@@ -478,6 +478,26 @@ class GenerateModelScaffold extends Command {
     PHP;
     }
 
+    protected function getStoreRequestTemplate(): string {
+        $modelName = self::$model->studly;
+
+        return <<<PHP
+        <?php
+
+        namespace App\Http\Requests\\{$modelName};
+
+        use Illuminate\Foundation\Http\FormRequest;
+
+        class Store{$modelName}Request extends FormRequest {
+            public function rules(): array {
+                return [
+                    // Add your validation rules here
+                ];
+            }
+        }
+        PHP;
+    }
+
     protected function getUpdateRequestTemplate(): string {
         $modelName = self::$model->studly;
 
@@ -492,6 +512,28 @@ class GenerateModelScaffold extends Command {
             public function rules(): array {
                 return [
                     // Add your validation rules here
+                ];
+            }
+        }
+        PHP;
+    }
+
+    protected function getResourceTemplate(): string {
+        $modelName = self::$model->studly;
+
+        return <<<PHP
+        <?php
+
+        namespace App\Http\Resources;
+
+        use Illuminate\Http\Resources\Json\JsonResource;
+
+        class {$modelName}Resource extends JsonResource {
+            public function toArray(\$request): array {
+                return [
+                    'id' => \$this->id,
+                    'created_at' => \$this->created_at->toDateTimeString(),
+                    'updated_at' => \$this->updated_at->toDateTimeString(),
                 ];
             }
         }
