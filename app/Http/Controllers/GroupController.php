@@ -12,7 +12,13 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+        $groups = Group::all();
+        
+        return response()->json([
+            'status' => true,
+            'message' => 'Groups retrieved successfully',
+            'data' => $groups
+        ]);
     }
 
     /**
