@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('university_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->integer('qty_student');
             $table->date('start_period');

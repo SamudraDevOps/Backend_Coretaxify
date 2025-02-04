@@ -7,7 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreGroupUserRequest extends FormRequest {
     public function rules(): array {
         return [
-            // Add your validation rules here
+            'user_id' => 'required|exist:user,id', 
+            'group_id' => 'required|exist:group,id', 
         ];
     }
 }
