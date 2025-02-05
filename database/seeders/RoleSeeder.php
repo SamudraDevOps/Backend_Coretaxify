@@ -11,20 +11,25 @@ class RoleSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
-    {
-        // User::factory(10)->create();
-
+    public function run(): void {
         Role::create([
-            'name' => 'Admin',
+            'name' => 'admin',
+            'description' => 'Administrator',
         ]);
 
         Role::create([
-            'name' => 'Dosen',
+            'name' => 'dosen',
+            'description' => 'Lecturer',
         ]);
 
         Role::create([
-            'name' => 'Mahasiswa',
+            'name' => 'mahasiswa',
+            'description' => 'Student',
+        ]);
+
+        Role::create([
+            'name' => 'psc',
+            'description' => 'PSC',
         ]);
     }
 }
