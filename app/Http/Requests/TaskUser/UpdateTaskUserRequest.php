@@ -7,7 +7,11 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateTaskUserRequest extends FormRequest {
     public function rules(): array {
         return [
-            // Add your validation rules here
+            'user_id' => 'required|exist:user,id',
+            'lecture_task_id' => 'required|exist:lecture_task,id',
+            'task_id' => 'required|exist:task,id',
+            'name' => 'required|string',
+            'score' => 'required|integer',
         ];
     }
 }
