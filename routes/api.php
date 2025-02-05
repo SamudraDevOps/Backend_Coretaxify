@@ -25,7 +25,7 @@ Route::group(['as' => 'api.'], function () {
     });
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-        Route::get('/dosen', [ApiDummyController::class, 'index']);
+        Route::get('/admin', [ApiDummyController::class, 'index']);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
