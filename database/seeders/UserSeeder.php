@@ -23,12 +23,12 @@ class UserSeeder extends Seeder
         $admin->roles()->attach(Role::where('name', 'admin')->first());
         // $admin->assignRole('admin');
 
-        $mahasiswa = User::factory()->create([
-            'name' => 'Mahasiswa User',
-            'email' => 'mahasiswa@example.com',
+        $dosen = User::create([
+            'name' => 'Dosen User',
+            'email' => 'dosen@example.com',
             'password' => Hash::make('password123'),
         ]);
+        $dosen->roles()->attach(Role::where('name', 'dosen')->first());
 
-        $mahasiswa->assignRole('mahasiswa');
     }
 }
