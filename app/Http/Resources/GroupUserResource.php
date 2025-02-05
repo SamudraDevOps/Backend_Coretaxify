@@ -9,9 +9,9 @@ class GroupUserResource extends JsonResource {
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'user' => UserResource::make($this->whenLoaded('user')),
+            'users' => UserResource::collection($this->users),
             'group_id' => $this->group_id,
-            'group' => GroupResource::make($this->whenLoaded('group')),
+            'groups' => GroupResource::collection($this->groups),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

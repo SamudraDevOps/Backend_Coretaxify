@@ -9,6 +9,7 @@ class ContractResource extends JsonResource {
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'users' => UserResource::collection($this->users),
             'name' => $this->name,
             'qty_student' => $this->qty_student,
             'start_period' => $this->start_period,

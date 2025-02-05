@@ -9,9 +9,9 @@ class TaskUserResource extends JsonResource {
         return [
             'id' => $this->id,
             'lecture_task_id' => $this->lecture_task_id,
-            'lecture_task' => LectureTaskResource::make($this->whenLoaded('lecture_task')),
+            'lecture_tasks' => UserResource::collection($this->lecture_task),
             'task_id' => $this->task_id,
-            'task' => TaskResource::make($this->whenLoaded('task')),
+            'tasks' => TaskResource::collection($this->tasks),
             'score' => $this->score,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
