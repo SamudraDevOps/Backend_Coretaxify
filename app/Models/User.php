@@ -47,17 +47,27 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles(): BelongsToMany {
+    public function role_user(): BelongsToMany {
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function groups(): BelongsToMany {
-        return $this->belongsToMany(Group::class, 'group_users');
+    public function group_user(){
+        return $this->hasMany(GroupUser::class, 'group_users');
     
     }
     
     public function contract()
     {
-        return $this->belongsTo(Contract::class, 'contracts');
+        return $this->hasMany(Contract::class, 'contracts');
+    }
+
+    public function lecture_task()
+    {
+        return $this->hasMany(LectureTask::class, 'lecture_tasks');
+    }
+
+    public function task_user()
+    {
+        return $this->hasMany(TaskUser::class, 'task_users');
     }
 }

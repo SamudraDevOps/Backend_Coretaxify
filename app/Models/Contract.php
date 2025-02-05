@@ -14,10 +14,8 @@ class Contract extends Model
         return $this->belongsTo(University::class);
     }
 
-    public function users(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'users');
+    public function users() {
+        return $this->hasMany(User::class, 'users');
     
     }
-
-    
 }

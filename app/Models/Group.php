@@ -9,8 +9,13 @@ class Group extends Model
 {
     protected $guarded = ['id'];
 
-    public function users(): BelongsToMany
+    public function group_user()
     {
-        return $this->belongsToMany(User::class, 'group_users');
+        return $this->hasMany(GroupUser::class, 'group_users');
+    }
+
+    public function lecture_task()
+    {
+        return $this->hasMany(LectureTask::class, 'lecture_tasks');
     }
 }
