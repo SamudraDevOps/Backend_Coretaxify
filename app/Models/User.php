@@ -64,6 +64,16 @@ class User extends Authenticatable
 
     public function contract()
     {
-        return $this->belongsTo(Contract::class, 'contracts');
+        return $this->hasMany(Contract::class, 'contracts');
+    }
+
+    public function lecture_task()
+    {
+        return $this->hasMany(LectureTask::class, 'lecture_tasks');
+    }
+
+    public function task()
+    {
+        return $this->hasMany(Task::class, 'task_users');
     }
 }
