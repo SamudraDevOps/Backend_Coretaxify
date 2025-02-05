@@ -17,7 +17,6 @@ class ApiAuthController extends ApiController {
             return response()->json([
                 'user' => new UserResource(auth()->user()),
                 'token' => auth()->user()->createToken('auth_token')->plainTextToken,
-                'role' => new RoleResource(auth()->user()->roles()->first()),
             ]);
         }
 
