@@ -49,7 +49,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function role_user(): BelongsToMany {
+    public function roles(): BelongsToMany {
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
@@ -72,8 +72,8 @@ class User extends Authenticatable
         return $this->hasMany(LectureTask::class, 'lecture_tasks');
     }
 
-    public function task_user()
+    public function task()
     {
-        return $this->hasMany(TaskUser::class, 'task_users');
+        return $this->hasMany(Task::class, 'task_users');
     }
 }

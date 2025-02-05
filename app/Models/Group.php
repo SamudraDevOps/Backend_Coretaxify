@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Group extends Model
 {
     protected $guarded = ['id'];
 
-    public function group_user()
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(GroupUser::class, 'group_users');
+        return $this->belongsToMany(User::class, 'group_users');
     }
 
     public function lecture_task()
