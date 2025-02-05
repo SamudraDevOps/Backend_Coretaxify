@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\RoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource {
@@ -17,6 +18,7 @@ class UserResource extends JsonResource {
             'image_path' => $this->image_path,
             'unique_id' => $this->unique_id,
             'lecture_id' => $this->lecture_id,
+            'roles' => RoleResource::collection($this->roles),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
