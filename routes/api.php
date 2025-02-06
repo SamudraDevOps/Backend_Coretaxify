@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
 
-Route::group(['as' => 'api.'], function () {
+Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
 
