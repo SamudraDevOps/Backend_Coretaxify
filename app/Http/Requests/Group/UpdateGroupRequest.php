@@ -15,7 +15,6 @@ class UpdateGroupRequest extends FormRequest {
             'spt' => 'nullable|integer',
             'bupot' => 'nullable|integer',
             'faktur' => 'nullable|integer',
-            'class_code' => 'nullable|string',
             'status' => 'nullable|in:' .
                 implode(',', GroupStatusEnum::toArray()),
         ];

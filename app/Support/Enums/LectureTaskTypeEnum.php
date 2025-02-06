@@ -7,7 +7,7 @@ use App\Traits\Enums\Arrayable;
 enum LectureTaskTypeEnum: string {
     use Arrayable;
 
-    case PRAKTIKUM = 'praktikum';
-    case UJIAN = 'ujian';
+    case PRAKTIKUM = 'PRAKTIKUM';
+    case UJIAN = 'UJIAN';
     case BNSP = 'BNSP';
 }

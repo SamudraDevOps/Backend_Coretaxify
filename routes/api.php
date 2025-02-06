@@ -5,11 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiRoleController;
 use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
-use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiDummyController;
+use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\ApiLectureTaskController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -43,7 +44,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
         // Lecturer only routes
-        Route::resource('contracts', ApiContractController::class);
+        Route::resource('groups', ApiGroupController::class);
+        Route::resource('lecture-tasks', ApiLectureTaskController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {

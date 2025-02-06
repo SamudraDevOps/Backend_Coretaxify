@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('spt');
             $table->integer('bupot');
             $table->integer('faktur');
-            $table->string('class_code');
+            $table->string('class_code')->nullable();
             $table->enum('status', GroupStatusEnum::toArray());
             $table->timestamps();
         });

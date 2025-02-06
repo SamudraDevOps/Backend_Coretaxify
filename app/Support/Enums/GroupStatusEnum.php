@@ -7,6 +7,6 @@ use App\Traits\Enums\Arrayable;
 enum GroupStatusEnum: string {
     use Arrayable;
 
-    case ACTIVE = 'active';
-    case INACTIVE = 'inactive';
+    case ACTIVE = 'ACTIVE';
+    case INACTIVE = 'INACTIVE';
 }
