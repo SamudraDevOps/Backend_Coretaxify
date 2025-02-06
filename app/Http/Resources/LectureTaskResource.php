@@ -9,9 +9,9 @@ class LectureTaskResource extends JsonResource {
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'users' => UserResource::collection($this->users),
+            // 'users' => UserResource::collection($this->users),
             'group_id' => $this->group_id,
-            'groups' => GroupResource::collection($this->groups),
+            // 'groups' => GroupResource::collection($this->groups),
             'name' => $this->name,
             'type' => $this->type,
             'start_at' => $this->start_at->toDateTimeString(),
