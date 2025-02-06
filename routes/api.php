@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\ApiUserController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -36,6 +37,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         // Admin only routes
         Route::apiResource('contract', ApiContractController::class);
+        Route::apiResource('users', ApiUserController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
