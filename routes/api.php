@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiRoleController;
 use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
-use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
+use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
@@ -20,7 +20,7 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
 
-Route::group(['as' => 'api.'], function () {
+Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
 
@@ -33,10 +33,12 @@ Route::group(['as' => 'api.'], function () {
         Route::get('/admin', [ApiDummyController::class, 'index']);
         Route::resource('users', ApiUserController::class) ;
         Route::resource('groups', ApiGroupController::class);
-        Route::resource('contracts', ApiContractController::class);
+        // Route::resource('contracts', ApiContractController::class);
         Route::resource('roles', ApiRoleController::class);
         Route::resource('tasks', ApiTaskController::class);
         Route::resource('universities', ApiUserController::class);
+        // Admin only routes
+        Route::apiResource('contract', ApiContractController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {

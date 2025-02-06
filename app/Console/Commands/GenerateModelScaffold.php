@@ -458,7 +458,7 @@ class GenerateModelScaffold extends Command {
          * Display the specified resource.
          */
         public function show({$modelName} \${$modelNameCamel}) {
-            return new {$modelName}Resource(\${$modelNameCamel}->load(['roles' => ['division', 'permissions']]));
+            return new {$modelName}Resource(\${$modelNameCamel});
         }
 
         /**
