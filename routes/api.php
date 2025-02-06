@@ -1,10 +1,11 @@
 <?php
 
 // use Illuminate\Http\Request;
-use App\Http\Controllers\Api\ApiDummyController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\ApiDummyController;
+use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
+use App\Http\Controllers\Api\Auth\ApiAuthController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -25,7 +26,8 @@ Route::group(['as' => 'api.'], function () {
     });
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-        Route::get('/admin', [ApiDummyController::class, 'index']);
+        // Admin only routes
+        Route::apiResource('contract', ApiContractController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
