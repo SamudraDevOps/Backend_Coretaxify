@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\Enums\ContractStatusEnum;
+use App\Support\Enums\ContractTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('university_id')->constrained()->onDelete('cascade');
-            $table->enum('contract_type', ContractStatusEnum::toArray());
+            $table->enum('contract_type', ContractTypeEnum::toArray());
             $table->integer('qty_student');
             $table->date('start_period');
             $table->date('end_period');

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
+use App\Http\Resources\UserResource;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 use App\Support\Interfaces\Services\UserServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiUserController extends ApiController {
     public function __construct(
@@ -27,6 +28,16 @@ class ApiUserController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(StoreUserRequest $request) {
+        // $intent = $request->get('intent');
+
+        // switch ($intent) {
+        //     case IntentEnum::API_USER_IMPORT_DOSEN->value:
+        //         $this->userService->importData($request->file('import_file'));
+
+        //         return response()->noContent();
+        //     case IntentEnum::API_USER_REGISTER_MAHASISWA->value:
+        //         return null;
+        // }
         return $this->userService->create($request->validated());
     }
 
@@ -34,7 +45,8 @@ class ApiUserController extends ApiController {
      * Display the specified resource.
      */
     public function show(User $user) {
-        return new UserResource($user->load(['roles' => ['division', 'permissions']]));
+        // return new UserResource($user->load(['roles' => ['division', 'permissions']]));
+        return new UserResource($user);
     }
 
     /**
