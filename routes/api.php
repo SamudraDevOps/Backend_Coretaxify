@@ -22,7 +22,7 @@ header('Access-Control-Allow-Credentials: true');
 
 Route::get('/csrf-token', function (Request $request) {
     return response()->json(['token' => csrf_token()]);
-});
+})->middleware('web');
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
