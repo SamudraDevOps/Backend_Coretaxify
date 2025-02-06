@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 //     Route::post('login', [ApiAuthController::class, 'login']);
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
-header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-XSRF-TOKEN');
 header('Access-Control-Allow-Credentials: true');
