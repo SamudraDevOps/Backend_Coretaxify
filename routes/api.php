@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
+use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
@@ -46,6 +47,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         // Lecturer only routes
         Route::resource('groups', ApiGroupController::class);
         Route::resource('lecture-tasks', ApiLectureTaskController::class);
+        Route::resource('group-users', ApiGroupUserController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {

@@ -19,9 +19,9 @@ class ApiGroupUserController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
-
-        return GroupUserResource::collection($this->groupUserService->getAllPaginated($request->query(), $perPage));
-    }
+        
+        return GroupUserResource::collection($this->groupUserService->getAllPaginated($request->query(), $perPage)->load(['group', 'user']));
+    }    
 
     /**
      * Store a newly created resource in storage.
@@ -34,7 +34,7 @@ class ApiGroupUserController extends ApiController {
      * Display the specified resource.
      */
     public function show(GroupUser $groupUser) {
-        return new GroupUserResource($groupUser->load(['roles' => ['division', 'permissions']]));
+        return new GroupUserResource($groupUser->load('group','user'));
     }
 
     /**
