@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use Illuminate\Http\Request;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -15,9 +16,14 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 //     Route::post('login', [ApiAuthController::class, 'login']);
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
-header('Access-Control-Allow-Origin: http://localhost:5173');
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-XSRF-TOKEN');
+header('Access-Control-Allow-Credentials: true');
+
+Route::get('/csrf-token', function (Request $request) {
+    return response()->json(['token' => csrf_token()]);
+});
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
