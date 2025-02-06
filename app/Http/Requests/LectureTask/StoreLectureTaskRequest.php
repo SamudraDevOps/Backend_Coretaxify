@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\LectureTask;
 
+use App\Support\Enums\LectureTaskTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLectureTaskRequest extends FormRequest {
@@ -14,7 +15,8 @@ class StoreLectureTaskRequest extends FormRequest {
             'type' => 'required|string',
             'start_period' => 'required|date',
             'end_period' => 'required|date',
-            'type' => 'required|string',
+            'type' => 'required|in:' .
+                implode(',', LectureTaskTypeEnum::toArray()),
         ];
     }
 }
