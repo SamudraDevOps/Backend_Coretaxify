@@ -14,7 +14,7 @@ class UserResource extends JsonResource {
             'email_verified_at' => $this->email_verified_at,
             'password' => $this->password,
             'contract_id' => $this->contract_id,
-            'contracts' => ContractResource::collection($this->contracts),
+            'contract' => ContractResource::make($this->whenLoaded('contract')),
             'image_path' => $this->image_path,
             'unique_id' => $this->unique_id,
             'lecture_id' => $this->lecture_id,

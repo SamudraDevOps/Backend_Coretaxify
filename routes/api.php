@@ -1,10 +1,15 @@
 <?php
 
 // use Illuminate\Http\Request;
-use App\Http\Controllers\Api\ApiDummyController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\ApiRoleController;
+use App\Http\Controllers\Api\ApiTaskController;
+use App\Http\Controllers\Api\ApiUserController;
+use App\Http\Controllers\Api\ApiDummyController;
+use App\Http\Controllers\Api\ApiGroupController;
+use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
+use App\Http\Controllers\Api\Auth\ApiAuthController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -26,10 +31,17 @@ Route::group(['as' => 'api.'], function () {
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         Route::get('/admin', [ApiDummyController::class, 'index']);
+        Route::resource('users', ApiUserController::class) ;
+        Route::resource('groups', ApiGroupController::class);
+        Route::resource('contracts', ApiContractController::class);
+        Route::resource('roles', ApiRoleController::class);
+        Route::resource('tasks', ApiTaskController::class);
+        Route::resource('universities', ApiUserController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
         // Lecturer only routes
+        Route::resource('contracts', ApiContractController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {
@@ -40,6 +52,3 @@ Route::group(['as' => 'api.'], function () {
         // PSC only routes
     });
 });
-
-
-
