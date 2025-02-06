@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 //     Route::post('login', [ApiAuthController::class, 'login']);
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
-header('Access-Control-Allow-Origin: http://localhost:5173/');
+header('Access-Control-Allow-Origin: http://localhost:5173');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
 
