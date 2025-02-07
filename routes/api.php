@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiLectureTaskController;
 
 // Route::get('/user', function (Request $request) {
@@ -21,6 +22,13 @@ use App\Http\Controllers\Api\ApiLectureTaskController;
 //     Route::post('login', [ApiAuthController::class, 'login']);
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-XSRF-TOKEN');
+header('Access-Control-Allow-Credentials: true');
+
+Route::get('/csrf-token', function (Request $request) {
+    return response()->json(['token' => csrf_token()]);
+})->middleware('web');
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
@@ -41,6 +49,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::resource('universities', ApiUserController::class);
         // Admin only routes
         Route::apiResource('contract', ApiContractController::class);
+        Route::apiResource('users', ApiUserController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
