@@ -9,6 +9,8 @@ class GroupResource extends JsonResource {
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'user_id' => $this->user_id,
+            'user' => new UserResource($this->whenLoaded('user')),
             'qty_student' => $this->qty_student,
             'start_period' => $this->start_period,
             'end_period' => $this->end_period,

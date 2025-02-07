@@ -6,4 +6,6 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 
 interface GroupServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data): ?Model;
+
+    public function joinGroup(array $data): ?Model;
 }
