@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateLectureTaskRequest extends FormRequest {
     public function rules(): array {
         return [
-            'user_id' => 'nullable|exist:user,id',
+            'group_id' => 'nullable|exist:group,id',
             'task_id' => 'nullable|exist:task,id',
             'name' => 'nullable|string',
             'type' => 'nullable|string',
