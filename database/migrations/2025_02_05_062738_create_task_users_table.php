@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('task_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('lecture_task_id')->constrained()->onDelete('cascade');
+            $table->foreignId('group_id')->constrained()->onDelete('cascade');
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->float('score');
+            $table->float('score')->nullable();
             $table->timestamps();
         });
     }

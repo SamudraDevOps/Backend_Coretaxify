@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
-use App\Support\Interfaces\Repositories\TaskRepositoryInterface;
 use App\Support\Interfaces\Services\TaskServiceInterface;
+use App\Support\Interfaces\Repositories\TaskRepositoryInterface;
+use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
 class TaskService extends BaseCrudService implements TaskServiceInterface {
     protected function getRepositoryClass(): string {

@@ -2,31 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LectureTask extends Model
 {
-    /** @use HasFactory<\Database\Factories\LectureTaskFactory> */
-    use HasFactory;
-
-    public $guarded = ['id'];
-
-    public function task_user()
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(TaskUser::class, 'task_users');
+        return $this->belongsToMany(User::class, 'task_users');
     }
 
-    public function task(): BelongsToMany {
-        return $this->belongsToMany(Task::class, 'tasks');
+    public function groups(): BelongsToMany {
+        return $this->belongsToMany(Group::class, 'task_users');
     }
 
-    public function user(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'users');
-    }
+    public static function generateTaskCode($existingNumber = null) {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        
+        if($existingNumber) {
+            $number = $existingNumber;
+        } else {
+            do {
+                $code = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $code .= $characters[rand(0, strlen($characters) - 1)];
+                }
+                
+                $exists = self::where('task_code', $code)->exists();
+            } while ($exists);
+            
+            $number = $code;
+        }
 
-    public function group(): BelongsToMany {
-        return $this->belongsToMany(Group::class, 'groups');
+        return str_pad($number, 5, '0', STR_PAD_LEFT);
     }
 }

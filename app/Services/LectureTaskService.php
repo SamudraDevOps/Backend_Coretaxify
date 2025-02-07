@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Models\LectureTask;
 use Illuminate\Database\Eloquent\Model;
-use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
-use App\Support\Interfaces\Repositories\LectureTaskRepositoryInterface;
 use App\Support\Interfaces\Services\LectureTaskServiceInterface;
+use App\Support\Interfaces\Repositories\LectureTaskRepositoryInterface;
+use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
 class LectureTaskService extends BaseCrudService implements LectureTaskServiceInterface {
     protected function getRepositoryClass(): string {
@@ -22,6 +22,6 @@ class LectureTaskService extends BaseCrudService implements LectureTaskServiceIn
         // Attach logged in user to the newly created group
         $lectureTask->users()->attach(auth()->id);
         
-        return $lectureTask;
+        return $lectureTask; 
     }
 }
