@@ -15,6 +15,10 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_users');
     }
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     public function lecture_tasks(): BelongsToMany {
         return $this->belongsToMany(LectureTask::class, 'task_users');
     }
