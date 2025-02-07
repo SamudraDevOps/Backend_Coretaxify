@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Group;
 use App\Models\LectureTask;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Support\Interfaces\Services\LectureTaskServiceInterface;
 use App\Support\Interfaces\Repositories\LectureTaskRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
@@ -14,13 +18,9 @@ class LectureTaskService extends BaseCrudService implements LectureTaskServiceIn
     }
 
     public function create(array $data): ?Model {
-        $data['user_id'] = auth()->id();
         $data['task_code'] = LectureTask::generateTaskCode();
         
         $lectureTask = parent::create($data);
-        
-        // Attach logged in user to the newly created group
-        $lectureTask->users()->attach(auth()->id);
         
         return $lectureTask; 
     }

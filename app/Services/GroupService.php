@@ -19,8 +19,8 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         
         $group = parent::create($data);
         
-        // Attach logged in user to the newly created group
-        $group->users()->attach(auth()->id());
+        // // Attach logged in user to the newly created group
+        // $group->users()->attach(auth()->id());
         
         return $group;
     }
