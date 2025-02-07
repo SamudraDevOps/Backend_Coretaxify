@@ -2,19 +2,20 @@
 
 namespace App\Http\Requests\LectureTask;
 
+use App\Support\Enums\LectureTaskTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateLectureTaskRequest extends FormRequest {
     public function rules(): array {
         return [
-            'user_id' => 'required|exist:user,id',
-            'lecture_id' => 'required|exist:lecture,id',
-            'task_id' => 'required|exist:task,id',
-            'name' => 'required|string',
-            'type' => 'required|string',
-            'start_period' => 'required|date',
-            'end_period' => 'required|date',
-            'type' => 'required|string',
+            'group_id' => 'nullable|exist:group,id',
+            'task_id' => 'nullable|exist:task,id',
+            'name' => 'nullable|string',
+            'type' => 'nullable|string',
+            'start_period' => 'nullable|date',
+            'end_period' => 'nullable|date',
+            'type' => 'nullable|in:' .
+                implode(',', LectureTaskTypeEnum::toArray()),
         ];
     }
 }

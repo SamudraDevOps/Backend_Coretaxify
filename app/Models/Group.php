@@ -15,8 +15,28 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_users');
     }
 
-    public function lecture_task()
-    {
-        return $this->hasMany(LectureTask::class, 'lecture_tasks');
+    public function lecture_tasks(): BelongsToMany {
+        return $this->belongsToMany(LectureTask::class, 'task_users');
+    }
+
+    public static function generateClassCode($existingNumber = null) {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        
+        if($existingNumber) {
+            $number = $existingNumber;
+        } else {
+            do {
+                $code = '';
+                for ($i = 0; $i < 4; $i++) {
+                    $code .= $characters[rand(0, strlen($characters) - 1)];
+                }
+                
+                $exists = self::where('class_code', $code)->exists();
+            } while ($exists);
+            
+            $number = $code;
+        }
+
+        return str_pad($number, 4, '0', STR_PAD_LEFT);
     }
 }

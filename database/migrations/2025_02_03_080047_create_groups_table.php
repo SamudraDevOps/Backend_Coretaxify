@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Support\Enums\GroupStatusEnum;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -20,8 +21,8 @@ return new class extends Migration
             $table->integer('spt');
             $table->integer('bupot');
             $table->integer('faktur');
-            $table->string('class_code');
-            $table->integer('status');
+            $table->string('class_code')->nullable()->unique();
+            $table->enum('status', GroupStatusEnum::toArray());
             $table->timestamps();
         });
     }
