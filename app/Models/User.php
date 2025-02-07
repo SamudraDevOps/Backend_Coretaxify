@@ -62,7 +62,10 @@ class User extends Authenticatable
 
     public function groups(): BelongsToMany {
         return $this->belongsToMany(Group::class, 'group_users');
+    }
 
+    public function hasGroup($groupName) {
+        return $this->groups->contains('name', $groupName);
     }
 
     public function contract(): BelongsTo
@@ -70,9 +73,8 @@ class User extends Authenticatable
         return $this->belongsTo(Contract::class, 'contracts');
     }
 
-    public function lecture_task()
-    {
-        return $this->hasMany(LectureTask::class, 'lecture_tasks');
+    public function lecture_tasks(): BelongsToMany {
+        return $this->belongsToMany(LectureTask::class, 'task_users');
     }
 
     public function task()
@@ -80,3 +82,6 @@ class User extends Authenticatable
         return $this->hasMany(Task::class, 'task_users');
     }
 }
+=======
+}
+>>>>>>> origin/isal

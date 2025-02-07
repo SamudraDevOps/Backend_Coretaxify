@@ -34,7 +34,8 @@ class ApiTaskController extends ApiController {
      * Display the specified resource.
      */
     public function show(Task $task) {
-        return new TaskResource($task->load(['roles' => ['division', 'permissions']]));
+        // return new TaskResource($task->load(['roles' => ['division', 'permissions']]));
+        return new TaskResource($task);
     }
 
     /**

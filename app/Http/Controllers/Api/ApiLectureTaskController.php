@@ -34,7 +34,7 @@ class ApiLectureTaskController extends ApiController {
      * Display the specified resource.
      */
     public function show(LectureTask $lectureTask) {
-        return new LectureTaskResource($lectureTask->load(['roles' => ['division', 'permissions']]));
+        return new LectureTaskResource($lectureTask);
     }
 
     /**

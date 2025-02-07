@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Task;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class TaskSeeder extends Seeder
 {
@@ -12,6 +13,14 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Task::create([
+            'name' => 'Buku 1',
+            'file_path' => 'Buku1.pdf',
+        ]);
+
+        Task::create([
+            'name' => 'Buku 2',
+            'file_path' => 'Buku2.pdf',
+        ]);
     }
 }

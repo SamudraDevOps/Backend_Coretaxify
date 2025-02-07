@@ -12,12 +12,4 @@ class TaskUser extends Model
     use HasFactory;
     
     protected $guarded = ['id'];
-    
-    public function user(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'users');
-    }
-
-    public function lecture_task(): BelongsToMany {
-        return $this->belongsToMany(LectureTask::class, 'lecture_tasks');
-    }
 }

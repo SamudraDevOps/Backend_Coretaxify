@@ -8,10 +8,12 @@ class TaskUserResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'lecture_task_id' => $this->lecture_task_id,
-            'lecture_task' => LectureTaskResource::make($this->whenLoaded('lecture_task')),
+            'user_id' => $this->user_id,
+            'user' => UserResource::collection($this->users),
+            'group_id' => $this->group_id,
+            'group' => GroupResource::collection($this->groups),
             'task_id' => $this->task_id,
-            'task' => TaskResource::make($this->whenLoaded('task')),
+            'tasks' => TaskResource::collection($this->tasks),
             'score' => $this->score,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),

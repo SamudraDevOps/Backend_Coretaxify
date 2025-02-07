@@ -12,8 +12,4 @@ class Task extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    
-    public function lecture_task() {
-        return $this->hasMany(LectureTask::class, 'lecture_tasks');
-    }
 }
