@@ -20,7 +20,7 @@ class ApiLectureTaskController extends ApiController {
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
 
-        return LectureTaskResource::collection($this->lectureTaskService->getAllPaginated($request->query(), $perPage));
+        return LectureTaskResource::collection($this->lectureTaskService->getAllPaginated($request->query(), $perPage)->load(['group', 'task']));
     }
 
     /**

@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('qty_student');
             $table->date('start_period');
             $table->date('end_period');
