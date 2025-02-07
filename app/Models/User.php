@@ -82,6 +82,3 @@ class User extends Authenticatable
         return $this->hasMany(Task::class, 'task_users');
     }
 }
-=======
-}
->>>>>>> origin/isal
