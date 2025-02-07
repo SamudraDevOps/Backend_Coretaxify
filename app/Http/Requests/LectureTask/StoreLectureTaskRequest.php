@@ -8,10 +8,10 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreLectureTaskRequest extends FormRequest {
     public function rules(): array {
         return [
-            'group_id' => 'required|exist:group,id',
-            'task_id' => 'required|exist:task,id',
+            'group_id' => 'required|exists:groups,id',
+            'task_id' => 'required|exists:tasks,id',
             'name' => 'required|string',
-            'type' => 'required|string',
+            'time' => 'required|string',
             'start_period' => 'required|date',
             'end_period' => 'required|date',
             'type' => 'required|in:' .

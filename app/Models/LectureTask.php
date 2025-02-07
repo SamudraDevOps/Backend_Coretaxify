@@ -7,13 +7,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LectureTask extends Model
 {
+    protected $guarded = ['id'];
+    
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_users');
     }
 
-    public function groups(): BelongsToMany {
+    public function groups(): BelongsToMany 
+    {
         return $this->belongsToMany(Group::class, 'task_users');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class, 'group_id');
+    }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
     }
 
     public static function generateTaskCode($existingNumber = null) {
