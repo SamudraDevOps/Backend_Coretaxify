@@ -36,7 +36,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [ApiAuthController::class, 'logout']);
-        Route::get('/me', [ApiAuthController::class, 'me']);
+        Route::get('/profile', [ApiAuthController::class, 'me']);
+        Route::post('/profile/update', [ApiAuthController::class, 'updateProfile']);
     });
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
