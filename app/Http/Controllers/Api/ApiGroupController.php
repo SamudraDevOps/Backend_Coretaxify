@@ -8,6 +8,7 @@ use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Support\Interfaces\Services\GroupServiceInterface;
 use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
 
 class ApiGroupController extends ApiController {
     public function __construct(
@@ -27,7 +28,17 @@ class ApiGroupController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(StoreGroupRequest $request) {
-        return $this->groupService->create($request->validated());
+        
+        $intent = $request->get('intent');
+
+        switch ($intent) {
+            case IntentEnum::API_USER_CREATE_GROUP->value:
+                return $this->groupService->create($request->validated());
+            case IntentEnum::API_USER_JOIN_GROUP->value:
+                return $this->groupService->joinGroup($request->validated());    
+        }   
+        
+        
     }
 
     /**
