@@ -82,7 +82,7 @@ class ApiAuthController extends ApiController {
 
         return response()->json([
             'message' => 'Profile updated successfully',
-            'data' => $user
+            'data' => new UserResource($user),
         ]);
     }
 
