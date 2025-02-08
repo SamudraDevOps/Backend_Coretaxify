@@ -31,5 +31,10 @@ class RoleSeeder extends Seeder
             'name' => 'psc',
             'description' => 'PSC',
         ]);
+
+        Role::create([
+            'name' => 'instruktur',
+            'description' => 'Instructor',
+        ]);
     }
 }
