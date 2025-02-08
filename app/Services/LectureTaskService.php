@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Support\Interfaces\Services\LectureTaskServiceInterface;
 use App\Support\Interfaces\Repositories\LectureTaskRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
+use App\Models\GroupUser;
 
 class LectureTaskService extends BaseCrudService implements LectureTaskServiceInterface {
     protected function getRepositoryClass(): string {
@@ -23,5 +24,20 @@ class LectureTaskService extends BaseCrudService implements LectureTaskServiceIn
         $lectureTask = parent::create($data);
         
         return $lectureTask; 
+    }
+
+    public function AssignTask(array $data): ?Model {
+        $lectureTask = LectureTask::where('task_code', $data['task_code'])->first();
+        $lectureTaskId = $lectureTask->id;
+
+        $groupId = $lectureTask->group->id;
+        
+        $groupUser = LectureTask::create([
+            'user_id' => auth()->id(),
+            'task_id' => $lectureTaskId,
+            'group_id' => $groupId,
+        ]);
+        
+        return $groupUser; 
     }
 }

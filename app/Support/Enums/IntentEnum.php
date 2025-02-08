@@ -7,6 +7,8 @@ enum IntentEnum: string {
     case API_USER_CREATE_DOSEN = 'api.user.create.dosen';
 
     case API_USER_CREATE_GROUP = 'api.user.create.group';
+    
+    case API_USER_CREATE_LECTURE_TASK = 'api.user.create.lecture.task';
 
     case API_USER_JOIN_GROUP = 'api.user.join.group';
 
