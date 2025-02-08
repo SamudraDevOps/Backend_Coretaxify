@@ -41,31 +41,34 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     });
 
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-        Route::get('/admin', [ApiDummyController::class, 'index']);
-        Route::resource('users', ApiUserController::class) ;
-        Route::resource('groups', ApiGroupController::class);
-        // Route::resource('contracts', ApiContractController::class);
-        Route::resource('roles', ApiRoleController::class);
-        Route::resource('tasks', ApiTaskController::class);
-        Route::resource('universities', ApiUserController::class);
         // Admin only routes
+        Route::get('/admin', [ApiDummyController::class, 'index']);
+        Route::apiResource('groups', ApiGroupController::class);
+        // Route::apiResource('contracts', ApiContractController::class);
+        Route::apiResource('roles', ApiRoleController::class);
+        Route::apiResource('tasks', ApiTaskController::class);
+        Route::apiResource('universities', ApiUserController::class);
         Route::apiResource('contract', ApiContractController::class);
-        Route::apiResource('users', ApiUserController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:dosen'])->group(function () {
         // Lecturer only routes
-        Route::resource('groups', ApiGroupController::class);
-        Route::resource('lecture-tasks', ApiLectureTaskController::class);
-        Route::resource('group-users', ApiGroupUserController::class);
+        Route::apiResource('groups', ApiGroupController::class);
+        Route::apiResource('lecture-tasks', ApiLectureTaskController::class);
+        Route::apiResource('group-users', ApiGroupUserController::class);
     });
 
     Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {
         // Student only routes
-        Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
+        Route::apiResource('groups', ApiGroupController::class, ['only' => ['store']]);
     });
 
     Route::middleware(['auth:sanctum', 'role:psc'])->group(function () {
         // PSC only routes
+    });
+
+    Route::middleware(['auth:sanctum', 'role:admin,psc'])->group(function () {
+        // ADMIN & PSC
+        Route::apiResource('users', ApiUserController::class);
     });
 });
