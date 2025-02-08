@@ -60,7 +60,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
     Route::middleware(['auth:sanctum', 'role:mahasiswa'])->group(function () {
         // Student only routes
-        Route::apiResource('groups', ApiGroupController::class, ['only' => ['store']]);
+        Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
+        Route::resource('lecture-tasks', ApiLectureTaskController::class, ['only' => ['store']]);
     });
 
     Route::middleware(['auth:sanctum', 'role:psc'])->group(function () {
