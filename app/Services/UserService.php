@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Str;
+use App\Support\Enums\IntentEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\UserServiceInterface;
 use App\Support\Interfaces\Repositories\UserRepositoryInterface;
@@ -20,8 +22,21 @@ class UserService extends BaseCrudService implements UserServiceInterface {
         $data['password'] = $plain_password;
 
         $user = parent::create($data);
-        // $user->assignRole('dosen');
-        $user->roles()->attach(Role::where('name', 'admin')->first());
+        $this->assignRoleByIntent($user, $data['intent'] ?? null);
         return $user;
+    }
+
+    public function assignRoleByIntent(Model $user, ?string $intent): void {
+        if (!$user instanceof User) {
+            return;
+        }
+
+        switch($intent) {
+            case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
+                $user->roles()->attach(Role::where('name', 'instruktur')->first());
+                break;
+            default:
+                $user->roles()->attach(Role::where('name', 'dosen')->first());
+        }
     }
 }
