@@ -10,7 +10,18 @@ class UserResource extends JsonResource {
     public function toArray($request): array {
         $intent = $request->get('intent');
         switch ($intent) {
-            case IntentEnum::API_USER_CREATE_DOSEN->value:
+            case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
+                return[
+                    'id' => $this->id,
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'email_verified_at' => $this->email_verified_at,
+                    'password' => $this->password,
+                    'image_path' => $this->image_path,
+                    'roles' => RoleResource::collection($this->roles),
+                    'created_at' => $this->created_at->toDateTimeString(),
+                    'updated_at' => $this->updated_at->toDateTimeString(),
+                ];
             default:
                 return [
                     'id' => $this->id,
