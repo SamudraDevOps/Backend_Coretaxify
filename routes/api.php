@@ -66,6 +66,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::middleware(['role:psc'])->prefix('psc')->group(function () {
             // PSC only routes
             Route::apiResource('users', ApiUserController::class);
+            Route::apiResource('lecture-tasks', ApiLectureTaskController::class);
         });
 
         Route::middleware(['role:instruktur'])->prefix('instructor')->group(function () {
