@@ -16,12 +16,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('qty_student');
-            $table->date('start_period');
-            $table->date('end_period');
-            $table->integer('spt');
-            $table->integer('bupot');
-            $table->integer('faktur');
+            $table->integer('qty_student')->nullable();
+            $table->date('start_period')->nullable();
+            $table->date('end_period')->nullable();
+            $table->integer('spt')->nullable();
+            $table->integer('bupot')->nullable();
+            $table->integer('faktur')->nullable();
             $table->string('class_code')->nullable()->unique();
             $table->enum('status', GroupStatusEnum::toArray());
             $table->timestamps();
