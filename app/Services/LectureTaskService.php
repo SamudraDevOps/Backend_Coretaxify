@@ -12,29 +12,30 @@ use App\Support\Interfaces\Services\LectureTaskServiceInterface;
 use App\Support\Interfaces\Repositories\LectureTaskRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 use App\Models\GroupUser;
+use App\Models\TaskUser;
 
 class LectureTaskService extends BaseCrudService implements LectureTaskServiceInterface {
     protected function getRepositoryClass(): string {
         return LectureTaskRepositoryInterface::class;
     }
 
-    public function create(array $data): ?Model {
-        $data['task_code'] = LectureTask::generateTaskCode();
+    // public function create(array $data): ?Model {
+    //     $data['task_code'] = LectureTask::generateTaskCode();
         
-        $lectureTask = parent::create($data);
+    //     $lectureTask = parent::create($data);
         
-        return $lectureTask; 
-    }
+    //     return $lectureTask; 
+    // }
 
-    public function AssignTask(array $data): ?Model {
+    public function assignTask(array $data): ?Model {
         $lectureTask = LectureTask::where('task_code', $data['task_code'])->first();
         $lectureTaskId = $lectureTask->id;
 
         $groupId = $lectureTask->group->id;
         
-        $groupUser = LectureTask::create([
+        $groupUser = TaskUser::create([
             'user_id' => auth()->id(),
-            'task_id' => $lectureTaskId,
+            'lecture_task_id' => $lectureTaskId,
             'group_id' => $groupId,
         ]);
         

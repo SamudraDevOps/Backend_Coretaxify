@@ -37,8 +37,6 @@ class ApiGroupController extends ApiController {
             case IntentEnum::API_USER_JOIN_GROUP->value:
                 return $this->groupService->joinGroup($request->validated());    
         }   
-        
-        
     }
 
     /**
