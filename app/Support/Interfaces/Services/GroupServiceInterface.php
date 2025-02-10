@@ -9,5 +9,5 @@ interface GroupServiceInterface extends BaseCrudServiceInterface {
 
     public function joinGroup(array $data): ?Model;
 
-    public function getGroupsByUserId($userId, $role = null);
+    public function getGroupsByUserId($userId);
 }

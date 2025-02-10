@@ -38,19 +38,17 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         return $groupUser;
     }
 
-    public function getGroupsByUserId($userId, $role = null) {
+    public function getGroupsByUserId($userId) {
         $repository = app($this->getRepositoryClass());
 
-        $query = $repository->query()->whereHas('users', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        });
+        // $query = $repository->query()->whereHas('users', function ($query) use ($userId) {
+        //     $query->where('user_id', $userId);
+        // });
 
-        if ($role) {
-            $query->whereHas('users.roles', function ($query) use ($role) {
-                $query->where('name', $role);
-            });
-        }
-        return $query->paginate();
+        return $repository->query()->whereHas('users', function ($query) use ($userId) {
+            $query->where('id', $userId);
+        })->paginate();
+        // return $query->paginate();
 
     }
 }
