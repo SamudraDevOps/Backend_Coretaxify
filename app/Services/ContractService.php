@@ -21,9 +21,8 @@ class ContractService extends BaseCrudService implements ContractServiceInterfac
     public function update($keyOrModel, array $data): ?Model {
         $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
 
-        if (isset($data['contract_type']) && $model->contract_type !==  $data['contract_type']) {
-            $existingNumber = intval(substr($model->contract_code, strrpos($model->contract_code, '-') + 1));
-            $data['contract_code'] = Contract::generateContractCode($data['contract_type'], $existingNumber);
+        if (isset($data['contract_type']) && $model->contract_type !== $data['contract_type']) {
+            $data['contract_code'] = Contract::generateContractCode($data['contract_type']);
         }
 
         return parent::update($keyOrModel, $data);

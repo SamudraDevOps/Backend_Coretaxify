@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -32,14 +33,8 @@ class Contract extends Model
             self::TYPE_BNSP => 'BNSP-',
         };
 
-        if($existingNumber) {
-            $number = $existingNumber;
-        } else {
-            $lastContract = self::orderBy('id', 'desc')->first();
-            $number = $lastContract ? (intval(substr($lastContract->contract_code, strrpos($lastContract->contract_code, '-') + 1)) + 1) : 1;
-        }
-
-        return $prefix . str_pad($number, 4, '0', STR_PAD_LEFT);
+        $randomString = strtoupper(Str::random(5));
+        return $prefix . $randomString;
     }
 
     public function university(): BelongsTo {

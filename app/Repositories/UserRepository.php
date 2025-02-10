@@ -2,13 +2,14 @@
 
 namespace App\Repositories;
 
-use Adobrovolsky97\LaravelRepositoryServicePattern\Repositories\BaseRepository;
 use App\Models\User;
-use App\Support\Interfaces\Repositories\UserRepositoryInterface;
+use App\Support\Enums\IntentEnum;
+use Illuminate\Database\Eloquent\Builder;
+use App\Traits\Repositories\HandlesSorting;
 use App\Traits\Repositories\HandlesFiltering;
 use App\Traits\Repositories\HandlesRelations;
-use App\Traits\Repositories\HandlesSorting;
-use Illuminate\Database\Eloquent\Builder;
+use App\Support\Interfaces\Repositories\UserRepositoryInterface;
+use Adobrovolsky97\LaravelRepositoryServicePattern\Repositories\BaseRepository;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface {
     use HandlesFiltering, HandlesRelations, HandlesSorting;
@@ -20,9 +21,23 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface {
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        if (isset($searchParams['intent'])) {
+            $roleName = match ($searchParams['intent']) {
+                IntentEnum::API_USER_GET_DOSEN->value => 'dosen',
+                IntentEnum::API_USER_GET_MAHASISWA->value => 'mahasiswa',
+                IntentEnum::API_USER_GET_INSTRUKTUR->value => 'instruktur',
+            };
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+            if ($roleName) {
+                $query->whereHas('roles', function($q) use ($roleName) {
+                    $q->where('name', $roleName);
+                });
+            }
+        }
+
+        $query = $this->applySearchFilters($query, $searchParams, ['name', 'email']);
+
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'contract_id']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 

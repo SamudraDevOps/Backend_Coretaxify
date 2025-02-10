@@ -17,12 +17,13 @@ class ContractSeeder extends Seeder
         $contract = Contract::create([
             'university_id' => 1,
             'contract_type' => ContractTypeEnum::LICENSE->value,
-            'qty_student' => 100,
+            'qty_student' => 1,
             'start_period' => now(),
             'end_period' => now()->addYears(1),
             'spt' => 5,
             'bupot' => 5,
             'faktur' => 5,
+            'contract_code' => 'L-0001',
         ]);
     }
 }

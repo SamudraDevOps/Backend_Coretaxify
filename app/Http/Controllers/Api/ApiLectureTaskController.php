@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\LectureTask;
+use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
+use App\Http\Resources\LectureTaskResource;
 use App\Http\Requests\LectureTask\StoreLectureTaskRequest;
 use App\Http\Requests\LectureTask\UpdateLectureTaskRequest;
-use App\Http\Resources\LectureTaskResource;
-use App\Models\LectureTask;
 use App\Support\Interfaces\Services\LectureTaskServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiLectureTaskController extends ApiController {
     public function __construct(
@@ -27,7 +28,14 @@ class ApiLectureTaskController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(StoreLectureTaskRequest $request) {
-        return $this->lectureTaskService->create($request->validated());
+        $intent = $request->get('intent');
+
+        switch ($intent) {
+            case IntentEnum::API_USER_CREATE_LECTURE_TASK->value:
+                return $this->lectureTaskService->create($request->validated());
+            case IntentEnum::API_USER_ASSIGN_TASK->value:
+                return $this->lectureTaskService->assignTask($request->validated());    
+        }   
     }
 
     /**

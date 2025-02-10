@@ -28,17 +28,23 @@ class ApiUserController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(StoreUserRequest $request) {
+
+        $validated = $request->validated();
+        $validated['intent'] = $request->get('intent');
+
+        return $this->userService->create($validated);
+
         // $intent = $request->get('intent');
 
         // switch ($intent) {
-        //     case IntentEnum::API_USER_IMPORT_DOSEN->value:
-        //         $this->userService->importData($request->file('import_file'));
-
-        //         return response()->noContent();
-        //     case IntentEnum::API_USER_REGISTER_MAHASISWA->value:
-        //         return null;
+        //     // case IntentEnum::API_USER_IMPORT_DOSEN->value:
+        //     //     $this->userService->importData($request->file('import_file'));
+        //     //     return response()->noContent();
+        //     case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
+        //         return $this->userService->create($request->validated());
+        //     default:
+        //         return $this->userService->create($request->validated());
         // }
-        return $this->userService->create($request->validated());
     }
 
     /**

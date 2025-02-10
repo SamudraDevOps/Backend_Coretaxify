@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApiAuthLoginRequest extends FormRequest {
+class ApiAuthUpdateRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -19,8 +19,10 @@ class ApiAuthLoginRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'name' => 'sometimes|string',
+            'email' => 'sometimes|string|email|min:8|unique:users',
+            'password' => 'sometimes|string|min:8|confirmed',
+            'image' => 'sometimes|image|mimes:jpg,png,jpeg|max:2048',
         ];
     }
 }
