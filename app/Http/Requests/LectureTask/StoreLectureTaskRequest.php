@@ -18,6 +18,7 @@ class StoreLectureTaskRequest extends FormRequest {
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
                     'time' => 'required|string',
+                    'task_code' => 'required|string',
                     'start_period' => 'required|date',
                     'end_period' => 'required|date',
                     'type' => 'required|in:' .

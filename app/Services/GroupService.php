@@ -14,17 +14,17 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         return GroupRepositoryInterface::class;
     }
 
-    // public function create(array $data): ?Model {
-    //     $data['user_id'] = auth()->id();
-    //     $data['class_code'] = Group::generateClassCode();
+    public function create(array $data): ?Model {
+        $data['user_id'] = auth()->id();
+        // $data['class_code'] = Group::generateClassCode();
 
-    //     $group = parent::create($data);
+        $group = parent::create($data);
 
-    //     // // Attach logged in user to the newly created group
-    //     // $group->users()->attach(auth()->id());
+        // // Attach logged in user to the newly created group
+        // $group->users()->attach(auth()->id());
 
-    //     return $group;
-    // }
+        return $group;
+    }
 
     public function joinGroup(array $data): ?Model {
         $group = Group::where('class_code', $data['class_code'])->first();

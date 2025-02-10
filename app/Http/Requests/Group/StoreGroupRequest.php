@@ -20,6 +20,7 @@ class StoreGroupRequest extends FormRequest {
                     'spt' => 'required|integer',
                     'bupot' => 'required|integer',
                     'faktur' => 'required|integer',
+                    'class_code' => 'required|string',
                     'status' => 'required|in:' .
                         implode(',', GroupStatusEnum::toArray()),
                 ];
