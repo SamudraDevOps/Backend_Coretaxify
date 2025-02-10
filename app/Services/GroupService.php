@@ -20,8 +20,8 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
 
         $group = parent::create($data);
 
-        // // Attach logged in user to the newly created group
-        // $group->users()->attach(auth()->id());
+        // Attach logged in user to the newly created group
+        $group->users()->attach(auth()->id());
 
         return $group;
     }
@@ -36,5 +36,21 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         ]);
 
         return $groupUser;
+    }
+
+    public function getGroupsByUserId($userId, $role = null) {
+        $repository = app($this->getRepositoryClass());
+
+        $query = $repository->query()->whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        });
+
+        if ($role) {
+            $query->whereHas('users.roles', function ($query) use ($role) {
+                $query->where('name', $role);
+            });
+        }
+        return $query->paginate();
+
     }
 }

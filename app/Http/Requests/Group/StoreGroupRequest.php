@@ -14,32 +14,23 @@ class StoreGroupRequest extends FormRequest {
             case IntentEnum::API_USER_CREATE_GROUP->value:
                 return [
                     'name' => 'required|string',
-                    'qty_student' => 'required|integer',
                     'start_period' => 'required|date',
                     'end_period' => 'required|date|after:start_time',
-                    'spt' => 'required|integer',
-                    'bupot' => 'required|integer',
-                    'faktur' => 'required|integer',
-                    'class_code' => 'required|string',
-                    'status' => 'required|in:' .
-                        implode(',', GroupStatusEnum::toArray()),
+                    'class_code' => 'required|string|unique:groups,class_code',
+                    'status' => 'required|in:' . implode(',', GroupStatusEnum::toArray()),
                 ];
             case IntentEnum::API_USER_JOIN_GROUP->value:
                 return [
                     'class_code' => 'required|string',
                 ];
         }
-        
+
         return [
             'name' => 'required|string',
             'qty_student' => 'required|integer',
             'start_period' => 'required|date',
             'end_period' => 'required|date|after:start_time',
-            'spt' => 'required|integer',
-            'bupot' => 'required|integer',
-            'faktur' => 'required|integer',
-            'status' => 'required|in:' .
-                implode(',', GroupStatusEnum::toArray()),
+            'status' => 'required|in:' . implode(',', GroupStatusEnum::toArray()),
         ];
     }
 }

@@ -30,4 +30,8 @@ class GroupRepository extends BaseRepository implements GroupRepositoryInterface
 
         return $query;
     }
+
+    public function query() {
+        return $this->getQuery();
+    }
 }
