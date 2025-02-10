@@ -34,6 +34,7 @@ Route::get('/csrf-token', function (Request $request) {
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
+    Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [ApiAuthController::class, 'logout']);
@@ -44,7 +45,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             // Admin only routes
             Route::apiResource('users', ApiUserController::class);
             Route::apiResource('groups', ApiGroupController::class);
-            // Route::apiResource('contracts', ApiContractController::class);
             Route::apiResource('roles', ApiRoleController::class);
             Route::apiResource('tasks', ApiTaskController::class);
             Route::apiResource('universities', ApiUniversityController::class);
