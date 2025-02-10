@@ -34,12 +34,16 @@ class ApiUniversityController extends ApiController {
      * Display the specified resource.
      */
     public function show(University $university) {
-        return new UniversityResource($university->load(['roles' => ['division', 'permissions']]));
+        return new UniversityResource($university->load(['contracts']));
     }
 
     /**
      * Update the specified resource in storage.
      */
+    // public function update(UpdateUniversityRequest $request, University $university) {
+    //     return $this->universityService->update($university, $request->validated());
+    // }
+
     public function update(UpdateUniversityRequest $request, University $university) {
         return $this->universityService->update($university, $request->validated());
     }
