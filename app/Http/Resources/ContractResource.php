@@ -17,6 +17,8 @@ class ContractResource extends JsonResource {
             'bupot' => $this->bupot,
             'faktur' => $this->faktur,
             'contract_code' => $this->contract_code,
+            'status' => $this->status,
+            'is_buy_task' => $this->is_buy_task,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
