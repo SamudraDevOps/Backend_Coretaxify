@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Enums\ContractStatusEnum;
 use App\Support\Enums\ContractTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,6 +24,8 @@ return new class extends Migration
             $table->integer('bupot');
             $table->integer('faktur');
             $table->string('contract_code')->nullable();
+            $table->enum('status', ContractStatusEnum::toArray());
+            $table->boolean('is_buy_task')->default(false);
             $table->timestamps();
         });
     }

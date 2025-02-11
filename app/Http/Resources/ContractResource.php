@@ -8,7 +8,7 @@ class ContractResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'university' => new UniversityResource($this->whenLoaded('university')),
+            'university' => new UniversityResource($this->university),
             'contract_type' => $this->contract_type,
             'qty_student' => $this->qty_student,
             'start_period' => $this->start_period,
