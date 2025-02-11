@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ContractSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            GroupSeeder::class,
         ]);
     }
 }
