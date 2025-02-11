@@ -35,7 +35,7 @@ class ApiContractController extends ApiController {
      */
     public function show(Contract $contract) {
         // return new ContractResource($contract->load(['roles' => ['division', 'permissions']]));
-        return new ContractResource($contract->load(['university']));
+        return new ContractResource($contract);
     }
 
     /**
