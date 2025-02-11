@@ -6,15 +6,19 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Contract;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\PasswordResetMail;
 use App\Services\FileUploadService;
 use App\Http\Resources\AuthResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\ApiAuthLoginRequest;
 use App\Http\Requests\Auth\ApiAuthUpdateRequest;
 use App\Http\Requests\Auth\ApiAuthRegisterRequest;
+use App\Http\Requests\Auth\ApiAuthResetPasswordRequest;
 
 class ApiAuthController extends ApiController {
 
@@ -82,6 +86,29 @@ class ApiAuthController extends ApiController {
         $user->createToken('auth_token')->plainTextToken;
 
         return new AuthResource($user);
+    }
+
+    public function resetPassword(ApiAuthResetPasswordRequest $request) {
+        $user = User::where('email', $request->validated('email'))->first();
+
+        if($user->default_password) {
+            $user->update([
+                'password' => $user->default_password
+            ]);
+        } else {
+            $newPassword = Str::random(8);
+            $user->update([
+                'password' => $newPassword,
+                'default_password' => $newPassword
+            ]);
+
+        }
+
+        Mail::to($user->email)->send(new PasswordResetMail($user));
+
+        return response()->json([
+            'message' => 'Password reset successfully. Check your email for your password.',
+        ]);
     }
 
     // UPDATE PROFILE

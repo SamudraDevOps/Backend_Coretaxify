@@ -8,15 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateGroupRequest extends FormRequest {
     public function rules(): array {
         return [
-            'name' => 'nullable|string',
-            'qty_student' => 'nullable|integer',
-            'start_period' => 'nullable|date',
-            'end_period' => 'nullable|date|after:start_time',
-            'spt' => 'nullable|integer',
-            'bupot' => 'nullable|integer',
-            'faktur' => 'nullable|integer',
-            'status' => 'nullable|in:' .
-                implode(',', GroupStatusEnum::toArray()),
+            'name' => 'sometimes|string',
+            'qty_student' => 'sometimes|integer',
+            'start_period' => 'sometimes|date',
+            'end_period' => 'sometimes|date|after:start_time',
+            'status' => 'sometimes|in:' . implode(',', GroupStatusEnum::toArray()),
         ];
     }
 }

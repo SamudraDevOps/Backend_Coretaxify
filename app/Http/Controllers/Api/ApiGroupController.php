@@ -21,6 +21,14 @@ class ApiGroupController extends ApiController {
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
 
+        $user = auth()->user();
+
+        if ($user->hasRole('dosen')) {
+            return $this->groupService->getGroupsByUserId($user->id)->load('user');
+        } else if ($user->hasRole('mahasiswa')) {
+            return $this->groupService->getGroupsByUserId($user->id)->load('user');
+        }
+
         return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load('user'));
     }
 
@@ -28,15 +36,15 @@ class ApiGroupController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(StoreGroupRequest $request) {
-        
+
         $intent = $request->get('intent');
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_GROUP->value:
                 return $this->groupService->create($request->validated());
             case IntentEnum::API_USER_JOIN_GROUP->value:
-                return $this->groupService->joinGroup($request->validated());    
-        }   
+                return $this->groupService->joinGroup($request->validated());
+        }
     }
 
     /**

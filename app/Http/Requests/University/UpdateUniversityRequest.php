@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateUniversityRequest extends FormRequest {
     public function rules(): array {
         return [
-            'name' => 'nullable|string'
+            'name' => 'required|string'
         ];
     }
 }
