@@ -34,7 +34,7 @@ class ApiRoleController extends ApiController {
      * Display the specified resource.
      */
     public function show(Role $role) {
-        return new RoleResource($role->load(['roles' => ['division', 'permissions']]));
+        return new RoleResource($role);
     }
 
     /**

@@ -34,7 +34,7 @@ class ApiDummyController extends ApiController {
      * Display the specified resource.
      */
     public function show(Dummy $dummy) {
-        return new DummyResource($dummy->load(['roles' => ['division', 'permissions']]));
+        return new DummyResource($dummy);
     }
 
     /**

@@ -32,6 +32,8 @@ class UserService extends BaseCrudService implements UserServiceInterface {
         }
 
         switch($intent) {
+            case IntentEnum::API_USER_CREATE_ADMIN->value:
+                $user->roles()->attach(Role::where('name', 'admin')->first());
             case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
                 $user->roles()->attach(Role::where('name', 'instruktur')->first());
                 break;
