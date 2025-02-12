@@ -14,13 +14,13 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         Task::create([
-            'name' => 'Buku 1',
-            'file_path' => 'Buku1.pdf',
+            'name' => 'Soal 1',
+            // 'file_path' => 'Buku1.pdf',
         ]);
 
         Task::create([
-            'name' => 'Buku 2',
-            'file_path' => 'Buku2.pdf',
+            'name' => 'Soal 2',
+            // 'file_path' => 'Buku2.pdf',
         ]);
     }
 }
