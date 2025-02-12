@@ -20,4 +20,6 @@ enum IntentEnum: string {
     case API_USER_GET_MAHASISWA = 'api.user.get.mahasiswa';
 
     case API_USER_GET_INSTRUKTUR = 'api.user.get.instruktur';
+
+    case API_USER_DOWNLOAD_SOAL = 'api.user.download.soal';
 }

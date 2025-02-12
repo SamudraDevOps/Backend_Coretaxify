@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Task;
 use App\Models\Contract;
+use Illuminate\Database\Seeder;
 use App\Support\Enums\ContractTypeEnum;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ContractSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class ContractSeeder extends Seeder
     {
         $contract = Contract::create([
             'university_id' => 1,
+            'task_id' => Task::inRandomOrder()->first()->id,
             'contract_type' => ContractTypeEnum::LICENSE->value,
             'qty_student' => 1,
             'start_period' => now(),

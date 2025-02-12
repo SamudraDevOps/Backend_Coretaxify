@@ -29,7 +29,7 @@ class Account extends Model
         'kantor_wilayah_direktorat_jenderal_pajak',
         'kantor_pelayanan_pajak',
         'seksi_pengawasan',
-        'tanggal_pembaruan__profil_terakhir',
+        'tanggal_pembaruan_profil_terakhir',
         'alamat_utama',
         'nomor_handphone',
         'email',

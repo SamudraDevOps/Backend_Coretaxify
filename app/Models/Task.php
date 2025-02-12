@@ -15,6 +15,7 @@ class Task extends Model
 
     protected $fillable = [
         'name',
+        'file_path',
     ];
 
     protected $guarded = ['id'];

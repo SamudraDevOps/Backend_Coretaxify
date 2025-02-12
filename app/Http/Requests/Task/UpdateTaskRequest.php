@@ -9,7 +9,7 @@ class UpdateTaskRequest extends FormRequest {
     public function rules(): array {
         return [
             'name' => 'nullable|string',
-            // 'file_path' => 'nullable|string',
+            'import_file' => 'required|mimes:xlsx,xls,csv',
         ];
     }
 }

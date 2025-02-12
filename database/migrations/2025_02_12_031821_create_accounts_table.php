@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
             $table->foreignId('account_type_id')->constrained();
             $table->string('nama');
-            $table->string('npwp')->unique();
+            $table->string('npwp');
             $table->string('kegiatan_utama')->nullable();
             $table->string('jenis_wajib_pajak')->nullable();
             $table->string('kategori_wajib_pajak')->nullable();
