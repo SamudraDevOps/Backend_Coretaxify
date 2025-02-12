@@ -9,6 +9,7 @@ class ContractResource extends JsonResource {
         return [
             'id' => $this->id,
             'university' => new UniversityResource($this->university),
+            'task' => new TaskResource($this->task),
             'contract_type' => $this->contract_type,
             'qty_student' => $this->qty_student,
             'start_period' => $this->start_period,

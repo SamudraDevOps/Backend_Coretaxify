@@ -9,7 +9,9 @@ class TaskResource extends JsonResource {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'file_path' => $this->file_path,
+            'contracts' => ContractResource::collection($this->contracts),
+            'accounts' => AccountResource::collection($this->accounts),
+            // 'file_path' => $this->file_path,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
