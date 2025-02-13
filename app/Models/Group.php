@@ -28,7 +28,7 @@ class Group extends Model
         return $this->belongsTo(User::class);
     }
     public function assignments(): BelongsToMany {
-        return $this->belongsToMany(Assignment::class, 'task_users');
+        return $this->belongsToMany(Assignment::class, 'assignment_users');
     }
 
     // public static function generateClassCode($existingNumber = null) {

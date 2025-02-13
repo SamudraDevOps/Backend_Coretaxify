@@ -78,11 +78,11 @@ class User extends Authenticatable
     }
 
     public function assignments(): BelongsToMany {
-        return $this->belongsToMany(Assignment::class, 'task_users');
+        return $this->belongsToMany(Assignment::class, 'assignment_users');
     }
 
     public function task()
     {
-        return $this->hasMany(Task::class, 'task_users');
+        return $this->hasMany(Task::class, 'assignment_users');
     }
 }

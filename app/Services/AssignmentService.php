@@ -12,7 +12,7 @@ use App\Support\Interfaces\Services\AssignmentServiceInterface;
 use App\Support\Interfaces\Repositories\AssignmentRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 use App\Models\GroupUser;
-use App\Models\TaskUser;
+use App\Models\AssignmentUser;
 
 class AssignmentService extends BaseCrudService implements AssignmentServiceInterface {
     protected function getRepositoryClass(): string {
@@ -33,9 +33,8 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
         $groupId = $Assignment->group->id;
 
-        $groupUser = TaskUser::create([
+        $groupUser = AssignmentUser::create([
             'user_id' => auth()->id(),
-            'lecture_task_id' => $AssignmentId,
             'group_id' => $groupId,
         ]);
 
