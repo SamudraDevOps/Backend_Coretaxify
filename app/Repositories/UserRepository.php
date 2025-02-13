@@ -23,6 +23,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface {
 
         if (isset($searchParams['intent'])) {
             $roleName = match ($searchParams['intent']) {
+                IntentEnum::API_USER_GET_PSC->value => 'psc',
+                IntentEnum::API_USER_GET_ADMIN->value => 'admin',
                 IntentEnum::API_USER_GET_DOSEN->value => 'dosen',
                 IntentEnum::API_USER_GET_MAHASISWA->value => 'mahasiswa',
                 IntentEnum::API_USER_GET_INSTRUKTUR->value => 'instruktur',
