@@ -1,18 +1,19 @@
 <?php
 
 // use Illuminate\Http\Request;
-use App\Http\Controllers\Api\ApiUniversityController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiRoleController;
 use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
-use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
+use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\ApiUniversityController;
+use App\Http\Controllers\Api\ApiAccountTypeController;
 use App\Http\Controllers\Api\ApiLectureTaskController;
 
 // Route::get('/user', function (Request $request) {
@@ -49,6 +50,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('tasks', ApiTaskController::class);
             Route::apiResource('universities', ApiUniversityController::class);
             Route::apiResource('contract', ApiContractController::class);
+            Route::apiResource('account-types', ApiAccountTypeController::class);
         });
 
         Route::prefix('lecturer')->group(function () {

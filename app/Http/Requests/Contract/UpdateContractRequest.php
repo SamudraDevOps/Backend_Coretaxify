@@ -9,6 +9,7 @@ class UpdateContractRequest extends FormRequest {
     public function rules(): array {
         return [
             'university_id' => 'required|exists:universities,id',
+            'task_id' => 'required|exists:tasks,id',
             'contract_type' => ['required', 'in:' . implode(',', array_column(ContractTypeEnum::cases(), 'value'))],
             'qty_student' => 'required|integer',
             'start_period' => 'required|date',

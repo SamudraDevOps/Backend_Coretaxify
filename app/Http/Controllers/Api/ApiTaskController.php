@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Task;
+use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
+use App\Http\Resources\TaskResource;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
-use App\Http\Resources\TaskResource;
-use App\Models\Task;
 use App\Support\Interfaces\Services\TaskServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiTaskController extends ApiController {
     public function __construct(
@@ -33,8 +34,13 @@ class ApiTaskController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Task $task) {
-        // return new TaskResource($task->load(['roles' => ['division', 'permissions']]));
+    public function show(Request $request, Task $task) {
+        $intent = $request->get('intent');
+
+        switch($intent) {
+            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+                return $this->taskService->downloadFile($task);
+        }
         return new TaskResource($task);
     }
 

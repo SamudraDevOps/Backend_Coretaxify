@@ -51,7 +51,6 @@ class ApiUserController extends ApiController {
      * Display the specified resource.
      */
     public function show(User $user) {
-        // return new UserResource($user->load(['roles' => ['division', 'permissions']]));
         return new UserResource($user);
     }
 

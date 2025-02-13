@@ -34,7 +34,7 @@ class ApiTaskUserController extends ApiController {
      * Display the specified resource.
      */
     public function show(TaskUser $taskUser) {
-        return new TaskUserResource($taskUser->load(['roles' => ['division', 'permissions']]));
+        return new TaskUserResource($taskUser);
     }
 
     /**

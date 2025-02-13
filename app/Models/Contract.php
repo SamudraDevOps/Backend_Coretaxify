@@ -12,6 +12,7 @@ class Contract extends Model
 
     protected $fillable = [
         'university_id',
+        'task_id',
         'contract_type',
         'qty_student',
         'start_period',
@@ -44,5 +45,9 @@ class Contract extends Model
     public function users() {
         return $this->hasMany(User::class, 'users');
 
+    }
+
+    public function task() {
+        return $this->belongsTo(Task::class);
     }
 }
