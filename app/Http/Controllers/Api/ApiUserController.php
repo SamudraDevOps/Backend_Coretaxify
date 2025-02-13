@@ -32,6 +32,11 @@ class ApiUserController extends ApiController {
         $validated = $request->validated();
         $validated['intent'] = $request->get('intent');
 
+        switch($validated['intent']) {
+            case IntentEnum::API_USER_IMPORT_DOSEN->value:
+                return $this->userService->importData($validated);
+        }
+
         return $this->userService->create($validated);
 
         // $intent = $request->get('intent');

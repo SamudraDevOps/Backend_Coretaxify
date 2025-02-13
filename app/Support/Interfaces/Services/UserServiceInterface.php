@@ -9,4 +9,5 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 interface UserServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data): ?Model;
     public function assignRoleByIntent(User $user, ?string $intent): void;
+    public function importData(array $data): void;
 }
