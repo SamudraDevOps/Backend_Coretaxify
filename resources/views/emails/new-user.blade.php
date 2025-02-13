@@ -1,6 +1,6 @@
 Hi {{ $name }},
 
-Your password has been reset. Here are your login credentials:
+Thank you for signing up in Coretaxify. Here are your login credentials:
 
 Email: {{ $email }}
 Password: {{ $password }}

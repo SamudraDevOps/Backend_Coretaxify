@@ -10,16 +10,26 @@ class StoreUserRequest extends FormRequest {
         $intent = $this->get('intent');
 
         switch ($intent) {
+            case IntentEnum::API_USER_IMPORT_DOSEN->value:
+                return [
+                    'contract_id' => 'required|integer|exists:contracts,id',
+                    'import_file' => 'required|file|mimes:xlsx,xls',
+                ];
+            case IntentEnum::API_USER_CREATE_ADMIN->value:
+                return [
+                    'name' => 'required|string',
+                    'email' => 'required|string|email',
+                ];
             case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
                 return [
                     'name' => 'required|string',
-                    'email' => 'required|string',
+                    'email' => 'required|string|email',
                 ];
             default:
                 return [
                     'contract_id' => 'required|integer|exists:contracts,id',
                     'name' => 'required|string',
-                    'email' => 'required|string',
+                    'email' => 'required|string|email',
                 ];
         }
     }
