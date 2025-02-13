@@ -77,8 +77,8 @@ class User extends Authenticatable
         return $this->belongsTo(Contract::class, 'contracts');
     }
 
-    public function lecture_tasks(): BelongsToMany {
-        return $this->belongsToMany(LectureTask::class, 'task_users');
+    public function assignments(): BelongsToMany {
+        return $this->belongsToMany(Assignment::class, 'task_users');
     }
 
     public function task()

@@ -10,17 +10,25 @@ class Group extends Model
 {
     protected $guarded = ['id'];
 
-    public function users(): BelongsToMany
+    protected $fillable = [
+        'name',
+        'user_id',
+        'start_period',
+        'end_period',
+        'class_code',
+        'status',
+    ];
+
+    public function mahasiswa(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users');
     }
 
-    public function user() {
+    public function dosen() {
         return $this->belongsTo(User::class);
     }
-
-    public function lecture_tasks(): BelongsToMany {
-        return $this->belongsToMany(LectureTask::class, 'task_users');
+    public function assignments(): BelongsToMany {
+        return $this->belongsToMany(Assignment::class, 'task_users');
     }
 
     // public static function generateClassCode($existingNumber = null) {

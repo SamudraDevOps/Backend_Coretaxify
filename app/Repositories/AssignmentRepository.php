@@ -3,18 +3,18 @@
 namespace App\Repositories;
 
 use Adobrovolsky97\LaravelRepositoryServicePattern\Repositories\BaseRepository;
-use App\Models\LectureTask;
-use App\Support\Interfaces\Repositories\LectureTaskRepositoryInterface;
+use App\Models\Assignment;
+use App\Support\Interfaces\Repositories\AssignmentRepositoryInterface;
 use App\Traits\Repositories\HandlesFiltering;
 use App\Traits\Repositories\HandlesRelations;
 use App\Traits\Repositories\HandlesSorting;
 use Illuminate\Database\Eloquent\Builder;
 
-class LectureTaskRepository extends BaseRepository implements LectureTaskRepositoryInterface {
+class AssignmentRepository extends BaseRepository implements AssignmentRepositoryInterface {
     use HandlesFiltering, HandlesRelations, HandlesSorting;
 
     protected function getModelClass(): string {
-        return LectureTask::class;
+        return Assignment::class;
     }
 
     protected function applyFilters(array $searchParams = []): Builder {

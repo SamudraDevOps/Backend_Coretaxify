@@ -4,4 +4,4 @@ namespace App\Support\Interfaces\Repositories;
 
 use Adobrovolsky97\LaravelRepositoryServicePattern\Repositories\Contracts\BaseRepositoryInterface;
 
-interface LectureTaskRepositoryInterface extends BaseRepositoryInterface {}
+interface AssignmentRepositoryInterface extends BaseRepositoryInterface {}
