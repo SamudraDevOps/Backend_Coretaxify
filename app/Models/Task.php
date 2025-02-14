@@ -28,8 +28,8 @@ class Task extends Model
         return $this->hasMany(Contract::class);
     }
 
-    // public function lecture_tasks()
+    // public function assignments()
     // {
-    //     return $this->hasMany(LectureTask::class);
+    //     return $this->hasMany(Assignment::class);
     // }
 }

@@ -4,17 +4,16 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TaskUserResource extends JsonResource {
+class AssignmentResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'user' => UserResource::collection($this->users),
             'group_id' => $this->group_id,
-            'group' => GroupResource::collection($this->groups),
-            'task_id' => $this->task_id,
-            'tasks' => TaskResource::collection($this->tasks),
-            'score' => $this->score,
+            'group' => new GroupResource($this->whenLoaded('group')),
+            'name' => $this->name,
+            'assignment_code' => $this->assignment_code,
+            'start_period' => $this->start_period,
+            'end_period' => $this->end_period,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
