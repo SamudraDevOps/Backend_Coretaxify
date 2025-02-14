@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Http\Requests\DetailKontak;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateDetailKontakRequest extends FormRequest {
+    public function rules(): array {
+        return [
+            'account_id' => 'nullable|exists:accounts,id',
+            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+            'jenis_kontak' => 'nullable|string',
+            'nomor_telpon' => 'nullable|string',
+            'nomor_handphone' => 'nullable|string',
+            'nomor_faksimile' => 'nullable|string',
+            'alamat_email' => 'nullable|string',
+            'alamat_situs_wajib' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_berakhir' => 'nullable|date|after:start_time',
+        ];
+    }
+}
