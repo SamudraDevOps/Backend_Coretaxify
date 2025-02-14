@@ -3,6 +3,7 @@
 // use Illuminate\Http\Request;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ApiExamController;
 use App\Http\Controllers\Api\ApiRoleController;
 use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
@@ -12,9 +13,9 @@ use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\ApiAssignmentController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
-use App\Http\Controllers\Api\ApiAssignmentController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -57,6 +58,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             // Lecturer only routes
             Route::apiResource('groups', ApiGroupController::class);
             Route::apiResource('assignments', ApiAssignmentController::class);
+            Route::apiResource('exams', ApiExamController::class);
             Route::apiResource('group-users', ApiGroupUserController::class);
         });
 
@@ -64,12 +66,15 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             // Student only routes
             Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
             Route::resource('assignments', ApiAssignmentController::class, ['only' => ['store']]);
+            Route::resource('exams', ApiExamController::class, ['only' => ['store']]);
         });
 
         Route::prefix('psc')->group(function () {
             // PSC only routes
+            Route::apiResource('groups', ApiGroupController::class);
             Route::apiResource('users', ApiUserController::class);
             Route::apiResource('assignments', ApiAssignmentController::class);
+            Route::apiResource('exams', ApiExamController::class);
         });
 
         Route::prefix('instructor')->group(function () {
