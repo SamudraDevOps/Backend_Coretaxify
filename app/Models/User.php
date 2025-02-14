@@ -85,4 +85,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class, 'assignment_users');
     }
+
+    public function exams(): BelongsToMany {
+        return $this->belongsToMany(Exam::class, 'exam_users');
+    }
 }

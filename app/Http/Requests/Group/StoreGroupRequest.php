@@ -18,6 +18,7 @@ class StoreGroupRequest extends FormRequest {
                     'end_period' => 'required|date|after:start_time',
                     'class_code' => 'required|string|unique:groups,class_code',
                     'status' => 'required|in:' . implode(',', GroupStatusEnum::toArray()),
+                    'import_file' => 'sometimes|mimes:xlsx,xls',
                 ];
             case IntentEnum::API_USER_JOIN_GROUP->value:
                 return [
