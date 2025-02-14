@@ -20,7 +20,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     }
 
     // public function create(array $data): ?Model {
-    //     $data['task_code'] = Assignment::generateTaskCode();
+    //     $data['assignment_code'] = Assignment::generateTaskCode();
 
     //     $Assignment = parent::create($data);
 
@@ -28,7 +28,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     // }
 
     public function assignTask(array $data): ?Model {
-        $Assignment = Assignment::where('task_code', $data['task_code'])->first();
+        $Assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
         $AssignmentId = $Assignment->id;
 
         $groupId = $Assignment->group->id;

@@ -63,13 +63,13 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::prefix('student')->group(function () {
             // Student only routes
             Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
-            Route::resource('lecture-tasks', ApiAssignmentController::class, ['only' => ['store']]);
+            Route::resource('assignments', ApiAssignmentController::class, ['only' => ['store']]);
         });
 
         Route::prefix('psc')->group(function () {
             // PSC only routes
             Route::apiResource('users', ApiUserController::class);
-            Route::apiResource('lecture-tasks', ApiAssignmentController::class);
+            Route::apiResource('assignments', ApiAssignmentController::class);
         });
 
         Route::prefix('instructor')->group(function () {

@@ -19,12 +19,12 @@ class Group extends Model
         'status',
     ];
 
-    public function mahasiswa(): BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users');
     }
 
-    public function dosen() {
+    public function user() {
         return $this->belongsTo(User::class);
     }
     public function assignments(): BelongsToMany {

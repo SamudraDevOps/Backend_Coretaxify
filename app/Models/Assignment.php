@@ -11,6 +11,7 @@ class Assignment extends Model
 
     protected $fillable = [
         'name',
+        'group_id',
         'assignment_code',
         'start_period',
         'end_period',
@@ -48,7 +49,7 @@ class Assignment extends Model
     //                 $code .= $characters[rand(0, strlen($characters) - 1)];
     //             }
 
-    //             $exists = self::where('task_code', $code)->exists();
+    //             $exists = self::where('assignment_code', $code)->exists();
     //         } while ($exists);
 
     //         $number = $code;
