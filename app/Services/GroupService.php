@@ -31,7 +31,7 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
             'status' => $data['status'],
         ]);
 
-        if($data['import_file']) {
+        if (!empty($data['import_file'])) {
             $this->importData($data['import_file']);
         }
 
@@ -114,6 +114,8 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
     }
 
     public function downloadFile(Group $group) {
-        
+        $filename = $group->file_path;
+        $path = storage_path('app/public/soal-psc/' . $filename);
+        return response()->download($path);
     }
 }

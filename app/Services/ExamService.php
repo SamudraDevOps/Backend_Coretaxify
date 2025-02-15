@@ -29,7 +29,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
             'duration' => $data['duration'],
         ]);
 
-        if($data['import_file']) {
+        if (!empty($data['import_file'])) {
             $this->importData($data['import_file']);
         }
 
@@ -101,5 +101,11 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
             ]);
         }
 
+    }
+
+    public function downloadFile(Exam $exam) {
+        $filename = $exam->file_path;
+        $path = storage_path('app/public/soal-psc/' . $filename);
+        return response()->download($path);
     }
 }

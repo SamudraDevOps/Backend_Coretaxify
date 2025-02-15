@@ -43,7 +43,13 @@ class ApiExamController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Exam $exam) {
+    public function show(Request $request, Exam $exam) {
+        $intent = $request->get('intent');
+
+        switch($intent) {
+            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+                return $this->examService->downloadFile($exam);
+        }
         return new ExamResource($exam);
     }
 
