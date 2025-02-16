@@ -21,7 +21,7 @@ class ApiAssignmentController extends ApiController {
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
 
-        return AssignmentResource::collection($this->AssignmentService->getAllPaginated($request->query(), $perPage)->load(['group', 'task']));
+        return AssignmentResource::collection($this->AssignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
     }
 
     /**
@@ -34,7 +34,7 @@ class ApiAssignmentController extends ApiController {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
                 return $this->AssignmentService->create($request->validated());
             case IntentEnum::API_USER_ASSIGN_TASK->value:
-                return $this->AssignmentService->assignTask($request->validated());    
+                return $this->AssignmentService->assignTask($request->validated());
         }
     }
 
