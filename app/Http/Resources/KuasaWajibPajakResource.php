@@ -8,8 +8,8 @@ class KuasaWajibPajakResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => $this->account_id,
-            'assignment_users_id' => $this->assignment_users_id,
+            'account_id' => new AccountResource($this->account),
+            // 'assignment_users_id' => new AssignmentUserResource($this->assignment_users),
             'is_wajib_pajak' => $this->is_wajib_pajak,
             'id_penunjukkan_perwakilan' => $this->id_penunjukkan_perwakilan,
             'npwp_perwakilan' => $this->npwp_perwakilan,
