@@ -2,33 +2,31 @@
 
 namespace App\Services;
 
-use App\Models\Group;
+use App\Models\Exam;
 use App\Models\Account;
-use App\Models\GroupUser;
-use App\Support\Enums\IntentEnum;
+use App\Models\ExamUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use App\Support\Interfaces\Services\GroupServiceInterface;
-use App\Support\Interfaces\Repositories\GroupRepositoryInterface;
+use App\Support\Interfaces\Services\ExamServiceInterface;
+use App\Support\Interfaces\Repositories\ExamRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
-class GroupService extends BaseCrudService implements GroupServiceInterface {
+class ExamService extends BaseCrudService implements ExamServiceInterface {
     protected function getRepositoryClass(): string {
-        return GroupRepositoryInterface::class;
+        return ExamRepositoryInterface::class;
     }
 
     public function create(array $data): ?Model {
         $data['user_id'] = auth()->id();
-        // $data['class_code'] = Group::generateClassCode();
-        $group = Group::create([
-            'name' => $data['name'],
+        $exam = Exam::create([
             'user_id' => $data['user_id'],
+            'name' => $data['name'],
+            'exam_code' => $data['exam_code'],
             'start_period' => $data['start_period'],
             'end_period' => $data['end_period'],
-            'class_code' => $data['class_code'],
-            'status' => $data['status'],
+            'duration' => $data['duration'],
         ]);
 
         if (!empty($data['import_file'])) {
@@ -36,37 +34,29 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         }
 
         // Attach logged in user to the newly created group
-        $group->users()->attach(auth()->id());
+        $exam->users()->attach(auth()->id());
 
-        return $group;
+        return $exam;
     }
 
-    public function joinGroup(array $data): ?Model {
-        $group = Group::where('class_code', $data['class_code'])->first();
-        $groupId = $group->id;
+    public function joinExam(array $data): ?Model {
+        $exam = Exam::where('class_code', $data['class_code'])->first();
+        $examId = $exam->id;
 
-        $groupUser = GroupUser::create([
+        $examUser = ExamUser::create([
             'user_id' => auth()->id(),
-            'group_id' => $groupId,
+            'exam_id' => $examId,
         ]);
 
-        return $groupUser;
-    }
-
-    public function getGroupsByUserId($userId) {
-        $repository = app($this->getRepositoryClass());
-
-        return $repository->query()->whereHas('users', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->paginate();
+        return $examUser;
     }
 
     private function importData(UploadedFile $file): void {
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('soal-psc', $filename, 'public');
 
-        $group = Group::latest()->first();
-        $group->update([
+        $exam = Exam::latest()->first();
+        $exam->update([
             'file_path' => $filename,
         ]);
 
@@ -88,7 +78,7 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
 
         foreach ($records as $record) {
             $account = Account::create([
-                'group_id' => $group->id,
+                'exam_id' => $exam->id,
                 'account_type_id' => $record[0],
                 'nama' => $record[1],
                 'npwp' => $record[2],
@@ -113,8 +103,8 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
 
     }
 
-    public function downloadFile(Group $group) {
-        $filename = $group->file_path;
+    public function downloadFile(Exam $exam) {
+        $filename = $exam->file_path;
         $path = storage_path('app/public/soal-psc/' . $filename);
         return response()->download($path);
     }

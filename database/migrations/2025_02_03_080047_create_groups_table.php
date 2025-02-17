@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('end_period')->nullable();
             $table->string('class_code')->nullable()->unique();
             $table->enum('status', GroupStatusEnum::toArray());
+            $table->string('filename')->nullable();
             $table->timestamps();
         });
     }

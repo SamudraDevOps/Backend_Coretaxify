@@ -27,6 +27,8 @@ class ApiGroupController extends ApiController {
             return $this->groupService->getGroupsByUserId($user->id)->load('user');
         } else if ($user->hasRole('mahasiswa')) {
             return $this->groupService->getGroupsByUserId($user->id)->load('user');
+        } else if ($user->hasRole('psc')) {
+            return $this->groupService->getGroupsByUserId($user->id)->load('user');
         }
 
         return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load('user'));
@@ -50,7 +52,13 @@ class ApiGroupController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Group $group) {
+    public function show(Request $request, Group $group) {
+        $intent = $request->get('intent');
+
+        switch($intent) {
+            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+                return $this->groupService->downloadFile($group);
+        }
         return new GroupResource($group->load('user'));
     }
 
