@@ -14,9 +14,10 @@ class StoreExamRequest extends FormRequest {
                 return [
                     'name' => 'required|string|max:255',
                     'exam_code' => 'required|string|max:255',
-                    'start_period' => 'required|datetime',
-                    'end_period' => 'required|datetime',
+                    'start_period' => 'required|date',
+                    'end_period' => 'required|date',
                     'duration' => 'required|integer',
+                    'import_file' => 'sometimes|mimes:xlsx,xls,csv',
                 ];
             case IntentEnum::API_USER_JOIN_EXAM->value:
                 return [
@@ -27,8 +28,8 @@ class StoreExamRequest extends FormRequest {
         return [
             'name' => 'required|string|max:255',
             'exam_code' => 'required|string|max:255',
-            'start_period' => 'required|datetime',
-            'end_period' => 'required|datetime',
+            'start_period' => 'required|date',
+            'end_period' => 'required|date',
             'duration' => 'required|integer',
             'import_file' => 'sometimes|mimes:xlsx,xls,csv',
         ];

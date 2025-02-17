@@ -30,11 +30,25 @@ class ApiAssignmentController extends ApiController {
     public function store(StoreAssignmentRequest $request) {
         $intent = $request->get('intent');
 
+        $user = auth()->user();
+
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
-                return $this->AssignmentService->create($request->validated());
+                if ($user->hasRole('dosen')) {
+                    return $this->AssignmentService->create($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to create an assignment',
+                    ], 403);
+                }
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
-                return $this->AssignmentService->assignTask($request->validated());
+                if ($user->hasRole('mahasiswa')) {
+                    return $this->AssignmentService->joinAssignment($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to join an assignment',
+                    ], 403);
+                }
         }
     }
 
