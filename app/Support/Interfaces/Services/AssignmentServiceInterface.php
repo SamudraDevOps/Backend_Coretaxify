@@ -7,5 +7,5 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 interface AssignmentServiceInterface extends BaseCrudServiceInterface {
     // public function create(array $data): ?Model;
 
-    public function assignTask(array $data): ?Model;
+    public function joinAssignment(array $data): ?Model;
 }

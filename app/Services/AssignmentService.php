@@ -27,7 +27,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     //     return $Assignment;
     // }
 
-    public function assignTask(array $data): ?Model {
+    public function joinAssignment(array $data): ?Model {
         $Assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
         $AssignmentId = $Assignment->id;
 

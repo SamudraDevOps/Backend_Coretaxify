@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('default_password')->nullable();
             $table->string('image_path')->nullable();
             $table->string('unique_id')->nullable();
+            $table->string('email_otp')->nullable();
+            $table->timestamp('email_otp_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

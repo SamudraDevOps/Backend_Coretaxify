@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Contract;
+use App\Mail\SendOtpMail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\PasswordResetMail;
@@ -13,11 +14,14 @@ use App\Services\FileUploadService;
 use App\Http\Resources\AuthResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\ApiAuthLoginRequest;
 use App\Http\Requests\Auth\ApiAuthUpdateRequest;
 use App\Http\Requests\Auth\ApiAuthRegisterRequest;
+use App\Http\Requests\Auth\ApiAuthResendOtpRequest;
+use App\Http\Requests\Auth\ApiAuthVerifyOtpRequest;
 use App\Http\Requests\Auth\ApiAuthResetPasswordRequest;
 
 class ApiAuthController extends ApiController {
@@ -30,6 +34,12 @@ class ApiAuthController extends ApiController {
 
     // LOGIN
     public function login(ApiAuthLoginRequest $request) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user->email_verified_at) {
+            return response()->json(['message' => 'Please verify your email with the OTP before logging in.'], 403);
+        }
+
         if (auth()->attempt($request->validated())) {
             return response()->json([
                 'user' => new UserResource(auth()->user()),
@@ -59,9 +69,14 @@ class ApiAuthController extends ApiController {
             $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
             $user->groups()->attach($group->id);
 
-            $user->createToken('auth_token')->plainTextToken;
+            // generate and send otp
+            $user->generateOtp();
+            Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
 
-            return new AuthResource($user);
+            // $user->createToken('auth_token')->plainTextToken;
+
+            // return new AuthResource($user);
+            return response()->json(['message' => 'OTP sent to your email. Please verify your account.']);
 
         }
 
@@ -83,9 +98,13 @@ class ApiAuthController extends ApiController {
             'contract_id' => $contract->id,
         ]);
         $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
-        $user->createToken('auth_token')->plainTextToken;
 
-        return new AuthResource($user);
+        $user->generateOtp();
+        Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
+        // $user->createToken('auth_token')->plainTextToken;
+
+        // return new AuthResource($user);
+        return response()->json(['message' => 'OTP sent to your email. Please verify your account.']);
     }
 
     public function resetPassword(ApiAuthResetPasswordRequest $request) {
@@ -140,5 +159,59 @@ class ApiAuthController extends ApiController {
 
     public function me(Request $request) {
         return new UserResource($request->user());
+    }
+
+    public function verifyOtp(ApiAuthVerifyOtpRequest $request) {
+        $user = User::where('email', $request->validated('email'))->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        if ($user->email_otp !== $request->validated('otp')) {
+            return response()->json([
+                'message' => 'Invalid OTP',
+            ], 400);
+        }
+
+        if ($user->email_otp_expires_at->isPast()) {
+            return response()->json([
+                'message' => 'OTP has expired. Please request a new one.',
+            ], 400);
+        }
+
+        // is verified
+        $user->email_verified_at = now();
+        $user->email_otp = null;
+        $user->email_otp_expires_at = null;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Email verified successfully. You can now login.',
+        ]);
+    }
+
+    public function resendOtp(ApiAuthResendOtpRequest $request) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if ($user->email_verified_at) {
+            return response()->json([
+                'message' => 'Email is already verified'
+            ], 400);
+        }
+
+        // Generate and send new OTP
+    $user->generateOtp();
+    Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
+
+    return response()->json(['message' => 'New OTP sent to your email.']);
     }
 }
