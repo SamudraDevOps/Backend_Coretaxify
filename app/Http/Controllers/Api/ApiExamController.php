@@ -30,11 +30,25 @@ class ApiExamController extends ApiController {
     public function store(StoreExamRequest $request) {
         $intent = $request->get('intent');
 
+        $user = auth()->user();
+
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_EXAM->value:
-                return $this->examService->create($request->validated());
+                if ($user->hasRole('dosen')) {
+                    return $this->examService->create($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to create a group',
+                    ], 403);
+                }
             case IntentEnum::API_USER_JOIN_EXAM->value:
-                return $this->examService->joinExam($request->validated());
+                if ($user->hasRole('mahasiswa')) {
+                    return $this->examService->joinExam($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to join a group',
+                    ], 403);
+                }
         }
 
         return $this->examService->create($request->validated());
