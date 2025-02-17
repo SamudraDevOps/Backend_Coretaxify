@@ -64,9 +64,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
         Route::prefix('student')->group(function () {
             // Student only routes
-            Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
-            Route::resource('assignments', ApiAssignmentController::class, ['only' => ['store']]);
-            Route::resource('exams', ApiExamController::class, ['only' => ['store']]);
+            Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
+            Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
+            Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
         });
 
         Route::prefix('psc')->group(function () {
@@ -79,43 +79,47 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
         Route::prefix('instructor')->group(function () {
             // Instruktor only routes
+            Route::apiResource('assignments', ApiAssignmentController::class);
             Route::apiResource('users', ApiUserController::class);
         });
+        
+        // Route::middleware(['role:admin'])->prefix('admin')->group(function () {
+        //     // Admin only routes
+        //     Route::apiResource('users', ApiUserController::class);
+        //     Route::apiResource('groups', ApiGroupController::class);
+        //     Route::apiResource('roles', ApiRoleController::class);
+        //     Route::apiResource('tasks', ApiTaskController::class);
+        //     Route::apiResource('universities', ApiUniversityController::class);
+        //     Route::apiResource('contract', ApiContractController::class);
+        //     Route::apiResource('account-types', ApiAccountTypeController::class);
+        // });
+
+        // Route::middleware(['role:dosen'])->prefix('lecturer')->group(function () {
+        //     // Lecturer only routes
+        //     Route::apiResource('groups', ApiGroupController::class);
+        //     Route::apiResource('assignments', ApiAssignmentController::class);
+        //     Route::apiResource('exams', ApiExamController::class);
+        //     Route::apiResource('group-users', ApiGroupUserController::class);
+        // });
+
+        // Route::middleware(['role:mahasiswa'])->prefix('student')->group(function () {
+        //     // Student only routes
+        //     Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
+        //     Route::resource('lecture-tasks', ApiAssignmentController::class, ['only' => ['store']]);
+        // });
+
+        // Route::middleware(['role:psc'])->prefix('psc')->group(function () {
+        //     // PSC only routes
+        //     Route::apiResource('groups', ApiGroupController::class);
+        //     Route::apiResource('users', ApiUserController::class);
+        //     Route::apiResource('assignments', ApiAssignmentController::class);
+        //     Route::apiResource('exams', ApiExamController::class);
+        // });
+
+        // Route::middleware(['role:instruktur'])->prefix('instructor')->group(function () {
+        //     // Instruktor only routes
+        //     Route::apiResource('assignments', ApiAssignmentController::class);
+        //     Route::apiResource('users', ApiUserController::class);
+        // });
     });
-    //     Route::middleware(['role:admin'])->prefix('admin')->group(function () {
-    //         // Admin only routes
-    //         Route::apiResource('users', ApiUserController::class);
-    //         Route::apiResource('groups', ApiGroupController::class);
-    //         // Route::apiResource('contracts', ApiContractController::class);
-    //         Route::apiResource('roles', ApiRoleController::class);
-    //         Route::apiResource('tasks', ApiTaskController::class);
-    //         Route::apiResource('universities', ApiUniversityController::class);
-    //         Route::apiResource('contract', ApiContractController::class);
-    //     });
-
-    //     Route::middleware(['role:dosen'])->prefix('lecturer')->group(function () {
-    //         // Lecturer only routes
-    //         Route::apiResource('groups', ApiGroupController::class);
-    //         Route::apiResource('lecture-tasks', ApiAssignmentController::class);
-    //         Route::apiResource('group-users', ApiGroupUserController::class);
-    //     });
-
-    //     Route::middleware(['role:mahasiswa'])->prefix('student')->group(function () {
-    //         // Student only routes
-    //         Route::resource('groups', ApiGroupController::class, ['only' => ['store']]);
-    //         Route::resource('lecture-tasks', ApiAssignmentController::class, ['only' => ['store']]);
-    //     });
-
-    //     Route::middleware(['role:psc'])->prefix('psc')->group(function () {
-    //         // PSC only routes
-    //         Route::apiResource('users', ApiUserController::class);
-    //         Route::apiResource('lecture-tasks', ApiAssignmentController::class);
-    //     });
-
-    //     Route::middleware(['role:instruktur'])->prefix('instructor')->group(function () {
-    //         // Instruktor only routes
-    //         Route::apiResource('users', ApiUserController::class);
-    //     });
-    // });
-
 });

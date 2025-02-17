@@ -8,9 +8,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAssignmentRequest extends FormRequest {
     public function rules(): array {
-        
+
         $intent = $this->get('intent');
-        
+
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
                 return [
@@ -20,7 +20,7 @@ class StoreAssignmentRequest extends FormRequest {
                     'start_period' => 'required|date',
                     'end_period' => 'required|date',
                 ];
-            case IntentEnum::API_USER_ASSIGN_TASK->value:
+            case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
                 return [
                     'assignment_code' => 'required|string',
                 ];
