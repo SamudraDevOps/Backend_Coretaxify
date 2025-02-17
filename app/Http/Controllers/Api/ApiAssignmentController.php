@@ -33,7 +33,7 @@ class ApiAssignmentController extends ApiController {
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
                 return $this->AssignmentService->create($request->validated());
-            case IntentEnum::API_USER_ASSIGN_TASK->value:
+            case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
                 return $this->AssignmentService->assignTask($request->validated());
         }
     }

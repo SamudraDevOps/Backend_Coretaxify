@@ -38,14 +38,27 @@ class ApiGroupController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(StoreGroupRequest $request) {
-
         $intent = $request->get('intent');
+
+        $user = auth()->user();
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_GROUP->value:
-                return $this->groupService->create($request->validated());
+                if ($user->hasRole('dosen')) {
+                    return $this->groupService->create($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to create a group',
+                    ], 403);
+                }
             case IntentEnum::API_USER_JOIN_GROUP->value:
-                return $this->groupService->joinGroup($request->validated());
+                if ($user->hasRole('mahasiswa')) {
+                    return $this->groupService->joinGroup($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to join a group',
+                    ], 403);
+                }
         }
     }
 
