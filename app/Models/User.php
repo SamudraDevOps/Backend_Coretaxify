@@ -27,6 +27,8 @@ class User extends Authenticatable
         'default_password',
         'image_path',
         'contract_id',
+        'email_otp',
+        'email_otp_expires_at',
     ];
 
     /**
@@ -49,6 +51,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'email_otp_expires_at' => 'datetime',
         ];
     }
 
@@ -88,5 +91,12 @@ class User extends Authenticatable
 
     public function exams(): BelongsToMany {
         return $this->belongsToMany(Exam::class, 'exam_users');
+    }
+
+    public function generateOtp()
+    {
+        $this->email_otp = rand(1000, 9999); // Generate 4-digit OTP
+        $this->email_otp_expires_at = now()->addMinutes(10); // OTP expires in 10 minutes
+        $this->save();
     }
 }
