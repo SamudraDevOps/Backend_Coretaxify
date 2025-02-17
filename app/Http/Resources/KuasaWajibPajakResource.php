@@ -15,7 +15,6 @@ class KuasaWajibPajakResource extends JsonResource {
             'npwp_perwakilan' => $this->npwp_perwakilan,
             'nama_wakil' => $this->nama_wakil,
             'jenis_perwakilan' => $this->jenis_perwakilan,
-            'id_penunjukkan_perwakilan' => $this->id_penunjukkan_perwakilan,
             'nomor_dokumen_penunjukkan_perwakilan' => $this->nomor_dokumen_penunjukkan_perwakilan,
             'izin_perwakilan' => $this->izin_perwakilan,
             'status_penunjukkan' => $this->status_penunjukkan,

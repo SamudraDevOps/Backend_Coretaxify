@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('npwp_perwakilan');
             $table->string('nama_wakil');
             $table->string('jenis_perwakilan');
-            $table->string('id_penunjukkan_perwakilan');
             $table->string('nomor_dokumen_penunjukkan_perwakilan');
             $table->string('izin_perwakilan');
             $table->string('status_penunjukkan');

@@ -14,7 +14,6 @@ class UpdateKuasaWajibPajakRequest extends FormRequest {
             'npwp_perwakilan' => 'nullable|string',
             'nama_wakil' => 'nullable|string',
             'jenis_perwakilan' => 'nullable|string',
-            'id_penunjukkan_perwakilan' => 'nullable|string',
             'nomor_dokumen_penunjukkan_perwakilan' => 'nullable|string',
             'izin_perwakilan' => 'nullable|string',
             'status_penunjukkan' => 'nullable|string',
