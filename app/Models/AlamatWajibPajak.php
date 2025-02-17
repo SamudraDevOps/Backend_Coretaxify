@@ -25,4 +25,14 @@ class AlamatWajibPajak extends Model
         'kpp',
         'seksi_pengawasan',
     ];
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    public function assignment_users()
+    {
+        return $this->hasMany(AssignmentUser::class);
+    }
 }
