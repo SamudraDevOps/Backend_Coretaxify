@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
 
         $psc = User::create([
             'name' => 'PSC',
-            'email' => 'psc@email.com',
+            'email' => 'psc@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -58,7 +58,7 @@ class UserSeeder extends Seeder
 
         $instructor1 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor1@email.com',
+            'email' => 'instructor1@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
 
         $instructor2 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor2@email.com',
+            'email' => 'instructor2@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -74,7 +74,7 @@ class UserSeeder extends Seeder
 
         $instructor3 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor3@email.com',
+            'email' => 'instructor3@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -82,7 +82,7 @@ class UserSeeder extends Seeder
 
         $instructor4 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor4@email.com',
+            'email' => 'instructor4@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -90,7 +90,7 @@ class UserSeeder extends Seeder
 
         $instructor5 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor5@email.com',
+            'email' => 'instructor5@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -98,7 +98,7 @@ class UserSeeder extends Seeder
 
         $instructor6 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor6@email.com',
+            'email' => 'instructor6@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -106,7 +106,7 @@ class UserSeeder extends Seeder
 
         $instructor7 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor7@email.com',
+            'email' => 'instructor7@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -114,7 +114,7 @@ class UserSeeder extends Seeder
 
         $instructor8 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor8@email.com',
+            'email' => 'instructor8@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -122,7 +122,7 @@ class UserSeeder extends Seeder
 
         $instructor9 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor9@email.com',
+            'email' => 'instructor9@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
@@ -130,7 +130,7 @@ class UserSeeder extends Seeder
 
         $instructor10 = User::create([
             'name' => 'Instructor',
-            'email' => 'instructor10@email.com',
+            'email' => 'instructor10@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);

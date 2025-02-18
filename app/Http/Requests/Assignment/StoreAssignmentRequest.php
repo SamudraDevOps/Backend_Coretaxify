@@ -19,6 +19,7 @@ class StoreAssignmentRequest extends FormRequest {
                     'assignment_code' => 'required|string',
                     'start_period' => 'required|date',
                     'end_period' => 'required|date',
+                    'supporting_file' => 'nullable|file',
                 ];
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
                 return [

@@ -21,6 +21,7 @@ class Contract extends Model
         'bupot',
         'faktur',
         'contract_code',
+        'is_buy_task',
     ];
 
     const TYPE_LICENSE = 'LICENSE';
