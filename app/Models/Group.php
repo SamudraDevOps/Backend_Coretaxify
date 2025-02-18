@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -19,17 +20,16 @@ class Group extends Model
         'status',
     ];
 
-    public function users(): BelongsToMany
-    {
+    public function users(): BelongsToMany {
         return $this->belongsToMany(User::class, 'group_users');
     }
 
-
-    public function user() {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
-    public function assignments(): BelongsToMany {
-        return $this->belongsToMany(Assignment::class, 'assignment_users');
+
+    public function assignments(): HasMany {
+        return $this->hasMany(Assignment::class);
     }
 
     // public static function generateClassCode($existingNumber = null) {
