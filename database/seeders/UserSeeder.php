@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $admin->roles()->attach(Role::where('name', 'admin')->first());
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
         $dosen = User::create([
             'name' => 'Dosen User',
             'email' => 'dosen@example.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $dosen->roles()->attach(Role::where('name', 'dosen')->first());
@@ -33,6 +35,7 @@ class UserSeeder extends Seeder
         $mhs1 = User::create([
             'name' => 'Mahasiswa 1 User',
             'email' => 'mahasiswa1@example.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $mhs1->roles()->attach(Role::where('name', 'mahasiswa')->first());
@@ -40,6 +43,7 @@ class UserSeeder extends Seeder
         $mhs2 = User::create([
             'name' => 'Mahasiswa 2 User',
             'email' => 'mahasiswa2@example.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $mhs2->roles()->attach(Role::where('name', 'mahasiswa')->first());
@@ -47,6 +51,7 @@ class UserSeeder extends Seeder
         $psc = User::create([
             'name' => 'PSC',
             'email' => 'psc@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $psc->roles()->attach(Role::where('name', 'psc')->first());
@@ -54,6 +59,7 @@ class UserSeeder extends Seeder
         $instructor1 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor1@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor1->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -61,6 +67,7 @@ class UserSeeder extends Seeder
         $instructor2 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor2@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor2->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -68,6 +75,7 @@ class UserSeeder extends Seeder
         $instructor3 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor3@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor3->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -75,6 +83,7 @@ class UserSeeder extends Seeder
         $instructor4 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor4@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor4->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -82,6 +91,7 @@ class UserSeeder extends Seeder
         $instructor5 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor5@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor5->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -89,6 +99,7 @@ class UserSeeder extends Seeder
         $instructor6 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor6@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor6->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -96,6 +107,7 @@ class UserSeeder extends Seeder
         $instructor7 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor7@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor7->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -103,6 +115,7 @@ class UserSeeder extends Seeder
         $instructor8 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor8@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor8->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -110,6 +123,7 @@ class UserSeeder extends Seeder
         $instructor9 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor9@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor9->roles()->attach(Role::where('name', 'instruktur')->first());
@@ -117,6 +131,7 @@ class UserSeeder extends Seeder
         $instructor10 = User::create([
             'name' => 'Instructor',
             'email' => 'instructor10@email.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password123'),
         ]);
         $instructor10->roles()->attach(Role::where('name', 'instruktur')->first());
