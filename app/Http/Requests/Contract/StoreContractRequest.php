@@ -17,6 +17,7 @@ class StoreContractRequest extends FormRequest {
             'spt' => 'required|integer',
             'bupot' => 'required|integer',
             'faktur' => 'required|integer',
+            'is_buy_task' => 'required|integer',
         ];
     }
 }
