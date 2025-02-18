@@ -36,4 +36,12 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         ]);
         return $assignmentUser;
     }
+
+    public function getAssignmentsByUserId($userId) {
+        $repository = app($this->getRepositoryClass());
+
+        return $repository->query()->whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->paginate();
+    }
 }
