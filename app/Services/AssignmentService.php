@@ -28,16 +28,12 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     // }
 
     public function joinAssignment(array $data): ?Model {
-        $Assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
-        $AssignmentId = $Assignment->id;
+        $assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
 
-        $groupId = $Assignment->group->id;
-
-        $groupUser = AssignmentUser::create([
+        $assignmentUser = AssignmentUser::create([
             'user_id' => auth()->id(),
-            'group_id' => $groupId,
+            'assignment_id' => $assignment->id,
         ]);
-
-        return $groupUser;
+        return $assignmentUser;
     }
 }
