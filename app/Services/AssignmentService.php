@@ -5,14 +5,15 @@ namespace App\Services;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\GroupUser;
 use App\Models\Assignment;
+use App\Models\AssignmentUser;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
 use App\Support\Interfaces\Repositories\AssignmentRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
-use App\Models\GroupUser;
-use App\Models\AssignmentUser;
 
 class AssignmentService extends BaseCrudService implements AssignmentServiceInterface {
     protected function getRepositoryClass(): string {
@@ -26,6 +27,28 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
     //     return $Assignment;
     // }
+
+    public function create(array $data): ?Model {
+        $filename = $this->importData($data['supporting_file']);
+
+        $assignment = Assignment::create([
+            'group_id' => $data['group_id'],
+            'name' => $data['name'],
+            'assignment_code' => $data['assignment_code'],
+            'start_period' => $data['start_period'],
+            'end_period' => $data['end_period'],
+            'supporting_file' => $filename,
+        ]);
+
+        return $assignment;
+    }
+
+    private function importData(UploadedFile $file) {
+        $filename = time() . '.' . $file->getClientOriginalName();
+        $file->storeAs('soal', $filename, 'public');
+
+        return $filename;
+    }
 
     public function joinAssignment(array $data): ?Model {
         $assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
