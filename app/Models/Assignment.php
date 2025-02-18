@@ -15,6 +15,7 @@ class Assignment extends Model
         'assignment_code',
         'start_period',
         'end_period',
+        'supporting_file',
     ];
 
     public function users(): BelongsToMany
@@ -22,14 +23,14 @@ class Assignment extends Model
         return $this->belongsToMany(User::class, 'assignment_users');
     }
 
-    public function groups(): BelongsToMany
-    {
-        return $this->belongsToMany(Group::class, 'assignment_users');
-    }
+    // public function groups(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Group::class, 'assignment_users');
+    // }
 
     public function group()
     {
-        return $this->belongsTo(Group::class, 'group_id');
+        return $this->belongsTo(Group::class);
     }
 
     // public function task()
