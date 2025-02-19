@@ -21,13 +21,8 @@ class DataEkonomi extends Model
         'jumlah_peredaran_bruto',
     ];
 
-    public function accounts()
+    public function profil_sayas()
     {
-        return $this->hasMany(Account::class);
-    }
-
-    public function assignment_users()
-    {
-        return $this->hasMany(AssignmentUser::class);
+        return $this->hasMany(ProfilSaya::class);
     }
 }

@@ -15,14 +15,8 @@ class ManajemenKasus extends Model
         'tanggal_permohonan',
     ];
 
-    public function accounts()
+    public function profil_sayas()
     {
-        return $this->hasMany(Account::class);
+        return $this->hasMany(ProfilSaya::class);
     }
-
-    public function assignment_users()
-    {
-        return $this->hasMany(AssignmentUser::class);
-    }
-
 }

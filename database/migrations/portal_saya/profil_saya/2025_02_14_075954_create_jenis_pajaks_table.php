@@ -12,15 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jenis_pajaks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assignment_users_id')->constrained()->onDelete('cascade');
-            $table->string('jenis_pajak');
-            $table->date('tanggal_permohonan');
-            $table->date('tanggal_mulai_transaksi');
-            $table->date('tanggal_pendaftaran');
-            $table->date('tanggal_pencabutan_pendaftaran');
-            $table->integer('nomor_kasus');
+            $table->id()->nullable();
+            $table->string('jenis_pajak')->nullable();
+            $table->date('tanggal_permohonan')->nullable();
+            $table->date('tanggal_mulai_transaksi')->nullable();
+            $table->date('tanggal_pendaftaran')->nullable();
+            $table->date('tanggal_pencabutan_pendaftaran')->nullable();
+            $table->integer('nomor_kasus')->nullable();
             $table->timestamps();
         });
     }

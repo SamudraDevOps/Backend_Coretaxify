@@ -12,11 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('manajemen_kasuses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assignment_users_id')->constrained()->onDelete('cascade');
-            $table->string('kanal');
-            $table->date('tanggal_permohonan');
+            $table->id()->nullable();
+            $table->string('kanal')->nullable();;
+            $table->date('tanggal_permohonan')->nullable();;
             $table->timestamps();
         });
     }

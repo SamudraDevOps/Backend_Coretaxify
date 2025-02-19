@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\ProfilSaya\StoreProfilSayaRequest;
 use Illuminate\Database\Eloquent\Model;
 
 class TempatKegiatanUsaha extends Model
@@ -43,14 +44,9 @@ class TempatKegiatanUsaha extends Model
         'is_alamat_utama_pkp',
     ];
 
-    public function accounts()
+    public function profil_sayas()
     {
-        return $this->hasMany(Account::class);
-    }
-
-    public function assignment_users()
-    {
-        return $this->hasMany(AssignmentUser::class);
+        return $this->hasMany(ProfilSaya::class);
     }
 
 

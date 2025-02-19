@@ -12,14 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kode_klus', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assignment_users_id')->constrained()->onDelete('cascade');
-            $table->string('kode_nama');
-            $table->string('deskripsi_klu');
-            $table->string('deskripsi_tku');
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_berakhir');
+            $table->id()->nullable();
+            $table->string('kode_nama')->nullable();;
+            $table->string('deskripsi_klu')->nullable();;
+            $table->string('deskripsi_tku')->nullable();;
+            $table->date('tanggal_mulai')->nullable();;
+            $table->date('tanggal_berakhir')->nullable();;
             $table->timestamps();
         });
     }

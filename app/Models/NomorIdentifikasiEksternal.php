@@ -17,13 +17,8 @@ class NomorIdentifikasiEksternal extends Model
         'tanggal_berakhir',
     ];
 
-    public function accounts()
+    public function profil_sayas()
     {
-        return $this->hasMany(Account::class);
-    }
-
-    public function assignment_users()
-    {
-        return $this->hasMany(AssignmentUser::class);
+        return $this->hasMany(ProfilSaya::class);
     }
 }

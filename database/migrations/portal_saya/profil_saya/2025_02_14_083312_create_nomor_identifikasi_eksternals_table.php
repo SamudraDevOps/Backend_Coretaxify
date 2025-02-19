@@ -12,13 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nomor_identifikasi_eksternals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('account_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assignment_users_id')->constrained()->onDelete('cascade');
-            $table->string('tipe_nomor_identifikasi');
-            $table->string('nomor_identifikasi');
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_berakhir');
+            $table->id()->nullable();
+            $table->string('tipe_nomor_identifikasi')->nullable();
+            $table->string('nomor_identifikasi')->nullable();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_berakhir')->nullable();
             $table->timestamps();
         });
     }
