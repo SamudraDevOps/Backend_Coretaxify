@@ -23,15 +23,13 @@ class ApiAssignmentController extends ApiController {
 
         $user = auth()->user();
 
-        if ($user->hasRole('dosen')) {
-            return $this->assignmentService->getAssignmentsByUserId($user->id)->load('user');
-        } else if ($user->hasRole('mahasiswa')) {
-            return $this->assignmentService->getAssignmentsByUserId($user->id)->load('user');
-        } else if ($user->hasRole('psc')) {
-            return $this->assignmentService->getAssignmentsByUserId($user->id)->load('user');
-        }
+        $assignments = $this->assignmentService->getAssignmentsByUserId($user->id);
 
-        return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
+        // $assignments->load(['user', 'group']);
+
+        return AssignmentResource::collection($assignments);
+
+        // return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
     }
 
     /**

@@ -3,13 +3,14 @@
 namespace App\Http\Requests\Contract;
 
 use App\Support\Enums\ContractTypeEnum;
+use App\Support\Enums\ContractStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreContractRequest extends FormRequest {
+    
     public function rules(): array {
         return [
             'university_id' => 'required|exists:universities,id',
-            'task_id' => 'nullable|exists:tasks,id',
             'contract_type' => ['required', 'in:' . implode(',', array_column(ContractTypeEnum::cases(), 'value'))],
             'qty_student' => 'required|integer',
             'start_period' => 'required|date',
@@ -18,6 +19,8 @@ class StoreContractRequest extends FormRequest {
             'bupot' => 'required|integer',
             'faktur' => 'required|integer',
             'is_buy_task' => 'required|integer',
+            'status' => 'required|in:' . implode(',', array_column(ContractStatusEnum::cases(), 'value')),
+            'tasks' => 'required|array',
         ];
     }
 }

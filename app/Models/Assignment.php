@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Assignment extends Model
@@ -12,6 +13,7 @@ class Assignment extends Model
     protected $fillable = [
         'name',
         'group_id',
+        'task_id',
         'assignment_code',
         'start_period',
         'end_period',
@@ -31,6 +33,10 @@ class Assignment extends Model
     public function group()
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function task(): HasOne {
+        return $this->hasOne(Task::class);
     }
 
     // public function task()

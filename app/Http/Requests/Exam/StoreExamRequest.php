@@ -13,6 +13,7 @@ class StoreExamRequest extends FormRequest {
             case IntentEnum::API_USER_CREATE_EXAM->value:
                 return [
                     'name' => 'required|string|max:255',
+                    'task_id' => 'required|exists:tasks,id',
                     'exam_code' => 'required|string|max:255',
                     'start_period' => 'required|date',
                     'end_period' => 'required|date',

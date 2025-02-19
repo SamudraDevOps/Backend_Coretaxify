@@ -9,6 +9,7 @@ class UpdateAssignmentRequest extends FormRequest {
     public function rules(): array {
         return [
             'group_id' => 'required|exists:groups,id',
+            'task_id' => 'required|exists:tasks,id',
             'name' => 'required|string',
             'assignment_code' => 'required|string',
             'start_period' => 'required|date',
