@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('task_id')->nullable()->constrained();
             $table->string('name');
             $table->string('exam_code');
             $table->dateTime('start_period');

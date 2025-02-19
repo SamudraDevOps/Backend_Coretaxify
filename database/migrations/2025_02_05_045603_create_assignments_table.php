@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->foreignId('task_id')->nullable()->constrained();
             $table->string('name');
             $table->string('assignment_code')->unique();
             $table->date('start_period');

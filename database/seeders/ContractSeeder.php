@@ -30,5 +30,6 @@ class ContractSeeder extends Seeder
             'is_buy_task' => 1,
             'status' => ContractStatusEnum::ACTIVE->value,
         ]);
+        $contract->tasks()->attach([1,2]);
     }
 }

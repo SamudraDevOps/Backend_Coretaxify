@@ -21,7 +21,8 @@ class UpdateExamRequest extends FormRequest {
             //     ];
             default:
                 return [
-                    'user_id' => 'required|integer|exists:users,id',
+                    'user_id' => 'required|exists:users,id',
+                    'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string|max:255',
                     'exam_code' => 'required|string|max:255',
                     'start_period' => 'required|datetime',
