@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_banks', function (Blueprint $table) {
-            $table->id()->nullable();
-            $table->string('nama_bank')->nullable();;
-            $table->string('nomor_rekening_bank')->nullable();;
-            $table->string('jenis_rekening_bank')->nullable();;
-            $table->string('keterangan')->nullable();;
+        Schema::create('kode_klus', function (Blueprint $table) {
+            $table->id();
+            $table->string('kode_nama')->nullable();;
+            $table->string('deskripsi_klu')->nullable();;
+            $table->string('deskripsi_tku')->nullable();;
             $table->date('tanggal_mulai')->nullable();;
             $table->date('tanggal_berakhir')->nullable();;
-            $table->boolean('is_rekening_bank_utama')->nullable();;
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_banks');
+        Schema::dropIfExists('kode_klus');
     }
 };

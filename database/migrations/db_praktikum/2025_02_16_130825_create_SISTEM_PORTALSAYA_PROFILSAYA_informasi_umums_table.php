@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('informasi_umums', function (Blueprint $table) {
-            $table->id()->nullable();
+            $table->id();
             $table->integer('npwp')->nullable();
             $table->string('jenis_wajib_pajak')->nullable();
             $table->string('nama')->nullable();

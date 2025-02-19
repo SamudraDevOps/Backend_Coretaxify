@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penunjukkan_wajib_pajak_sayas', function (Blueprint $table) {
-            $table->id()->nullable();
+            $table->id();
             $table->string('status_pemberian_akses_portal')->nullable();
             $table->string('nama_wajib_pajak')->nullable();
             $table->string('npwp')->nullable();

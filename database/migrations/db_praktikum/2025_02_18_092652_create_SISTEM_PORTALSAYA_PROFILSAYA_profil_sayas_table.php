@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profil_sayas', function (Blueprint $table) {
-            $table->id()->nullable();
+            $table->id();
             $table->foreignId('informasi_umum_id')->nullable()->constrained();
-            $table->foreignId('kuasa_wajib_id')->nullable()->constrained();
+            $table->foreignId('kuasa_wajib_pajak_id')->nullable()->constrained();
             $table->foreignId('manajemen_kasus_id')->nullable()->constrained();
             $table->foreignId('detail_bank_id')->nullable()->constrained();
             $table->foreignId('nomor_identifikasi_eksternal_id')->nullable()->constrained();

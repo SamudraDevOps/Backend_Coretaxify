@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('data_ekonomis', function (Blueprint $table) {
-            $table->id()->nullable();
+            $table->id();
             $table->string('merek_dagang')->nullable();
             $table->boolean('is_karyuawan')->nullable();
             $table->string('jumlah_karyawan')->nullable();
