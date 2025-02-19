@@ -58,7 +58,7 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
 
         return $repository->query()->whereHas('users', function ($query) use ($userId) {
             $query->where('user_id', $userId);
-        })->paginate();
+        })->paginate(1);
     }
 
     private function importData(UploadedFile $file): void {

@@ -24,14 +24,14 @@ class ApiGroupController extends ApiController {
         $user = auth()->user();
 
         if ($user->hasRole('dosen')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load('user');
+            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         } else if ($user->hasRole('mahasiswa')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load('user');
+            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         } else if ($user->hasRole('psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load('user');
+            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         }
 
-        return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load('user'));
+        return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load(['user', 'users', 'assignments']));
     }
 
     /**
