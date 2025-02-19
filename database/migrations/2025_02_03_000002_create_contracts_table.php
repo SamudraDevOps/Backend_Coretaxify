@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('university_id')->constrained();
-            $table->foreignId('task_id')->nullable()->constrained();
+            // $table->foreignId('task_id')->nullable()->constrained();
             $table->enum('contract_type', ContractTypeEnum::toArray());
             $table->integer('qty_student');
             $table->date('start_period');

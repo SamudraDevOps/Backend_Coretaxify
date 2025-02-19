@@ -24,8 +24,8 @@ class Task extends Model
         return $this->hasMany(Account::class);
     }
 
-    public function contracts(): HasMany {
-        return $this->hasMany(Contract::class);
+    public function contracts(): BelongsToMany {
+        return $this->belongsToMany(Contract::class, 'contract_tasks');
     }
 
     // public function assignments()
