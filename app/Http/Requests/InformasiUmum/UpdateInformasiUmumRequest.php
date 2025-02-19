@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateInformasiUmumRequest extends FormRequest {
     public function rules(): array {
         return [
-            'account_id' => 'nullable|exists:accounts,id',
-            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+             
             'npwp' => 'nullable|string',
             'jenis_wajib_pajak' => 'nullable|string',
             'nama' => 'nullable|string',

@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreObjekPajakBumiDanBangunanRequest extends FormRequest {
     public function rules(): array {
         return [
-            'account_id' => 'nullable|exists:accounts,id',
-            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+             
             'nop' => 'nullable|string',
             'nama_objek_pajak' => 'nullable|string',
             'sektor' => 'nullable|string',

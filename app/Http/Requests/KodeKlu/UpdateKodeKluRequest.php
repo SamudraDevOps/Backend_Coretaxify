@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateKodeKluRequest extends FormRequest {
     public function rules(): array {
         return [
-            'account_id' => 'nullable|exists:accounts,id',
-            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+             
             'kode_nama' => 'nullable|string',
             'deskripsi_klu' => 'nullable|string',
             'deskripsi_tku' => 'nullable|string',

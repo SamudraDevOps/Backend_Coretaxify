@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdatePenunjukkanWajibPajakSayaRequest extends FormRequest {
     public function rules(): array {
         return [
-            'account_id' => 'nullable|exists:accounts,id',
-            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+             
             'status_pemberian_akses_portal' => 'nullable|string',
             'nama_wajib_pajak' => 'nullable|string',
             'npwp' => 'nullable|string',

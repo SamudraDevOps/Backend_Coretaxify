@@ -8,8 +8,7 @@ class PenunjukkanWajibPajakSayaResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => 'nullable|exists:accounts,id',
-            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+             
             'status_pemberian_akses_portal' => $this->status_pemberian_akses_portal,
             'nama_wajib_pajak' => $this->nama_wajib_pajak,
             'npwp' => $this->npwp,

@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreTempatKegiatanUsahaRequest extends FormRequest {
     public function rules(): array {
         return [
-            'account_id' => 'nullable|exists:accounts,id',
-            'assignment_users_id' => 'nullable|exists:assignment_users,id',
+             
             'nitku' => 'nullable|string',
             'jenis_tku' => 'nullable|string',
             'nama_tku' => 'nullable|string',
