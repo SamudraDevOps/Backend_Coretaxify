@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Contract extends Model
 {
@@ -48,7 +49,7 @@ class Contract extends Model
 
     }
 
-    public function task() {
-        return $this->belongsTo(Task::class);
+    public function tasks(): BelongsToMany {
+        return $this->belongsToMany(Task::class, 'contract_tasks');
     }
 }
