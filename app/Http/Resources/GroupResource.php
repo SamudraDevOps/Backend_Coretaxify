@@ -10,7 +10,7 @@ class GroupResource extends JsonResource {
             'id' => $this->id,
             'name' => $this->name,
             // 'user_id' => $this->user_id,
-            // 'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'assignments' => AssignmentResource::collection($this->whenLoaded('assignments')),
             'start_period' => $this->start_period,

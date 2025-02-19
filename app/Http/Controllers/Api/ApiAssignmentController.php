@@ -62,7 +62,7 @@ class ApiAssignmentController extends ApiController {
 
     /**
      * Display the specified resource.
-     */
+     */ 
     public function show(Assignment $assignment) {
         return new AssignmentResource($assignment);
     }
