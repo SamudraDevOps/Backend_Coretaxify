@@ -40,6 +40,11 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             'supporting_file' => $filename,
         ]);
 
+        AssignmentUser::create([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id,
+        ]);
+
         return $assignment;
     }
 
@@ -66,5 +71,9 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $repository->query()->whereHas('users', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->paginate();
+        // return Assignment::where('user_id', $userId)
+        // ->orWhereHas('users', function($query) use ($userId) {
+        //     $query->where('user_id', $userId);
+        // });
     }
 }
