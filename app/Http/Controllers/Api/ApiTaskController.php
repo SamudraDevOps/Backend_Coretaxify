@@ -57,4 +57,11 @@ class ApiTaskController extends ApiController {
     public function destroy(Request $request, Task $task) {
         return $this->taskService->delete($task);
     }
+
+    public function getContractTasks(Request $request) {
+        $perPage = request()->get('perPage', 5);
+        $user = auth()->user();
+
+        return $user->contract->tasks;
+    }
 }

@@ -62,6 +62,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('assignments', ApiAssignmentController::class);
             Route::apiResource('exams', ApiExamController::class);
             Route::apiResource('group-users', ApiGroupUserController::class);
+            Route::get('contract-tasks', [ApiTaskController::class, 'getContractTasks']);
         });
 
         Route::prefix('student')->group(function () {
@@ -77,6 +78,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('users', ApiUserController::class);
             Route::apiResource('assignments', ApiAssignmentController::class);
             Route::apiResource('exams', ApiExamController::class);
+            Route::apiResource('tasks', ApiTaskController::class);
         });
 
         Route::prefix('instructor')->group(function () {
