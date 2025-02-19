@@ -12,7 +12,7 @@ use App\Support\Interfaces\Services\AssignmentServiceInterface;
 
 class ApiAssignmentController extends ApiController {
     public function __construct(
-        protected AssignmentServiceInterface $AssignmentService
+        protected AssignmentServiceInterface $assignmentService
     ) {}
 
     /**
@@ -21,7 +21,17 @@ class ApiAssignmentController extends ApiController {
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
 
-        return AssignmentResource::collection($this->AssignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
+        $user = auth()->user();
+
+        if ($user->hasRole('dosen')) {
+            return $this->assignmentService->getAssignmentsByUserId($user->id)->load('user');
+        } else if ($user->hasRole('mahasiswa')) {
+            return $this->assignmentService->getAssignmentsByUserId($user->id)->load('user');
+        } else if ($user->hasRole('psc')) {
+            return $this->assignmentService->getAssignmentsByUserId($user->id)->load('user');
+        }
+
+        return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
     }
 
     /**
@@ -35,7 +45,7 @@ class ApiAssignmentController extends ApiController {
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
                 if ($user->hasRole('dosen')) {
-                    return $this->AssignmentService->create($request->validated());
+                    return $this->assignmentService->create($request->validated());
                 } else {
                     return response()->json([
                         'message' => 'You are not authorized to create an assignment',
@@ -43,7 +53,7 @@ class ApiAssignmentController extends ApiController {
                 }
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
                 if ($user->hasRole('mahasiswa')) {
-                    return $this->AssignmentService->joinAssignment($request->validated());
+                    return $this->assignmentService->joinAssignment($request->validated());
                 } else {
                     return response()->json([
                         'message' => 'You are not authorized to join an assignment',
@@ -55,21 +65,21 @@ class ApiAssignmentController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $Assignment) {
-        return new AssignmentResource($Assignment);
+    public function show(Assignment $assignment) {
+        return new AssignmentResource($assignment);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAssignmentRequest $request, Assignment $Assignment) {
-        return $this->AssignmentService->update($Assignment, $request->validated());
+    public function update(UpdateAssignmentRequest $request, Assignment $assignment) {
+        return $this->assignmentService->update($assignment, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Assignment $Assignment) {
-        return $this->AssignmentService->delete($Assignment);
+    public function destroy(Request $request, Assignment $assignment) {
+        return $this->assignmentService->delete($assignment);
     }
 }

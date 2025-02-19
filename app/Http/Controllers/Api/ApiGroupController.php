@@ -44,7 +44,7 @@ class ApiGroupController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_GROUP->value:
-                if ($user->hasRole('dosen')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
                     return $this->groupService->create($request->validated());
                 } else {
                     return response()->json([
@@ -68,11 +68,31 @@ class ApiGroupController extends ApiController {
     public function show(Request $request, Group $group) {
         $intent = $request->get('intent');
 
+        $user = auth()->user();
+
         switch($intent) {
             case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
                 return $this->groupService->downloadFile($group);
+            case IntentEnum::API_GET_GROUP_WITH_ASSIGNMENTS->value:
+                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+                    return new GroupResource($group->load(['user', 'assignments']));
+                } else if ($user->hasRole('mahasiswa')) {
+                    $userId = $user->id;
+
+                    $group->load([
+                        'assignments' => function ($query) use ($userId) {
+                            $query->whereHas('users', function ($query) use ($userId) {
+                                $query->where('user_id', $userId);
+                            });
+                        },
+                    ]);
+
+                    return new GroupResource($group);
+                }
+            case IntentEnum::API_GET_GROUP_WITH_MEMBERS->value:
+                return new GroupResource($group->load(['user', 'users',]));
         }
-        return new GroupResource($group->load('user'));
+        return new GroupResource($group->load(['user', 'users', 'assignments']));
     }
 
     /**

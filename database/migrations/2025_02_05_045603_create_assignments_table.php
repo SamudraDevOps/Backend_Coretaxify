@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('assignment_code')->unique();
             $table->date('start_period');
             $table->date('end_period');
+            $table->string('supporting_file')->nullable();
             $table->timestamps();
         });
     }

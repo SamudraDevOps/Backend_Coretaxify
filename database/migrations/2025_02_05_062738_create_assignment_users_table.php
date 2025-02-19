@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('assignment_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->foreignId('assignment_id')->constrained()->onDelete('cascade');
             // $table->foreignId('lecture_task_id')->constrained()->onDelete('cascade');
             $table->float('score')->nullable();
             $table->timestamps();
