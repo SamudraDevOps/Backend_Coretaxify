@@ -75,7 +75,7 @@ class ApiGroupController extends ApiController {
                 return $this->groupService->downloadFile($group);
             case IntentEnum::API_GET_GROUP_WITH_ASSIGNMENTS->value:
                 if ($user->hasRole('dosen') || $user->hasRole('psc')) {
-                    return new GroupResource($group->load(['user', 'assignments']));
+                    return new GroupResource($group->load('assignments'));
                 } else if ($user->hasRole('mahasiswa')) {
                     $userId = $user->id;
 
@@ -90,9 +90,9 @@ class ApiGroupController extends ApiController {
                     return new GroupResource($group);
                 }
             case IntentEnum::API_GET_GROUP_WITH_MEMBERS->value:
-                return new GroupResource($group->load(['user', 'users',]));
+                return new GroupResource($group->load('users',));
         }
-        return new GroupResource($group->load(['user', 'users', 'assignments']));
+        return new GroupResource($group->load(['users', 'assignments']));
     }
 
     /**
