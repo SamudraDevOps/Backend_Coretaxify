@@ -18,8 +18,8 @@ class KodeKlu extends Model
         'tanggal_berakhir',
     ];
 
-    public function profil_sayas()
+    public function profil_saya()
     {
-        return $this->hasMany(ProfilSaya::class);
+        return $this->belongsTo(ProfilSaya::class);
     }
 }

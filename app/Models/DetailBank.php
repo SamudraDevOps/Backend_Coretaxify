@@ -21,8 +21,8 @@ class DetailBank extends Model
         'is_rekening-bank_utama',
     ];
 
-    public function profil_sayas()
+    public function profil_saya()
     {
-        return $this->hasMany(ProfilSaya::class);
+        return $this->belongsTo(ProfilSaya::class);
     }
 }

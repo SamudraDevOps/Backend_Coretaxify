@@ -46,7 +46,7 @@ class TempatKegiatanUsaha extends Model
 
     public function profil_sayas()
     {
-        return $this->hasMany(ProfilSaya::class);
+        return $this->belongsTo(ProfilSaya::class);
     }
 
 

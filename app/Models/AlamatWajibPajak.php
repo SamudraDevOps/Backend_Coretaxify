@@ -26,8 +26,8 @@ class AlamatWajibPajak extends Model
         'seksi_pengawasan',
     ];
 
-    public function profil_sayas()
+    public function profil_saya()
     {
-        return $this->hasMany(ProfilSaya::class);
+        return $this->belongsTo(ProfilSaya::class);
     }
 }

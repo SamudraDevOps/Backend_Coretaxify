@@ -19,8 +19,8 @@ class JenisPajak extends Model
         'nomor_kasus',
     ];
 
-    public function profil_sayas()
+    public function profil_saya()
     {
-        return $this->hasMany(ProfilSaya::class);
+        return $this->belongsTo(ProfilSaya::class);
     }
 }
