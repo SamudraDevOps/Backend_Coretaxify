@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('detail_kontaks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('account_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assignment_users_id')->constrained()->onDelete('cascade');
             $table->string('jenis_kontak')->nullable();
             $table->string('nomor_telpon')->nullable();
             $table->string('nomor_handphone')->nullable();

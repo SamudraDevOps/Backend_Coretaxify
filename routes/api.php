@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
+use App\Http\Controllers\Api\ApiSistemController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -70,6 +71,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
+            Route::apiResource('sistems', ApiSistemController::class);
         });
 
         Route::prefix('psc')->group(function () {

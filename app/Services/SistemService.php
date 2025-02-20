@@ -3,42 +3,56 @@
 namespace App\Services;
 
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
+use App\Models\AlamatWajibPajak;
+use App\Models\DataEkonomi;
+use App\Models\DetailBank;
+use App\Models\DetailKontak;
+use App\Models\InformasiUmum;
+use App\Models\JenisPajak;
+use App\Models\KodeKlu;
+use App\Models\KuasaWajibPajak;
+use App\Models\ManajemenKasus;
+use App\Models\NomorIdentifikasiEksternal;
+use App\Models\ObjekPajakBumiDanBangunan;
+use App\Models\PihakTerkait;
+use App\Models\PortalSaya;
+use App\Models\ProfilSaya;
+use App\Models\TempatKegiatanUsaha;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 class SistemService extends BaseCrudService implements SistemServiceInterface {
     protected function getRepositoryClass(): string {
         return SistemRepositoryInterface::class;
     }
     
-    public function create(array $data): ?Model {
-        $data['assignment_user_id'] = $data['assignment_user_id'] ?? null;
-        
+    public function create(array $data): ?Model {    
         $sistem = parent::create($data);
         
-        $portal = $sistem->portal_saya()->create();
+        $portal = PortalSaya::create();
 
         $sistem->update(['portal_saya_id' => $portal->id]);
                 
-        $profil = $portal->profil_saya()->create();
+        $profil = ProfilSaya::create();
 
         $portal->update(['profil_saya_id' => $profil->id]);
                 
-        $informasi_umum         =    $profil->informasi_umum()->create();
-        $alamat_pajak           =    $profil->alamat_pajak()->create();
-        $kuasa_wajib_pajak      =    $profil->kuasa_wajib_pajak()->create();
-        $manajemen_kasus        =    $profil->manajemen_kasus()->create();
-        $detail_kontak          =    $profil->detail_kontak()->create();
-        $kode_klu               =    $profil->kode_klu()->create();
-        $tempat_kegiatan_usaha  =    $profil->tempat_kegiatan_usaha()->create();
-        $alamat_wajib_pajak     =    $profil->alamat_wajib_pajak()->create();
-        $pihak_terkait          =    $profil->pihak_terkait()->create();
-        $data_ekonomi           =    $profil->data_ekonomi()->create();
-        $nomor_identifikasi_eksternal       =     $profil->nomor_identifikasi_eksternal()->create();
-        $jenis_pajak            =    $profil->jenis_pajak()->create();
-        $objek_pajak_bumi_dan_bangunan      =        $profil->objek_pajak_bumi_dan_bangunan()->create();
-        $detail_bank            =    $profil->detail_bank()->create();
+        $informasi_umum         =    InformasiUmum::create();
+        $alamat_pajak           =    AlamatWajibPajak::create();
+        $kuasa_wajib_pajak      =    KuasaWajibPajak::create();
+        $manajemen_kasus        =    ManajemenKasus::create();
+        $detail_kontak          =    DetailKontak::create();
+        $kode_klu               =    KodeKlu::create();
+        $tempat_kegiatan_usaha  =    TempatKegiatanUsaha::create();
+        $pihak_terkait          =    PihakTerkait::create();
+        $data_ekonomi           =    DataEkonomi::create();
+        $nomor_identifikasi_eksternal       =     NomorIdentifikasiEksternal::create();
+        $jenis_pajak            =    JenisPajak::create();
+        $objek_pajak_bumi_dan_bangunan      =        ObjekPajakBumiDanBangunan::create();
+        $detail_bank            =    DetailBank::create();
+        $alamat_wajib_pajak      =   AlamatWajibPajak::create();
         
         $profil->update([
             'informasi_umum_id' => $informasi_umum->id,
