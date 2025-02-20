@@ -12,6 +12,7 @@ class AssignmentResource extends JsonResource {
             'group' => new GroupResource($this->whenLoaded('group')),
             'name' => $this->name,
             'assignment_code' => $this->assignment_code,
+            'task_id' => $this->task_id,
             'start_period' => $this->start_period,
             'end_period' => $this->end_period,
             'supporting_file' => $this->supporting_file,

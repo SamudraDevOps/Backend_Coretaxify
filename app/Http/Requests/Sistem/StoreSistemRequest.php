@@ -7,9 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreSistemRequest extends FormRequest {
     public function rules(): array {
         return [
-            'nama_akun' => 'required|string',
-            'npwp_akun' => 'required|string',
-            'assignment_user_id' => 'nullable|exists:assignment_users,id'
+            // 'nama_akun' => 'nullable|string',
+            // 'npwp_akun' => 'nullable|string',
+            'assignment_user_id' => 'required|exists:assignment_users,id'
         ];
     }
 }
