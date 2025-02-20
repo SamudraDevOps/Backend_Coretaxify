@@ -8,8 +8,7 @@ class PihakTerkaitResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => new AccountResource($this->account),
-            // 'assignment_users_id' => new AssignmentUserResource($this->assignment_users),
+ 
             'tipe_pihak_terkait' => $this->tipe_pihak_terkait,
             'is_pic' => $this->is_pic,
             'jenis_orang_terkait' => $this->jenis_orang_terkait,

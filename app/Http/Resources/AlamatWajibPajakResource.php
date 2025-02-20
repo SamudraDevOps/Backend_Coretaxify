@@ -8,8 +8,6 @@ class AlamatWajibPajakResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => new AccountResource($this->account),
-            // 'assignment_users_id' => new AssignmentUserResource($this->assignment_users),
             'negara' => $this->negara,
             'jenis_alamat' => $this->jenis_alamat,
             'detail_alamat' => $this->detail_alamat,

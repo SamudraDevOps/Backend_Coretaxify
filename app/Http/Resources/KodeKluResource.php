@@ -8,8 +8,7 @@ class KodeKluResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => new AccountResource($this->account),
-            // 'assignment_users_id' => new AssignmentUserResource($this->assignment_users),
+ 
             'kode_nama' => $this->kode_nama,
             'deskripsi_klu' => $this->deskripsi_klu,
             'deskripsi_tku' => $this->deskripsi_tku,

@@ -8,8 +8,7 @@ class TempatKegiatanUsahaResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => new AccountResource($this->account),
-            // 'assignment_users_id' => new AssignmentUserResource($this->assignment_users),
+ 
             'nitku' => $this->nitku,
             'jenis_tku' => $this->jenis_tku,
             'nama_tku' => $this->nama_tku,

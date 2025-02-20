@@ -8,8 +8,7 @@ class DataEkonomiResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => new AccountResource($this->account),
-            // 'assignment_users_id' => new AssignmentUserResource($this->assignment_users),
+ 
             'merek_dagang' => $this->merek_dagang,
             'is_karyawan' => $this->is_karyawan,
             'jumlah_karyawan' => $this->jumlah_karyawan,
