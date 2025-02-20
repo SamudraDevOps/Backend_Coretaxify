@@ -62,8 +62,14 @@ class ApiAssignmentController extends ApiController {
 
     /**
      * Display the specified resource.
-     */ 
-    public function show(Assignment $assignment) {
+     */
+    public function show(Request $request ,Assignment $assignment) {
+        $intent = $request->get('intent');
+
+        switch($intent) {
+            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+                return $this->assignmentService->downloadFile($assignment);
+        }
         return new AssignmentResource($assignment);
     }
 

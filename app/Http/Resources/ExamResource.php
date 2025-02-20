@@ -15,6 +15,7 @@ class ExamResource extends JsonResource {
             'end_period' => $this->end_period,
             'duration'=> $this->duration,
             'filename' => $this->filename,
+            'supporting_file' => $this->supporting_file,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

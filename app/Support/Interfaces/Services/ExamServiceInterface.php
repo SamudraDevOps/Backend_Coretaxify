@@ -10,4 +10,6 @@ interface ExamServiceInterface extends BaseCrudServiceInterface {
     public function joinExam(array $data): ?Model;
 
     public function downloadFile(Exam $exam);
+
+    public function downloadSupport(Exam $exam);
 }
