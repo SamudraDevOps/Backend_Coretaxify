@@ -9,7 +9,8 @@ class AssignmentResource extends JsonResource {
         return [
             'id' => $this->id,
             'group_id' => $this->group_id,
-            'group' => new GroupResource($this->whenLoaded('group')),
+            'group' => new GroupResource($this->load('group')),
+            'dosen' => $this->group->user,
             'name' => $this->name,
             'assignment_code' => $this->assignment_code,
             'task_id' => $this->task_id,

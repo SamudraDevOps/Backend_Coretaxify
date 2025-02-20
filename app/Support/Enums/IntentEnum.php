@@ -34,6 +34,8 @@ enum IntentEnum: string {
 
     case API_USER_DOWNLOAD_SOAL = 'api.user.download.soal';
 
+    case API_USER_DOWNLOAD_FILE = 'api.user.download.file';
+
     case API_GET_GROUP_WITH_ASSIGNMENTS = 'api.get.group.with.assignments';
 
     case API_GET_GROUP_WITH_MEMBERS = 'api.get.group.with.members';

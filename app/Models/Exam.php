@@ -25,6 +25,7 @@ class Exam extends Model
         'end_period',
         'duration',
         'filename',
+        'supporting_file',
     ];
 
     public function user(): BelongsTo {

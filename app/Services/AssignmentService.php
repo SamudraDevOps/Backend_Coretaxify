@@ -29,7 +29,10 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     // }
 
     public function create(array $data): ?Model {
-        $filename = $this->importData($data['supporting_file']);
+        $filename = null;
+        if(isset($data['supporting_file'])) {
+            $filename = $this->importData($data['supporting_file']);
+        }
 
         $assignment = Assignment::create([
             'group_id' => $data['group_id'],
@@ -50,7 +53,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
     private function importData(UploadedFile $file) {
         $filename = time() . '.' . $file->getClientOriginalName();
-        $file->storeAs('soal', $filename, 'public');
+        $file->storeAs('support-file', $filename, 'public');
 
         return $filename;
     }
@@ -75,5 +78,11 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         // ->orWhereHas('users', function($query) use ($userId) {
         //     $query->where('user_id', $userId);
         // });
+    }
+
+    public function downloadFile(Assignment $assignment) {
+        $filename = $assignment->supporting_file;
+        $path = storage_path('app/public/support-file/' . $filename);
+        return response()->download($path);
     }
 }

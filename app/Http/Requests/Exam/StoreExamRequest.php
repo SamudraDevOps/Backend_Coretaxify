@@ -19,6 +19,7 @@ class StoreExamRequest extends FormRequest {
                     'end_period' => 'required|date',
                     'duration' => 'required|integer',
                     'import_file' => 'sometimes|mimes:xlsx,xls,csv',
+                    'supporting_file' => 'nullable|file',
                 ];
             case IntentEnum::API_USER_JOIN_EXAM->value:
                 return [
@@ -33,6 +34,7 @@ class StoreExamRequest extends FormRequest {
             'end_period' => 'required|date',
             'duration' => 'required|integer',
             'import_file' => 'sometimes|mimes:xlsx,xls,csv',
+            'supporting_file' => 'nullable|file',
         ];
     }
 }
