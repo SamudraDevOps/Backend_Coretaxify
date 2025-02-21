@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
+use App\Http\Controllers\Api\ApiAccountController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
 use App\Http\Controllers\Api\ApiGroupUserController;
@@ -48,6 +49,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::prefix('admin')->group(function () {
             // Admin only routes
             Route::apiResource('users', ApiUserController::class);
+            Route::apiResource('accounts', ApiAccountController::class);
             Route::apiResource('groups', ApiGroupController::class);
             Route::apiResource('roles', ApiRoleController::class);
             Route::apiResource('tasks', ApiTaskController::class);
