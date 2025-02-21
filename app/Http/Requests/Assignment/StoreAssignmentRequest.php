@@ -14,7 +14,7 @@ class StoreAssignmentRequest extends FormRequest {
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
                 return [
-                    'group_id' => 'required|exists:groups,id',
+                    'groups' => 'required|array',
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
                     'assignment_code' => 'required|string',
@@ -28,7 +28,7 @@ class StoreAssignmentRequest extends FormRequest {
                 ];
             default:
                 return [
-                    'group_id' => 'required|exists:groups,id',
+                    'groups' => 'required|array',
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
                     'assignment_code' => 'required|string',

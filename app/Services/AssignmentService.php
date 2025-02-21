@@ -33,9 +33,9 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         if(isset($data['supporting_file'])) {
             $filename = $this->importData($data['supporting_file']);
         }
-
+        
         $assignment = Assignment::create([
-            'group_id' => $data['group_id'],
+            'task_id' => $data['task_id'],
             'name' => $data['name'],
             'assignment_code' => $data['assignment_code'],
             'start_period' => $data['start_period'],
@@ -48,7 +48,27 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             'assignment_id' => $assignment->id,
         ]);
 
+        $assignment->groups()->attach($data['groups']);
+
         return $assignment;
+    }
+
+    public function update($keyOrModel, array $data): ?Model {
+        // $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+        // return parent::update($keyOrModel, $data);
+        $filename = null;
+        if(isset($data['supporting_file'])) {
+            $filename = $this->importData($data['supporting_file']);
+        }
+        $assignment = parent::update($keyOrModel, $data);
+
+        $assignment->update([
+            'supporting_file' => $filename,
+        ]);
+
+        $assignment->groups()->sync($data['groups']);
+
+        return $assignment;   
     }
 
     private function importData(UploadedFile $file) {
