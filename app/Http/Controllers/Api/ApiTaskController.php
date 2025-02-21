@@ -20,8 +20,13 @@ class ApiTaskController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
+        $user = auth()->user();
 
-        return TaskResource::collection($this->taskService->getAllPaginated($request->query(), $perPage));
+        $task = $this->taskService->getTasksByUserId($user->id);
+
+        return TaskResource::collection($task);
+
+        // return TaskResource::collection($this->taskService->getAllPaginated($request->query(), $perPage));
     }
 
     /**
@@ -48,6 +53,7 @@ class ApiTaskController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(UpdateTaskRequest $request, Task $task) {
+        // dd($request->all());
         return $this->taskService->update($task, $request->validated());
     }
 

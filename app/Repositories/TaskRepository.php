@@ -30,4 +30,8 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface {
 
         return $query;
     }
+
+    public function query() {
+        return $this->getQuery();
+    }
 }
