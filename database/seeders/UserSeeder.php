@@ -33,6 +33,15 @@ class UserSeeder extends Seeder
         ]);
         $dosen->roles()->attach(Role::where('name', 'dosen')->first());
 
+        // $dosen2 = User::create([
+        //     'name' => 'Dosen2 User',
+        //     // 'contract_id' => 2,
+        //     'email' => 'dosen2@example.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password123'),
+        // ]);
+        // $dosen2->roles()->attach(Role::where('name', 'dosen')->first());
+
         $mhs1 = User::create([
             'name' => 'Mahasiswa 1 User',
             'email' => 'mahasiswa1@example.com',

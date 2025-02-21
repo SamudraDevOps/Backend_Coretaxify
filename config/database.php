@@ -127,6 +127,7 @@ return [
 
     'migrations' => [
         'table' => 'migrations',
+        base_path('database/migrations/db_praktikum'),
         'update_date_on_publish' => true,
     ],
 

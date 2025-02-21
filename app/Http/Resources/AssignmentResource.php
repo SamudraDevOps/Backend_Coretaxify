@@ -13,6 +13,7 @@ class AssignmentResource extends JsonResource {
             'dosen' => $this->group->user,
             'name' => $this->name,
             'assignment_code' => $this->assignment_code,
+            'task_id' => $this->task_id,
             'start_period' => $this->start_period,
             'end_period' => $this->end_period,
             'supporting_file' => $this->supporting_file,

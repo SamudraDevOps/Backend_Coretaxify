@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AssignmentUser extends Model
@@ -12,4 +13,9 @@ class AssignmentUser extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function sistems()
+    {
+        return $this->hasMany(Sistem::class);
+    }
 }
