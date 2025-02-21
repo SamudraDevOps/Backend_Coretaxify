@@ -61,8 +61,8 @@ class ApiExamController extends ApiController {
         $intent = $request->get('intent');
 
         switch($intent) {
-            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
-                return $this->examService->downloadFile($exam);
+            // case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+            //     return $this->examService->downloadFile($exam);
             case IntentEnum::API_USER_DOWNLOAD_FILE->value:
                 return $this->examService->downloadSupport($exam);
         }

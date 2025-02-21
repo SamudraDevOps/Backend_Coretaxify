@@ -16,8 +16,8 @@ class Account extends Model
     protected $fillable = [
         'task_id',
         'account_type_id',
-        'exam_id',
-        'group_id',
+        // 'exam_id',
+        // 'group_id',
         'nama',
         'npwp',
         'kegiatan_utama',
@@ -46,10 +46,10 @@ class Account extends Model
     public function account_type(): BelongsTo {
         return $this->belongsTo(AccountType::class);
     }
-    public function exam(): BelongsTo {
-        return $this->belongsTo(Exam::class);
-    }
-    public function group(): BelongsTo {
-        return $this->belongsTo(Group::class);
-    }
+    // public function exam(): BelongsTo {
+    //     return $this->belongsTo(Exam::class);
+    // }
+    // public function group(): BelongsTo {
+    //     return $this->belongsTo(Group::class);
+    // }
 }
