@@ -16,6 +16,14 @@ class ProfilSaya extends Model
         return $this->hasMany(DataEkonomi::class);
     }
 
+    public function detail_kontaks() {
+        return $this->hasMany(DetailKontak::class);
+    }
+
+    public function detail_banks() {
+        return $this->hasMany(DetailBank::class);
+    }
+
     public function penunjukkan_wajib_pajak_sayas() {
         return $this->hasMany(PenunjukkanWajibPajakSaya::class);
     }
@@ -28,7 +36,7 @@ class ProfilSaya extends Model
         return $this->hasMany(ManajemenKasus::class);
     }
     
-    public function nomor_identitas_eksternals() {
+    public function nomor_identifikasi_eksternals() {
         return $this->hasMany(NomorIdentifikasiEksternal::class);
     }
     
@@ -53,6 +61,6 @@ class ProfilSaya extends Model
     }
        
     public function portal_saya() {
-        return $this->belongsTo(PihakTerkait::class);
+        return $this->belongsTo(PortalSaya::class); 
     }   
 }

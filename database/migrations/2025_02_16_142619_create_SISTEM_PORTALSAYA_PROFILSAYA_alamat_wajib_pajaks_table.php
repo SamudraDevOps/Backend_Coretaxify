@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('alamat_wajib_pajaks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('profil_saya_id')->nullable()->constrained();
             $table->string('negara')->nullable();
             $table->string('jenis_alamat')->nullable();
             $table->string('detail_alamat')->nullable();

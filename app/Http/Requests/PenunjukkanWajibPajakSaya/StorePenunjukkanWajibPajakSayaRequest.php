@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StorePenunjukkanWajibPajakSayaRequest extends FormRequest {
     public function rules(): array {
         return [
-             
+            'profil_saya_id' => 'nullable|exists:profil_sayas,id', 
             'status_pemberian_akses_portal' => 'nullable|string',
             'nama_wajib_pajak' => 'nullable|string',
             'npwp' => 'nullable|string',

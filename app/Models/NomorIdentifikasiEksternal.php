@@ -9,8 +9,7 @@ class NomorIdentifikasiEksternal extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+        'profil_saya_id',
         'tipe_identifikasi_eksternal',
         'nomor_identifikasi',
         'tanggal_mulai',

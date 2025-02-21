@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateJenisPajakRequest extends FormRequest {
     public function rules(): array {
         return [
-             
+            'profil_saya_id' => 'nullable|exists:profil_sayas,id', 
             'jenis_pajak' => 'nullable|string',
             'tanggal_permohonan' => 'nullable|date',
             'tanggal_mulai_transaksi' => 'nullable|date',

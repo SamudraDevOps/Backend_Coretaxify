@@ -8,7 +8,8 @@ class SistemResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'assigment_user' => AssignmentUserResource::collection($this->assignmentUsers),
+            'assignment_user' => new AssignmentUserResource($this->assignment_user),
+            'portal_saya' => PortalSayaResource::collection($this->portal_sayas),
             'nama_akun' => $this->nama_akun,
             'npwp_akun' => $this->npwp_akun,
             'created_at' => $this->created_at->toDateTimeString(),

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StorePihakTerkaitRequest extends FormRequest {
     public function rules(): array {
         return [
-             
+            'profil_saya_id' => 'nullable|exists:profil_sayas,id', 
             'tipe_pihak_terkait' => 'nullable|string',
             'is_pic' => 'nullable|boolean',
             'jenis_orang_terkait' => 'nullable|string',

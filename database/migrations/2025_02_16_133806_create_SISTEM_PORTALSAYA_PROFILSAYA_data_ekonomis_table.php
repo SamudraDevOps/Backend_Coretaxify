@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('data_ekonomis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('profil_saya_id')->nullable()->constrained();
             $table->string('merek_dagang')->nullable();
             $table->boolean('is_karyuawan')->nullable();
             $table->string('jumlah_karyawan')->nullable();

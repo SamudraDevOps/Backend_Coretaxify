@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('manajemen_kasuses', function (Blueprint $table) {
+        Schema::create('profil_sayas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profil_saya_id')->nullable()->constrained();
-            $table->string('kanal')->nullable();;
-            $table->date('tanggal_permohonan')->nullable();;
+            $table->foreignId('portal_saya_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('manajemen_kasuses');
+        Schema::dropIfExists('profil_sayas');
     }
 };

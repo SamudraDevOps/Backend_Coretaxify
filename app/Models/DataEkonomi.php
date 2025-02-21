@@ -9,8 +9,7 @@ class DataEkonomi extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+        'profil_saya_id',
         'merek_dagang',
         'is_karyawan',
         'jumlah_karyawan',

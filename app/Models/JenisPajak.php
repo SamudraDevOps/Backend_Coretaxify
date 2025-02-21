@@ -9,8 +9,7 @@ class JenisPajak extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+        'profil_saya_id',
         'jenis_pajak',
         'tanggal_permohonan',
         'tanggal_mulai_transaksi',

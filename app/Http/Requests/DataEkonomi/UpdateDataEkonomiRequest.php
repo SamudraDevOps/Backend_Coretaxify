@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateDataEkonomiRequest extends FormRequest {
     public function rules(): array {
         return [
-             
+            'profil_saya_id' => 'nullable|exists:profil_sayas,id',
             'merek_dagang' => 'nullable|string',
             'is_karyawan' => 'nullable|boolean',
             'jumlah_karyawan' => 'nullable|string',

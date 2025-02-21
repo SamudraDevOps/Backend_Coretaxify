@@ -9,8 +9,7 @@ class InformasiUmum extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+        'profil_saya_id',
         'npwp',
         'jenis_wajib_pajak',
         'nama',

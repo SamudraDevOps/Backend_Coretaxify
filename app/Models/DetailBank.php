@@ -9,8 +9,7 @@ class DetailBank extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+        'profil_saya_id',
         'nama_bank',
         'nomor_rekening',
         'nama_pemilik_rekening_bank',

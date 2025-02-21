@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pihak_terkaits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('profil_saya_id')->nullable()->constrained();
             $table->string('tipe_pihak_terkait')->nullable();
             $table->boolean('is_pic')->nullable();
             $table->string('jenis_orang_terkait')->nullable();

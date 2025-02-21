@@ -9,8 +9,7 @@ class KuasaWajibPajak extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+        'profil_saya_id',
         'is_wajib_pajak',
         'id_penunjukkan_perwakilan',
         'nama_wakil',
