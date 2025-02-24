@@ -16,6 +16,21 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
+use App\Http\Controllers\Api\ApiAlamatWajibPajakController;
+use App\Http\Controllers\Api\ApiDataEkonomiController;
+use App\Http\Controllers\Api\ApiDetailBankController;
+use App\Http\Controllers\Api\ApiDetailKontakController;
+use App\Http\Controllers\Api\ApiInformasiUmumController;
+use App\Http\Controllers\Api\ApiJenisPajakController;
+use App\Http\Controllers\Api\ApiKodeKluController;
+use App\Http\Controllers\Api\ApiKuasaWajibPajakController;
+use App\Http\Controllers\Api\ApiManajemenKasusController;
+use App\Http\Controllers\Api\ApiNomorIdentifikasiEksternalController;
+use App\Http\Controllers\Api\ApiObjekPajakBumiDanBangunanController;
+use App\Http\Controllers\Api\ApiPenunjukkanWajibPajakSayaController;
+use App\Http\Controllers\Api\ApiPihakTerkaitController;
+use App\Http\Controllers\Api\ApiPortalSayaController;
+use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiSistemController;
 
 // Route::get('/user', function (Request $request) {
@@ -72,6 +87,21 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('sistems', ApiSistemController::class);
+            Route::apiResource('portal-saya', ApiPortalSayaController::class);
+            Route::apiResource('profil-saya', ApiProfilSayaController::class);
+            Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
+            Route::apiResource('detail-kontak', ApiDetailKontakController::class);
+            Route::apiResource('detail-bank', ApiDetailBankController::class);
+            Route::apiResource('objek-pajak', ApiObjekPajakBumiDanBangunanController::class);
+            Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
+            Route::apiResource('penunjukkan-pajak', ApiPenunjukkanWajibPajakSayaController::class);
+            Route::apiResource('nomor-identifikasi', ApiNomorIdentifikasiEksternalController::class);
+            Route::apiResource('manajemen-kasus', ApiManajemenKasusController::class);
+            Route::apiResource('kode-klu', ApiKodeKluController::class);
+            Route::apiResource('kuasa-wajib', ApiKuasaWajibPajakController::class);
+            Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
+            Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
+            Route::apiResource('alamat-wajib', ApiAlamatWajibPajakController::class);
         });
 
         Route::prefix('psc')->group(function () {
