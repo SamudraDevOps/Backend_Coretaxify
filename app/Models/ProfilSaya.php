@@ -8,59 +8,59 @@ class ProfilSaya extends Model
 {
     protected $guarded = ['id'];
 
-    public function informasi_umums() {
-        return $this->hasOne(InformasiUmum::class);
+    public function informasi_umum() {
+        return $this->belongsTo(InformasiUmum::class);
     }
 
-    public function data_ekonomis() {
-        return $this->hasOne(DataEkonomi::class);
+    public function data_ekonomi() {
+        return $this->belongsTo(DataEkonomi::class);
     }
 
-    public function detail_kontaks() {
-        return $this->hasOne(DetailKontak::class);
+    public function detail_kontak() {
+        return $this->belongsTo(DetailKontak::class);
     }
 
-    public function detail_banks() {
-        return $this->hasOne(DetailBank::class);
+    public function detail_bank() {
+        return $this->belongsTo(DetailBank::class);
     }
 
-    public function penunjukkan_wajib_pajak_sayas() {
-        return $this->hasOne(PenunjukkanWajibPajakSaya::class);
+    public function penunjukkan_wajib_pajak_saya() {
+        return $this->belongsTo(PenunjukkanWajibPajakSaya::class);
     }
 
-    public function alamat_wajib_pajaks() {
-        return $this->hasOne(AlamatWajibPajak::class);
+    public function alamat_wajib_pajak() {
+        return $this->belongsTo(AlamatWajibPajak::class);
     }
 
-    public function manajemen_kasuses() {
-        return $this->hasOne(ManajemenKasus::class);
+    public function manajemen_kasuse() {
+        return $this->belongsTo(ManajemenKasus::class);
     }
     
-    public function nomor_identifikasi_eksternals() {
-        return $this->hasOne(NomorIdentifikasiEksternal::class);
+    public function nomor_identifikasi_eksternal() {
+        return $this->belongsTo(NomorIdentifikasiEksternal::class);
     }
     
-    public function jenis_pajaks() {
-        return $this->hasOne(JenisPajak::class);
+    public function jenis_pajak() {
+        return $this->belongsTo(JenisPajak::class);
     }
     
-    public function objek_pajak_bumi_dan_bangunans() {
-        return $this->hasOne(ObjekPajakBumiDanBangunan::class);
+    public function objek_pajak_bumi_dan_bangunan() {
+        return $this->belongsTo(ObjekPajakBumiDanBangunan::class);
     }
     
-    public function tempat_kegiatan_usahas() {
-        return $this->hasOne(TempatKegiatanUsaha::class);
+    public function tempat_kegiatan_usaha() {
+        return $this->belongsTo(TempatKegiatanUsaha::class);
     }
 
-    public function kode_klus() {
-        return $this->hasOne(KodeKlu::class);
+    public function kode_klu() {
+        return $this->belongsTo(KodeKlu::class);
     }
     
-    public function pihak_terkaits() {
-        return $this->hasOne(PihakTerkait::class);
+    public function pihak_terkait() {
+        return $this->belongsTo(PihakTerkait::class);
     }
        
     public function portal_saya() {
-        return $this->belongsTo(PortalSaya::class); 
+        return $this->hasOne(PortalSaya::class); 
     }   
 }

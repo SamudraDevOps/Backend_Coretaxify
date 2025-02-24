@@ -9,10 +9,10 @@ class PortalSaya extends Model
     protected $guarded = ['id'];
 
     public function sistem() {
-        return $this->belongsTo(Sistem::class);
+        return $this->hasOne(Sistem::class);
     }
        
-    public function profil_sayas() {
-        return $this->hasOne(ProfilSaya::class);
+    public function profil_saya() {
+        return $this->belongsTo(ProfilSaya::class);
     }   
 }

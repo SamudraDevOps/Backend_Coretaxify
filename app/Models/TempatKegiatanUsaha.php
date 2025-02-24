@@ -45,7 +45,7 @@ class TempatKegiatanUsaha extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 
 
