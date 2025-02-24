@@ -15,6 +15,11 @@ class StoreUserRequest extends FormRequest {
                     'contract_id' => 'required|integer|exists:contracts,id',
                     'import_file' => 'required|file|mimes:xlsx,xls',
                 ];
+            case IntentEnum::API_USER_IMPORT_MAHASISWA->value:
+                return [
+                    'group_id' => 'sometimes|exists:groups,id',
+                    'import_file' => 'required|file|mimes:xlsx,xls',
+                ];
             case IntentEnum::API_USER_CREATE_ADMIN->value:
                 return [
                     'name' => 'required|string',
