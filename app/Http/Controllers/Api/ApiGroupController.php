@@ -23,7 +23,7 @@ class ApiGroupController extends ApiController {
 
         $user = auth()->user();
 
-        if ($user->hasRole('dosen')) {
+        if ($user->hasRole('dosen') || $user->hasRole('psc')) {
             return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         } else if ($user->hasRole('mahasiswa')) {
             return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);

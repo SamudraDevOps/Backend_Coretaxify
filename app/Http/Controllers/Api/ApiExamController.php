@@ -34,7 +34,7 @@ class ApiExamController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_EXAM->value:
-                if ($user->hasRole('dosen')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
                     return $this->examService->create($request->validated());
                 } else {
                     return response()->json([
