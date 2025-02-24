@@ -35,7 +35,7 @@ class ApiUserController extends ApiController {
         switch($validated['intent']) {
             case IntentEnum::API_USER_IMPORT_DOSEN->value:
                 return $this->userService->importData($validated);
-            case IntentEnum::API_USER_IMPORT_MAHASISWA->value:
+            case IntentEnum::API_USER_IMPORT_MAHASISWA_PSC->value:
                 return $this->userService->importData($validated);
         }
 

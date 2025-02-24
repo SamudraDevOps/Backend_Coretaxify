@@ -27,6 +27,8 @@ class ApiGroupController extends ApiController {
             return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         } else if ($user->hasRole('mahasiswa')) {
             return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        } else if ($user->hasRole('mahasiswa-psc')) {
+            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         } else if ($user->hasRole('psc')) {
             return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
         }
@@ -52,7 +54,7 @@ class ApiGroupController extends ApiController {
                     ], 403);
                 }
             case IntentEnum::API_USER_JOIN_GROUP->value:
-                if ($user->hasRole('mahasiswa')) {
+                if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
                     return $this->groupService->joinGroup($request->validated());
                 } else {
                     return response()->json([
@@ -76,7 +78,7 @@ class ApiGroupController extends ApiController {
             case IntentEnum::API_GET_GROUP_WITH_ASSIGNMENTS->value:
                 if ($user->hasRole('dosen') || $user->hasRole('psc')) {
                     return new GroupResource($group->load('assignments'));
-                } else if ($user->hasRole('mahasiswa')) {
+                } else if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
                     $userId = $user->id;
 
                     $group->load([

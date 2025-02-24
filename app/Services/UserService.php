@@ -84,7 +84,7 @@ class UserService extends BaseCrudService implements UserServiceInterface {
                         'default_password' => $plain_password
                     ]);
                     $user->roles()->attach(Role::where('name', 'dosen')->first());
-                case IntentEnum::API_USER_IMPORT_MAHASISWA->value:
+                case IntentEnum::API_USER_IMPORT_MAHASISWA_PSC->value:
                     $user = User::create([
                         'name' => $record[0],
                         'email' => $record[1],

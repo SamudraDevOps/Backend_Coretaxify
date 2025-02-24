@@ -8,7 +8,7 @@ enum IntentEnum: string {
 
     case API_USER_IMPORT_DOSEN = 'api.user.import.dosen';
 
-    case API_USER_IMPORT_MAHASISWA = 'api.user.import.mahasiswa';
+    case API_USER_IMPORT_MAHASISWA_PSC = 'api.user.import.mahasiswa.psc';
 
     case API_USER_CREATE_INSTRUCTOR = 'api.user.create.instructor';
 
@@ -31,6 +31,8 @@ enum IntentEnum: string {
     case API_USER_GET_DOSEN = 'api.user.get.dosen';
 
     case API_USER_GET_MAHASISWA = 'api.user.get.mahasiswa';
+
+    case API_USER_GET_MAHASISWA_PSC = 'api.user.get.mahasiswa.psc';
 
     case API_USER_GET_INSTRUKTUR = 'api.user.get.instruktur';
 

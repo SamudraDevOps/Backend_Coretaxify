@@ -42,7 +42,7 @@ class ApiExamController extends ApiController {
                     ], 403);
                 }
             case IntentEnum::API_USER_JOIN_EXAM->value:
-                if ($user->hasRole('mahasiswa')) {
+                if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
                     return $this->examService->joinExam($request->validated());
                 } else {
                     return response()->json([

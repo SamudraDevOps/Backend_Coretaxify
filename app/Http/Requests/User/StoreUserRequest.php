@@ -15,7 +15,7 @@ class StoreUserRequest extends FormRequest {
                     'contract_id' => 'required|integer|exists:contracts,id',
                     'import_file' => 'required|file|mimes:xlsx,xls',
                 ];
-            case IntentEnum::API_USER_IMPORT_MAHASISWA->value:
+            case IntentEnum::API_USER_IMPORT_MAHASISWA_PSC->value:
                 return [
                     'group_id' => 'sometimes|exists:groups,id',
                     'import_file' => 'required|file|mimes:xlsx,xls',
