@@ -85,6 +85,14 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('tasks', ApiTaskController::class);
         });
 
+        Route::prefix('student-psc')->group(function () {
+            // Student-psc only routes
+            Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
+            Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
+            Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
+            Route::apiResource('sistems', ApiSistemController::class);
+        });
+
         Route::prefix('instructor')->group(function () {
             // Instruktor only routes
             Route::apiResource('assignments', ApiAssignmentController::class);
@@ -122,6 +130,14 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         //     Route::apiResource('users', ApiUserController::class);
         //     Route::apiResource('assignments', ApiAssignmentController::class);
         //     Route::apiResource('exams', ApiExamController::class);
+        // });
+
+        // Route::middleware(['role:mahasiswa-psc'])->prefix('student-psc')->group(function () {
+        //     // Student-psc only routes
+        //     Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
+        //     Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
+        //     Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
+        //     Route::apiResource('sistems', ApiSistemController::class);
         // });
 
         // Route::middleware(['role:instruktur'])->prefix('instructor')->group(function () {
