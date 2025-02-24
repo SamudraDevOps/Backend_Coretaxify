@@ -27,6 +27,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         $data['user_id'] = auth()->id();
         $exam = Exam::create([
             'user_id' => $data['user_id'],
+            'task_id' => $data['task_id'],
             'name' => $data['name'],
             'exam_code' => $data['exam_code'],
             'start_period' => $data['start_period'],
