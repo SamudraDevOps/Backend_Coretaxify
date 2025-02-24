@@ -67,7 +67,7 @@ class ApiAssignmentController extends ApiController {
         $intent = $request->get('intent');
 
         switch($intent) {
-            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+            case IntentEnum::API_USER_DOWNLOAD_FILE->value:
                 return $this->assignmentService->downloadFile($assignment);
         }
         return new AssignmentResource($assignment);

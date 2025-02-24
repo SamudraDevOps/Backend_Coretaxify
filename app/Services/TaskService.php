@@ -22,17 +22,19 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
 
     public function create(array $data): ?Model {
         $task = Task::create([
+            'user_id' => auth()->user()->id,
             'name' => $data['name'],
         ]);
-        $this->importData($data['import_file']);
+        $this->importData($data['import_file'], $task);
         return $task;
     }
 
-    public function importData(UploadedFile $file): void {
+    public function importData(UploadedFile $file, $keyOrModel): void {
+        $task = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('soal', $filename, 'public');
 
-        $task = Task::latest()->first();
         $task->update([
             'file_path' => $filename,
         ]);
@@ -84,6 +86,27 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
                 'deskripsi_klasifikasi_lapangan_usaha' => $record[18],
             ]);
         }
+    }
+
+    public function update($keyOrModel, array $data): ?Model {
+        $task = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
+        if (isset($data['import_file'])) {
+            $task->accounts()->delete();
+
+            Storage::disk('public')->delete('soal.' . $task->file_path);
+
+            $this->importData($data['import_file'], $task);
+        }
+
+        return parent::update($task, $data);
+    }
+
+    public function getTasksByUserId($userId) {
+        $repository = app($this->getRepositoryClass());
+        return $repository->query()->whereHas('user', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->paginate();
     }
 
     public function downloadFile(Task $task) {

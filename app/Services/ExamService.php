@@ -35,9 +35,9 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
             'supporting_file' => $filename,
         ]);
 
-        if (!empty($data['import_file'])) {
-            $this->importData($data['import_file']);
-        }
+        // if (!empty($data['import_file'])) {
+        //     $this->importData($data['import_file']);
+        // }
 
         // Attach logged in user to the newly created group
         $exam->users()->attach(auth()->id());

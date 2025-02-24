@@ -24,7 +24,7 @@ class Exam extends Model
         'start_period',
         'end_period',
         'duration',
-        'filename',
+        // 'filename',
         'supporting_file',
     ];
 
@@ -36,9 +36,9 @@ class Exam extends Model
         return $this->belongsToMany(User::class, 'exam_users');
     }
 
-    public function accounts(): HasMany {
-        return $this->hasMany(Account::class);
-    }
+    // public function accounts(): HasMany {
+    //     return $this->hasMany(Account::class);
+    // }
 
     public function task(): HasOne {
         return $this->hasOne(Task::class);
