@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreDetailKontakRequest extends FormRequest {
     public function rules(): array {
         return [
-            'profil_saya_id' => 'nullable|exists:profil_sayas,id', 
+             
             'jenis_kontak' => 'nullable|string',
             'nomor_telpon' => 'nullable|string',
             'nomor_handphone' => 'nullable|string',

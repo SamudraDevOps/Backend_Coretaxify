@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreInformasiUmumRequest extends FormRequest {
     public function rules(): array {
         return [
-            'profil_saya_id' => 'nullable|exists:profil_sayas,id', 
+             
             'npwp' => 'nullable|string',
             'jenis_wajib_pajak' => 'nullable|string',
             'nama' => 'nullable|string',
