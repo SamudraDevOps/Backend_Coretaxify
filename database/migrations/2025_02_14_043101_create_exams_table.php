@@ -20,7 +20,8 @@ return new class extends Migration
             $table->dateTime('start_period');
             $table->dateTime('end_period');
             $table->integer('duration');
-            $table->string('filename')->nullable();
+            // $table->string('filename')->nullable();
+            $table->string('supporting_file')->nullable();
             $table->timestamps();
         });
     }

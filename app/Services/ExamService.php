@@ -19,24 +19,38 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
     }
 
     public function create(array $data): ?Model {
+        $filename = null;
+        if(isset($data['supporting_file'])) {
+            $filename = $this->supportFile($data['supporting_file']);
+        }
+
         $data['user_id'] = auth()->id();
         $exam = Exam::create([
             'user_id' => $data['user_id'],
+            'task_id' => $data['task_id'],
             'name' => $data['name'],
             'exam_code' => $data['exam_code'],
             'start_period' => $data['start_period'],
             'end_period' => $data['end_period'],
             'duration' => $data['duration'],
+            'supporting_file' => $filename,
         ]);
 
-        if (!empty($data['import_file'])) {
-            $this->importData($data['import_file']);
-        }
+        // if (!empty($data['import_file'])) {
+        //     $this->importData($data['import_file']);
+        // }
 
         // Attach logged in user to the newly created group
         $exam->users()->attach(auth()->id());
 
         return $exam;
+    }
+
+    private function supportFile(UploadedFile $file) {
+        $filename = time() . '.' . $file->getClientOriginalName();
+        $file->storeAs('support-file', $filename, 'public');
+
+        return $filename;
     }
 
     public function joinExam(array $data): ?Model {
@@ -104,8 +118,14 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
     }
 
     public function downloadFile(Exam $exam) {
-        $filename = $exam->file_path;
+        $filename = $exam->filename;
         $path = storage_path('app/public/soal-psc/' . $filename);
+        return response()->download($path);
+    }
+
+    public function downloadSupport(Exam $exam) {
+        $filename = $exam->filename;
+        $path = storage_path('app/public/support-file/' . $filename);
         return response()->download($path);
     }
 }

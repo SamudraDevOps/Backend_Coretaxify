@@ -34,7 +34,7 @@ class ApiExamController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_EXAM->value:
-                if ($user->hasRole('dosen')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
                     return $this->examService->create($request->validated());
                 } else {
                     return response()->json([
@@ -42,7 +42,7 @@ class ApiExamController extends ApiController {
                     ], 403);
                 }
             case IntentEnum::API_USER_JOIN_EXAM->value:
-                if ($user->hasRole('mahasiswa')) {
+                if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
                     return $this->examService->joinExam($request->validated());
                 } else {
                     return response()->json([
@@ -61,8 +61,10 @@ class ApiExamController extends ApiController {
         $intent = $request->get('intent');
 
         switch($intent) {
-            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
-                return $this->examService->downloadFile($exam);
+            // case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+            //     return $this->examService->downloadFile($exam);
+            case IntentEnum::API_USER_DOWNLOAD_FILE->value:
+                return $this->examService->downloadSupport($exam);
         }
         return new ExamResource($exam);
     }

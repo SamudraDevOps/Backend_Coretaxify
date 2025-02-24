@@ -74,15 +74,27 @@ class UserService extends BaseCrudService implements UserServiceInterface {
 
         foreach ($records as $record) {
             $plain_password = $this->generatePassword();
-            $dosen = User::create([
-                'contract_id' => $data['contract_id'],
-                'name' => $record[0],
-                'email' => $record[1],
-                'password' => $plain_password,
-                'default_password' => $plain_password
-            ]);
-            $dosen->roles()->attach(Role::where('name', 'dosen')->first());
-            $this->sendEmail($dosen);
+            switch($data['intent']) {
+                case IntentEnum::API_USER_IMPORT_DOSEN->value:
+                    $user = User::create([
+                        'contract_id' => $data['contract_id'],
+                        'name' => $record[0],
+                        'email' => $record[1],
+                        'password' => $plain_password,
+                        'default_password' => $plain_password
+                    ]);
+                    $user->roles()->attach(Role::where('name', 'dosen')->first());
+                case IntentEnum::API_USER_IMPORT_MAHASISWA_PSC->value:
+                    $user = User::create([
+                        'name' => $record[0],
+                        'email' => $record[1],
+                        'password' => $plain_password,
+                        'default_password' => $plain_password
+                    ]);
+                    $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
+                    if(isset($data['group_id'])) { $user->groups()->attach($data['group_id']); }
+            }
+            $this->sendEmail($user);
         }
     }
     private function sendEmail(Model $user){

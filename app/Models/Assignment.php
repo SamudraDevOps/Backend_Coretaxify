@@ -12,7 +12,7 @@ class Assignment extends Model
 
     protected $fillable = [
         'name',
-        'group_id',
+        // 'group_id',
         'task_id',
         'assignment_code',
         'start_period',
@@ -30,9 +30,9 @@ class Assignment extends Model
     //     return $this->belongsToMany(Group::class, 'assignment_users');
     // }
 
-    public function group()
+    public function groups(): BelongsToMany
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsToMany(Group::class, 'group_assignments');
     }
 
     public function task(): HasOne {

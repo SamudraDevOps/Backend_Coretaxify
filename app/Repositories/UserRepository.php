@@ -27,6 +27,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface {
                 IntentEnum::API_USER_GET_ADMIN->value => 'admin',
                 IntentEnum::API_USER_GET_DOSEN->value => 'dosen',
                 IntentEnum::API_USER_GET_MAHASISWA->value => 'mahasiswa',
+                IntentEnum::API_USER_GET_MAHASISWA_PSC->value => 'mahasiswa-psc',
                 IntentEnum::API_USER_GET_INSTRUKTUR->value => 'instruktur',
             };
 

@@ -42,7 +42,7 @@ class ApiAssignmentController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
-                if ($user->hasRole('dosen')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
                     return $this->assignmentService->create($request->validated());
                 } else {
                     return response()->json([
@@ -63,7 +63,13 @@ class ApiAssignmentController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment) {
+    public function show(Request $request ,Assignment $assignment) {
+        $intent = $request->get('intent');
+
+        switch($intent) {
+            case IntentEnum::API_USER_DOWNLOAD_FILE->value:
+                return $this->assignmentService->downloadFile($assignment);
+        }
         return new AssignmentResource($assignment);
     }
 

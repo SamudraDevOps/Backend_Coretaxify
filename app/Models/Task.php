@@ -14,10 +14,10 @@ class Task extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'name',
         'file_path',
     ];
-
     protected $guarded = ['id'];
 
     public function accounts(): HasMany {
@@ -26,6 +26,10 @@ class Task extends Model
 
     public function contracts(): BelongsToMany {
         return $this->belongsToMany(Contract::class, 'contract_tasks');
+    }
+
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
     }
 
     // public function assignments()

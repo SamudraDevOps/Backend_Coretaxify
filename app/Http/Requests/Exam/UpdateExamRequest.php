@@ -28,6 +28,8 @@ class UpdateExamRequest extends FormRequest {
                     'start_period' => 'required|datetime',
                     'end_period' => 'required|datetime',
                     'duration' => 'required|integer',
+                    // 'import_file' => 'nullable|mimes:xlsx,xls,csv',
+                    'supporting_file' => 'sometimes|file',
                 ];
             }
     }

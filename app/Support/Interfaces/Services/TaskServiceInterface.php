@@ -11,7 +11,9 @@ interface TaskServiceInterface extends BaseCrudServiceInterface {
 
     public function create(array $data): ?Model;
 
-    public function importData(UploadedFile $file): void;
+    public function importData(UploadedFile $file, $keyOrModel): void;
+
+    public function getTasksByUserId($userId);
 
     public function downloadFile(Task $task);
 }

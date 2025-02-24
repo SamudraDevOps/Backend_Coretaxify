@@ -8,8 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateTaskRequest extends FormRequest {
     public function rules(): array {
         return [
-            'name' => 'nullable|string',
-            'import_file' => 'required|mimes:xlsx,xls,csv',
+            'name' => 'sometimes|string',
+            'import_file' => 'sometimes|mimes:xlsx,xls,csv',
         ];
     }
 }

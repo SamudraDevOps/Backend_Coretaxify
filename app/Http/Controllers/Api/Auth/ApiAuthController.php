@@ -66,7 +66,7 @@ class ApiAuthController extends ApiController {
                 'default_password' => $validated['password']
             ]);
 
-            $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
+            $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
             $user->groups()->attach($group->id);
 
             // generate and send otp
