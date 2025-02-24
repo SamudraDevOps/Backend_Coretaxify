@@ -9,7 +9,7 @@ class AlamatWajibPajak extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'profil_saya_id',
+          
         'negara',
         'jenis_alamat',
         'detail_alamat',

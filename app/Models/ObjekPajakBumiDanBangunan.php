@@ -9,7 +9,7 @@ class ObjekPajakBumiDanBangunan extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'profil_saya_id',
+          
         'nop',
         'nama_objek_pajak',
         'sektor',

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penunjukkan_wajib_pajak_sayas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profil_saya_id')->nullable()->constrained();
+             
             $table->string('status_pemberian_akses_portal')->nullable();
             $table->string('nama_wajib_pajak')->nullable();
             $table->string('npwp')->nullable();

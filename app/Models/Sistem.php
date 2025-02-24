@@ -10,8 +10,8 @@ class Sistem extends Model
 {
     protected $guarded = ['id'];
 
-    public function portal_sayas(): HasMany {
-        return $this->hasMany(PortalSaya::class);
+    public function portal_sayas() {
+        return $this->hasOne(PortalSaya::class);
     }
 
     public function assignment_user(): BelongsTo {

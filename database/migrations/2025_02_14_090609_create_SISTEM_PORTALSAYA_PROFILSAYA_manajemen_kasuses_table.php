@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('manajemen_kasuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profil_saya_id')->nullable()->constrained();
+             
             $table->string('kanal')->nullable();;
             $table->date('tanggal_permohonan')->nullable();;
             $table->timestamps();

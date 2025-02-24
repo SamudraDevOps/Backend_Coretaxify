@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detail_kontaks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profil_saya_id')->nullable()->constrained();
+             
             $table->string('jenis_kontak')->nullable();
             $table->string('nomor_telpon')->nullable();
             $table->string('nomor_handphone')->nullable();

@@ -9,7 +9,7 @@ class DetailKontak extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'profil_saya_id',
+          
         'jenis_kontak',
         'nomor_telepon',
         'nomor_handphone',

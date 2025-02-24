@@ -9,7 +9,7 @@ class KodeKlu extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'profil_saya_id',
+          
         'kode_nama',
         'deskripsi_klu',
         'deskripsi_tku',

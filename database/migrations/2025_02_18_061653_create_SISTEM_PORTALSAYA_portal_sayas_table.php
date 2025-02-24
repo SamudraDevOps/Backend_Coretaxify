@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profil_sayas', function (Blueprint $table) {
+        Schema::create('portal_sayas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('portal_saya_id')->nullable()->constrained();
+            $table->foreignId('profil_saya_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profil_sayas');
+        Schema::dropIfExists('portal_sayas');
     }
 };

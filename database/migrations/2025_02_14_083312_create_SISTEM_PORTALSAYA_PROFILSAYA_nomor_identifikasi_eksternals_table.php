@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('nomor_identifikasi_eksternals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profil_saya_id')->nullable()->constrained();
+             
             $table->string('tipe_nomor_identifikasi')->nullable();
             $table->string('nomor_identifikasi')->nullable();
             $table->date('tanggal_mulai')->nullable();

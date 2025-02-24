@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('jenis_pajaks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profil_saya_id')->nullable()->constrained();
+             
             $table->string('jenis_pajak')->nullable();
             $table->date('tanggal_permohonan')->nullable();
             $table->date('tanggal_mulai_transaksi')->nullable();

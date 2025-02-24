@@ -10,7 +10,7 @@ class TempatKegiatanUsaha extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'profil_saya_id',
+          
         'nitku',
         'jenis_tku',
         'nama_tku',

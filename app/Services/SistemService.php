@@ -55,72 +55,57 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             ]);
 
             $portal = PortalSaya::create();
-            $portal->update(['sistem_id' => $sistem->id]);
+            
+            $sistem->update(['portal_saya_id' => $portal->id]);
                     
-            $profil = ProfilSaya::create();
-            $profil->update(['portal_saya_id' => $portal->id]);
+            $profil = PortalSaya::create([
+                'informasi_umum_id' => InformasiUmum::create()->id,
+                'alamat_wajib_pajak_id' => AlamatWajibPajak::create()->id,
+                'kuasa_wajib_pajak_id' => KuasaWajibPajak::create()->id,
+                'manajemen_kasus_id' => ManajemenKasus::create()->id,
+                'detail_kontak_id' => DetailKontak::create()->id,
+                'kode_klu_id' => KodeKlu::create()->id,
+                'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
+                'pihak_terkait_id' => PihakTerkait::create()->id,
+                'data_ekonomi_id' => DataEkonomi::create()->id,
+                'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create()->id,
+                'jenis_pajak_id' => JenisPajak::create()->id,
+                'objek_pajak_bumi_dan_bangunan_id' => ObjekPajakBumiDanBangunan::create()->id,
+                'detail_bank_id' => DetailBank::create()->id,
+                'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
+            ]);
+            
+            $portal->update(['profil_saya_id' => $profil->id]);
                     
-            InformasiUmum::create([
-                'profil_saya_id' => $profil->id
-            ]);
+            // $informasi_umum = InformasiUmum::create();
             
-            AlamatWajibPajak::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            KuasaWajibPajak::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            ManajemenKasus::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            DetailKontak::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            KodeKlu::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            TempatKegiatanUsaha::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            PihakTerkait::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            DataEkonomi::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            NomorIdentifikasiEksternal::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            JenisPajak::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            ObjekPajakBumiDanBangunan::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            DetailBank::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            AlamatWajibPajak::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            PenunjukkanWajibPajakSaya::create([
-                'profil_saya_id' => $profil->id
-            ]);
-            
-            
+            // $alamatWajib =    AlamatWajibPajak::create();
+                
+            // $kuasawajib =    KuasaWajibPajak::create();
+                
+            // $manajemenaKasus =   ManajemenKasus::create();
+                
+            // $detailKontak =    DetailKontak::create();
+                
+            // $kodeKlu =    KodeKlu::create();
+                
+            // $tempatKegiatan =    TempatKegiatanUsaha::create();
+                
+            // $pihakTerkait =     PihakTerkait::create();
+                
+            // $dataEkonomi = DataEkonomi::create();
+                
+            // $nomorIdentifikasi = NomorIdentifikasiEksternal::create();
+                
+            // $jenisPajak = JenisPajak::create();
+                
+            // $objekPajak = ObjekPajakBumiDanBangunan::create();
+                
+            // $detailBank = DetailBank::create();
+                
+            // $alamatWajib = AlamatWajibPajak::create();
+                
+            // $penujukkanWajib = PenunjukkanWajibPajakSaya::create();
         }
                 
         return $sistem;

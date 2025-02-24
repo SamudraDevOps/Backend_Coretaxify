@@ -12,7 +12,7 @@ class PortalSaya extends Model
         return $this->belongsTo(Sistem::class);
     }
        
-    public function profil_sayas(): HasMany {
-        return $this->hasMany(ProfilSaya::class);
+    public function profil_sayas() {
+        return $this->hasOne(ProfilSaya::class);
     }   
 }

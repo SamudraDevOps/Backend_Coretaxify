@@ -16,7 +16,23 @@ class ContractSeeder extends Seeder
      */
     public function run(): void
     {
-        $contract = Contract::create([
+        // $contract = Contract::create([
+        //     'university_id' => 1,
+        //     // 'task_id' => Task::inRandomOrder()->first()->id,
+        //     'contract_type' => ContractTypeEnum::LICENSE->value,
+        //     'qty_student' => 1,
+        //     'start_period' => now(),
+        //     'end_period' => now()->addYears(1),
+        //     'spt' => 5,
+        //     'bupot' => 5,
+        //     'faktur' => 5,
+        //     'contract_code' => 'L-0001',
+        //     'is_buy_task' => 1,
+        //     'status' => ContractStatusEnum::ACTIVE->value,
+        // ]);
+        // $contract->tasks()->attach([1,2]);
+
+        $contract2 = Contract::create([
             'university_id' => 1,
             // 'task_id' => Task::inRandomOrder()->first()->id,
             'contract_type' => ContractTypeEnum::LICENSE->value,
@@ -26,10 +42,10 @@ class ContractSeeder extends Seeder
             'spt' => 5,
             'bupot' => 5,
             'faktur' => 5,
-            'contract_code' => 'L-0001',
+            'contract_code' => 'L-0002',
             'is_buy_task' => 1,
             'status' => ContractStatusEnum::ACTIVE->value,
         ]);
-        $contract->tasks()->attach([1,2]);
+        $contract2->tasks()->attach([3]);
     }
 }
