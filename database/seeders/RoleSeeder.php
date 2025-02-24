@@ -31,6 +31,10 @@ class RoleSeeder extends Seeder
             'name' => 'psc',
             'description' => 'PSC',
         ]);
+        Role::create([
+            'name' => 'mahasiswa-psc',
+            'description' => 'Student-PSC',
+        ]);
 
         Role::create([
             'name' => 'instruktur',

@@ -91,7 +91,7 @@ class UserService extends BaseCrudService implements UserServiceInterface {
                         'password' => $plain_password,
                         'default_password' => $plain_password
                     ]);
-                    $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
+                    $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
                     if(isset($data['group_id'])) { $user->groups()->attach($data['group_id']); }
             }
             $this->sendEmail($user);
