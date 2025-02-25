@@ -19,7 +19,7 @@ class UpdateContractRequest extends FormRequest {
             'faktur' => 'required|integer',
             'is_buy_task' => 'required|integer',
             'status' => 'required|in:' . implode(',', array_column(ContractStatusEnum::cases(), 'value')),
-            'tasks' => 'required|array',
+            'tasks' => 'sometimes|array',
         ];
     }
 }

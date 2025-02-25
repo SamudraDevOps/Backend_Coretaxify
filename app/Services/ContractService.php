@@ -17,8 +17,9 @@ class ContractService extends BaseCrudService implements ContractServiceInterfac
         $data['contract_code'] = Contract::generateContractCode($data['contract_type']);
         // return parent::create($data);
         $contract = parent::create($data);
-
-        $contract->tasks()->attach($data['tasks']);
+        if(isset($data['tasks'])) {
+            $contract->tasks()->attach($data['tasks']);
+        }
 
         return $contract;
     }
