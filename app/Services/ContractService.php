@@ -41,4 +41,14 @@ class ContractService extends BaseCrudService implements ContractServiceInterfac
 
         return $contract;   
     }
+
+    public function delete($keyOrModel): bool {
+        $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+        
+        $model->tasks()->detach();
+
+        parent::delete($model);
+
+        return true;
+    }
 }
