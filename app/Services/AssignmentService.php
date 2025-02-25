@@ -71,6 +71,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignment;   
     }
 
+
     private function importData(UploadedFile $file) {
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('support-file', $filename, 'public');
@@ -90,7 +91,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
     public function getAssignmentsByUserId($userId) {
         $repository = app($this->getRepositoryClass());
-
+        
         return $repository->query()->whereHas('users', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->paginate();
