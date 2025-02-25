@@ -23,6 +23,7 @@ class Contract extends Model
         'faktur',
         'contract_code',
         'is_buy_task',
+        'status'
     ];
 
     const TYPE_LICENSE = 'LICENSE';

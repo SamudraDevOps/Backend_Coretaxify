@@ -18,7 +18,7 @@ class UpdateContractRequest extends FormRequest {
             'bupot' => 'required|integer',
             'faktur' => 'required|integer',
             'is_buy_task' => 'required|integer',
-            'status' => 'required|in:' . implode(',', array_column(ContractStatusEnum::cases(), 'value')),
+            'status' => ['required', 'in:' . implode(',', array_column(ContractStatusEnum::cases(), 'value'))],
             'tasks' => 'sometimes|array',
         ];
     }

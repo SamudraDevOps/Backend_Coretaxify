@@ -17,7 +17,7 @@ class ContractService extends BaseCrudService implements ContractServiceInterfac
         $data['contract_code'] = Contract::generateContractCode($data['contract_type']);
         // return parent::create($data);
         $contract = parent::create($data);
-        if(isset($data['tasks'])) {
+        if(isset($data['tasks'])) {  
             $contract->tasks()->attach($data['tasks']);
         }
 
@@ -33,8 +33,11 @@ class ContractService extends BaseCrudService implements ContractServiceInterfac
 
         // return parent::update($keyOrModel, $data);
         $contract = parent::update($keyOrModel, $data);
-
-        $contract->tasks()->sync($data['tasks']);
+        if(isset($data['tasks'])) {
+            $contract->tasks()->sync($data['tasks']);
+        } else {
+            $contract->tasks()->detach();
+        }
 
         return $contract;   
     }
