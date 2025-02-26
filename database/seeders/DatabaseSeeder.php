@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TaskSeeder::class,
             GroupSeeder::class,
+            AccountSeeder::class,
         ]);
     }
 }
