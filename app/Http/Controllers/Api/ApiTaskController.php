@@ -22,9 +22,10 @@ class ApiTaskController extends ApiController {
         $perPage = request()->get('perPage', 5);
         $user = auth()->user();
 
-        $task = $this->taskService->getTasksByUserId($user->id);
+         // $tasks = $this->taskService->getTasksByUserId($user->id);
+        $tasks = $this->taskService->getTasksByUserRole($user);
 
-        return TaskResource::collection($task);
+        return TaskResource::collection($tasks);
 
         // return TaskResource::collection($this->taskService->getAllPaginated($request->query(), $perPage));
     }
