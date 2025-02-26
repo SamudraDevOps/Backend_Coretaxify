@@ -27,6 +27,8 @@ class ApiAssignmentController extends ApiController {
 
         // $assignments->load(['user', 'group']);
 
+        // return $assignments;
+
         return AssignmentResource::collection($assignments);
 
         // return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));

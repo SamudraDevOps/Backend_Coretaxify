@@ -8,9 +8,9 @@ class AssignmentResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'group_id' => $this->group_id,
-            'group' => new GroupResource($this->load('group')),
-            'dosen' => $this->group->user,
+            // 'group_id' => $this->group_id,
+            'groups' => GroupResource::collection($this->groups->load('user')),
+            // 'dosen' => $this->group->user,
             'name' => $this->name,
             'assignment_code' => $this->assignment_code,
             'task_id' => $this->task_id,
