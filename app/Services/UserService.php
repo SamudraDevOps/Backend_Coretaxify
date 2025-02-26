@@ -27,6 +27,8 @@ class UserService extends BaseCrudService implements UserServiceInterface {
         $data['password'] = $plain_password;
 
         $user = parent::create($data);
+        $user->email_verified_at = now();
+        $user->save();
         $this->assignRoleByIntent($user, $data['intent'] ?? null);
         $this->sendEmail($user);
         return $user;
