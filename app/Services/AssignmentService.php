@@ -47,8 +47,10 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             'user_id' => auth()->id(),
             'assignment_id' => $assignment->id,
         ]);
-
-        $assignment->groups()->attach($data['groups']);
+        
+        if(isset($data['groups'])){
+            $assignment->groups()->attach($data['groups']);
+        }
 
         return $assignment;
     }
@@ -65,10 +67,24 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         $assignment->update([
             'supporting_file' => $filename,
         ]);
-
-        $assignment->groups()->sync($data['groups']);
+        
+        if(isset($data['groups'])) {
+            $assignment->groups()->sync($data['groups']);
+        }
+        // $assignment->groups()->sync($data['groups']);
 
         return $assignment;   
+    }
+
+    public function delete($keyOrModel): bool {
+        $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+        
+        $model->users()->detach();
+        $model->groups()->detach();
+
+        parent::delete($model);
+
+        return true;
     }
 
 
