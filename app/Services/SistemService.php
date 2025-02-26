@@ -44,58 +44,43 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
         
         $dataAccount = Account::where('task_id', $task_id)
-                    ->select('nama', 'npwp')
+                    ->select('nama', 'npwp','account_type_id')
                     ->get();
-            
-        foreach($dataAccount as $account) {
-            $sistem = parent::create([
-                'assignment_user_id' => $dataAssignUserId,
-                'nama_akun' => $account->nama,
-                'npwp_akun' => $account->npwp
-            ]);
         
-            $portal = PortalSaya::create();
-
-            $sistem->update(['portal_saya_id' => $portal->id]);
-                    
-            $profil = ProfilSaya::create();
-
-            $portal->update(['profil_saya_id' => $profil->id]);
-                    
-            $informasi_umum         =    InformasiUmum::create();
-            $alamat_pajak           =    AlamatWajibPajak::create();
-            $kuasa_wajib_pajak      =    KuasaWajibPajak::create();
-            $manajemen_kasus        =    ManajemenKasus::create();
-            $detail_kontak          =    DetailKontak::create();
-            $kode_klu               =    KodeKlu::create();
-            $tempat_kegiatan_usaha  =    TempatKegiatanUsaha::create();
-            $pihak_terkait          =    PihakTerkait::create();
-            $data_ekonomi           =    DataEkonomi::create();
-            $nomor_identifikasi_eksternal   =  NomorIdentifikasiEksternal::create();
-            $jenis_pajak            =    JenisPajak::create();
-            $objek_pajak_bumi_dan_bangunan  =  ObjekPajakBumiDanBangunan::create();
-            $detail_bank            =    DetailBank::create();
-            $alamat_wajib_pajak     =    AlamatWajibPajak::create();
-            $penunjukkan_wajib_pajak =    PenunjukkanWajibPajakSaya::create();
+        foreach($dataAccount as $account) {
+        $sistem = parent::create([
+            'assignment_user_id' => $dataAssignUserId,
+            'nama_akun' => $account->nama,
+            'npwp_akun' => $account->npwp,
+            'account_type_id' => $account->account_type->name
+        ]);
             
-            $profil->update([
-                'informasi_umum_id' => $informasi_umum->id,
-                'alamat_pajak_id' => $alamat_pajak->id,
-                'kuasa_wajib_pajak_id' => $kuasa_wajib_pajak->id,
-                'manajemen_kasus_id' => $manajemen_kasus->id,
-                'detail_kontak_id' => $detail_kontak->id,
-                'kode_klu_id' => $kode_klu->id,
-                'tempat_kegiatan_usaha_id' => $tempat_kegiatan_usaha->id,
-                'alamat_wajib_pajak_id' => $alamat_wajib_pajak->id,
-                'pihak_terkait_id' => $pihak_terkait->id,
-                'data_ekonomi_id' => $data_ekonomi->id,
-                'nomor_identifikasi_eksternal_id' => $nomor_identifikasi_eksternal->id,
-                'jenis_pajak_id' => $jenis_pajak->id,
-                'objek_pajak_bumi_dan_bangunan_id' => $objek_pajak_bumi_dan_bangunan->id,
-                'detail_bank_id' => $detail_bank->id,
-                'penunjukkan_wajib_pajak_id' => $penunjukkan_wajib_pajak->id,
-            ]);
-        }
+        // Create ProfilSaya first
+        $profil = ProfilSaya::create([
+            'informasi_umum_id' => InformasiUmum::create()->id,
+            'alamat_wajib_pajak_id' => AlamatWajibPajak::create()->id,
+            'kuasa_wajib_pajak_id' => KuasaWajibPajak::create()->id,
+            'manajemen_kasus_id' => ManajemenKasus::create()->id,
+            'detail_kontak_id' => DetailKontak::create()->id,
+            'kode_klu_id' => KodeKlu::create()->id,
+            'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
+            'pihak_terkait_id' => PihakTerkait::create()->id,
+            'data_ekonomi_id' => DataEkonomi::create()->id,
+            'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create()->id,
+            'jenis_pajak_id' => JenisPajak::create()->id,
+            'objek_pajak_bumi_dan_bangunan_id' => ObjekPajakBumiDanBangunan::create()->id,
+            'detail_bank_id' => DetailBank::create()->id,
+            'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
+        ]);
+
+        // Then create PortalSaya with the profil_saya_id
+        $portal = PortalSaya::create([
+            'profil_saya_id' => $profil->id
+        ]);
+        
+        // Update sistem with portal_saya_id
+        $sistem->update(['portal_saya_id' => $portal->id]);
+    }
                 
         return $sistem;
     }

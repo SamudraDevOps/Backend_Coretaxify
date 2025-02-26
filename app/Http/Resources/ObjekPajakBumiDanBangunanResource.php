@@ -8,8 +8,6 @@ class ObjekPajakBumiDanBangunanResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'account_id' => $this->account_id,
-            'assignment_users_id' => $this->assignment_users_id,
             'nop' => $this->nop,
             'nama_objek_pajak' => $this->nama_objek_pajak,
             'sektor' => $this->sektor,
@@ -35,8 +33,8 @@ class ObjekPajakBumiDanBangunanResource extends JsonResource {
             'tanggal_pencabutan_pendaftaran' => $this->tanggal_pencabutan_pendaftaran,
             'kode_kpp' => $this->kode_kpp,
             'seksi_pengawasan' => $this->seksi_pengawasan,                        
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
+            // 'created_at' => $this->created_at->toDateTimeString(),
+            // 'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }

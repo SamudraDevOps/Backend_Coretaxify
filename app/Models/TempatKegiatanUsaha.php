@@ -10,8 +10,7 @@ class TempatKegiatanUsaha extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'nitku',
         'jenis_tku',
         'nama_tku',
@@ -44,9 +43,9 @@ class TempatKegiatanUsaha extends Model
         'is_alamat_utama_pkp',
     ];
 
-    public function profil_sayas()
+    public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 
 

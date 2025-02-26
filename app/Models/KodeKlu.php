@@ -9,8 +9,7 @@ class KodeKlu extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'kode_nama',
         'deskripsi_klu',
         'deskripsi_tku',
@@ -20,6 +19,6 @@ class KodeKlu extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

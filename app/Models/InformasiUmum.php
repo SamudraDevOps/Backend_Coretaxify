@@ -9,8 +9,7 @@ class InformasiUmum extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'npwp',
         'jenis_wajib_pajak',
         'nama',
@@ -34,6 +33,6 @@ class InformasiUmum extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

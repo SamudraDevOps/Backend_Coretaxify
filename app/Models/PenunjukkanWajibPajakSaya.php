@@ -9,8 +9,7 @@ class PenunjukkanWajibPajakSaya extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'status_pemberian_akses_portal',
         'nama_wajib_pajak',
         'npwp',
@@ -25,6 +24,6 @@ class PenunjukkanWajibPajakSaya extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

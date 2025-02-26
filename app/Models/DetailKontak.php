@@ -9,8 +9,7 @@ class DetailKontak extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'jenis_kontak',
         'nomor_telepon',
         'nomor_handphone',
@@ -24,6 +23,6 @@ class DetailKontak extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

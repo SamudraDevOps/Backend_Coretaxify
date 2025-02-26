@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('manajemen_kasuses', function (Blueprint $table) {
             $table->id();
+             
             $table->string('kanal')->nullable();;
             $table->date('tanggal_permohonan')->nullable();;
             $table->timestamps();

@@ -8,7 +8,6 @@ class DetailBankResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
- 
             'nama_bank' => $this->nama_bank,
             'nomor_rekening_bank' => $this->nomor_rekening_bank,
             'jenis_rekening_bank' => $this->jenis_rekening_bank,

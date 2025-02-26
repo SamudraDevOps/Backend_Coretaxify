@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nomor_identifikasi_eksternals', function (Blueprint $table) {
+        Schema::create('portal_sayas', function (Blueprint $table) {
             $table->id();
-             
-            $table->string('tipe_nomor_identifikasi')->nullable();
-            $table->string('nomor_identifikasi')->nullable();
-            $table->date('tanggal_mulai')->nullable();
-            $table->date('tanggal_berakhir')->nullable();
+            $table->foreignId('profil_saya_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nomor_identifikasi_eksternals');
+        Schema::dropIfExists('portal_sayas');
     }
 };

@@ -41,6 +41,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             'start_period' => $data['start_period'],
             'end_period' => $data['end_period'],
             'supporting_file' => $filename,
+            'task_id' => $data['task_id'],
         ]);
 
         AssignmentUser::create([

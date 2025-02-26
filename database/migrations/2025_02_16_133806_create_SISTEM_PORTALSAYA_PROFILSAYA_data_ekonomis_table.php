@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('data_ekonomis', function (Blueprint $table) {
             $table->id();
             $table->string('merek_dagang')->nullable();
-            $table->boolean('is_karyuawan')->nullable();
+            $table->boolean('is_karyawan')->nullable();
             $table->string('jumlah_karyawan')->nullable();
             $table->string('metode_pembukuan')->nullable();
             $table->string('mata_uang_pembukuan')->nullable();

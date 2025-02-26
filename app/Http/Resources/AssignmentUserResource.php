@@ -9,9 +9,9 @@ class AssignmentUserResource extends JsonResource {
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'user' => UserResource::collection($this->users),
-            'group_id' => $this->group_id,
-            'group' => GroupResource::collection($this->groups),
+            // 'user' => UserResource::collection($this->user),
+            'assignment_id' => $this->assignment_id,
+            // 'assignment_id' => new AssignmentResource($this->assignment),
             'score' => $this->score,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),

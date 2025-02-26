@@ -9,8 +9,7 @@ class PihakTerkait extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'tipe_pihak_terkait',
         'is_pic',
         'jenis_orang_terkait',
@@ -26,6 +25,6 @@ class PihakTerkait extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

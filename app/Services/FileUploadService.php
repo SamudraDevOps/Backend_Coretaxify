@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FileUploadService
 {
-    public function uploadImage(UploadedFile $file, string $path = 'profiles'): string
+    public function uploadImage(UploadedFile $file, string $path = 'profil_sayas'): string
     {
         $filename = time() . '_' . $file->getClientOriginalName();
         return $file->storeAs($path, $filename, 'public');

@@ -9,8 +9,7 @@ class JenisPajak extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'jenis_pajak',
         'tanggal_permohonan',
         'tanggal_mulai_transaksi',
@@ -21,6 +20,6 @@ class JenisPajak extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

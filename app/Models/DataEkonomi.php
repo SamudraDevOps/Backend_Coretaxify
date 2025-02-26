@@ -9,8 +9,7 @@ class DataEkonomi extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'merek_dagang',
         'is_karyawan',
         'jumlah_karyawan',
@@ -23,6 +22,6 @@ class DataEkonomi extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }

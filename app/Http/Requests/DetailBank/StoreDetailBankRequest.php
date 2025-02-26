@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreDetailBankRequest extends FormRequest {
     public function rules(): array {
         return [
-            "account_id" => "nullable|exists:accounts,id",
-            "assignment_users_id" => "nullable|exists:assignment_users,id",
+             
             "nama_bank" => "nullable|string",
             "nomor_rekening_bank" => "nullable|string",
             "jenis_rekening_bank" => "nullable|string",

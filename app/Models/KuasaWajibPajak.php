@@ -9,8 +9,7 @@ class KuasaWajibPajak extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-        'account_id',
-        'assignment_users_id',
+          
         'is_wajib_pajak',
         'id_penunjukkan_perwakilan',
         'nama_wakil',
@@ -31,6 +30,6 @@ class KuasaWajibPajak extends Model
 
     public function profil_saya()
     {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class);
     }
 }
