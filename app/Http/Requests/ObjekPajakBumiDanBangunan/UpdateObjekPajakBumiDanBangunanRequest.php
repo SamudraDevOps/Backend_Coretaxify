@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateObjekPajakBumiDanBangunanRequest extends FormRequest {
     public function rules(): array {
         return [
-             
+            
             'nop' => 'nullable|string',
             'nama_objek_pajak' => 'nullable|string',
             'sektor' => 'nullable|string',

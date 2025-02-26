@@ -19,6 +19,7 @@ return new class extends Migration
             // $table->foreignId('faktur_id')->nullable()->constrained();
             $table->string('nama_akun');
             $table->string('npwp_akun');
+            $table->string('tipe_akun');
             $table->timestamps();
         });
     }

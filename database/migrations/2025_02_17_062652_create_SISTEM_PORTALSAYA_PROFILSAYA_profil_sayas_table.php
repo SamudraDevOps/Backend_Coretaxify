@@ -22,8 +22,8 @@ return new class extends Migration
             $table->foreignId('manajemen_kasus_id')->nullable()->constrained();
             $table->foreignId('nomor_identifikasi_eksternal_id')->nullable()->constrained();
             $table->foreignId('objek_pajak_bumi_dan_bangunan_id')->nullable()->constrained();
-            $table->foreignId('pihak_terkait')->nullable()->constrained();
-            $table->foreignId('tempat_kegiatan_usaha')->nullable()->constrained();
+            $table->foreignId('pihak_terkait_id')->nullable()->constrained();
+            $table->foreignId('tempat_kegiatan_usaha_id')->nullable()->constrained();
             $table->foreignId('alamat_wajib_pajak_id')->nullable()->constrained();
             $table->foreignId('penunjukkan_wajib_pajak_saya_id')->nullable()->constrained();
             $table->foreignId('detail_kontak_id')->nullable()->constrained();

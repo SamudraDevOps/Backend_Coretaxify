@@ -44,14 +44,15 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
         
         $dataAccount = Account::where('task_id', $task_id)
-                    ->select('nama', 'npwp')
+                    ->select('nama', 'npwp','account_type_id')
                     ->get();
         
         foreach($dataAccount as $account) {
         $sistem = parent::create([
             'assignment_user_id' => $dataAssignUserId,
             'nama_akun' => $account->nama,
-            'npwp_akun' => $account->npwp
+            'npwp_akun' => $account->npwp,
+            'account_type_id' => $account->account_type->name
         ]);
             
         // Create ProfilSaya first

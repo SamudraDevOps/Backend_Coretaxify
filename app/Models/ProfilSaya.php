@@ -32,7 +32,7 @@ class ProfilSaya extends Model
         return $this->belongsTo(AlamatWajibPajak::class);
     }
 
-    public function manajemen_kasuse() {
+    public function manajemen_kasus() {
         return $this->belongsTo(ManajemenKasus::class);
     }
     
