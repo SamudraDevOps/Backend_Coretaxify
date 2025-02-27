@@ -14,7 +14,6 @@ use App\Models\DetailKontak;
 use App\Models\InformasiUmum;
 use App\Models\JenisPajak;
 use App\Models\KodeKlu;
-use App\Models\KuasaWajibPajak;
 use App\Models\ManajemenKasus;
 use App\Models\NomorIdentifikasiEksternal;
 use App\Models\ObjekPajakBumiDanBangunan;
@@ -78,7 +77,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'data_ekonomi_id' => DataEkonomi::create()->id,
             'jenis_pajak_id' => JenisPajak::create()->id,
             'detail_bank_id' => DetailBank::create()->id,
-            'kuasa_wajib_pajak_id' => KuasaWajibPajak::create()->id,
             'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create()->id,
             'alamat_wajib_pajak_id' => AlamatWajibPajak::create()->id,
             'manajemen_kasus_id' => ManajemenKasus::create()->id,
