@@ -9,7 +9,6 @@ class ManajemenKasus extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-          
         'kanal',
         'tanggal_permohonan',
     ];

@@ -33,8 +33,8 @@ class ObjekPajakBumiDanBangunanResource extends JsonResource {
             'tanggal_pencabutan_pendaftaran' => $this->tanggal_pencabutan_pendaftaran,
             'kode_kpp' => $this->kode_kpp,
             'seksi_pengawasan' => $this->seksi_pengawasan,                        
-            // 'created_at' => $this->created_at->toDateTimeString(),
-            // 'updated_at' => $this->updated_at->toDateTimeString(),
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }
