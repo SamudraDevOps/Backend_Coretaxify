@@ -11,5 +11,9 @@ interface ExamServiceInterface extends BaseCrudServiceInterface {
 
     public function downloadFile(Exam $exam);
 
+    public function getExamsByUserId($userId);
+
+    public function getExamsByUserRole($user);
+
     public function downloadSupport(Exam $exam);
 }

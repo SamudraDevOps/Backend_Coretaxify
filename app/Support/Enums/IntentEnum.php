@@ -48,6 +48,8 @@ enum IntentEnum: string {
 
     case API_GET_GROUP_BY_ROLES = 'api.get.group.by.roles';
 
+    case API_GET_EXAM_BY_ROLES = 'api.get.exam.by.roles';
+
     case API_USER_DOWNLOAD_SOAL = 'api.user.download.soal';
 
     case API_USER_DOWNLOAD_FILE = 'api.user.download.file';

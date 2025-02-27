@@ -65,6 +65,27 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         return $examUser;
     }
 
+    public function getExamsByUserId($userId) {
+        $repository = app($this->getRepositoryClass());
+
+        return $repository->query()->whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->paginate(1);
+    }
+
+    public function getExamsByUserRole($user) {
+        $repository = app($this->getRepositoryClass());
+
+        // Get an array of role IDs for the currently logged-in user
+        $userRoleIds = $user->roles->pluck('id')->toArray();
+
+        return $repository->query()
+            ->whereHas('user.roles', function ($query) use ($userRoleIds) {
+                $query->whereIn('roles.id', $userRoleIds);
+            })
+            ->paginate();
+    }
+
     private function importData(UploadedFile $file): void {
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('soal-psc', $filename, 'public');

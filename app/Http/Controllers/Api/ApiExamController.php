@@ -20,8 +20,17 @@ class ApiExamController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
+        $intent = request()->get('intent');
+        $user = auth()->user();
 
-        return ExamResource::collection($this->examService->getAllPaginated($request->query(), $perPage));
+        switch ($intent) {
+            case IntentEnum::API_GET_EXAM_BY_ROLES->value:
+                return ExamResource::collection($this->examService->getExamsByUserRole($user)->load(['user', 'task', 'users']));
+            default:
+                return ExamResource::collection($this->examService->getExamsByUserId($user->id)->load(['user', 'users', 'assignments']));
+        }
+
+        // return ExamResource::collection($this->examService->getAllPaginated($request->query(), $perPage));
     }
 
     /**
