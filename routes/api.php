@@ -94,16 +94,16 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
             Route::apiResource('detail-kontak', ApiDetailKontakController::class);
             Route::apiResource('detail-bank', ApiDetailBankController::class);
-            Route::apiResource('objek-pajak', ApiObjekPajakBumiDanBangunanController::class);
             Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
-            Route::apiResource('penunjukkan-pajak', ApiPenunjukkanWajibPajakSayaController::class);
-            Route::apiResource('nomor-identifikasi', ApiNomorIdentifikasiEksternalController::class);
-            Route::apiResource('manajemen-kasus', ApiManajemenKasusController::class);
             Route::apiResource('kode-klu', ApiKodeKluController::class);
-            Route::apiResource('kuasa-wajib', ApiKuasaWajibPajakController::class);
-            Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
-            Route::apiResource('alamat-wajib', ApiAlamatWajibPajakController::class);
+            Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
+            Route::apiResource('kuasa-wajib-pajak', ApiKuasaWajibPajakController::class);
+            Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
+            Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
+            Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
+            Route::apiResource('manajemen-kasuses', ApiManajemenKasusController::class);
+            Route::apiResource('alamat-wajib-pajak', ApiAlamatWajibPajakController::class);
         });
 
         Route::prefix('psc')->group(function () {

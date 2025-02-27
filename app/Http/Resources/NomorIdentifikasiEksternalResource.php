@@ -8,7 +8,6 @@ class NomorIdentifikasiEksternalResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
- 
             'tipe_nomor_identifikasi' => $this->tipe_nomor_identifikasi,
             'nomor_identifikasi' => $this->nomor_identifikasi,
             'tanggal_mulai' => $this->tanggal_mulai,

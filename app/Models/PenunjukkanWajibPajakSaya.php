@@ -9,7 +9,6 @@ class PenunjukkanWajibPajakSaya extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-          
         'status_pemberian_akses_portal',
         'nama_wajib_pajak',
         'npwp',
