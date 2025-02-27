@@ -43,8 +43,14 @@ class UserService extends BaseCrudService implements UserServiceInterface {
             case IntentEnum::API_USER_CREATE_ADMIN->value:
                 $user->roles()->attach(Role::where('name', 'admin')->first());
                 break;
-            case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
+            case IntentEnum::API_USER_CREATE_PSC->value:
+                $user->roles()->attach(Role::where('name', 'psc')->first());
+                break;
+            case IntentEnum::API_USER_CREATE_INSTRUKTUR->value:
                 $user->roles()->attach(Role::where('name', 'instruktur')->first());
+                break;
+            case IntentEnum::API_USER_CREATE_MAHASISWA_PSC->value:
+                $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
                 break;
             default:
                 $user->roles()->attach(Role::where('name', 'dosen')->first());
@@ -76,6 +82,7 @@ class UserService extends BaseCrudService implements UserServiceInterface {
 
         foreach ($records as $record) {
             $plain_password = $this->generatePassword();
+            // dd($record);
             switch($data['intent']) {
                 case IntentEnum::API_USER_IMPORT_DOSEN->value:
                     $user = User::create([
@@ -86,6 +93,7 @@ class UserService extends BaseCrudService implements UserServiceInterface {
                         'default_password' => $plain_password
                     ]);
                     $user->roles()->attach(Role::where('name', 'dosen')->first());
+                    break;
                 case IntentEnum::API_USER_IMPORT_MAHASISWA_PSC->value:
                     $user = User::create([
                         'name' => $record[0],
@@ -95,6 +103,16 @@ class UserService extends BaseCrudService implements UserServiceInterface {
                     ]);
                     $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
                     if(isset($data['group_id'])) { $user->groups()->attach($data['group_id']); }
+                    break;
+                case IntentEnum::API_USER_IMPORT_INSTRUKTUR->value:
+                    $user = User::create([
+                        'name' => $record[0],
+                        'email' => $record[1],
+                        'password' => $plain_password,
+                        'default_password' => $plain_password
+                    ]);
+                    $user->roles()->attach(Role::where('name', 'instruktur')->first());
+                    break;
             }
             $this->sendEmail($user);
         }

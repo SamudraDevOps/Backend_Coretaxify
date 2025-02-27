@@ -61,6 +61,19 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         })->paginate(1);
     }
 
+    public function getGroupsByUserRole($user) {
+        $repository = app($this->getRepositoryClass());
+
+        // Get an array of role IDs for the currently logged-in user
+        $userRoleIds = $user->roles->pluck('id')->toArray();
+
+        return $repository->query()
+            ->whereHas('user.roles', function ($query) use ($userRoleIds) {
+                $query->whereIn('roles.id', $userRoleIds);
+            })
+            ->paginate();
+    }
+
     private function importData(UploadedFile $file): void {
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('soal-psc', $filename, 'public');

@@ -25,7 +25,17 @@ class StoreUserRequest extends FormRequest {
                     'name' => 'required|string',
                     'email' => 'required|string|email',
                 ];
-            case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
+            case IntentEnum::API_USER_CREATE_PSC->value:
+                return [
+                    'name' => 'required|string',
+                    'email' => 'required|string|email',
+                ];
+            case IntentEnum::API_USER_CREATE_MAHASISWA_PSC->value:
+                return [
+                    'name' => 'required|string',
+                    'email' => 'required|string|email',
+                ];
+            case IntentEnum::API_USER_CREATE_INSTRUKTUR->value:
                 return [
                     'name' => 'required|string',
                     'email' => 'required|string|email',

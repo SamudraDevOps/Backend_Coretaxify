@@ -20,20 +20,31 @@ class ApiGroupController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
-
+        $intent = request()->get('intent');
         $user = auth()->user();
 
-        if ($user->hasRole('dosen') || $user->hasRole('psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
-        } else if ($user->hasRole('mahasiswa')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
-        } else if ($user->hasRole('mahasiswa-psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
-        } else if ($user->hasRole('psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        switch($intent) {
+            case IntentEnum::API_GET_GROUP_BY_ROLES->value:
+                $groups = $this->groupService->getGroupsByUserRole($user);
+                return GroupResource::collection($groups->load(['user', 'users', 'assignments']));
+            default:
+                $groups = $this->groupService->getGroupsByUserId($user->id);
+                return GroupResource::collection($groups->load(['user', 'users', 'assignments']));
         }
 
-        return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load(['user', 'users', 'assignments']));
+
+
+        // if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // } else if ($user->hasRole('mahasiswa')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // } else if ($user->hasRole('mahasiswa-psc')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // } else if ($user->hasRole('psc')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // }
+
+        // return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load(['user', 'users', 'assignments']));
     }
 
     /**

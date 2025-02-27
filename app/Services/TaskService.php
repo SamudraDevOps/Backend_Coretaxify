@@ -112,10 +112,10 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
 
     public function getTasksByUserRole($user) {
         $repository = app($this->getRepositoryClass());
-    
+
         // Get an array of role IDs for the currently logged-in user
         $userRoleIds = $user->roles->pluck('id')->toArray();
-    
+
         return $repository->query()
             ->whereHas('user.roles', function ($query) use ($userRoleIds) {
                 $query->whereIn('roles.id', $userRoleIds);
@@ -126,5 +126,16 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
         $filename = $task->file_path;
         $path = storage_path('app/public/soal/' . $filename);
         return response()->download($path);
+    }
+
+    public function delete($keyOrModel): bool {
+        $task = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
+        $task->contracts()->detach();
+        $task->accounts()->delete();
+
+        parent::delete($task);
+
+        return true;
     }
 }

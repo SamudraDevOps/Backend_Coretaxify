@@ -12,5 +12,7 @@ interface GroupServiceInterface extends BaseCrudServiceInterface {
 
     public function getGroupsByUserId($userId);
 
+    public function getGroupsByUserRole($user);
+
     public function downloadFile(Group $group);
 }
