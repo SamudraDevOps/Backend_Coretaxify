@@ -54,10 +54,23 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'npwp_akun' => $account->npwp,
             'tipe_akun' => $account->account_type->name
         ]);
-            
+        
+        $kategoriWajibPajak = $sistem->tipe_akun;
+
+        if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan ') {
+            $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
+        } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
+            $kategoriWajibPajak = 'Orang Pribadi';
+        }
         // Create ProfilSaya first
         $profil = ProfilSaya::create([
-            'informasi_umum_id' => InformasiUmum::create()->id,
+            'informasi_umum_id' => InformasiUmum::create([
+                'nama' => $sistem->nama_akun,
+                'npwp' => $sistem->npwp_akun,
+                'jenis_wajib_pajak' => $sistem->tipe_akun,
+                'kategori_wajib_pajak' => $kategoriWajibPajak,
+                'bahasa' => 'Bahasa Indonesia',
+            ])->id,
             'detail_kontak_id' => DetailKontak::create()->id,
             'kode_klu_id' => KodeKlu::create()->id,
             'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
