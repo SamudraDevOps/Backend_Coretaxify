@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             TaskSeeder::class,
             GroupSeeder::class,
             AccountSeeder::class,
+            ExamSeeder::class,
+            AssignmentSeeder::class,
         ]);
     }
 }

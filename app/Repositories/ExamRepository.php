@@ -30,4 +30,8 @@ class ExamRepository extends BaseRepository implements ExamRepositoryInterface {
 
         return $query;
     }
+
+    public function query() {
+        return $this->getQuery();
+    }
 }

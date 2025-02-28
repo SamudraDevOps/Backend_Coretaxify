@@ -21,5 +21,13 @@ class GroupSeeder extends Seeder
                 'class_code' => 'ABCD',
                 'status' => 'ACTIVE',
             ]);
+        $groups2 = Group::create([
+                'name' => 'Kelas PSC',
+                'user_id' => 5,
+                'start_period' => now(),
+                'end_period' => now()->addYears(1),
+                'class_code' => 'DCBA',
+                'status' => 'ACTIVE',
+            ]);
     }
 }

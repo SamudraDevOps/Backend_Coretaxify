@@ -27,7 +27,7 @@ class ApiExamController extends ApiController {
             case IntentEnum::API_GET_EXAM_BY_ROLES->value:
                 return ExamResource::collection($this->examService->getExamsByUserRole($user)->load(['user', 'task', 'users']));
             default:
-                return ExamResource::collection($this->examService->getExamsByUserId($user->id)->load(['user', 'users', 'assignments']));
+                return ExamResource::collection($this->examService->getExamsByUserId($user->id)->load(['user', 'users', 'users']));
         }
 
         // return ExamResource::collection($this->examService->getAllPaginated($request->query(), $perPage));
@@ -75,7 +75,7 @@ class ApiExamController extends ApiController {
             case IntentEnum::API_USER_DOWNLOAD_FILE->value:
                 return $this->examService->downloadSupport($exam);
         }
-        return new ExamResource($exam);
+        return new ExamResource($exam->load(['users']));
     }
 
     /**
