@@ -9,7 +9,6 @@ class PihakTerkait extends Model
     protected $guarded = ['id'];    
 
     protected $fillable = [
-          
         'tipe_pihak_terkait',
         'is_pic',
         'jenis_orang_terkait',
