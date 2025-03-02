@@ -17,10 +17,10 @@ class StoreAssignmentRequest extends FormRequest {
                     'groups' => 'sometimes|array',
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
-                    'assignment_code' => 'required|string',
+                    // 'assignment_code' => 'required|string',
                     'start_period' => 'required|date',
                     'end_period' => 'required|date',
-                    'supporting_file' => 'nullable|file',
+                    'supporting_file' => 'sometimes|file',
                 ];
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
                 return [
@@ -31,7 +31,7 @@ class StoreAssignmentRequest extends FormRequest {
                     'groups' => 'sometimes|array',
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
-                    'assignment_code' => 'required|string',
+                    // 'assignment_code' => 'required|string',
                     'start_period' => 'required|date',
                     'end_period' => 'required|date',
                 ];

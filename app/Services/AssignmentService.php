@@ -33,24 +33,44 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         if(isset($data['supporting_file'])) {
             $filename = $this->importData($data['supporting_file']);
         }
-        
-        $assignment = Assignment::create([
-            'task_id' => $data['task_id'],
-            'name' => $data['name'],
-            'assignment_code' => $data['assignment_code'],
-            'start_period' => $data['start_period'],
-            'end_period' => $data['end_period'],
-            'supporting_file' => $filename,
-            'task_id' => $data['task_id'],
-        ]);
 
-        AssignmentUser::create([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id,
-        ]);
-        
-        if(isset($data['groups'])){
-            $assignment->groups()->attach($data['groups']);
+        $data['user_id'] = auth()->id();
+
+        // $assignment = Assignment::create([
+        //     'user_id' => $data['user_id'],
+        //     'task_id' => $data['task_id'],
+        //     'name' => $data['name'],
+        //     'assignment_code' => $data['assignment_code'],
+        //     'start_period' => $data['start_period'],
+        //     'end_period' => $data['end_period'],
+        //     'supporting_file' => $filename,
+        // ]);
+
+        // AssignmentUser::create([
+        //     'user_id' => auth()->id(),
+        //     'assignment_id' => $assignment->id,
+        // ]);
+
+        // Many to Many
+        // if(isset($data['groups'])){
+        //     $assignment->groups()->attach($data['groups']);
+        // }
+
+        // 1 Praktikum 1 Kelas
+        if (isset($data['groups'])) {
+            foreach ($data['groups'] as $group) {
+                $data['assignment_code'] = Assignment::generateTaskCode();
+                $assignment = Assignment::create([
+                    'group_id' => $group,
+                    'user_id' => $data['user_id'],
+                    'task_id' => $data['task_id'],
+                    'name' => $data['name'],
+                    'assignment_code' => $data['assignment_code'],
+                    'start_period' => $data['start_period'],
+                    'end_period' => $data['end_period'],
+                    'supporting_file' => $filename,
+                ]);
+            }
         }
 
         return $assignment;
@@ -68,20 +88,20 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         $assignment->update([
             'supporting_file' => $filename,
         ]);
-        
-        if(isset($data['groups'])) {
-            $assignment->groups()->sync($data['groups']);
-        }
+
+        // if(isset($data['groups'])) {
+        //     $assignment->groups()->sync($data['groups']);
+        // }
         // $assignment->groups()->sync($data['groups']);
 
-        return $assignment;   
+        return $assignment;
     }
 
     public function delete($keyOrModel): bool {
         $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
-        
+
         $model->users()->detach();
-        $model->groups()->detach();
+        // $model->groups()->detach();
 
         parent::delete($model);
 
@@ -108,14 +128,17 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
     public function getAssignmentsByUserId($userId) {
         $repository = app($this->getRepositoryClass());
-        
-        return $repository->query()->whereHas('users', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->paginate();
-        // return Assignment::where('user_id', $userId)
-        // ->orWhereHas('users', function($query) use ($userId) {
-        //     $query->where('user_id', $userId);
-        // });
+        $user = auth()->user();
+
+        if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+            return $repository->query()->whereHas('users', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate();
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+            return $repository->query()->whereHas('user', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate();
+        }
     }
 
     public function downloadFile(Assignment $assignment) {

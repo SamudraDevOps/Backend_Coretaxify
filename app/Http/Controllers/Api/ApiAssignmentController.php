@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
@@ -52,7 +53,7 @@ class ApiAssignmentController extends ApiController {
                     ], 403);
                 }
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
-                if ($user->hasRole('mahasiswa')) {
+                if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
                     return $this->assignmentService->joinAssignment($request->validated());
                 } else {
                     return response()->json([
@@ -87,5 +88,17 @@ class ApiAssignmentController extends ApiController {
      */
     public function destroy(Request $request, Assignment $assignment) {
         return $this->assignmentService->delete($assignment);
+    }
+    public function getMembers(Assignment $assignment) {
+        return new AssignmentResource($assignment->load('users'));
+    }
+
+    public function removeMember(Assignment $assignment, User $user) {
+        $assignment->users()->detach($user->id);
+        return response()->json(['message' => 'Member removed successfully']);
+    }
+
+    public function getMemberDetail(Assignment $assignment, User $user) {
+        return $assignment->users()->findOrFail($user->id);
     }
 }
