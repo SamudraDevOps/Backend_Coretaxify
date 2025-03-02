@@ -36,7 +36,7 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         }
 
         // Attach logged in user to the newly created group
-        $group->users()->attach(auth()->id());
+        // $group->users()->attach(auth()->id());
 
         return $group;
     }
