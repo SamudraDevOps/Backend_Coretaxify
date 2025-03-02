@@ -122,6 +122,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
             });
             Route::apiResource('exams', ApiExamController::class);
+            Route::prefix('exams')->group(function () {
+                Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+                Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+                Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+            });
             Route::apiResource('tasks', ApiTaskController::class);
         });
 

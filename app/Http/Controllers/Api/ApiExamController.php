@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Exam;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
 use App\Http\Resources\ExamResource;
@@ -25,9 +26,9 @@ class ApiExamController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_GET_EXAM_BY_ROLES->value:
-                return ExamResource::collection($this->examService->getExamsByUserRole($user)->load(['user', 'task', 'users']));
+                return ExamResource::collection($this->examService->getExamsByUserRole($user));
             default:
-                return ExamResource::collection($this->examService->getExamsByUserId($user->id)->load(['user', 'users', 'users']));
+                return ExamResource::collection($this->examService->getExamsByUserId($user->id));
         }
 
         // return ExamResource::collection($this->examService->getAllPaginated($request->query(), $perPage));
@@ -90,5 +91,18 @@ class ApiExamController extends ApiController {
      */
     public function destroy(Request $request, Exam $exam) {
         return $this->examService->delete($exam);
+    }
+
+    public function getMembers(Exam $exam) {
+        return new ExamResource($exam->load('users'));
+    }
+
+    public function removeMember(Exam $exam, User $user) {
+        $exam->users()->detach($user->id);
+        return response()->json(['message' => 'Member removed successfully']);
+    }
+
+    public function getMemberDetail(Exam $exam, User $user) {
+        return $exam->users()->findOrFail($user->id);
     }
 }

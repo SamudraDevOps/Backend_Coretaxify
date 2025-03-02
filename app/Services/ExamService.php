@@ -67,10 +67,22 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
 
     public function getExamsByUserId($userId) {
         $repository = app($this->getRepositoryClass());
+        $user = auth()->user();
 
-        return $repository->query()->whereHas('users', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->paginate(5);
+        if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+            return $repository->query()->whereHas('users', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate();
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+            return $repository->query()->whereHas('user', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate();
+        }
+
+
+        // return $repository->query()->whereHas('users', function ($query) use ($userId) {
+        //     $query->where('user_id', $userId);
+        // })->paginate(5);
     }
 
     public function getExamsByUserRole($user) {

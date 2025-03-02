@@ -97,6 +97,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Exam::class, 'exam_users');
     }
 
+    public function exam(): HasMany {
+        return $this->HasMany(Exam::class);
+    }
+
     public function generateOtp()
     {
         $this->email_otp = rand(1000, 9999); // Generate 4-digit OTP
