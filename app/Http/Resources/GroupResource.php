@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Carbon;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupResource extends JsonResource {
@@ -13,8 +15,8 @@ class GroupResource extends JsonResource {
             'user' => new UserResource($this->whenLoaded('user')),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'assignments' => AssignmentResource::collection($this->whenLoaded('assignments')),
-            'start_period' => $this->start_period,
-            'end_period' => $this->end_period,
+            'start_period' => $this->start_period ? Carbon::parse($this->start_period)->format('d-m-Y') : null,
+            'end_period' => $this->end_period ? Carbon::parse($this->end_period)->format('d-m-Y') : null,
             'class_code' => $this->class_code,
             'status' => $this->status,
             'filename' => $this->filename,

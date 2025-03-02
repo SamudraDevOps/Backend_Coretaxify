@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('task_id')->nullable()->constrained();
             $table->foreignId('account_type_id')->constrained();
             // $table->foreignId('exam_id')->nullable()->constrained();
-            $table->foreignId('group_id')->nullable()->constrained();
+            // $table->foreignId('group_id')->nullable()->constrained();
             $table->string('nama');
             $table->string('npwp');
             $table->string('kegiatan_utama')->nullable();

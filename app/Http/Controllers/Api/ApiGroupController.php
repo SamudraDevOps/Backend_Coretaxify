@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\Group\StoreGroupRequest;
-use App\Http\Requests\Group\UpdateGroupRequest;
-use App\Http\Resources\GroupResource;
+use App\Models\User;
 use App\Models\Group;
-use App\Support\Interfaces\Services\GroupServiceInterface;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
+use App\Http\Resources\GroupResource;
+use App\Http\Requests\Group\StoreGroupRequest;
+use App\Http\Requests\Group\UpdateGroupRequest;
+use App\Support\Interfaces\Services\GroupServiceInterface;
 
 class ApiGroupController extends ApiController {
     public function __construct(
@@ -26,10 +27,10 @@ class ApiGroupController extends ApiController {
         switch($intent) {
             case IntentEnum::API_GET_GROUP_BY_ROLES->value:
                 $groups = $this->groupService->getGroupsByUserRole($user);
-                return GroupResource::collection($groups->load(['user', 'users', 'assignments']));
+                return GroupResource::collection($groups);
             default:
                 $groups = $this->groupService->getGroupsByUserId($user->id);
-                return GroupResource::collection($groups->load(['user', 'users', 'assignments']));
+                return GroupResource::collection($groups);
         }
 
 
@@ -105,7 +106,7 @@ class ApiGroupController extends ApiController {
             case IntentEnum::API_GET_GROUP_WITH_MEMBERS->value:
                 return new GroupResource($group->load('users',));
         }
-        return new GroupResource($group->load(['users', 'assignments']));
+        return new GroupResource($group->load(['user', 'assignments']));
     }
 
     /**
@@ -120,5 +121,18 @@ class ApiGroupController extends ApiController {
      */
     public function destroy(Request $request, Group $group) {
         return $this->groupService->delete($group);
+    }
+
+    public function getMembers(Group $group) {
+        return new GroupResource($group->load('users'));
+    }
+
+    public function removeMember(Group $group, User $user) {
+        $group->users()->detach($user->id);
+        return response()->json(['message' => 'Member removed successfully']);
+    }
+
+    public function getMemberDetail(Group $group, User $user) {
+        return $group->users()->findOrFail($user->id);
     }
 }

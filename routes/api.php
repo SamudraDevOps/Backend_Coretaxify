@@ -109,6 +109,12 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::prefix('psc')->group(function () {
             // PSC only routes
             Route::apiResource('groups', ApiGroupController::class);
+
+            Route::prefix('groups')->group(function () {
+                Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
+                Route::delete('{group}/members/{user}', [ApiGroupController::class, 'removeMember']);
+                Route::get('{group}/members/{user}', [ApiGroupController::class, 'getMemberDetail']);
+            });
             Route::apiResource('users', ApiUserController::class);
             Route::apiResource('assignments', ApiAssignmentController::class);
             Route::apiResource('exams', ApiExamController::class);
