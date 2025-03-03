@@ -20,7 +20,7 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         
         $randomNumber = 'DA' . Str::random(8);
                 
-        WakilSaya::create([
+    WakilSaya::create([
            'nama' => $pihakTerkait->nama,
            'npwp' => $pihakTerkait->npwp,
            'id_penunjukkan_perwakilan' => $randomNumber,

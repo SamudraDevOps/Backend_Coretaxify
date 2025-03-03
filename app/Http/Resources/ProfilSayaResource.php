@@ -21,6 +21,7 @@ class ProfilSayaResource extends JsonResource {
             'kode_klu' => new KodeKluResource($this->kode_klu),
             'tempat_kegiatan_usaha' => new TempatKegiatanUsahaResource($this->tempat_kegiatan_usaha),
             'pihak_terkait' => new PihakTerkaitResource($this->pihak_terkait),
+            'wakil_saya' => new WakilSayaResource($this->wakil_saya),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

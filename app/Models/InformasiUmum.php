@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class InformasiUmum extends Model
 {
@@ -33,5 +34,9 @@ class InformasiUmum extends Model
     public function profil_saya()
     {
         return $this->hasOne(ProfilSaya::class);
+    }
+
+    public function wakil_sayas(): BelongsToMany {
+        return $this->belongsToMany(WakilSaya::class, 'wakil_saya_informasi_umums');
     }
 }

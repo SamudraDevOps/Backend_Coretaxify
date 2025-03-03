@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class WakilSaya extends Model
 {
@@ -24,4 +25,8 @@ class WakilSaya extends Model
         'tanggal_mulai',
         'tanggal_berakhir',
     ];  
+
+    public function informasi_umums(): BelongsToMany {
+        return $this->belongsToMany(InformasiUmum::class, 'wakil_saya_informasi_umums');
+    }
 }

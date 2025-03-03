@@ -24,6 +24,7 @@ use App\Models\ProfilSaya;
 use App\Models\Sistem;
 use App\Models\Task;
 use App\Models\TempatKegiatanUsaha;
+use App\Models\WakilSaya;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -73,7 +74,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'detail_kontak_id' => DetailKontak::create()->id,
             'kode_klu_id' => KodeKlu::create()->id,
             'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
-            'pihak_terkait_id' => PihakTerkait::create()->id,
             'data_ekonomi_id' => DataEkonomi::create()->id,
             'jenis_pajak_id' => JenisPajak::create()->id,
             'detail_bank_id' => DetailBank::create()->id,
