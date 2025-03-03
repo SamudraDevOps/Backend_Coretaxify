@@ -16,15 +16,15 @@ class AccountSeeder extends Seeder
         Account::create([
             'task_id' => 1,
             'account_type_id' => 1,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Helmi',
             'npwp' => '35730116969',
         ]);
-        
+
         Account::create([
             'task_id' => 1,
             'account_type_id' => 2,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Badan 1',
             'npwp' => '35730117070',
         ]);
@@ -32,7 +32,7 @@ class AccountSeeder extends Seeder
         Account::create([
             'task_id' => 1,
             'account_type_id' => 3,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Helmi Lawan Transaksi',
             'npwp' => '35730118080',
         ]);
@@ -40,15 +40,15 @@ class AccountSeeder extends Seeder
         Account::create([
             'task_id' => 2,
             'account_type_id' => 1,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Bani',
             'npwp' => '35730116969111',
         ]);
-        
+
         Account::create([
             'task_id' => 2,
             'account_type_id' => 2,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Badan 2',
             'npwp' => '35730117070111',
         ]);
@@ -56,7 +56,7 @@ class AccountSeeder extends Seeder
         Account::create([
             'task_id' => 2,
             'account_type_id' => 3,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Bani Lawan Transaksi',
             'npwp' => '35730118080111',
         ]);
@@ -64,7 +64,7 @@ class AccountSeeder extends Seeder
         Account::create([
             'task_id' => 2,
             'account_type_id' => 4,
-            'group_id' => 1,
+            // 'group_id' => 1,
             'nama' => 'Badan Lawan Transaksi',
             'npwp' => '35730118080111',
         ]);

@@ -32,8 +32,11 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function assignments()
-    // {
-    //     return $this->hasMany(Assignment::class);
-    // }
+    public function exams(): HasMany {
+        return $this->hasMany(Exam::class);
+    }
+
+    public function assignments(): HasMany {
+        return $this->hasMany(Assignment::class);
+    }
 }

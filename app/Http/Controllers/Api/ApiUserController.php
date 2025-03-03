@@ -47,7 +47,7 @@ class ApiUserController extends ApiController {
         //     // case IntentEnum::API_USER_IMPORT_DOSEN->value:
         //     //     $this->userService->importData($request->file('import_file'));
         //     //     return response()->noContent();
-        //     case IntentEnum::API_USER_CREATE_INSTRUCTOR->value:
+        //     case IntentEnum::API_USER_CREATE_INSTRUKTUR->value:
         //         return $this->userService->create($request->validated());
         //     default:
         //         return $this->userService->create($request->validated());

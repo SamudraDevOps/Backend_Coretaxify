@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Task;
+use App\Models\User;
 use League\Csv\Reader;
 use App\Models\Account;
 use Illuminate\Http\UploadedFile;
@@ -109,9 +110,32 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
         })->paginate();
     }
 
+    public function getTasksByUserRole($user) {
+        $repository = app($this->getRepositoryClass());
+
+        // Get an array of role IDs for the currently logged-in user
+        $userRoleIds = $user->roles->pluck('id')->toArray();
+
+        return $repository->query()
+            ->whereHas('user.roles', function ($query) use ($userRoleIds) {
+                $query->whereIn('roles.id', $userRoleIds);
+            })
+            ->paginate();
+    }
     public function downloadFile(Task $task) {
         $filename = $task->file_path;
         $path = storage_path('app/public/soal/' . $filename);
         return response()->download($path);
+    }
+
+    public function delete($keyOrModel): bool {
+        $task = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
+        $task->contracts()->detach();
+        $task->accounts()->delete();
+
+        parent::delete($task);
+
+        return true;
     }
 }

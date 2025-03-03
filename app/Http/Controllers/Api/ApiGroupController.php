@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\Group\StoreGroupRequest;
-use App\Http\Requests\Group\UpdateGroupRequest;
-use App\Http\Resources\GroupResource;
+use App\Models\User;
 use App\Models\Group;
-use App\Support\Interfaces\Services\GroupServiceInterface;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
+use App\Http\Resources\GroupResource;
+use App\Http\Requests\Group\StoreGroupRequest;
+use App\Http\Requests\Group\UpdateGroupRequest;
+use App\Support\Interfaces\Services\GroupServiceInterface;
 
 class ApiGroupController extends ApiController {
     public function __construct(
@@ -20,20 +21,31 @@ class ApiGroupController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
-
+        $intent = request()->get('intent');
         $user = auth()->user();
 
-        if ($user->hasRole('dosen') || $user->hasRole('psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
-        } else if ($user->hasRole('mahasiswa')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
-        } else if ($user->hasRole('mahasiswa-psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
-        } else if ($user->hasRole('psc')) {
-            return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        switch($intent) {
+            case IntentEnum::API_GET_GROUP_BY_ROLES->value:
+                $groups = $this->groupService->getGroupsByUserRole($user);
+                return GroupResource::collection($groups);
+            default:
+                $groups = $this->groupService->getGroupsByUserId($user->id);
+                return GroupResource::collection($groups);
         }
 
-        return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load(['user', 'users', 'assignments']));
+
+
+        // if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // } else if ($user->hasRole('mahasiswa')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // } else if ($user->hasRole('mahasiswa-psc')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // } else if ($user->hasRole('psc')) {
+        //     return $this->groupService->getGroupsByUserId($user->id)->load(['user', 'users', 'assignments']);
+        // }
+
+        // return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage)->load(['user', 'users', 'assignments']));
     }
 
     /**
@@ -73,8 +85,8 @@ class ApiGroupController extends ApiController {
         $user = auth()->user();
 
         switch($intent) {
-            case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
-                return $this->groupService->downloadFile($group);
+            // case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
+            //     return $this->groupService->downloadFile($group);
             case IntentEnum::API_GET_GROUP_WITH_ASSIGNMENTS->value:
                 if ($user->hasRole('dosen') || $user->hasRole('psc')) {
                     return new GroupResource($group->load('assignments'));
@@ -92,9 +104,9 @@ class ApiGroupController extends ApiController {
                     return new GroupResource($group);
                 }
             case IntentEnum::API_GET_GROUP_WITH_MEMBERS->value:
-                return new GroupResource($group->load('users',));
+                return new GroupResource($group->load('users'));
         }
-        return new GroupResource($group->load(['users', 'assignments']));
+        return new GroupResource($group->load(['user', 'assignments']));
     }
 
     /**
@@ -109,5 +121,18 @@ class ApiGroupController extends ApiController {
      */
     public function destroy(Request $request, Group $group) {
         return $this->groupService->delete($group);
+    }
+
+    public function getMembers(Group $group) {
+        return new GroupResource($group->load('users'));
+    }
+
+    public function removeMember(Group $group, User $user) {
+        $group->users()->detach($user->id);
+        return response()->json(['message' => 'Member removed successfully']);
+    }
+
+    public function getMemberDetail(Group $group, User $user) {
+        return $group->users()->findOrFail($user->id);
     }
 }

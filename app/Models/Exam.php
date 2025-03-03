@@ -40,7 +40,7 @@ class Exam extends Model
     //     return $this->hasMany(Account::class);
     // }
 
-    public function task(): HasOne {
-        return $this->hasOne(Task::class);
+    public function task(): belongsTo {
+        return $this->belongsTo(Task::class);
     }
 }

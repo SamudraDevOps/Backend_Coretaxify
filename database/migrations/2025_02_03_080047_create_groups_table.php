@@ -16,11 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->date('start_period')->nullable();
-            $table->date('end_period')->nullable();
+            $table->dateTime('start_period')->nullable();
+            $table->dateTime('end_period')->nullable();
             $table->string('class_code')->nullable()->unique();
             $table->enum('status', GroupStatusEnum::toArray());
-            $table->string('filename')->nullable();
+            // $table->string('filename')->nullable();
             $table->timestamps();
         });
     }

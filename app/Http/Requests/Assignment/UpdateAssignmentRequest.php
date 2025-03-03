@@ -8,13 +8,13 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateAssignmentRequest extends FormRequest {
     public function rules(): array {
         return [
-            'group' => 'required|array',
-            'task_id' => 'required|exists:tasks,id',
-            'name' => 'required|string',
-            'assignment_code' => 'required|string',
-            'start_period' => 'required|date',
-            'end_period' => 'required|date',
-            'supporting_file' => 'nullable|file',
+            // 'groups' => 'sometimes|array',
+            'task_id' => 'sometimes|exists:tasks,id',
+            'name' => 'sometimes|string',
+            'assignment_code' => 'sometimes|string',
+            'start_period' => 'sometimes|date',
+            'end_period' => 'sometimes|date',
+            'supporting_file' => 'sometimes|file',
         ];
     }
 }

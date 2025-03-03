@@ -41,7 +41,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         // }
 
         // Attach logged in user to the newly created group
-        $exam->users()->attach(auth()->id());
+        // $exam->users()->attach(auth()->id());
 
         return $exam;
     }
@@ -63,6 +63,39 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         ]);
 
         return $examUser;
+    }
+
+    public function getExamsByUserId($userId) {
+        $repository = app($this->getRepositoryClass());
+        $user = auth()->user();
+
+        if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+            return $repository->query()->whereHas('users', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate();
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+            return $repository->query()->whereHas('user', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate();
+        }
+
+
+        // return $repository->query()->whereHas('users', function ($query) use ($userId) {
+        //     $query->where('user_id', $userId);
+        // })->paginate(5);
+    }
+
+    public function getExamsByUserRole($user) {
+        $repository = app($this->getRepositoryClass());
+
+        // Get an array of role IDs for the currently logged-in user
+        $userRoleIds = $user->roles->pluck('id')->toArray();
+
+        return $repository->query()
+            ->whereHas('user.roles', function ($query) use ($userRoleIds) {
+                $query->whereIn('roles.id', $userRoleIds);
+            })
+            ->paginate();
     }
 
     private function importData(UploadedFile $file): void {
