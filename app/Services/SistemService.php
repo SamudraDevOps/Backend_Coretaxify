@@ -14,7 +14,6 @@ use App\Models\DetailKontak;
 use App\Models\InformasiUmum;
 use App\Models\JenisPajak;
 use App\Models\KodeKlu;
-use App\Models\KuasaWajibPajak;
 use App\Models\ManajemenKasus;
 use App\Models\NomorIdentifikasiEksternal;
 use App\Models\ObjekPajakBumiDanBangunan;
@@ -25,6 +24,7 @@ use App\Models\ProfilSaya;
 use App\Models\Sistem;
 use App\Models\Task;
 use App\Models\TempatKegiatanUsaha;
+use App\Models\WakilSaya;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -54,18 +54,29 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'npwp_akun' => $account->npwp,
             'tipe_akun' => $account->account_type->name
         ]);
-            
+        
+        $kategoriWajibPajak = $sistem->tipe_akun;
+
+        if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan ') {
+            $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
+        } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
+            $kategoriWajibPajak = 'Orang Pribadi';
+        }
         // Create ProfilSaya first
         $profil = ProfilSaya::create([
-            'informasi_umum_id' => InformasiUmum::create()->id,
+            'informasi_umum_id' => InformasiUmum::create([
+                'nama' => $sistem->nama_akun,
+                'npwp' => $sistem->npwp_akun,
+                'jenis_wajib_pajak' => $sistem->tipe_akun,
+                'kategori_wajib_pajak' => $kategoriWajibPajak,
+                'bahasa' => 'Bahasa Indonesia',
+            ])->id,
             'detail_kontak_id' => DetailKontak::create()->id,
             'kode_klu_id' => KodeKlu::create()->id,
             'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
-            'pihak_terkait_id' => PihakTerkait::create()->id,
             'data_ekonomi_id' => DataEkonomi::create()->id,
             'jenis_pajak_id' => JenisPajak::create()->id,
             'detail_bank_id' => DetailBank::create()->id,
-            'kuasa_wajib_pajak_id' => KuasaWajibPajak::create()->id,
             'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create()->id,
             'alamat_wajib_pajak_id' => AlamatWajibPajak::create()->id,
             'manajemen_kasus_id' => ManajemenKasus::create()->id,

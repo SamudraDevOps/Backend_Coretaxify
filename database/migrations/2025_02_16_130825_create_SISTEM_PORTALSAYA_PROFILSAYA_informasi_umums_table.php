@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('informasi_umums', function (Blueprint $table) {
             $table->id();
              
-            $table->integer('npwp')->nullable();
+            $table->string('npwp')->nullable();
             $table->string('jenis_wajib_pajak')->nullable();
             $table->string('nama')->nullable();
             $table->string('kategori_wajib_pajak')->nullable();

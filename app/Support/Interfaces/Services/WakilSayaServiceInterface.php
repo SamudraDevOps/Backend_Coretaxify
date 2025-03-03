@@ -4,4 +4,4 @@ namespace App\Support\Interfaces\Services;
 
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudServiceInterface;
 
-interface KuasaWajibPajakServiceInterface extends BaseCrudServiceInterface {}
+interface WakilSayaServiceInterface extends BaseCrudServiceInterface {}

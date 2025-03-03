@@ -3,18 +3,18 @@
 namespace App\Repositories;
 
 use Adobrovolsky97\LaravelRepositoryServicePattern\Repositories\BaseRepository;
-use App\Models\KuasaWajibPajak;
-use App\Support\Interfaces\Repositories\KuasaWajibPajakRepositoryInterface;
+use App\Models\WakilSayaInformasiUmum;
+use App\Support\Interfaces\Repositories\WakilSayaInformasiUmumRepositoryInterface;
 use App\Traits\Repositories\HandlesFiltering;
 use App\Traits\Repositories\HandlesRelations;
 use App\Traits\Repositories\HandlesSorting;
 use Illuminate\Database\Eloquent\Builder;
 
-class KuasaWajibPajakRepository extends BaseRepository implements KuasaWajibPajakRepositoryInterface {
+class WakilSayaInformasiUmumRepository extends BaseRepository implements WakilSayaInformasiUmumRepositoryInterface {
     use HandlesFiltering, HandlesRelations, HandlesSorting;
 
     protected function getModelClass(): string {
-        return KuasaWajibPajak::class;
+        return WakilSayaInformasiUmum::class;
     }
 
     protected function applyFilters(array $searchParams = []): Builder {

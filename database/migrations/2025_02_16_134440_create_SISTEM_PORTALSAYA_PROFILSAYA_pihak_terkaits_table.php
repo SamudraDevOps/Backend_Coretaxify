@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('pihak_terkaits', function (Blueprint $table) {
             $table->id();
-             
-            $table->string('tipe_pihak_terkait')->nullable();
-            $table->boolean('is_pic')->nullable();
-            $table->string('jenis_orang_terkait')->nullable();
             $table->string('npwp')->nullable();
-            $table->string('nomor_paspor')->nullable();
+            $table->string('nama_pengurus')->nullable();
+            $table->string('jenis_orang_terkait')->default('Orang Pribadi');
+            $table->string('kategori_wajib_pajak')->default('Orang Pribadi');
             $table->string('kewarganegaraan')->nullable();
             $table->string('negara_asal')->nullable();
-            $table->string('email')->nullable();
-            $table->string('nomor_handphone')->nullable();
+            $table->string('sub_orang_terkait')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->boolean('is_orang_terkait')->default(true);
+            $table->boolean('is_penanggung_jawab')->default(true);
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_berakhir')->nullable();
             $table->timestamps();

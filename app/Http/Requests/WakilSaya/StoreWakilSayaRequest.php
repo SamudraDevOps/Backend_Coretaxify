@@ -1,29 +1,26 @@
 <?php
 
-namespace App\Http\Requests\KuasaWajibPajak;
+namespace App\Http\Requests\WakilSaya;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateKuasaWajibPajakRequest extends FormRequest {
+class StoreWakilSayaRequest extends FormRequest {
     public function rules(): array {
         return [
-             
-            'is_wajib_pajak' => 'nullable|boolean',
-            'id_penunjukkan_perwakilan' => 'nullable|string',
-            'npwp_perwakilan' => 'nullable|string',
-            'nama_wakil' => 'nullable|string',
+            'nama' => 'nullable|string',
+            'npwp' => 'nullable|string',
             'jenis_perwakilan' => 'nullable|string',
+            'id_penunjukkan_perwakilan' => 'nullable|string',
             'nomor_dokumen_penunjukkan_perwakilan' => 'nullable|string',
             'izin_perwakilan' => 'nullable|string',
-            'status_penunjukkan' => 'nullable|string',
+            'status_penujukkan' => 'nullable|string',
             'tanggal_disetujui' => 'nullable|date',
             'tanggal_ditolak' => 'nullable|date',
             'tanggal_dicabut' => 'nullable|date',
             'tanggal_dibatalkan' => 'nullable|date',
-            'tanggal_tertunda' => 'nullable|date',
             'alasan' => 'nullable|string',
             'tanggal_mulai' => 'nullable|date',
-            'tanggal_berakhir' => 'nullable|date',
-         ];
+            'tanggal_berakhir' => 'nullable|date',             
+        ];
     }
 }

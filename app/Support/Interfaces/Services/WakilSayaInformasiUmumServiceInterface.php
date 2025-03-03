@@ -2,9 +2,9 @@
 
 namespace App\Support\Interfaces\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudServiceInterface;
+use Illuminate\Database\Eloquent\Model;
 
-interface PihakTerkaitServiceInterface extends BaseCrudServiceInterface {
+interface WakilSayaInformasiUmumServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data): ?Model;
 }
