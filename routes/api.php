@@ -77,8 +77,23 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::prefix('lecturer')->group(function () {
             // Lecturer only routes
             Route::apiResource('groups', ApiGroupController::class);
+            Route::prefix('groups')->group(function () {
+                Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
+                Route::delete('{group}/members/{user}', [ApiGroupController::class, 'removeMember']);
+                Route::get('{group}/members/{user}', [ApiGroupController::class, 'getMemberDetail']);
+            });
             Route::apiResource('assignments', ApiAssignmentController::class);
+            Route::prefix('assignments')->group(function () {
+                Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                Route::delete('{assignment}/members/{user}', [ApiAssignmentController::class, 'removeMember']);
+                Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
+            });
             Route::apiResource('exams', ApiExamController::class);
+            Route::prefix('exams')->group(function () {
+                Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+                Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+                Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+            });
             Route::apiResource('group-users', ApiGroupUserController::class);
             Route::get('contract-tasks', [ApiTaskController::class, 'getContractTasks']);
         });
@@ -127,6 +142,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
                 Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
             });
+            // Route::prefix('evaluations')->group(function () {
+            //     Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+            //     Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+            //     Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+            // });
             Route::apiResource('tasks', ApiTaskController::class);
         });
 
@@ -140,8 +160,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
         Route::prefix('instructor')->group(function () {
             // Instruktor only routes
+            Route::apiResource('tasks', ApiTaskController::class, ['only' => ['index', 'show']]);
             Route::apiResource('assignments', ApiAssignmentController::class);
-            Route::apiResource('users', ApiUserController::class);
+            // Route::apiResource('users', ApiUserController::class);
         });
 
         // Route::middleware(['role:admin'])->prefix('admin')->group(function () {

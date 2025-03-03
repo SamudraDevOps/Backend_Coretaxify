@@ -45,7 +45,7 @@ class ApiAssignmentController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
-                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
                     return $this->assignmentService->create($request->validated());
                 } else {
                     return response()->json([

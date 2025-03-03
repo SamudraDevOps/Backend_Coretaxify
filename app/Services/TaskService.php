@@ -116,6 +116,10 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
         // Get an array of role IDs for the currently logged-in user
         $userRoleIds = $user->roles->pluck('id')->toArray();
 
+        if($user->hasRole('instruktur')) {
+            $userRoleIds = [4];
+        }
+
         return $repository->query()
             ->whereHas('user.roles', function ($query) use ($userRoleIds) {
                 $query->whereIn('roles.id', $userRoleIds);

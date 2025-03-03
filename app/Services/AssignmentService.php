@@ -71,6 +71,17 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
                     'supporting_file' => $filename,
                 ]);
             }
+        } else {
+            $data['assignment_code'] = Assignment::generateTaskCode();
+            $assignment = Assignment::create([
+                'user_id' => $data['user_id'],
+                'task_id' => $data['task_id'],
+                'name' => $data['name'],
+                'assignment_code' => $data['assignment_code'],
+                'start_period' => $data['start_period'],
+                'end_period' => $data['end_period'],
+                'supporting_file' => $filename,
+            ]);
         }
 
         return $assignment;
@@ -134,7 +145,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             return $repository->query()->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })->paginate();
-        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
             return $repository->query()->whereHas('user', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })->paginate();

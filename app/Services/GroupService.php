@@ -61,7 +61,7 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
             return $repository->query()->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })->paginate();
-        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
             return $repository->query()->whereHas('user', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })->paginate();
