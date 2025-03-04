@@ -80,6 +80,16 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
                 Route::delete('{group}/members/{user}', [ApiGroupController::class, 'removeMember']);
                 Route::get('{group}/members/{user}', [ApiGroupController::class, 'getMemberDetail']);
+
+                Route::get('{group}/assignments', [ApiGroupController::class, 'getAssignments']);
+                Route::get('{group}/assignments/{assignment}', [ApiGroupController::class, 'showAssignment']);
+                Route::post('{group}/assignments', [ApiGroupController::class, 'storeAssignment']);
+                Route::put('{group}/assignments/{assignment}', [ApiGroupController::class, 'updateAssignment']);
+                Route::delete('{group}/assignments/{assignment}', [ApiGroupController::class, 'removeAssignment']);
+
+                Route::get('{group}/assignments/{assignment}/members', [ApiGroupController::class, 'getAssignmentMembers']);
+                Route::delete('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'removeAssignmentMember']);
+                Route::get('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'getAssignmentMemberDetail']);
             });
             Route::apiResource('assignments', ApiAssignmentController::class);
             Route::prefix('assignments')->group(function () {

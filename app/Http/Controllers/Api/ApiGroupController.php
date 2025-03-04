@@ -4,16 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Models\Group;
+use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\AssignmentResource;
 use App\Http\Requests\Group\StoreGroupRequest;
 use App\Http\Requests\Group\UpdateGroupRequest;
+use App\Http\Requests\Assignment\StoreAssignmentRequest;
+use App\Http\Requests\Assignment\UpdateAssignmentRequest;
 use App\Support\Interfaces\Services\GroupServiceInterface;
+use App\Support\Interfaces\Services\AssignmentServiceInterface;
 
 class ApiGroupController extends ApiController {
     public function __construct(
-        protected GroupServiceInterface $groupService
+        protected GroupServiceInterface $groupService,
+        protected AssignmentServiceInterface $assignmentService
     ) {}
 
     /**
@@ -28,6 +34,8 @@ class ApiGroupController extends ApiController {
             case IntentEnum::API_GET_GROUP_BY_ROLES->value:
                 $groups = $this->groupService->getGroupsByUserRole($user);
                 return GroupResource::collection($groups);
+            case IntentEnum::API_GET_GROUP_ALL->value:
+                return GroupResource::collection($this->groupService->getAllPaginated($request->query(), $perPage));
             default:
                 $groups = $this->groupService->getGroupsByUserId($user->id);
                 return GroupResource::collection($groups);
@@ -134,5 +142,45 @@ class ApiGroupController extends ApiController {
 
     public function getMemberDetail(Group $group, User $user) {
         return $group->users()->findOrFail($user->id);
+    }
+
+    public function getAssignments(Group $group) {
+        return new GroupResource($group->load('assignments'));
+    }
+
+    public function showAssignment(Request $request, Group $group, Assignment $assignment) {
+        $intent = $request->get('intent');
+
+        switch($intent) {
+            case IntentEnum::API_USER_DOWNLOAD_FILE->value:
+                return $this->assignmentService->downloadFile($assignment);
+        }
+
+        return new AssignmentResource($assignment);
+    }
+
+    public function storeAssignment(StoreAssignmentRequest $request, Group $group) {
+        return $this->assignmentService->create($request->validated(), $group);
+    }
+
+    public function updateAssignment(UpdateAssignmentRequest $request, Group $group, Assignment $assignment) {
+        return $this->assignmentService->update($assignment, $request->validated());
+    }
+
+    public function removeAssignment(Request $request, Group $group, Assignment $assignment) {
+        return $this->assignmentService->delete($assignment);
+    }
+
+    public function getAssignmentMembers(Group $group, Assignment $assignment) {
+        return new AssignmentResource($assignment->load('users'));
+    }
+
+    public function removeAssignmentMember(Group $group, Assignment $assignment, User $user) {
+        $assignment->users()->detach($user->id);
+        return response()->json(['message' => 'Member removed successfully']);
+    }
+
+    public function getAssignmentMemberDetail(Group $group, Assignment $assignment, User $user) {
+        return $assignment->users()->findOrFail($user->id);
     }
 }

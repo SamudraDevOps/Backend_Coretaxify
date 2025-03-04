@@ -21,8 +21,13 @@ class ApiAssignmentController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
-
+        $intent = request()->get('intent');
         $user = auth()->user();
+
+        switch ($intent) {
+            case IntentEnum::API_GET_ASSIGNMENT_ALL->value:
+                return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
+        }
 
         $assignments = $this->assignmentService->getAssignmentsByUserId($user->id);
 
@@ -32,7 +37,6 @@ class ApiAssignmentController extends ApiController {
 
         return AssignmentResource::collection($assignments);
 
-        // return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
     }
 
     /**
@@ -40,7 +44,7 @@ class ApiAssignmentController extends ApiController {
      */
     public function store(StoreAssignmentRequest $request) {
         $intent = $request->get('intent');
-
+        dd($request->all());
         $user = auth()->user();
 
         switch ($intent) {
