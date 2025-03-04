@@ -7,6 +7,7 @@ use App\Models\Group;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\AssignmentResource;
 use App\Http\Requests\Group\StoreGroupRequest;
@@ -131,8 +132,9 @@ class ApiGroupController extends ApiController {
         return $this->groupService->delete($group);
     }
 
-    public function getMembers(Group $group) {
-        return new GroupResource($group->load('users'));
+    public function getMembers(Request $request, Group $group) {
+        $perPage = $request->get('perPage', 5);
+        return UserResource::collection($group->users()->paginate($perPage));
     }
 
     public function removeMember(Group $group, User $user) {
@@ -144,8 +146,9 @@ class ApiGroupController extends ApiController {
         return $group->users()->findOrFail($user->id);
     }
 
-    public function getAssignments(Group $group) {
-        return new GroupResource($group->load('assignments'));
+    public function getAssignments(Request $request, Group $group) {
+        $perPage = $request->get('perPage', 5);
+        return AssignmentResource::collection($group->assignments()->paginate($perPage));
     }
 
     public function showAssignment(Request $request, Group $group, Assignment $assignment) {
@@ -171,8 +174,9 @@ class ApiGroupController extends ApiController {
         return $this->assignmentService->delete($assignment);
     }
 
-    public function getAssignmentMembers(Group $group, Assignment $assignment) {
-        return new AssignmentResource($assignment->load('users'));
+    public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment) {
+        $perPage = $request->get('perPage', 5);
+        return UserResource::collection($assignment->users()->paginate($perPage));
     }
 
     public function removeAssignmentMember(Group $group, Assignment $assignment, User $user) {
