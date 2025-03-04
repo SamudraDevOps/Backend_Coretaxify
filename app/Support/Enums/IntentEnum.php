@@ -42,6 +42,10 @@ enum IntentEnum: string {
 
     case API_USER_JOIN_EXAM = 'api.user.join.exam';
 
+    case API_GET_GROUP_ALL = 'api.get.group.all';
+
+    case API_GET_ASSIGNMENT_ALL = 'api.get.assignment.all';
+
     case API_GET_GROUP_WITH_ASSIGNMENTS = 'api.get.group.with.assignments';
 
     case API_GET_GROUP_WITH_MEMBERS = 'api.get.group.with.members';
