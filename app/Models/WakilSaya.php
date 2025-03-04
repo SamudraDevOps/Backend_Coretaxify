@@ -25,8 +25,4 @@ class WakilSaya extends Model
         'tanggal_mulai',
         'tanggal_berakhir',
     ];  
-
-    public function informasi_umums(): BelongsToMany {
-        return $this->belongsToMany(InformasiUmum::class, 'wakil_saya_informasi_umums');
-    }
 }

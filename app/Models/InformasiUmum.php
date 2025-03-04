@@ -35,8 +35,4 @@ class InformasiUmum extends Model
     {
         return $this->hasOne(ProfilSaya::class);
     }
-
-    public function wakil_sayas(): BelongsToMany {
-        return $this->belongsToMany(WakilSaya::class, 'wakil_saya_informasi_umums');
-    }
 }

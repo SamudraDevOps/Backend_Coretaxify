@@ -99,7 +99,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('kode-klu', ApiKodeKluController::class);
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
             Route::apiResource('wakil-saya', ApiWakilSayaController::class);
-            Route::apiResource('wakil-saya-informasi-umum', ApiWakilSayaInformasiUmumController::class);
             Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
             Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
             Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
