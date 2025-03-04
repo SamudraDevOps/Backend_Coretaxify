@@ -140,18 +140,18 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignmentUser;
     }
 
-    public function getAssignmentsByUserId($userId) {
+    public function getAssignmentsByUserId($userId, $perPage = 15) {
         $repository = app($this->getRepositoryClass());
         $user = auth()->user();
 
         if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
             return $repository->query()->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->paginate();
+            })->paginate($perPage);
         } else if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
             return $repository->query()->whereHas('user', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->paginate();
+            })->paginate($perPage);
         }
     }
 

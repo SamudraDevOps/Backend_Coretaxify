@@ -11,7 +11,7 @@ interface AssignmentServiceInterface extends BaseCrudServiceInterface {
 
     public function joinAssignment(array $data): ?Model;
 
-    public function getAssignmentsByUserId($userId);
+    public function getAssignmentsByUserId($userId, $perPage);
 
     public function downloadFile(Assignment $assignment);
 }

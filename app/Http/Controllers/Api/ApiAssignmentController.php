@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\AssignmentResource;
 use App\Http\Requests\Assignment\StoreAssignmentRequest;
 use App\Http\Requests\Assignment\UpdateAssignmentRequest;
@@ -29,7 +30,7 @@ class ApiAssignmentController extends ApiController {
                 return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
         }
 
-        $assignments = $this->assignmentService->getAssignmentsByUserId($user->id);
+        $assignments = $this->assignmentService->getAssignmentsByUserId($user->id, $perPage);
 
         // $assignments->load(['user', 'group']);
 
@@ -93,8 +94,9 @@ class ApiAssignmentController extends ApiController {
     public function destroy(Request $request, Assignment $assignment) {
         return $this->assignmentService->delete($assignment);
     }
-    public function getMembers(Assignment $assignment) {
-        return new AssignmentResource($assignment->load('users'));
+    public function getMembers(Request $request, Assignment $assignment) {
+        $perPage = $request->get('perPage', 5);
+        return UserResource::collection($assignment->users()->paginate($perPage));
     }
 
     public function removeMember(Assignment $assignment, User $user) {
