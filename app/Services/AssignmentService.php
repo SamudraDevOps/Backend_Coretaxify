@@ -28,7 +28,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     //     return $Assignment;
     // }
 
-    public function create(array $data): ?Model {
+    public function create(array $data, ?Group $group = null): ?Model {
         $filename = null;
         if(isset($data['supporting_file'])) {
             $filename = $this->importData($data['supporting_file']);
@@ -36,6 +36,9 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
         $data['user_id'] = auth()->id();
 
+        if ($group) {
+            $data['groups'] = [$group->id];
+        }
         // $assignment = Assignment::create([
         //     'user_id' => $data['user_id'],
         //     'task_id' => $data['task_id'],
