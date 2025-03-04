@@ -28,7 +28,9 @@ use App\Http\Controllers\Api\ApiManajemenKasusController;
 use App\Http\Controllers\Api\ApiNomorIdentifikasiEksternalController;
 use App\Http\Controllers\Api\ApiObjekPajakBumiDanBangunanController;
 use App\Http\Controllers\Api\ApiPenunjukkanWajibPajakSayaController;
+use App\Http\Controllers\Api\ApiWakilSayaController;
 use App\Http\Controllers\Api\ApiPihakTerkaitController;
+use App\Http\Controllers\Api\ApiWakilSayaInformasiUmumController;
 use App\Http\Controllers\Api\ApiPortalSayaController;
 use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiSistemController;
@@ -96,6 +98,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
             Route::apiResource('kode-klu', ApiKodeKluController::class);
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
+            Route::apiResource('wakil-saya', ApiWakilSayaController::class);
+            Route::apiResource('wakil-saya-informasi-umum', ApiWakilSayaInformasiUmumController::class);
             Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
             Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
             Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
