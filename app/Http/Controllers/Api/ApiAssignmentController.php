@@ -107,4 +107,12 @@ class ApiAssignmentController extends ApiController {
     public function getMemberDetail(Assignment $assignment, User $user) {
         return $assignment->users()->findOrFail($user->id);
     }
+
+    /**
+     * Public download endpoint that uses signed URLs for security
+     */
+    public function downloadPublic(Request $request, Assignment $assignment) {
+        // The 'signed' middleware has already verified the URL signature
+        return $this->assignmentService->downloadFile($assignment);
+    }
 }

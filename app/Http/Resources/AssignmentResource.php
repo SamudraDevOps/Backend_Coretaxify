@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Support\Carbon;
 use App\Support\Enums\IntentEnum;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AssignmentResource extends JsonResource {
@@ -27,7 +28,11 @@ class AssignmentResource extends JsonResource {
         // Add download URL for supporting file if it exists
         if (!empty($this->supporting_file)) {
             $prefix = $this->getUserRolePrefix();
-            $data['supporting_file_url'] = url("/api/{$prefix}/assignments/{$this->id}") . "?intent=" . IntentEnum::API_USER_DOWNLOAD_FILE->value;
+            $data['supporting_file_url'] = URL::temporarySignedRoute(
+                'download.assignment.file',
+                now()->addMinutes(30), // Short expiration time
+                ['assignment' => $this->id]
+            );
         } else {
             $data['supporting_file_url'] = null;
         }
