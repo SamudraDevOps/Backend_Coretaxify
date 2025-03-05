@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('assignment_user_id')->nullable()->constrained();
             $table->foreignId('portal_saya_id')->nullable()->constrained();
+            $table->foreignId('sistem_id')->nullable()->constrained();
             // $table->foreignId('spt_id')->nullable()->constrained();
             // $table->foreignId('faktur_id')->nullable()->constrained();
             $table->string('nama_akun');

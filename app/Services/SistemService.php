@@ -95,4 +95,11 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
                 
         return $sistem;
     }
+
+    public function updateKuasaWajib($request) {
+        // $sistem = Sistem::find($request->id);
+        // $sistem->update([
+        //     'sistem_id' => $request->kuasa_wajib_pajak
+        // ]);
+    }    
 }

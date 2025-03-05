@@ -6,6 +6,7 @@ use App\Http\Requests\Sistem\StoreSistemRequest;
 use App\Http\Requests\Sistem\UpdateSistemRequest;
 use App\Http\Resources\SistemResource;
 use App\Models\Sistem;
+use App\Support\Enums\IntentEnum;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,6 @@ class ApiSistemController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
-
         return SistemResource::collection($this->sistemService->getAllPaginated($request->query(), $perPage));
     }
 
@@ -41,6 +41,14 @@ class ApiSistemController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(UpdateSistemRequest $request, Sistem $sistem) {
+
+        $intent = $request->get('intent');
+
+        switch ($intent) {
+            case IntentEnum::API_USER_UPDATE_KUASA_WAJIB->value:
+                return $this->sistemService->updateKuasaWajib($request->validated());    
+        }
+        
         return $this->sistemService->update($sistem, $request->validated());
     }
 

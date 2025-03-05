@@ -9,6 +9,7 @@ use App\Traits\Repositories\HandlesFiltering;
 use App\Traits\Repositories\HandlesRelations;
 use App\Traits\Repositories\HandlesSorting;
 use Illuminate\Database\Eloquent\Builder;
+use App\Support\Enums\IntentEnum;
 
 class SistemRepository extends BaseRepository implements SistemRepositoryInterface {
     use HandlesFiltering, HandlesRelations, HandlesSorting;
@@ -20,7 +21,11 @@ class SistemRepository extends BaseRepository implements SistemRepositoryInterfa
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        if (isset($searchParams['tipe_akun']) && is_array($searchParams['tipe_akun'])) {
+            $query->whereIn('tipe_akun', $searchParams['tipe_akun']);
+        }
+
+        $query = $this->applySearchFilters($query, $searchParams, ['name'], []);
 
         $query = $this->applyColumnFilters($query, $searchParams, ['id']);
 

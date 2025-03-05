@@ -89,7 +89,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
-            Route::apiResource('sistems', ApiSistemController::class);
+            Route::apiResource('sistem', ApiSistemController::class);
             Route::apiResource('portal-saya', ApiPortalSayaController::class);
             Route::apiResource('profil-saya', ApiProfilSayaController::class);
             Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
