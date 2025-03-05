@@ -45,6 +45,37 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-XSRF-TOKEN');
 header('Access-Control-Allow-Credentials: true');
 
+Route::get('routes/download', function () {
+    $routeCollection = Route::getRoutes();
+    $routes = [];
+
+    foreach ($routeCollection as $route) {
+        $routes[] = [
+            'method' => isset($route->methods()[0]) ? $route->methods()[0] : '',
+            'uri' => $route->uri(),
+            'name' => $route->getName(),
+            'action' => $route->getActionName(),
+        ];
+    }
+
+    // Create JavaScript content
+    $jsContent = "// Laravel Routes Export\n";
+    $jsContent .= "const routes = " . json_encode($routes, JSON_PRETTY_PRINT) . ";\n\n";
+    $jsContent .= "// Example function to find route by name\n";
+    $jsContent .= "function findRouteByName(name) {\n";
+    $jsContent .= "  return routes.find(route => route.name === name);\n";
+    $jsContent .= "}\n\n";
+    $jsContent .= "// Example function to find routes by method\n";
+    $jsContent .= "function findRoutesByMethod(method) {\n";
+    $jsContent .= "  return routes.filter(route => route.method.toUpperCase() === method.toUpperCase());\n";
+    $jsContent .= "}\n";
+
+    // Return as downloadable JavaScript file
+    return response($jsContent)
+        ->header('Content-Type', 'application/javascript')
+        ->header('Content-Disposition', 'attachment; filename="laravel-routes.js"');
+});
+
 Route::get('/csrf-token', function (Request $request) {
     return response()->json(['token' => csrf_token()]);
 })->middleware('web');
