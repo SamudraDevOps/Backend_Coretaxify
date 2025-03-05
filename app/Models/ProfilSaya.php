@@ -28,10 +28,6 @@ class ProfilSaya extends Model
         return $this->belongsTo(PenunjukkanWajibPajakSaya::class);
     }
 
-    public function alamat_wajib_pajak() {
-        return $this->belongsTo(AlamatWajibPajak::class);
-    }
-
     public function manajemen_kasus() {
         return $this->belongsTo(ManajemenKasus::class);
     }

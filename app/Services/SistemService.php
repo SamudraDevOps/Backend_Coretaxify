@@ -78,7 +78,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'jenis_pajak_id' => JenisPajak::create()->id,
             'detail_bank_id' => DetailBank::create()->id,
             'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create()->id,
-            'alamat_wajib_pajak_id' => AlamatWajibPajak::create()->id,
             'manajemen_kasus_id' => ManajemenKasus::create()->id,
             'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
             'objek_pajak_bumi_dan_bangunan_id' => ObjekPajakBumiDanBangunan::create()->id,
