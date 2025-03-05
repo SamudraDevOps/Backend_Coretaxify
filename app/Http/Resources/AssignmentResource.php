@@ -2,12 +2,13 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
+use App\Support\Enums\IntentEnum;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class AssignmentResource extends JsonResource {
     public function toArray($request): array {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'assignment_code' => $this->assignment_code,
@@ -26,7 +27,7 @@ class AssignmentResource extends JsonResource {
         // Add download URL for supporting file if it exists
         if (!empty($this->supporting_file)) {
             $prefix = $this->getUserRolePrefix();
-            $data['supporting_file_url'] = url("/api/{$prefix}/assignments/{$this->id}?intent=API_USER_DOWNLOAD_FILE");
+            $data['supporting_file_url'] = url("/api/{$prefix}/assignments/{$this->id}") . "?intent=" . IntentEnum::API_USER_DOWNLOAD_FILE->value;
         } else {
             $data['supporting_file_url'] = null;
         }
