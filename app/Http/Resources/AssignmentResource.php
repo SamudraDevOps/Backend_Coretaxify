@@ -22,5 +22,40 @@ class AssignmentResource extends JsonResource {
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
+
+        // Add download URL for supporting file if it exists
+        if (!empty($this->supporting_file)) {
+            $prefix = $this->getUserRolePrefix();
+            $data['supporting_file_url'] = url("/api/{$prefix}/assignments/{$this->id}?intent=API_USER_DOWNLOAD_FILE");
+        } else {
+            $data['supporting_file_url'] = null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Determine the appropriate prefix based on user role
+     */
+    protected function getUserRolePrefix(): string {
+        $user = auth()->user();
+
+        if ($user->hasRole('dosen')) {
+            return 'lecturer';
+        } else if ($user->hasRole('mahasiswa')) {
+            return 'student';
+        } else if ($user->hasRole('psc')) {
+            return 'psc';
+        } else if ($user->hasRole('mahasiswa-psc')) {
+            return 'student-psc';
+        } else if ($user->hasRole('instruktur')) {
+            return 'instructor';
+        } else if ($user->hasRole('admin')) {
+            return 'admin';
+        }
+
+        // Default fallback - could also throw an exception if preferred
+        return 'student';
+
     }
 }
