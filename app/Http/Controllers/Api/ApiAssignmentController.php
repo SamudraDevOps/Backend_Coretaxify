@@ -45,7 +45,7 @@ class ApiAssignmentController extends ApiController {
      */
     public function store(StoreAssignmentRequest $request) {
         $intent = $request->get('intent');
-        dd($request->all());
+        // dd($request->all());
         $user = auth()->user();
 
         switch ($intent) {
