@@ -17,10 +17,8 @@ return new class extends Migration
             $table->string('nama_bank')->nullable();;
             $table->string('nomor_rekening_bank')->nullable();;
             $table->string('jenis_rekening_bank')->nullable();;
-            $table->string('keterangan')->nullable();;
             $table->date('tanggal_mulai')->nullable();;
             $table->date('tanggal_berakhir')->nullable();;
-            $table->boolean('is_rekening_bank_utama')->nullable();;
             $table->timestamps();
         });
     }
