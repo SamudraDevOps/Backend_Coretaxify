@@ -48,10 +48,6 @@ class ProfilSaya extends Model
         return $this->belongsTo(TempatKegiatanUsaha::class);
     }
 
-    public function kode_klu() {
-        return $this->belongsTo(KodeKlu::class);
-    }
-    
     public function pihak_terkait() {
         return $this->belongsTo(PihakTerkait::class);
     }

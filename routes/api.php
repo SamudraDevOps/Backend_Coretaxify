@@ -96,7 +96,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('detail-kontak', ApiDetailKontakController::class);
             Route::apiResource('detail-bank', ApiDetailBankController::class);
             Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
-            Route::apiResource('kode-klu', ApiKodeKluController::class);
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
             Route::apiResource('wakil-saya', ApiWakilSayaController::class);
             Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);

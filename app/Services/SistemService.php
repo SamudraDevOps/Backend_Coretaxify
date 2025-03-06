@@ -74,7 +74,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
                 'bahasa' => 'Bahasa Indonesia',
             ])->id,
             'detail_kontak_id' => DetailKontak::create()->id,
-            'kode_klu_id' => KodeKlu::create()->id,
             'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
             'data_ekonomi_id' => DataEkonomi::create()->id,
             'jenis_pajak_id' => JenisPajak::create()->id,

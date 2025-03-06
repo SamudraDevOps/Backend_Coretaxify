@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('data_ekonomi_id')->nullable()->constrained();
             $table->foreignId('detail_bank_id')->nullable()->constrained();
             $table->foreignId('jenis_pajak_id')->nullable()->constrained();
-            $table->foreignId('kode_klu_id')->nullable()->constrained();
             $table->foreignId('manajemen_kasus_id')->nullable()->constrained();
             $table->foreignId('nomor_identifikasi_eksternal_id')->nullable()->constrained();
             $table->foreignId('objek_pajak_bumi_dan_bangunan_id')->nullable()->constrained();
