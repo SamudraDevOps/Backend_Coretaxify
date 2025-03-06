@@ -44,7 +44,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
         
         $dataAccount = Account::where('task_id', $task_id)
-                    ->select('nama', 'npwp','account_type_id')
+                    ->select('nama', 'npwp','account_type_id','alamat_utama','email')
                     ->get();
         
         foreach($dataAccount as $account) {
@@ -52,7 +52,9 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'assignment_user_id' => $dataAssignUserId,
             'nama_akun' => $account->nama,
             'npwp_akun' => $account->npwp,
-            'tipe_akun' => $account->account_type->name
+            'tipe_akun' => $account->account_type->name,
+            'alamat_utama_akun' => $account->alamat_utama,
+            'email_akun' => $account->email,
         ]);
         
         $kategoriWajibPajak = $sistem->tipe_akun;

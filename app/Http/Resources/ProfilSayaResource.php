@@ -9,7 +9,6 @@ class ProfilSayaResource extends JsonResource {
         return [
             'id' => $this->id,
             'informasi_umum' => new InformasiUmumResource($this->informasi_umum),
-            'alamat_wajib_pajak' => new AlamatWajibPajakResource($this->alamat_wajib_pajak),
             'data_ekonomi' => new DataEkonomiResource($this->data_ekonomi),
             'manajemen_kasus' => new ManajemenKasusResource($this->manajemen_kasus),
             'detail_bank' => new DetailBankResource($this->detail_bank),

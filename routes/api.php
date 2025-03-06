@@ -104,7 +104,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
             Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
             Route::apiResource('manajemen-kasuses', ApiManajemenKasusController::class);
-            Route::apiResource('alamat-wajib-pajak', ApiAlamatWajibPajakController::class);
         });
 
         Route::prefix('psc')->group(function () {

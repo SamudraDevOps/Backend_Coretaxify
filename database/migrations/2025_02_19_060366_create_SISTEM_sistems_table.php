@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('nama_akun');
             $table->string('npwp_akun');
             $table->string('tipe_akun');
+            $table->string('alamat_utama_akun');
+            $table->string('email_akun');
             $table->timestamps();
         });
     }
