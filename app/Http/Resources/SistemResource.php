@@ -3,9 +3,17 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use App\Support\Enums\IntentEnum;
 class SistemResource extends JsonResource {
     public function toArray($request): array {
+        $intent = $request->get('intent');
+        switch ($intent) {
+            case IntentEnum::API_SISTEM_GET_ALAMAT->value:
+                return [
+                    'id' => $this->id,
+                    'alamat_utama_akun' => $this->alamat_utama_akun,
+                ];
+        }
         return [
             'id' => $this->id,
             'assignment_user' => $this->assignment_user,

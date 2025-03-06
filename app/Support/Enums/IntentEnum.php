@@ -57,4 +57,6 @@ enum IntentEnum: string {
     case API_USER_UPDATE_KUASA_WAJIB = 'api.user.update.kuasa.wajib';
     
     case API_SISTEM_GET_AKUN_ORANG_PIBADI = 'api.sistem.get.akun.orang.pibadi';
+    
+    case API_SISTEM_GET_ALAMAT = 'api.sistem.get.akun.alamat';
 }
