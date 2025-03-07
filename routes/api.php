@@ -152,7 +152,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('detail-bank', ApiDetailBankController::class);
             Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
-            Route::apiResource('wakil-saya', ApiWakilSayaController::class);
             Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
             Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
             Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);

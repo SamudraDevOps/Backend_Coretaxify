@@ -24,7 +24,6 @@ use App\Models\ProfilSaya;
 use App\Models\Sistem;
 use App\Models\Task;
 use App\Models\TempatKegiatanUsaha;
-use App\Models\WakilSaya;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Database\Eloquent\Model;

@@ -5,7 +5,6 @@ namespace App\Services;
 use Illuminate\Database\Eloquent\Model;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 use App\Models\PihakTerkait;
-use App\Models\WakilSaya;
 use Illuminate\Support\Str;
 use App\Support\Interfaces\Repositories\PihakTerkaitRepositoryInterface;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
