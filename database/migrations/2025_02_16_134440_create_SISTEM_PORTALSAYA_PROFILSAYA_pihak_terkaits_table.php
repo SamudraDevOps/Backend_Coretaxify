@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('kewarganegaraan')->nullable();
             $table->string('negara_asal')->nullable();
             $table->string('sub_orang_terkait')->nullable();
+            $table->string('id_penunjukkan_perwakilan')->nullable();
             $table->string('keterangan')->nullable();
             $table->boolean('is_orang_terkait')->default(true);
             $table->boolean('is_penanggung_jawab')->default(true);

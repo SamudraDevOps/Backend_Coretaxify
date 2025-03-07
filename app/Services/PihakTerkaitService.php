@@ -16,14 +16,12 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
     }
 
     public function create(array $data): ?Model {
-        $pihakTerkait = PihakTerkait::create($data);
-        
         $randomNumber = 'DA' . mt_rand(10000000, 99999999);
-                
-    WakilSaya::create([
-           'nama' => $pihakTerkait->nama_pengurus,
-           'npwp' => $pihakTerkait->npwp,
-           'id_penunjukkan_perwakilan' => $randomNumber,
+        
+        $pihakTerkait = PihakTerkait::create([
+            'nama_pengurus' => $data['nama_pengurus'],
+            'npwp' => $data['npwp'],
+            'id_penunjukkan_perwakilan' => $randomNumber, 
         ]);
         
         return $pihakTerkait;
