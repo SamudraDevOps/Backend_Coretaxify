@@ -18,4 +18,12 @@ class AssignmentUser extends Model
     {
         return $this->hasMany(Sistem::class);
     }
+
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+    
+    public function assignment(): BelongsTo {
+        return $this->belongsTo(Assignment::class);
+    }
 }

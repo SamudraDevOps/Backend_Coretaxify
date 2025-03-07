@@ -10,4 +10,15 @@ class AssignmentUserService extends BaseCrudService implements AssignmentUserSer
     protected function getRepositoryClass(): string {
         return AssignmentUserRepositoryInterface::class;
     }
+
+    public function getAssignmentUserByUserId($userId, $perPage = 15) {
+        $repository = app($this->getRepositoryClass());
+        $user = auth()->user();
+
+        if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc' || $user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin'))) {
+            return $repository->query()->whereHas('user', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->paginate($perPage);
+        }
+    }
 }

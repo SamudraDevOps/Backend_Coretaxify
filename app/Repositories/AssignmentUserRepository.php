@@ -30,4 +30,8 @@ class AssignmentUserRepository extends BaseRepository implements AssignmentUserR
 
         return $query;
     }
+
+    public function query() {
+        return $this->getQuery();
+    }
 }

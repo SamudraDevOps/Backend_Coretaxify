@@ -17,8 +17,4 @@ class Sistem extends Model
     public function assignment_user(): BelongsTo {
         return $this->belongsTo(AssignmentUser::class);
     }
-
-    public function sistem(): BelongsTo {
-        return $this->belongsTo(Sistem::class);
-    }
 }

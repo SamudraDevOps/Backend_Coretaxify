@@ -72,6 +72,10 @@ class User extends Authenticatable
         return $this->hasMany(Group::class);
     }
 
+    public function assignment_user() {
+        return $this->hasMany(AssignmentUser::class);
+    }
+
     public function hasGroup($groupName) {
         return $this->groups->contains('name', $groupName);
     }
