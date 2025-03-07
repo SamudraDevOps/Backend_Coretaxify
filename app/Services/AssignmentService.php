@@ -28,7 +28,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     //     return $Assignment;
     // }
 
-    public function create(array $data): ?Model {
+    public function create(array $data, ?Group $group = null): ?Model {
         $filename = null;
         if(isset($data['supporting_file'])) {
             $filename = $this->importData($data['supporting_file']);
@@ -36,6 +36,9 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
 
         $data['user_id'] = auth()->id();
 
+        if ($group) {
+            $data['groups'] = [$group->id];
+        }
         // $assignment = Assignment::create([
         //     'user_id' => $data['user_id'],
         //     'task_id' => $data['task_id'],
@@ -71,6 +74,17 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
                     'supporting_file' => $filename,
                 ]);
             }
+        } else {
+            $data['assignment_code'] = Assignment::generateTaskCode();
+            $assignment = Assignment::create([
+                'user_id' => $data['user_id'],
+                'task_id' => $data['task_id'],
+                'name' => $data['name'],
+                'assignment_code' => $data['assignment_code'],
+                'start_period' => $data['start_period'],
+                'end_period' => $data['end_period'],
+                'supporting_file' => $filename,
+            ]);
         }
 
         return $assignment;
@@ -126,18 +140,18 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignmentUser;
     }
 
-    public function getAssignmentsByUserId($userId) {
+    public function getAssignmentsByUserId($userId, $perPage = 15) {
         $repository = app($this->getRepositoryClass());
         $user = auth()->user();
 
         if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
             return $repository->query()->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->paginate();
-        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+            })->paginate($perPage);
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
             return $repository->query()->whereHas('user', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->paginate();
+            })->paginate($perPage);
         }
     }
 

@@ -23,7 +23,7 @@ class ApiTaskController extends ApiController {
         $user = auth()->user();
 
          // $tasks = $this->taskService->getTasksByUserId($user->id);
-        $tasks = $this->taskService->getTasksByUserRole($user);
+        $tasks = $this->taskService->getTasksByUserRole($user, $perPage);
 
         return TaskResource::collection($tasks);
 

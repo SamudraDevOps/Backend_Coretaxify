@@ -26,9 +26,9 @@ class ApiExamController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_GET_EXAM_BY_ROLES->value:
-                return ExamResource::collection($this->examService->getExamsByUserRole($user));
+                return ExamResource::collection($this->examService->getExamsByUserRole($user, $perPage));
             default:
-                return ExamResource::collection($this->examService->getExamsByUserId($user->id));
+                return ExamResource::collection($this->examService->getExamsByUserId($user->id, $perPage));
         }
 
         // return ExamResource::collection($this->examService->getAllPaginated($request->query(), $perPage));
@@ -44,7 +44,7 @@ class ApiExamController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_EXAM->value:
-                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('admin')) {
                     return $this->examService->create($request->validated());
                 } else {
                     return response()->json([
@@ -93,8 +93,9 @@ class ApiExamController extends ApiController {
         return $this->examService->delete($exam);
     }
 
-    public function getMembers(Exam $exam) {
-        return new ExamResource($exam->load('users'));
+    public function getMembers(Request $request, Exam $exam) {
+        $perPage = $request->get('perPage', 5);
+        return ExamResource::collection($exam->users()->paginate($perPage));
     }
 
     public function removeMember(Exam $exam, User $user) {

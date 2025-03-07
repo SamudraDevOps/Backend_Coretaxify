@@ -47,6 +47,37 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-XSRF-TOKEN');
 header('Access-Control-Allow-Credentials: true');
 
+Route::get('routes/download', function () {
+    $routeCollection = Route::getRoutes();
+    $routes = [];
+
+    foreach ($routeCollection as $route) {
+        $routes[] = [
+            'method' => isset($route->methods()[0]) ? $route->methods()[0] : '',
+            'uri' => $route->uri(),
+            'name' => $route->getName(),
+            'action' => $route->getActionName(),
+        ];
+    }
+
+    // Create JavaScript content
+    $jsContent = "// Laravel Routes Export\n";
+    $jsContent .= "const routes = " . json_encode($routes, JSON_PRETTY_PRINT) . ";\n\n";
+    $jsContent .= "// Example function to find route by name\n";
+    $jsContent .= "function findRouteByName(name) {\n";
+    $jsContent .= "  return routes.find(route => route.name === name);\n";
+    $jsContent .= "}\n\n";
+    $jsContent .= "// Example function to find routes by method\n";
+    $jsContent .= "function findRoutesByMethod(method) {\n";
+    $jsContent .= "  return routes.filter(route => route.method.toUpperCase() === method.toUpperCase());\n";
+    $jsContent .= "}\n";
+
+    // Return as downloadable JavaScript file
+    return response($jsContent)
+        ->header('Content-Type', 'application/javascript')
+        ->header('Content-Disposition', 'attachment; filename="laravel-routes.js"');
+});
+
 Route::get('/csrf-token', function (Request $request) {
     return response()->json(['token' => csrf_token()]);
 })->middleware('web');
@@ -78,8 +109,33 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::prefix('lecturer')->group(function () {
             // Lecturer only routes
             Route::apiResource('groups', ApiGroupController::class);
+            Route::prefix('groups')->group(function () {
+                Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
+                Route::delete('{group}/members/{user}', [ApiGroupController::class, 'removeMember']);
+                Route::get('{group}/members/{user}', [ApiGroupController::class, 'getMemberDetail']);
+
+                Route::get('{group}/assignments', [ApiGroupController::class, 'getAssignments']);
+                Route::get('{group}/assignments/{assignment}', [ApiGroupController::class, 'showAssignment']);
+                Route::post('{group}/assignments', [ApiGroupController::class, 'storeAssignment']);
+                Route::put('{group}/assignments/{assignment}', [ApiGroupController::class, 'updateAssignment']);
+                Route::delete('{group}/assignments/{assignment}', [ApiGroupController::class, 'removeAssignment']);
+
+                Route::get('{group}/assignments/{assignment}/members', [ApiGroupController::class, 'getAssignmentMembers']);
+                Route::delete('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'removeAssignmentMember']);
+                Route::get('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'getAssignmentMemberDetail']);
+            });
             Route::apiResource('assignments', ApiAssignmentController::class);
+            Route::prefix('assignments')->group(function () {
+                Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                Route::delete('{assignment}/members/{user}', [ApiAssignmentController::class, 'removeMember']);
+                Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
+            });
             Route::apiResource('exams', ApiExamController::class);
+            Route::prefix('exams')->group(function () {
+                Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+                Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+                Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+            });
             Route::apiResource('group-users', ApiGroupUserController::class);
             Route::get('contract-tasks', [ApiTaskController::class, 'getContractTasks']);
         });
@@ -126,6 +182,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
                 Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
             });
+            // Route::prefix('evaluations')->group(function () {
+            //     Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+            //     Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+            //     Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+            // });
             Route::apiResource('tasks', ApiTaskController::class);
         });
 
@@ -139,8 +200,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
         Route::prefix('instructor')->group(function () {
             // Instruktor only routes
+            Route::apiResource('tasks', ApiTaskController::class, ['only' => ['index', 'show']]);
             Route::apiResource('assignments', ApiAssignmentController::class);
-            Route::apiResource('users', ApiUserController::class);
+            // Route::apiResource('users', ApiUserController::class);
         });
 
         // Route::middleware(['role:admin'])->prefix('admin')->group(function () {

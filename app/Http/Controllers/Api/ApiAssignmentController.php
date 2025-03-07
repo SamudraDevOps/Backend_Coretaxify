@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\AssignmentResource;
 use App\Http\Requests\Assignment\StoreAssignmentRequest;
 use App\Http\Requests\Assignment\UpdateAssignmentRequest;
@@ -21,10 +22,15 @@ class ApiAssignmentController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 5);
-
+        $intent = request()->get('intent');
         $user = auth()->user();
 
-        $assignments = $this->assignmentService->getAssignmentsByUserId($user->id);
+        switch ($intent) {
+            case IntentEnum::API_GET_ASSIGNMENT_ALL->value:
+                return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
+        }
+
+        $assignments = $this->assignmentService->getAssignmentsByUserId($user->id, $perPage);
 
         // $assignments->load(['user', 'group']);
 
@@ -32,7 +38,6 @@ class ApiAssignmentController extends ApiController {
 
         return AssignmentResource::collection($assignments);
 
-        // return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
     }
 
     /**
@@ -40,12 +45,12 @@ class ApiAssignmentController extends ApiController {
      */
     public function store(StoreAssignmentRequest $request) {
         $intent = $request->get('intent');
-
+        // dd($request->all());
         $user = auth()->user();
 
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_ASSIGNMENT->value:
-                if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+                if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
                     return $this->assignmentService->create($request->validated());
                 } else {
                     return response()->json([
@@ -89,8 +94,9 @@ class ApiAssignmentController extends ApiController {
     public function destroy(Request $request, Assignment $assignment) {
         return $this->assignmentService->delete($assignment);
     }
-    public function getMembers(Assignment $assignment) {
-        return new AssignmentResource($assignment->load('users'));
+    public function getMembers(Request $request, Assignment $assignment) {
+        $perPage = $request->get('perPage', 5);
+        return UserResource::collection($assignment->users()->paginate($perPage));
     }
 
     public function removeMember(Assignment $assignment, User $user) {
@@ -100,5 +106,13 @@ class ApiAssignmentController extends ApiController {
 
     public function getMemberDetail(Assignment $assignment, User $user) {
         return $assignment->users()->findOrFail($user->id);
+    }
+
+    /**
+     * Public download endpoint that uses signed URLs for security
+     */
+    public function downloadPublic(Request $request, Assignment $assignment) {
+        // The 'signed' middleware has already verified the URL signature
+        return $this->assignmentService->downloadFile($assignment);
     }
 }

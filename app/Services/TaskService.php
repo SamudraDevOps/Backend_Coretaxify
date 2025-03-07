@@ -110,17 +110,21 @@ class TaskService extends BaseCrudService implements TaskServiceInterface {
         })->paginate();
     }
 
-    public function getTasksByUserRole($user) {
+    public function getTasksByUserRole($user, $perPage = 15) {
         $repository = app($this->getRepositoryClass());
 
         // Get an array of role IDs for the currently logged-in user
         $userRoleIds = $user->roles->pluck('id')->toArray();
 
+        if($user->hasRole('instruktur')) {
+            $userRoleIds = [4];
+        }
+
         return $repository->query()
             ->whereHas('user.roles', function ($query) use ($userRoleIds) {
                 $query->whereIn('roles.id', $userRoleIds);
             })
-            ->paginate();
+            ->paginate($perPage);
     }
     public function downloadFile(Task $task) {
         $filename = $task->file_path;

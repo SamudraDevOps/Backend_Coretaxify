@@ -65,18 +65,18 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         return $examUser;
     }
 
-    public function getExamsByUserId($userId) {
+    public function getExamsByUserId($userId, $perPage = 15) {
         $repository = app($this->getRepositoryClass());
         $user = auth()->user();
 
         if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
             return $repository->query()->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->paginate();
-        } else if ($user->hasRole('dosen') || $user->hasRole('psc')) {
+            })->paginate($perPage);
+        } else if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur') || $user->hasRole('admin')) {
             return $repository->query()->whereHas('user', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })->paginate();
+            })->paginate($perPage);
         }
 
 
@@ -85,7 +85,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         // })->paginate(5);
     }
 
-    public function getExamsByUserRole($user) {
+    public function getExamsByUserRole($user, $perPage = 15) {
         $repository = app($this->getRepositoryClass());
 
         // Get an array of role IDs for the currently logged-in user
@@ -95,7 +95,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
             ->whereHas('user.roles', function ($query) use ($userRoleIds) {
                 $query->whereIn('roles.id', $userRoleIds);
             })
-            ->paginate();
+            ->paginate($perPage);
     }
 
     private function importData(UploadedFile $file): void {
