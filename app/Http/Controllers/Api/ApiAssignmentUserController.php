@@ -6,6 +6,7 @@ use App\Http\Requests\AssignmentUser\StoreAssignmentUserRequest;
 use App\Http\Requests\AssignmentUser\UpdateAssignmentUserRequest;
 use App\Http\Resources\AssignmentUserResource;
 use App\Models\AssignmentUser;
+use App\Models\Assignment;
 use App\Support\Interfaces\Services\AssignmentUserServiceInterface;
 use Illuminate\Http\Request;
 

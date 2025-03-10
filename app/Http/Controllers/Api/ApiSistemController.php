@@ -6,6 +6,8 @@ use App\Http\Requests\Sistem\StoreSistemRequest;
 use App\Http\Requests\Sistem\UpdateSistemRequest;
 use App\Http\Resources\SistemResource;
 use App\Models\Sistem;
+use App\Models\Assignment;
+use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Http\Request;
@@ -57,5 +59,31 @@ class ApiSistemController extends ApiController {
      */
     public function destroy(Request $request, Sistem $sistem) {
         return $this->sistemService->delete($sistem);
+    }
+
+    public function getSistems(Assignment $assignment)
+    {
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        return $assignmentUser->sistems; // Using the relationship defined in AssignmentUser
+    }
+
+    public function getSistemDetail(Assignment $assignment, Sistem $sistem)
+    {
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
+        }
+        
+        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get();
+
+        return new SistemResource($sistem);
     }
 }
