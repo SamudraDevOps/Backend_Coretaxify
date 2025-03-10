@@ -12,6 +12,7 @@ class UpdateGroupRequest extends FormRequest {
             'qty_student' => 'sometimes|integer',
             'start_period' => 'sometimes|date',
             'end_period' => 'sometimes|date|after:start_time',
+            'class_code' => 'sometimes|string',
             'status' => 'sometimes|in:' . implode(',', GroupStatusEnum::toArray()),
         ];
     }
