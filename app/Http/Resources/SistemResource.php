@@ -13,6 +13,14 @@ class SistemResource extends JsonResource {
                     'id' => $this->id,
                     'alamat_utama_akun' => $this->alamat_utama_akun,
                 ];
+            case IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value:
+                return [
+                    'id' => $this->id,
+                    'nama_akun' => $this->nama_akun,
+                    'npwp_akun' => $this->npwp_akun,
+                    'tipe_akun' => $this->tipe_akun,
+                    'alamat_utama_akun' => $this->alamat_utama_akun,
+                ];    
         }
         return [
             'id' => $this->id,

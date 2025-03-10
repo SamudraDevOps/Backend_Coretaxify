@@ -17,4 +17,12 @@ class Sistem extends Model
     public function assignment_user(): BelongsTo {
         return $this->belongsTo(AssignmentUser::class);
     }
+
+    public function akun_op() {
+        return $this->hasMany(Pic::class, 'akun_op_id');
+    }
+
+    public function akun_badan() {
+        return $this->hasMany(Pic::class, 'akun_badan_id');
+    }
 }
