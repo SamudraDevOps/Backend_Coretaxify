@@ -33,29 +33,35 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
     protected function getRepositoryClass(): string {
         return SistemRepositoryInterface::class;
     }
-    
-    public function create(array $data): ?Model { 
-        $dataAssignUserId = $data['assignment_user_id'];
-        
-        $assignUser_id = AssignmentUser::where('id', $dataAssignUserId)
+
+    public function create(array $data): ?Model {
+        $dataAssign = $data['assignment'];
+        $user = auth()->user();
+
+        $assignUser_id = AssignmentUser::where('user_id', $user->id)
+                        ->where('assignment_id', $dataAssign)
                         ->first()->assignment_id;
 
+        $idAssignUser = AssignmentUser::where('user_id', $user->id)
+                        ->where('assignment_id', $dataAssign)
+                        ->first()->id;
+
         $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
-        
+
         $dataAccount = Account::where('task_id', $task_id)
                     ->select('nama', 'npwp','account_type_id','alamat_utama','email')
                     ->get();
-        
+
         foreach($dataAccount as $account) {
         $sistem = parent::create([
-            'assignment_user_id' => $dataAssignUserId,
+            'assignment_user_id' => $idAssignUser,
             'nama_akun' => $account->nama,
             'npwp_akun' => $account->npwp,
             'tipe_akun' => $account->account_type->name,
             'alamat_utama_akun' => $account->alamat_utama,
             'email_akun' => $account->email,
         ]);
-        
+
         $kategoriWajibPajak = $sistem->tipe_akun;
 
         if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan ') {
@@ -63,7 +69,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
             $kategoriWajibPajak = 'Orang Pribadi';
         }
-        // Create ProfilSaya first
+
         $profil = ProfilSaya::create([
             'informasi_umum_id' => InformasiUmum::create([
                 'nama' => $sistem->nama_akun,
@@ -89,11 +95,11 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         $portal = PortalSaya::create([
             'profil_saya_id' => $profil->id
         ]);
-        
+
         // Update sistem with portal_saya_id
         $sistem->update(['portal_saya_id' => $portal->id]);
     }
-                
+
         return $sistem;
     }
 
@@ -102,5 +108,5 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         // $sistem->update([
         //     'sistem_id' => $request->kuasa_wajib_pajak
         // ]);
-    }    
+    }
 }

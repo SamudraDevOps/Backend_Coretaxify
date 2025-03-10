@@ -9,7 +9,7 @@ class StoreSistemRequest extends FormRequest {
         return [
             // 'nama_akun' => 'nullable|string',
             // 'npwp_akun' => 'nullable|string',
-            'assignment_user_id' => 'required|exists:assignment_users,id'
+            'assignment' => 'required|string'
         ];
     }
 }
