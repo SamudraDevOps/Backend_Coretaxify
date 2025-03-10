@@ -18,11 +18,11 @@ class Sistem extends Model
         return $this->belongsTo(AssignmentUser::class);
     }
 
-    public function akun_op() {
+    public function akun_ops() {
         return $this->hasMany(Pic::class, 'akun_op_id');
     }
 
-    public function akun_badan() {
+    public function akun_badans() {
         return $this->hasMany(Pic::class, 'akun_badan_id');
     }
 }
