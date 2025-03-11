@@ -96,6 +96,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             // Admin only routes
             Route::apiResource('users', ApiUserController::class);
             Route::apiResource('accounts', ApiAccountController::class);
+            Route::apiResource('assignments', ApiAssignmentController::class);
             Route::apiResource('groups', ApiGroupController::class);
             Route::apiResource('roles', ApiRoleController::class);
             Route::apiResource('tasks', ApiTaskController::class);
