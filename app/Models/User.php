@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'default_password',
         'image_path',
+        'status',
         'contract_id',
         'email_otp',
         'email_otp_expires_at',
