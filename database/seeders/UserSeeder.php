@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Role;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Support\Enums\UserStatusEnum;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +21,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $admin->roles()->attach(Role::where('name', 'admin')->first());
         // $admin->assignRole('admin');
@@ -30,6 +32,7 @@ class UserSeeder extends Seeder
             'email' => 'dosen@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $dosen->roles()->attach(Role::where('name', 'dosen')->first());
 
@@ -38,6 +41,7 @@ class UserSeeder extends Seeder
             'email' => 'mahasiswa1@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $mhs1->roles()->attach(Role::where('name', 'mahasiswa')->first());
 
@@ -46,6 +50,7 @@ class UserSeeder extends Seeder
             'email' => 'mahasiswa2@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $mhs2->roles()->attach(Role::where('name', 'mahasiswa')->first());
 
@@ -54,6 +59,7 @@ class UserSeeder extends Seeder
             'email' => 'psc@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $psc->roles()->attach(Role::where('name', 'psc')->first());
 
@@ -62,6 +68,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor1@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor1->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -70,6 +77,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor2@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor2->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -78,6 +86,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor3@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor3->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -86,6 +95,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor4@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor4->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -94,6 +104,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor5@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor5->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -102,6 +113,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor6@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor6->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -110,6 +122,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor7@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor7->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -118,6 +131,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor8@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor8->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -126,6 +140,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor9@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor9->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -134,6 +149,7 @@ class UserSeeder extends Seeder
             'email' => 'instructor10@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $instructor10->roles()->attach(Role::where('name', 'instruktur')->first());
 
@@ -142,6 +158,7 @@ class UserSeeder extends Seeder
             'email' => 'mahasiswapsc@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $mhsPsc1->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
 
