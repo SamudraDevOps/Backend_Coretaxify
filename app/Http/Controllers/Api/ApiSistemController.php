@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Sistem\StoreSistemRequest;
 use App\Http\Requests\Sistem\UpdateSistemRequest;
 use App\Http\Resources\SistemResource;
+use App\Http\Resources\PortalSayaResource;
+use App\Models\PortalSaya;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\AssignmentUser;
@@ -48,9 +50,9 @@ class ApiSistemController extends ApiController {
 
         switch ($intent) {
             case IntentEnum::API_USER_UPDATE_KUASA_WAJIB->value:
-                return $this->sistemService->updateKuasaWajib($request->validated());    
+                return $this->sistemService->updateKuasaWajib($request->validated());
         }
-        
+
         return $this->sistemService->update($sistem, $request->validated());
     }
 
@@ -71,19 +73,43 @@ class ApiSistemController extends ApiController {
         return $assignmentUser->sistems; // Using the relationship defined in AssignmentUser
     }
 
-    public function getSistemDetail(Assignment $assignment, Sistem $sistem)
+    public function getSistemDetail(Assignment $assignment, Sistem $sistem, Request $request)
     {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $intent = $request->get('intent');
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
+        switch ($intent) {
+            case IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value:
+                $assignmentUser = AssignmentUser::where([
+                    'user_id' => auth()->id(),
+                    'assignment_id' => $assignment->id
+                ])->firstOrFail();
+
+                if ($sistem->assignment_user_id !== $assignmentUser->id) {
+                    abort(403);
+                }
+
+                $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
+                                   ->where('id', $sistem->id)
+                                   ->firstOrFail();
+
+                return new PortalSayaResource($sistems->portal_saya);
+            default:
+                $assignmentUser = AssignmentUser::where([
+                    'user_id' => auth()->id(),
+                    'assignment_id' => $assignment->id
+                ])->firstOrFail();
+
+                if ($sistem->assignment_user_id !== $assignmentUser->id) {
+                    abort(403);
+                }
+
+                $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
+                                   ->where('id', $sistem->id)
+                                   ->firstOrFail();
+
+                return new SistemResource($sistems);
         }
-        
-        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get();
 
-        return new SistemResource($sistem);
+
     }
 }
