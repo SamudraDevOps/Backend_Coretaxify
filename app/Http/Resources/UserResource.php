@@ -23,6 +23,20 @@ class UserResource extends JsonResource {
                     'created_at' => $this->created_at->toDateTimeString(),
                     'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
+            case IntentEnum::API_USER_GET_MAHASISWA_PSC->value:
+                return [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'email_verified_at' => $this->email_verified_at,
+                    'password' => $this->password,
+                    'image_path' => $this->image_path,
+                    'status' => $this->status,
+                    'groups' => GroupResource::collection($this->groups),
+                    'roles' => RoleResource::collection($this->roles),
+                    'created_at' => $this->created_at->toDateTimeString(),
+                    'updated_at' => $this->updated_at->toDateTimeString(),
+                ];
             default:
                 return [
                     'id' => $this->id,
