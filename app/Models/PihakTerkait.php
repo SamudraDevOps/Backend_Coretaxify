@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class PihakTerkait extends Model
 {
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];
 
-    protected $fillable = [
-        'nama_pengurus',
-        'npwp',
-        'tipe_pihak_terkait',
-        'jenis_orang_terkait',
-        'sub_orang_terkait',
-        'kewarganegaraan',
-        'negara_asal',
-        'email',
-        'tanggal_mulai',
-        'tanggal_berakhir',
-    ];
+    // protected $fillable = [
+    //     'nama_pengurus',
+    //     'npwp',
+    //     'tipe_pihak_terkait',
+    //     'jenis_orang_terkait',
+    //     'sub_orang_terkait',
+    //     'kewarganegaraan',
+    //     'negara_asal',
+    //     'email',
+    //     'tanggal_mulai',
+    //     'tanggal_berakhir',
+    // ];
 
     public function profil_saya()
     {

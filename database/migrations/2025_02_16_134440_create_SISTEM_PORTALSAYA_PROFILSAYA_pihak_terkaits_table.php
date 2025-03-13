@@ -26,6 +26,15 @@ return new class extends Migration
             $table->boolean('is_penanggung_jawab')->default(true);
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_berakhir')->nullable();
+
+            $table->boolean('adalah_data_eksternal')->nullable();
+            $table->string('nomor_paspor')->nullable();
+            $table->string('presentasi_pemgegang_saham')->nullable();
+            $table->string('klasifikasi_saham')->nullable();
+            $table->string('jenis_wajib_pajak_terkait')->nullable();
+            $table->string('kewarganegaraan_pemegang_saham')->nullable();
+            $table->string('kriteria_pemilik_manfaat')->nullable();
+            $table->date('tanggal_selesai')->nullable();
             $table->timestamps();
         });
     }

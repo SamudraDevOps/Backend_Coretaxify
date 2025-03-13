@@ -144,12 +144,13 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
             Route::apiResource('assignment-user', ApiAssignmentUserController::class);
             Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
-            
+
             Route::prefix('assignments')->group(function () {
                 Route::get('{assignment}/sistem', [ApiSistemController::class, 'getSistems']);
                 Route::get('{assignment}/sistem/{sistem}', [ApiSistemController::class, 'getSistemDetail']);
+                Route::post('{assignment}/sistem/{sistem}', [ApiPihakTerkaitController::class, 'store']);
             });
-            
+
             Route::apiResource('sistem', ApiSistemController::class);
             Route::apiResource('portal-saya', ApiPortalSayaController::class);
             Route::apiResource('profil-saya', ApiProfilSayaController::class);

@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 use App\Models\PihakTerkait;
 use App\Models\Sistem;
+use App\Models\Assignment;
 use App\Models\Pic;
-use Illuminate\Support\Str;
+use App\Support\Enums\IntentEnum;
 use App\Support\Interfaces\Repositories\PihakTerkaitRepositoryInterface;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
 
@@ -16,24 +17,37 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         return PihakTerkaitRepositoryInterface::class;
     }
 
-    public function create(array $data): ?Model {
-        $randomNumber = 'DA' . mt_rand(10000000, 99999999);
+    public function create(array $data , ?Sistem $sistem = null): ?Model {
+        // dd($sistem->id);
+        // $intent = $data['intent'];
 
-        $pihakTerkait = PihakTerkait::create([
-            'nama_pengurus' => $data['nama_pengurus'],
-            'npwp' => $data['npwp'],
-            'id_penunjukkan_perwakilan' => $randomNumber,
-        ]);
+        // switch ($intent) {
+        //     case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
+                $randomNumber = 'DA' . mt_rand(10000000, 99999999);
 
-        $dataAkun = $data['id_akun_sistem'];
+                $pihakTerkait = PihakTerkait::create([
+                    'akun_id' => $data['akun_id'],
+                    'nama_pengurus' => $data['nama_pengurus'],
+                    'npwp' => $data['npwp'],
+                    // 'kewarganegaraan' => $data['kewarganegaraan'],
+                    // 'negara_asal' => $data['negara_asal'],
+                    // 'sub_orang_terkait' => $data['sub_orang_terkait'],
+                    // 'email' => $data['email'],
+                    // 'keterangan' => $data['keterangan'],
+                    // 'tanggal_mulai' => $data['tanggal_mulai'],
+                    // 'tanggal_berakhir' => $data['tanggal_berakhir'],
+                    'id_penunjukkan_perwakilan' => $randomNumber,
+                ]);
 
-        $idAkun = Sistem::where('id', $dataAkun)->first();
+                $idAkunOp = $data['akun_id'];
 
-        // Pic::create([
-        //     'akun_op_id' => $idAkun->id,
-        //     'akun_badan_id' => $data['npwp'],
-        // ]);
+                Pic::create([
+                    'akun_op_id' => $idAkunOp,
+                    'akun_badan_id' => $sistem->id,
+                ]);
 
-        return $pihakTerkait;
+                return $pihakTerkait;
+        // }
+
     }
 }

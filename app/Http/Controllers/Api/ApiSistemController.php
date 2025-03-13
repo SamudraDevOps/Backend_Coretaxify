@@ -78,6 +78,21 @@ class ApiSistemController extends ApiController {
         $intent = $request->get('intent');
 
         switch ($intent) {
+            case IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value:
+                $assignmentUser = AssignmentUser::where([
+                    'user_id' => auth()->id(),
+                    'assignment_id' => $assignment->id
+                ])->firstOrFail();
+
+                if ($sistem->assignment_user_id !== $assignmentUser->id) {
+                    abort(403);
+                }
+
+                $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
+                                   ->whereIn('tipe_akun', ['Orang Pribadi', 'Orang Pribadi Lawan Transaksi'])
+                                   ->get();
+
+                return SistemResource::collection($sistems);
             case IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value:
                 $assignmentUser = AssignmentUser::where([
                     'user_id' => auth()->id(),
@@ -109,7 +124,5 @@ class ApiSistemController extends ApiController {
 
                 return new SistemResource($sistems);
         }
-
-
     }
 }

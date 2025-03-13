@@ -6,6 +6,8 @@ use App\Http\Requests\PihakTerkait\StorePihakTerkaitRequest;
 use App\Http\Requests\PihakTerkait\UpdatePihakTerkaitRequest;
 use App\Http\Resources\PihakTerkaitResource;
 use App\Models\PihakTerkait;
+use App\Models\Assignment;
+use App\Models\Sistem;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
 use Illuminate\Http\Request;
 
@@ -26,8 +28,12 @@ class ApiPihakTerkaitController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePihakTerkaitRequest $request) {
-        return $this->pihakTerkaitService->create($request->validated());
+    public function store(Assignment $assignment, Sistem $sistem, StorePihakTerkaitRequest $request) {
+        // dd($request);
+
+        return $this->pihakTerkaitService->create($request->validated(),$sistem);
+
+        // return $this->pihakTerkaitService->create($request->validated());
     }
 
     /**
