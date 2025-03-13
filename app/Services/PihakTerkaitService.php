@@ -18,36 +18,32 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
     }
 
     public function create(array $data , ?Sistem $sistem = null): ?Model {
-        // dd($sistem->id);
+        // dd($data);
         // $intent = $data['intent'];
+        $randomNumber = 'DA' . mt_rand(10000000, 99999999);
 
-        // switch ($intent) {
-        //     case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
-                $randomNumber = 'DA' . mt_rand(10000000, 99999999);
+        $pihakTerkait = PihakTerkait::create([
+            'akun_id' => $data['akun_id'],
+            'nama_pengurus' => $data['nama_pengurus'],
+            'npwp' => $data['npwp'],
+            // 'kewarganegaraan' => $data['kewarganegaraan'],
+            // 'negara_asal' => $data['negara_asal'],
+            // 'sub_orang_terkait' => $data['sub_orang_terkait'],
+            // 'email' => $data['email'],
+            // 'keterangan' => $data['keterangan'],
+            // 'tanggal_mulai' => $data['tanggal_mulai'],
+            // 'tanggal_berakhir' => $data['tanggal_berakhir'],
+            'id_penunjukkan_perwakilan' => $randomNumber,
+        ]);
 
-                $pihakTerkait = PihakTerkait::create([
-                    'akun_id' => $data['akun_id'],
-                    'nama_pengurus' => $data['nama_pengurus'],
-                    'npwp' => $data['npwp'],
-                    // 'kewarganegaraan' => $data['kewarganegaraan'],
-                    // 'negara_asal' => $data['negara_asal'],
-                    // 'sub_orang_terkait' => $data['sub_orang_terkait'],
-                    // 'email' => $data['email'],
-                    // 'keterangan' => $data['keterangan'],
-                    // 'tanggal_mulai' => $data['tanggal_mulai'],
-                    // 'tanggal_berakhir' => $data['tanggal_berakhir'],
-                    'id_penunjukkan_perwakilan' => $randomNumber,
-                ]);
+        $idAkunOp = $data['akun_id'];
 
-                $idAkunOp = $data['akun_id'];
+        Pic::create([
+            'akun_op_id' => $idAkunOp,
+            'akun_badan_id' => $sistem->id,
+        ]);
 
-                Pic::create([
-                    'akun_op_id' => $idAkunOp,
-                    'akun_badan_id' => $sistem->id,
-                ]);
-
-                return $pihakTerkait;
-        // }
+        return $pihakTerkait;
 
     }
 }

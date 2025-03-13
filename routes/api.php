@@ -148,7 +148,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::prefix('assignments')->group(function () {
                 Route::get('{assignment}/sistem', [ApiSistemController::class, 'getSistems']);
                 Route::get('{assignment}/sistem/{sistem}', [ApiSistemController::class, 'getSistemDetail']);
-                Route::post('{assignment}/sistem/{sistem}', [ApiPihakTerkaitController::class, 'store']);
+                Route::post('{assignment}/sistem/{sistem}/profil-saya/informasi-umum/edit-data-profil/pihak-terkait', [ApiPihakTerkaitController::class, 'store']);
             });
 
             Route::apiResource('sistem', ApiSistemController::class);

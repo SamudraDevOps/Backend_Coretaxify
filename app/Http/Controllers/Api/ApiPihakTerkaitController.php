@@ -8,6 +8,7 @@ use App\Http\Resources\PihakTerkaitResource;
 use App\Models\PihakTerkait;
 use App\Models\Assignment;
 use App\Models\Sistem;
+use App\Support\Enums\IntentEnum;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
 use Illuminate\Http\Request;
 
@@ -29,11 +30,15 @@ class ApiPihakTerkaitController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, StorePihakTerkaitRequest $request) {
-        // dd($request);
+        // dd($request->all());
+        $validated = $request->validated();
+        $validated['intent'] = $request->get('intent');
 
-        return $this->pihakTerkaitService->create($request->validated(),$sistem);
+        switch ($validated['intent']) {
+            case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
+                return $this->pihakTerkaitService->create($validated,$sistem);
+        }
 
-        // return $this->pihakTerkaitService->create($request->validated());
     }
 
     /**

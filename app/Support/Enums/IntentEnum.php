@@ -67,4 +67,5 @@ enum IntentEnum: string {
     case API_SISTEM_GET_PORTAL_SAYA = 'api.sistem.get.portal.saya';
 
     case API_CREATE_PIHAK_TERKAIT = 'api.create.pihak.terkait';
+
 }

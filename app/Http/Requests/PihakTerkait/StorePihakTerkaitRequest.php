@@ -7,25 +7,25 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePihakTerkaitRequest extends FormRequest {
     public function rules(): array {
-        $intent = $this->get('intent');
+        // $intent = $this->get('intent');
 
-        switch ($intent) {
-            case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
-                return [
-                    'akun_id' => 'required|string',
-                    'assignment_id' => 'required|exists:assignments,id',
-                    'sistem_id' => 'required|exists:sistems,id',
-                    'nama_pengurus' => 'required|string',
-                    'npwp' => 'required|string',
-                    'kewarganegaraan' => 'required|string',
-                    'negara_asal' => 'required|string',
-                    'sub_orang_terkait' => 'required|string',
-                    'email' => 'required|string',
-                    'keterangan' => 'required|string',
-                    'tanggal_mulai' => 'required|date',
-                    'tanggal_berakhir' => 'required|date',
-                ];
-        }
+        // switch ($intent) {
+        //     case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
+        //         return [
+        //             'akun_id' => 'required|string',
+        //             'assignment_id' => 'required|exists:assignments,id',
+        //             'sistem_id' => 'required|exists:sistems,id',
+        //             'nama_pengurus' => 'required|string',
+        //             'npwp' => 'required|string',
+        //             'kewarganegaraan' => 'required|string',
+        //             'negara_asal' => 'required|string',
+        //             'sub_orang_terkait' => 'required|string',
+        //             'email' => 'required|string',
+        //             'keterangan' => 'required|string',
+        //             'tanggal_mulai' => 'required|date',
+        //             'tanggal_berakhir' => 'required|date',
+        //         ];
+        // }
 
         return [
             'akun_id' => 'required|string',
