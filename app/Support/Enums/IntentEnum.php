@@ -68,4 +68,6 @@ enum IntentEnum: string {
 
     case API_CREATE_PIHAK_TERKAIT = 'api.create.pihak.terkait';
 
+    case API_GET_ASSIGNMENT_USER_PIC = 'api.get.assignment.user.pic';
+
 }

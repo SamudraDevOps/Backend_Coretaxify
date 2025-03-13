@@ -20,7 +20,13 @@ class SistemResource extends JsonResource {
                     'npwp_akun' => $this->npwp_akun,
                     'tipe_akun' => $this->tipe_akun,
                     'alamat_utama_akun' => $this->alamat_utama_akun,
-                ];    
+                ];
+            case IntentEnum::API_GET_ASSIGNMENT_USER_PIC->value:
+                return [
+                    'nama_akun' => $this->nama_akun,
+                    'npwp_akun' => $this->npwp_akun,
+                    'tipe_akun' => $this->tipe_akun,
+                ];
         }
         return [
             'id' => $this->id,

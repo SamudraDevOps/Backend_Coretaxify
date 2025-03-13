@@ -6,4 +6,6 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 
 interface AssignmentUserServiceInterface extends BaseCrudServiceInterface {
     public function getAssignmentUserByUserId($userId, $perPage);
+
+    public function getPic($assignmentUser);
 }
