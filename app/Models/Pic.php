@@ -15,4 +15,8 @@ class Pic extends Model
     public function akun_badan() {
         return $this->belongsTo(Sistem::class, 'akun_badan_id');
     }
+
+    public function assignment_user() {
+        return $this->belongsTo(AssignmentUser::class);
+    }
 }

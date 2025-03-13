@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('akun_op_id')->references('id')->on('sistems');
             $table->foreignId('akun_badan_id')->references('id')->on('sistems');
+            $table->foreignId('assignment_user_id')->references('id')->on('assignment_users');
             $table->timestamps();
         });
     }

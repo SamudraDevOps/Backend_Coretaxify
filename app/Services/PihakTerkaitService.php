@@ -39,6 +39,7 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         $idAkunOp = $data['akun_id'];
 
         Pic::create([
+            'assignment_user_id' => $sistem->assignment_user_id,
             'akun_op_id' => $idAkunOp,
             'akun_badan_id' => $sistem->id,
         ]);
