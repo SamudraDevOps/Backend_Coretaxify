@@ -12,8 +12,8 @@ class UpdateAssignmentRequest extends FormRequest {
             'task_id' => 'sometimes|exists:tasks,id',
             'name' => 'sometimes|string',
             'assignment_code' => 'sometimes|string',
-            'start_period' => 'sometimes|date',
-            'end_period' => 'sometimes|date',
+            'start_period' => 'sometimes|date_format:Y-m-d H:i:s',
+            'end_period' => 'sometimes|date_format:Y-m-d H:i:s',
             'supporting_file' => 'sometimes|file',
         ];
     }
