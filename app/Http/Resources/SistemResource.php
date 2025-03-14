@@ -27,6 +27,24 @@ class SistemResource extends JsonResource {
                     'npwp_akun' => $this->npwp_akun,
                     'tipe_akun' => $this->tipe_akun,
                 ];
+            case IntentEnum::API_GET_SISTEM_IKHTISAR_PROFIL->value:
+                return  [
+                    'id' => $this->id,
+                    'nama_akun' => $this->nama_akun,
+                    'npwp_akun' => $this->npwp_akun,
+                    'tipe_akun' => $this->tipe_akun,
+                    'alamat_utama_akun' => $this->alamat_utama_akun,
+                    'email_akun' => $this->email_akun,
+                ];
+            case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
+                return  [
+                    'id' => $this->id,
+                    'nama_akun' => $this->nama_akun,
+                    'npwp_akun' => $this->npwp_akun,
+                    'tipe_akun' => $this->tipe_akun,
+                    'alamat_utama_akun' => $this->alamat_utama_akun,
+                    'email_akun' => $this->email_akun,
+                ];
         }
         return [
             'id' => $this->id,
