@@ -86,7 +86,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
                 'nomor_identifikasi' => $sistem->npwp_akun,
             ])->id,
-            'manajemen_kasus_id' => ManajemenKasus::create()->id,
             'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
             'objek_pajak_bumi_dan_bangunan_id' => ObjekPajakBumiDanBangunan::create()->id,
         ]);
