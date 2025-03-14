@@ -8,10 +8,6 @@ class ProfilSaya extends Model
 {
     protected $guarded = ['id'];
 
-    public function informasi_umum() {
-        return $this->belongsTo(InformasiUmum::class);
-    }
-
     public function data_ekonomi() {
         return $this->belongsTo(DataEkonomi::class);
     }

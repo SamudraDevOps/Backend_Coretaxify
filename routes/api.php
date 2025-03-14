@@ -152,7 +152,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('sistem', ApiSistemController::class);
             Route::apiResource('portal-saya', ApiPortalSayaController::class);
             Route::apiResource('profil-saya', ApiProfilSayaController::class);
-            Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
             Route::apiResource('detail-kontak', ApiDetailKontakController::class);
             Route::apiResource('detail-bank', ApiDetailBankController::class);
             Route::apiResource('jenis-pajak', ApiJenisPajakController::class);

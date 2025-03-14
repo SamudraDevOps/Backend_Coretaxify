@@ -71,13 +71,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         }
 
         $profil = ProfilSaya::create([
-            'informasi_umum_id' => InformasiUmum::create([
-                'nama' => $sistem->nama_akun,
-                'npwp' => $sistem->npwp_akun,
-                'jenis_wajib_pajak' => $sistem->tipe_akun,
-                'kategori_wajib_pajak' => $kategoriWajibPajak,
-                'bahasa' => 'Bahasa Indonesia',
-            ])->id,
             'detail_kontak_id' => DetailKontak::create()->id,
             'tempat_kegiatan_usaha_id' => TempatKegiatanUsaha::create()->id,
             'data_ekonomi_id' => DataEkonomi::create()->id,
