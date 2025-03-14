@@ -18,9 +18,10 @@ class AssignmentResource extends JsonResource {
             'users' => UserResource::collection($this->whenLoaded('users')),
             'users_count' => count($this->users),
             'supporting_file' => $this->supporting_file,
+            'task_id' => $this->task_id,
             'task' => new TaskResource($this->task),
-            'start_period' => $this->start_period ? Carbon::parse($this->start_period)->format('d-m-Y') : null,
-            'end_period' => $this->end_period ? Carbon::parse($this->end_period)->format('d-m-Y') : null,
+            'start_period' => $this->start_period ? Carbon::parse($this->start_period)->format('d-m-Y H:i:s') : null,
+            'end_period' => $this->end_period ? Carbon::parse($this->end_period)->format('d-m-Y H:i:s') : null,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
