@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class InformasiUmum extends Model
 {
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];
 
     protected $fillable = [
         'npwp',
@@ -24,9 +24,9 @@ class InformasiUmum extends Model
         'notary_officer_nik',
         'notary_officer_name',
         'jenis_perusahaan',
-        'authorized_capital',
-        'issued_capital',
-        'paid_in_capital',
+        'modal_dasar',
+        'modal_ditempatkan',
+        'modal_disetor',
         'kewarganegaraan',
         'bahasa',
     ];

@@ -13,26 +13,38 @@ return new class extends Migration
     {
         Schema::create('informasi_umums', function (Blueprint $table) {
             $table->id();
-             
+
             $table->string('npwp')->nullable();
             $table->string('jenis_wajib_pajak')->nullable();
             $table->string('nama')->nullable();
             $table->string('kategori_wajib_pajak')->nullable();
+
             $table->string('negara_asal')->nullable();
             $table->date('tanggal_keputusan_pengesahan')->nullable();
             $table->string('nomor_keputusan_pengesahan_perubahan')->nullable();
             $table->date('tanggal_surat_keputusasan_pengesahan_perubahan')->nullable();
-            $table->string('dead_of_establishment_document_number')->nullable();
-            $table->string('place_of_establishment')->nullable();
+            $table->string('nomor_akta_pendirian')->nullable();
+            $table->string('tempat_pendirian')->nullable();
             $table->date('tanggal_pendirian')->nullable();
-            $table->string('notary_office_nik')->nullable();
-            $table->string('notary_office_name')->nullable();
+            $table->string('nik_notaris')->nullable();
+            $table->string('nama_notaris')->nullable();
             $table->string('jenis_perusahaan')->nullable();
-            $table->integer('authorized_capital')->nullable();
-            $table->string('issued_capital')->nullable();
-            $table->string('paid_in_capital')->nullable();
+            $table->string('modal_dasar')->nullable();
+            $table->string('modal_ditempatkan')->nullable();
+            $table->string('modal_disetor')->nullable();
             $table->string('kewarganegaraan')->nullable();
             $table->string('bahasa')->nullable();
+
+            $table->string('nomor_paspor')->nullable();
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('jenis_kelamin')->nullable();
+            $table->string('status_perkawinan')->nullable();
+            $table->string('status_hubungan_keluarga')->nullable();
+            $table->string('agama')->nullable();
+            $table->string('jenis_pekerjaan')->nullable();
+            $table->string('nama_ibu_kandung')->nullable();
+            $table->string('nomor_kartu_keluarga')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,8 @@ use App\Http\Requests\InformasiUmum\StoreInformasiUmumRequest;
 use App\Http\Requests\InformasiUmum\UpdateInformasiUmumRequest;
 use App\Http\Resources\InformasiUmumResource;
 use App\Models\InformasiUmum;
+use App\Models\Assignment;
+use App\Models\Sistem;
 use App\Support\Interfaces\Services\InformasiUmumServiceInterface;
 use Illuminate\Http\Request;
 
@@ -40,8 +42,8 @@ class ApiInformasiUmumController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateInformasiUmumRequest $request, InformasiUmum $informasiUmum) {
-        return $this->informasiUmumService->update($informasiUmum, $request->validated());
+    public function update(Assignment $assignment, Sistem $sistem, UpdateInformasiUmumRequest $request, InformasiUmum $informasiUmum) {
+        return $this->informasiUmumService->update($informasiUmum, $request->validated() ,$assignment,$sistem, );
     }
 
     /**

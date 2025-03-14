@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateInformasiUmumRequest extends FormRequest {
     public function rules(): array {
         return [
-             
             'npwp' => 'nullable|string',
             'jenis_wajib_pajak' => 'nullable|string',
             'nama' => 'nullable|string',
@@ -19,14 +18,25 @@ class UpdateInformasiUmumRequest extends FormRequest {
             'dead_of_establishment_document_number' => 'nullable|string',
             'place_of_establishment' => 'nullable|string',
             'tanggal_pendirian' => 'nullable|date',
-            'notary_office_nik' => 'nullable|string',
-            'notary_office_name' => 'nullable|string',
+            'nik_notaris' => 'nullable|string',
+            'nama_notaris' => 'nullable|string',
             'jenis_perusahaan' => 'nullable|string',
-            'authorized_capital' => 'nullable|integer',
-            'issued_capital' => 'nullable|string',
-            'paid_in_capital' => 'nullable|string',
+            'modal_dasar' => 'nullable|integer',
+            'modal_ditempatkan' => 'nullable|string',
+            'modal_disetor' => 'nullable|string',
             'kewarganegaraan' => 'nullable|string',
             'bahasa' => 'nullable|string',
+
+            'nomor_paspor' => 'nullable|string',
+            'tempat_lahir' => 'nullable|string',
+            'tanggal_lahir' => 'nullable|string',
+            'jenis_kelamin' => 'nullable|string',
+            'status_perkawinan' => 'nullable|string',
+            'status_hubungan_keluarga' => 'nullable|string',
+            'agama' => 'nullable|string',
+            'jenis_pekerjaan' => 'nullable|string',
+            'nama_ibu_kandung' => 'nullable|string',
+            'nomor_kartu_keluarga' => 'nullable|string',
         ];
     }
 }

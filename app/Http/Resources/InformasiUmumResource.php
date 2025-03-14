@@ -8,7 +8,7 @@ class InformasiUmumResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-             
+
             'npwp' => $this->npwp,
             'jenis_wajib_pajak' => $this->jenis_wajib_pajak,
             'nama' => $this->nama,
@@ -20,12 +20,12 @@ class InformasiUmumResource extends JsonResource {
             'dead_of_establishment_document_number' => $this->dead_of_establishment_document_number,
             'place_of_establishment' => $this->place_of_establishment,
             'tanggal_pendirian' => $this->tanggal_pendirian,
-            'notary_office_nik' => $this->notary_office_nik,
-            'notary_office_name' => $this->notary_office_name,
+            'nik_notaris' => $this->nik_notaris,
+            'nama_notaris' => $this->nama_notaris,
             'jenis_perusahaan' => $this->jenis_perusahaan,
-            'authorized_capital' => $this->authorized_capital,
-            'issued_capital' => $this->issued_capital,
-            'paid_in_capital' => $this->paid_in_capital,
+            'modal_dasar' => $this->modal_dasar,
+            'modal_ditempatkan' => $this->modal_ditempatkan,
+            'modal_disetor' => $this->modal_disetor,
             'kewarganegaraan' => $this->kewarganegaraan,
             'bahasa' => $this->bahasa,
             'created_at' => $this->created_at->toDateTimeString(),

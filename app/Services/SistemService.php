@@ -64,7 +64,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
 
         $kategoriWajibPajak = $sistem->tipe_akun;
 
-        if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan ') {
+        if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi') {
             $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
         } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
             $kategoriWajibPajak = 'Orang Pribadi';
