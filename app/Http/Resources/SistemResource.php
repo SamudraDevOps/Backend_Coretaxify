@@ -8,7 +8,7 @@ class SistemResource extends JsonResource {
     public function toArray($request): array {
         $intent = $request->get('intent');
         switch ($intent) {
-            case IntentEnum::API_SISTEM_GET_ALAMAT->value:
+            case IntentEnum::API_GET_SISTEM_ALAMAT->value:
                 return [
                     'id' => $this->id,
                     'alamat_utama_akun' => $this->alamat_utama_akun,
