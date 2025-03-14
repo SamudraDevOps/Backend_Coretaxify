@@ -29,5 +29,6 @@ class GroupSeeder extends Seeder
                 'class_code' => 'DCBA',
                 'status' => 'ACTIVE',
             ]);
+        $groups2->users()->attach(16);
     }
 }

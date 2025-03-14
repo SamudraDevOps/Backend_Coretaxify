@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Group;
 use App\Models\Contract;
 use App\Mail\SendOtpMail;
+use App\Support\Enums\UserStatusEnum;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\PasswordResetMail;
@@ -63,7 +64,8 @@ class ApiAuthController extends ApiController {
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],
-                'default_password' => $validated['password']
+                'default_password' => $validated['password'],
+                'status' => UserStatusEnum::ACTIVE->value,
             ]);
 
             $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
@@ -96,6 +98,7 @@ class ApiAuthController extends ApiController {
             'email' => $validated['email'],
             'password' => $validated['password'],
             'contract_id' => $contract->id,
+            'status' => UserStatusEnum::ACTIVE->value,
         ]);
         $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
 

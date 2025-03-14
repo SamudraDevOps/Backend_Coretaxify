@@ -37,6 +37,8 @@ class ApiUserController extends ApiController {
                 return $this->userService->importData($validated);
             case IntentEnum::API_USER_IMPORT_MAHASISWA_PSC->value:
                 return $this->userService->importData($validated);
+            case IntentEnum::API_USER_IMPORT_INSTRUKTUR->value:
+                return $this->userService->importData($validated);
         }
 
         return $this->userService->create($validated);

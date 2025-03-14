@@ -41,9 +41,6 @@ use App\Http\Controllers\Api\ApiSistemController;
 //     Route::post('login', [ApiAuthController::class, 'login']);
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With, X-XSRF-TOKEN');
-header('Access-Control-Allow-Credentials: true');
 
 Route::get('routes/download', function () {
     $routeCollection = Route::getRoutes();
@@ -96,6 +93,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             // Admin only routes
             Route::apiResource('users', ApiUserController::class);
             Route::apiResource('accounts', ApiAccountController::class);
+            Route::apiResource('assignments', ApiAssignmentController::class);
             Route::apiResource('groups', ApiGroupController::class);
             Route::apiResource('roles', ApiRoleController::class);
             Route::apiResource('tasks', ApiTaskController::class);

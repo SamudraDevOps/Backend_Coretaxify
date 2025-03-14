@@ -26,7 +26,7 @@ class AssignmentSeeder extends Seeder
 
         $assignment2 = Assignment::create([
             'group_id' => 1,
-            'user_id' => 3,
+            'user_id' => 5,
             'task_id' => 2,
             'name' => 'tugas psc',
             'assignment_code' => 'tugaspsc',
