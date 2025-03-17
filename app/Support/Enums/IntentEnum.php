@@ -72,5 +72,11 @@ enum IntentEnum: string {
 
     case API_GET_SISTEM_IKHTISAR_PROFIL = 'api.get.sistem.ikhtisar.profil';
 
-    case API_GET_SISTEM_INFORMASI_UMUM = 'api.get.sistem.informasi.umum';
+    case API_GET_SISTEM_INFORMASI_UMUM_ORANG_PRIBADI = 'api.get.sistem.informasi.umum.orang.pribadi';
+
+    case API_GET_SISTEM_INFORMASI_UMUM_BADAN = 'api.get.sistem.informasi.umum.badan';
+
+    case API_UPDATE_SISTEM_INFORMASI_UMUM_BADAN = 'api.update.sistem.informasi.umum.badan';
+
+    case API_UPDATE_SISTEM_INFORMASI_UMUM_ORANG_PRIBADI = 'api.update.sistem.informasi.umum.orang.pribadi';
 }

@@ -108,21 +108,6 @@ class ApiSistemController extends ApiController {
                                    ->firstOrFail();
 
                 return new SistemResource($sistems);
-            case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
-                $assignmentUser = AssignmentUser::where([
-                    'user_id' => auth()->id(),
-                    'assignment_id' => $assignment->id
-                ])->firstOrFail();
-
-                if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                    abort(403);
-                }
-
-                $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                   ->where('id', $sistem->id)
-                                   ->firstOrFail();
-
-                return new SistemResource($sistems);
             case IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value:
                 $assignmentUser = AssignmentUser::where([
                     'user_id' => auth()->id(),
