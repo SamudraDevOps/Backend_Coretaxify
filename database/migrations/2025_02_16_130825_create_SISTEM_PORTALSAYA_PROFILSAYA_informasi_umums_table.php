@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->string('negara_asal')->nullable();
             $table->date('tanggal_keputusan_pengesahan')->nullable();
+            $table->string('nomor_keputusan_pengesahan')->nullable();
             $table->string('nomor_keputusan_pengesahan_perubahan')->nullable();
             $table->date('tanggal_surat_keputusasan_pengesahan_perubahan')->nullable();
             $table->string('nomor_akta_pendirian')->nullable();

@@ -16,23 +16,4 @@ class InformasiUmumService extends BaseCrudService implements InformasiUmumServi
     protected function getRepositoryClass(): string {
         return InformasiUmumRepositoryInterface::class;
     }
-
-    public function update($keyOrModel = null, array $data, ?Assignment $assignment = null, ?Sistem $sistem = null ): ?Model{
-
-        $sistem = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
-
-        $assignment = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
-
-        if ($sistem->assignment_user_id !== $assignment->id) {
-            abort(403);
-        }
-
-
-        $informasiUmum = parent::update($keyOrModel,$data);
-
-        return $informasiUmum;
-    }
 }

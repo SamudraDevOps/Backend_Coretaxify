@@ -29,7 +29,7 @@ class InformasiUmumResource extends JsonResource {
                     'kewarganegaraan'   => $this->kewarganegaraan,
                     'bahasa' => $this->bahasa,
                     'created_at' => $this->created_at->toDateTimeString(),
-                    'GETd_at' => $this->updated_at->toDateTimeString(),
+                    'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
             case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM_BADAN->value:
                 return [

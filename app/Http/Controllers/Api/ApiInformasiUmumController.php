@@ -58,8 +58,21 @@ class ApiInformasiUmumController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(Assignment $assignment, Sistem $sistem, UpdateInformasiUmumRequest $request, InformasiUmum $informasiUmum) {
-        $informasiUmum = $sistem->id;
-        return $this->informasiUmumService->update($informasiUmum, $request->validated() ,$assignment,$sistem, );
+
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
+        }
+
+        Sistem::where('assignment_user_id', $assignmentUser->id)
+                ->where('id', $sistem->id)
+                ->firstOrFail();
+
+        return $this->informasiUmumService->update($informasiUmum, $request->validated() );
     }
 
     /**
