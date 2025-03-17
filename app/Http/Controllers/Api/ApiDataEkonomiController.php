@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Sistem;
+use App\Models\Assignment;
+use App\Models\DataEkonomi;
+use Illuminate\Http\Request;
+use App\Models\AssignmentUser;
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Resources\DataEkonomiResource;
 use App\Http\Requests\DataEkonomi\StoreDataEkonomiRequest;
 use App\Http\Requests\DataEkonomi\UpdateDataEkonomiRequest;
-use App\Http\Resources\DataEkonomiResource;
-use App\Models\DataEkonomi;
 use App\Support\Interfaces\Services\DataEkonomiServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiDataEkonomiController extends ApiController {
     public function __construct(
@@ -33,14 +37,42 @@ class ApiDataEkonomiController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(DataEkonomi $dataEkonomi) {
+    public function show(Assignment $assignment, Sistem $sistem,DataEkonomi $dataEkonomi) {
+        // return 123;
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
+        }
+
+        Sistem::where('assignment_user_id', $assignmentUser->id)
+                ->where('id', $sistem->id)
+                ->firstOrFail();
+
         return new DataEkonomiResource($dataEkonomi);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDataEkonomiRequest $request, DataEkonomi $dataEkonomi) {
+    public function update(Assignment $assignment, Sistem $sistem, UpdateDataEkonomiRequest $request, DataEkonomi $dataEkonomi) {
+
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
+        }
+
+        Sistem::where('assignment_user_id', $assignmentUser->id)
+                ->where('id', $sistem->id)
+                ->firstOrFail();
+
         return $this->dataEkonomiService->update($dataEkonomi, $request->validated());
     }
 
