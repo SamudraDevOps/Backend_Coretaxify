@@ -32,6 +32,28 @@ class ApiUserController extends ApiController {
         $validated = $request->validated();
         $validated['intent'] = $request->get('intent');
 
+
+        // bulk creation
+        if ($request->has('bulk') && $request->boolean('bulk') && $request->has('students')) {
+            $students = [];
+            $intent = $validated['intent']; // Get the intent once
+
+            foreach ($request->input('students') as $studentData) {
+                // Add intent to each student's data
+                $studentData['intent'] = $intent;
+
+                // Create the student using your existing service
+                $student = $this->userService->create($studentData);
+                $students[] = $student;
+            }
+
+            return response()->json([
+                'message' => 'Students created successfully',
+                'data' => $students
+            ], 201);
+        }
+
+        // single creation
         switch($validated['intent']) {
             case IntentEnum::API_USER_IMPORT_DOSEN->value:
                 return $this->userService->importData($validated);
