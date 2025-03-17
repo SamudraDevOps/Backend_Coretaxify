@@ -22,7 +22,13 @@ class DetailKontakRepository extends BaseRepository implements DetailKontakRepos
 
         $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'sistem_id']);
+
+        // Explicitly handle sistem_id filtering if it exists in searchParams
+        if (isset($searchParams['sistem_id'])) {
+            $query->where('sistem_id', $searchParams['sistem_id']);
+        }
+
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 

@@ -16,8 +16,8 @@ class ProfilSaya extends Model
         return $this->belongsTo(DataEkonomi::class);
     }
 
-    public function detail_kontak() {
-        return $this->belongsTo(DetailKontak::class);
+    public function detail_kontaks() {
+        return $this->hasMany(DetailKontak::class, 'sistem_id');
     }
 
     public function detail_bank() {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Barryvdh\Reflection\DocBlock\Type\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProfilSayaResource extends JsonResource {
@@ -15,7 +16,7 @@ class ProfilSayaResource extends JsonResource {
             'penunjukkan_wajib_pajak_saya' => new PenunjukkanWajibPajakSayaResource($this->penunjukkan_wajib_pajak_saya),
             'jenis_pajak' => new JenisPajakResource($this->jenis_pajak),
             'objek_pajak_bumi_dan_bangunan' => new ObjekPajakBumiDanBangunanResource($this->objek_pajak_bumi_dan_bangunan),
-            'detail_kontak' => new DetailKontakResource($this->detail_kontak),
+            'detail_kontak' => DetailKontakResource::collection($this->detail_kontaks),
             'tempat_kegiatan_usaha' => new TempatKegiatanUsahaResource($this->tempat_kegiatan_usaha),
             'pihak_terkait' => new PihakTerkaitResource($this->pihak_terkait),
             'created_at' => $this->created_at->toDateTimeString(),

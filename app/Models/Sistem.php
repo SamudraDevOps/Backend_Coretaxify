@@ -25,4 +25,8 @@ class Sistem extends Model
     public function akun_badans() {
         return $this->hasMany(Pic::class, 'akun_badan_id');
     }
+
+    public function detail_kontaks() {
+        return $this->hasMany(DetailKontak::class);
+    }
 }

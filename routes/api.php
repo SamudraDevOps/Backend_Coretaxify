@@ -151,6 +151,10 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::put('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'update']);
                 Route::get('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'update']);
+                Route::get('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'index']);
+                Route::post('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'store']);
+                Route::get('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'show']);
+                Route::put('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'update']);
             });
 
             Route::apiResource('sistem', ApiSistemController::class);

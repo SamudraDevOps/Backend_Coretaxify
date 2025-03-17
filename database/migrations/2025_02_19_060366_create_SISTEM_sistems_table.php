@@ -24,6 +24,10 @@ return new class extends Migration
             $table->string('email_akun');
             $table->timestamps();
         });
+
+        Schema::table('detail_kontaks', function (Blueprint $table) {
+            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
+        });
     }
 
     /**
