@@ -17,7 +17,7 @@ class ProfilSayaResource extends JsonResource {
             'jenis_pajak' => new JenisPajakResource($this->jenis_pajak),
             'objek_pajak_bumi_dan_bangunan' => new ObjekPajakBumiDanBangunanResource($this->objek_pajak_bumi_dan_bangunan),
             'detail_kontak' => DetailKontakResource::collection($this->detail_kontaks),
-            'tempat_kegiatan_usaha' => new TempatKegiatanUsahaResource($this->tempat_kegiatan_usaha),
+            'tempat_kegiatan_usaha' => TempatKegiatanUsahaResource::collection($this->tempat_kegiatan_usaha),
             'pihak_terkait' => new PihakTerkaitResource($this->pihak_terkait),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),

@@ -82,7 +82,7 @@ class ApiDetailKontakController extends ApiController {
                 ->firstOrFail();
 
         if ($detailKontak->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses detail kontak punyak siapa.');
+        abort(403, 'hayo ngakses punyak siapa.');
         }
 
         return new DetailKontakResource($detailKontak);

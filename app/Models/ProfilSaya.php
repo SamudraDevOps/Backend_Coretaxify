@@ -19,6 +19,9 @@ class ProfilSaya extends Model
     public function detail_kontaks() {
         return $this->hasMany(DetailKontak::class, 'sistem_id');
     }
+    public function tempat_kegiatan_usaha() {
+        return $this->hasMany(TempatKegiatanUsaha::class, 'sistem_id');
+    }
 
     public function detail_bank() {
         return $this->belongsTo(DetailBank::class);
@@ -40,9 +43,6 @@ class ProfilSaya extends Model
         return $this->belongsTo(ObjekPajakBumiDanBangunan::class);
     }
 
-    public function tempat_kegiatan_usaha() {
-        return $this->belongsTo(TempatKegiatanUsaha::class);
-    }
 
     public function pihak_terkait() {
         return $this->belongsTo(PihakTerkait::class);

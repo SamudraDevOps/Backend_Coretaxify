@@ -28,6 +28,10 @@ return new class extends Migration
         Schema::table('detail_kontaks', function (Blueprint $table) {
             $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
         });
+
+        Schema::table('tempat_kegiatan_usahas', function (Blueprint $table) {
+            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
+        });
     }
 
     /**

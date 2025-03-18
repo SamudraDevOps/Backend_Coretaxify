@@ -29,4 +29,8 @@ class Sistem extends Model
     public function detail_kontaks() {
         return $this->hasMany(DetailKontak::class);
     }
+
+    public function tempat_kegiatan_usahas() {
+        return $this->hasMany(TempatKegiatanUsaha::class);
+    }
 }

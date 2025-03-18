@@ -22,7 +22,11 @@ class TempatKegiatanUsahaRepository extends BaseRepository implements TempatKegi
 
         $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'sistem_id']);
+
+        if (isset($searchParams['sistem_id'])) {
+            $query->where('sistem_id', $searchParams['sistem_id']);
+        }
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 
