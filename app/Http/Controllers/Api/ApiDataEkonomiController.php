@@ -73,6 +73,10 @@ class ApiDataEkonomiController extends ApiController {
                 ->where('id', $sistem->id)
                 ->firstOrFail();
 
+        if ($dataEkonomi->id !== $sistem->id) {
+        abort(403, 'hayo ngakses detail kontak punyak siapa.');
+        }
+
         return $this->dataEkonomiService->update($dataEkonomi, $request->validated());
     }
 

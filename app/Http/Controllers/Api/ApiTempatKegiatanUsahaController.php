@@ -106,7 +106,7 @@ class ApiTempatKegiatanUsahaController extends ApiController {
                 ->firstOrFail();
 
         if ($tempatKegiatanUsaha->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses detail kontak punyak siapa.');
+        abort(403, 'hayo ngakses  punyak siapa.');
         }
 
         return $this->tempatKegiatanUsahaService->update($tempatKegiatanUsaha, $request->validated());

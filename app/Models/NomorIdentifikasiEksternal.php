@@ -6,11 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class NomorIdentifikasiEksternal extends Model
 {
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];
 
     protected $fillable = [
-          
-        'tipe_identifikasi_eksternal',
         'nomor_identifikasi',
         'tanggal_mulai',
         'tanggal_berakhir',

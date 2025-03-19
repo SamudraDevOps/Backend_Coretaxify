@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('nomor_identifikasi_eksternals', function (Blueprint $table) {
             $table->id();
-            $table->string('tipe_nomor_identifikasi')->nullable();
             $table->string('nomor_identifikasi')->nullable();
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_berakhir')->nullable();
