@@ -19,8 +19,9 @@ class ApiAuthVerifyOtpRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'email' => 'required|email',
+            'email' => 'required_without:token|email',
             'otp' => 'required|digits:4',
+            'token' => 'required_without:email|string',
         ];
     }
 }
