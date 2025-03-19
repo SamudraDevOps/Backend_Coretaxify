@@ -32,5 +32,9 @@ class Sistem extends Model
 
     public function tempat_kegiatan_usahas() {
         return $this->hasMany(TempatKegiatanUsaha::class);
+
+    }
+    public function detail_banks() {
+        return $this->hasMany(TempatKegiatanUsaha::class);
     }
 }

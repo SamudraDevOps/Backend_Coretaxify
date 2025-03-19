@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailBank extends Model
 {
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];
 
-    protected $fillable = [
-          
-        'nama_bank',
-        'nomor_rekening',
-        'nama_pemilik_rekening_bank',
-        'jenis_rekening_bank',
-        'keterangan',
-        'tanggal_mulai',
-        'tanggal_berakhir',
-        'is_rekening-bank_utama',
-    ];
+    // protected $fillable = [
+
+    //     'nama_bank',
+    //     'nomor_rekening',
+    //     'nama_pemilik_rekening_bank',
+    //     'jenis_rekening_bank',
+    //     'keterangan',
+    //     'tanggal_mulai',
+    //     'tanggal_berakhir',
+    //     'is_rekening-bank_utama',
+    // ];
 
     public function profil_saya()
     {
