@@ -6,6 +6,6 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Sistem;
 
-interface DetailKontakServiceInterface extends BaseCrudServiceInterface {
+interface UnitPajakKeluargaServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data, ?Sistem $sistem = null): ?Model;
 }

@@ -23,6 +23,10 @@ class ProfilSaya extends Model
         return $this->hasMany(TempatKegiatanUsaha::class, 'sistem_id');
     }
 
+    public function unit_pajak_keluargas() {
+        return $this->hasMany(UnitPajakKeluarga::class, 'sistem_id');
+    }
+
     public function detail_bank() {
         return $this->belongsTo(DetailBank::class);
     }

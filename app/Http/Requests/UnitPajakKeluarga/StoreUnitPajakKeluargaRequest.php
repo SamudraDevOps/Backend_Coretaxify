@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\University;
+namespace App\Http\Requests\UnitPajakKeluarga;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUniversityRequest extends FormRequest {
+class StoreUnitPajakKeluargaRequest extends FormRequest {
     public function rules(): array {
         return [
             'nik_anggota_keluarga' => 'nullable|string',

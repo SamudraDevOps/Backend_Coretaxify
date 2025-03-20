@@ -37,4 +37,8 @@ class Sistem extends Model
     public function detail_banks() {
         return $this->hasMany(TempatKegiatanUsaha::class);
     }
+
+    public function unit_pajak_keluargas() {
+        return $this->hasMany(UnitPajakKeluarga::class, );
+    }
 }
