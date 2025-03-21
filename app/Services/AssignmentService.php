@@ -10,6 +10,7 @@ use App\Models\Assignment;
 use App\Models\AssignmentUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
 use App\Support\Interfaces\Repositories\AssignmentRepositoryInterface;
@@ -91,17 +92,21 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     }
 
     public function update($keyOrModel, array $data): ?Model {
+        $assignment = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
+
         // $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
         // return parent::update($keyOrModel, $data);
-        $filename = null;
-        if(isset($data['supporting_file'])) {
-            $filename = $this->importData($data['supporting_file']);
-        }
         $assignment = parent::update($keyOrModel, $data);
 
-        $assignment->update([
-            'supporting_file' => $filename,
-        ]);
+        if(isset($data['supporting_file'])) {
+            Storage::disk('public')->delete('support-file.' . $assignment->file_path);
+            $filename = $this->importData($data['supporting_file']);
+            $assignment->update([
+                'supporting_file' => $filename,
+            ]);
+        }
+
 
         // if(isset($data['groups'])) {
         //     $assignment->groups()->sync($data['groups']);

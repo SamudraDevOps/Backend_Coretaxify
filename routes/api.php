@@ -81,8 +81,6 @@ Route::get('/csrf-token', function (Request $request) {
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/register', [ApiAuthController::class, 'register']);
-    Route::post('/verify-otp', [ApiAuthController::class, 'verifyOtp']);
-    Route::post('/resend-otp', [ApiAuthController::class, 'resendOtp']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
 
@@ -90,18 +88,130 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::post('/logout', [ApiAuthController::class, 'logout']);
         Route::get('/profile', [ApiAuthController::class, 'me']);
         Route::post('/profile/update', [ApiAuthController::class, 'updateProfile']);
+        Route::post('/verify-otp', [ApiAuthController::class, 'verifyOtp']);
+        Route::post('/resend-otp', [ApiAuthController::class, 'resendOtp']);
+        Route::get('/verification-status', [ApiAuthController::class, 'verificationStatus']);
 
-        Route::prefix('admin')->group(function () {
-            // Admin only routes
-            Route::apiResource('users', ApiUserController::class);
-            Route::apiResource('accounts', ApiAccountController::class);
-            Route::apiResource('assignments', ApiAssignmentController::class);
-            Route::apiResource('groups', ApiGroupController::class);
-            Route::apiResource('roles', ApiRoleController::class);
-            Route::apiResource('tasks', ApiTaskController::class);
-            Route::apiResource('universities', ApiUniversityController::class);
-            Route::apiResource('contract', ApiContractController::class);
-            Route::apiResource('account-types', ApiAccountTypeController::class);
+        Route::middleware('verified')->group(function () {
+
+            Route::prefix('admin')->group(function () {
+                // Admin only routes
+                Route::apiResource('users', ApiUserController::class);
+                Route::apiResource('accounts', ApiAccountController::class);
+                Route::apiResource('assignments', ApiAssignmentController::class);
+                Route::apiResource('groups', ApiGroupController::class);
+                Route::apiResource('roles', ApiRoleController::class);
+                Route::apiResource('tasks', ApiTaskController::class);
+                Route::apiResource('universities', ApiUniversityController::class);
+                Route::apiResource('contract', ApiContractController::class);
+                Route::apiResource('account-types', ApiAccountTypeController::class);
+            });
+
+            Route::prefix('lecturer')->group(function () {
+                // Lecturer only routes
+                Route::apiResource('groups', ApiGroupController::class);
+                Route::prefix('groups')->group(function () {
+                    Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
+                    Route::delete('{group}/members/{user}', [ApiGroupController::class, 'removeMember']);
+                    Route::get('{group}/members/{user}', [ApiGroupController::class, 'getMemberDetail']);
+
+                    Route::get('{group}/assignments', [ApiGroupController::class, 'getAssignments']);
+                    Route::get('{group}/assignments/{assignment}', [ApiGroupController::class, 'showAssignment']);
+                    Route::post('{group}/assignments', [ApiGroupController::class, 'storeAssignment']);
+                    Route::put('{group}/assignments/{assignment}', [ApiGroupController::class, 'updateAssignment']);
+                    Route::delete('{group}/assignments/{assignment}', [ApiGroupController::class, 'removeAssignment']);
+
+                    Route::get('{group}/assignments/{assignment}/members', [ApiGroupController::class, 'getAssignmentMembers']);
+                    Route::delete('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'removeAssignmentMember']);
+                    Route::get('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'getAssignmentMemberDetail']);
+                });
+                Route::apiResource('assignments', ApiAssignmentController::class);
+                Route::prefix('assignments')->group(function () {
+                    Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                    Route::delete('{assignment}/members/{user}', [ApiAssignmentController::class, 'removeMember']);
+                    Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
+                });
+                Route::apiResource('exams', ApiExamController::class);
+                Route::prefix('exams')->group(function () {
+                    Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+                    Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+                    Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+                });
+                Route::apiResource('group-users', ApiGroupUserController::class);
+                Route::get('contract-tasks', [ApiTaskController::class, 'getContractTasks']);
+            });
+
+            Route::prefix('student')->group(function () {
+                // Student only routes
+                Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
+                Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
+                Route::apiResource('assignment-user', ApiAssignmentUserController::class);
+                Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
+
+                Route::prefix('assignments')->group(function () {
+                    Route::get('{assignment}/sistem', [ApiSistemController::class, 'getSistems']);
+                    Route::get('{assignment}/sistem/{sistem}', [ApiSistemController::class, 'getSistemDetail']);
+                    Route::post('{assignment}/sistem/{sistem}/pihak-terkait', [ApiPihakTerkaitController::class, 'store']);
+                });
+
+                Route::apiResource('sistem', ApiSistemController::class);
+                Route::apiResource('portal-saya', ApiPortalSayaController::class);
+                Route::apiResource('profil-saya', ApiProfilSayaController::class);
+                Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
+                Route::apiResource('detail-kontak', ApiDetailKontakController::class);
+                Route::apiResource('detail-bank', ApiDetailBankController::class);
+                Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
+                Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
+                Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
+                Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
+                Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
+                Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
+                Route::apiResource('manajemen-kasuses', ApiManajemenKasusController::class);
+            });
+
+            Route::prefix('psc')->group(function () {
+                // PSC only routes
+                Route::apiResource('groups', ApiGroupController::class);
+                Route::prefix('groups')->group(function () {
+                    Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
+                    Route::delete('{group}/members/{user}', [ApiGroupController::class, 'removeMember']);
+                    Route::get('{group}/members/{user}', [ApiGroupController::class, 'getMemberDetail']);
+                });
+                Route::apiResource('users', ApiUserController::class);
+                Route::apiResource('assignments', ApiAssignmentController::class);
+                Route::prefix('assignments')->group(function () {
+                    Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                    Route::delete('{assignment}/members/{user}', [ApiAssignmentController::class, 'removeMember']);
+                    Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
+                });
+                Route::apiResource('exams', ApiExamController::class);
+                Route::prefix('exams')->group(function () {
+                    Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+                    Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+                    Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+                });
+                // Route::prefix('evaluations')->group(function () {
+                //     Route::get('{exam}/members', [ApiExamController::class, 'getMembers']);
+                //     Route::delete('{exam}/members/{user}', [ApiExamController::class, 'removeMember']);
+                //     Route::get('{exam}/members/{user}', [ApiExamController::class, 'getMemberDetail']);
+                // });
+                Route::apiResource('tasks', ApiTaskController::class);
+            });
+
+            Route::prefix('student-psc')->group(function () {
+                // Student-psc only routes
+                Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
+                Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
+                Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
+                Route::apiResource('sistems', ApiSistemController::class);
+            });
+
+            Route::prefix('instructor')->group(function () {
+                // Instruktor only routes
+                Route::apiResource('tasks', ApiTaskController::class, ['only' => ['index', 'show']]);
+                Route::apiResource('assignments', ApiAssignmentController::class);
+                // Route::apiResource('users', ApiUserController::class);
+            });
         });
 
         Route::prefix('lecturer')->group(function () {

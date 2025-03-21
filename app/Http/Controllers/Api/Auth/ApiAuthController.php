@@ -17,6 +17,7 @@ use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Laravel\Sanctum\PersonalAccessToken;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\ApiAuthLoginRequest;
 use App\Http\Requests\Auth\ApiAuthUpdateRequest;
@@ -35,6 +36,25 @@ class ApiAuthController extends ApiController {
 
     // LOGIN
     public function login(ApiAuthLoginRequest $request) {
+        $credentials = $request->validated();
+
+        if (!auth()->attempt($credentials)) {
+            return response()->json([
+                'message' => __('auth.failed'),
+            ], 401);
+        }
+
+        $user = auth()->user();
+
+        if (!$user->email_verified_at) {
+            return response()->json([
+                'message' => 'Please verify your email with the OTP before logging in.',
+                'verification_required' => true,
+                'user' => new UserResource($user),
+                'token' => $user->createToken('auth_token')->plainTextToken,
+            ], 403);
+        }
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user->email_verified_at) {
@@ -47,17 +67,16 @@ class ApiAuthController extends ApiController {
                 'token' => auth()->user()->createToken('auth_token')->plainTextToken,
             ]);
         }
-
-        return response()->json([
-            'message' => __('auth.failed'),
-        ], 401);
     }
 
     // REGISTER
     public function register(ApiAuthRegisterRequest $request) {
         $validated = $request->validated();
 
-        if (str_starts_with($validated['contract_code'], 'PSC-')) {
+        $contract = Contract::where('contract_code', $request->contract_code)->first();
+
+        if (!$contract) {
+            // if (str_starts_with($validated['contract_code'], 'PSC-')) {
             $group = Group::where('class_code', $validated['contract_code'])->firstOrFail();
 
             $user = User::create([
@@ -75,24 +94,29 @@ class ApiAuthController extends ApiController {
             $user->generateOtp();
             Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
 
-            // $user->createToken('auth_token')->plainTextToken;
+            // Create token for the newly registered user
+            $token = $user->createToken('auth_token')->plainTextToken;
 
-            // return new AuthResource($user);
-            return response()->json(['message' => 'OTP sent to your email. Please verify your account.']);
-
+            return response()->json([
+                'message' => 'OTP sent to your email. Please verify your account.',
+                'user' => new UserResource($user),
+                'token' => $token,
+                'verification_required' => true
+            ]);
         }
 
-        $contract = Contract::where('contract_code', $request->contract_code)->first();
         $currentStudentCount = User::join('user_roles', 'users.id', '=', 'user_roles.user_id')
         ->join('roles', 'user_roles.role_id', '=', 'roles.id')
         ->where('roles.name', 'mahasiswa')
         ->where('users.contract_id', $contract->id)
         ->count();
+
         if ($currentStudentCount >= $contract->qty_student) {
             return response()->json([
                 'message' => 'Student quota for this University has been reached',
             ], 422);
         }
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -100,14 +124,21 @@ class ApiAuthController extends ApiController {
             'contract_id' => $contract->id,
             'status' => UserStatusEnum::ACTIVE->value,
         ]);
+
         $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
 
         $user->generateOtp();
         Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
-        // $user->createToken('auth_token')->plainTextToken;
 
-        // return new AuthResource($user);
-        return response()->json(['message' => 'OTP sent to your email. Please verify your account.']);
+        // Create token for the newly registered user
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'OTP sent to your email. Please verify your account.',
+            'user' => new UserResource($user),
+            'token' => $token,
+            'verification_required' => true
+        ]);
     }
 
     public function resetPassword(ApiAuthResetPasswordRequest $request) {
@@ -165,7 +196,29 @@ class ApiAuthController extends ApiController {
     }
 
     public function verifyOtp(ApiAuthVerifyOtpRequest $request) {
-        $user = User::where('email', $request->validated('email'))->first();
+        $user = null;
+
+        // check if user authenticated
+        if (auth()->check()) {
+            $user = auth()->user();
+        }
+
+        elseif ($request->has('token')) {
+            $token = $request->token;
+            $tokenParts = explode('|', $token);
+            $tokenId = $tokenparts[0] ?? null;
+
+            if ($tokenId) {
+                $personalAccessToken = PersonalAccessToken::find($tokenId);
+                if ($personalAccessToken) {
+                    $user = $personalAccessToken->tokenable;
+                }
+            }
+        }
+
+        elseif ($request->has('email')) {
+            $user = User::where('email', $request->validated('email'))->first();
+        }
 
         if (!$user) {
             return response()->json([
@@ -191,8 +244,16 @@ class ApiAuthController extends ApiController {
         $user->email_otp_expires_at = null;
         $user->save();
 
+        if (auth()->check()) {
+            return response()->json([
+                'message' => 'Email verified successfully.',
+            ]);
+        }
+
         return response()->json([
             'message' => 'Email verified successfully. You can now login.',
+            'user' => new UserResource($user),
+            'token' => $user->createToken('auth_token')->plainTextToken,
         ]);
     }
 
@@ -216,5 +277,14 @@ class ApiAuthController extends ApiController {
     Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
 
     return response()->json(['message' => 'New OTP sent to your email.']);
+    }
+
+    public function verificationStatus(Request $request) {
+        $user = $request->user();
+
+        return response()->json([
+            'verified' => !is_null($user->email_verified_at),
+            'email' => $user->email
+        ]);
     }
 }
