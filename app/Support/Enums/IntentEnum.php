@@ -70,6 +70,8 @@ enum IntentEnum: string {
 
     case API_GET_ASSIGNMENT_USER_PIC = 'api.get.assignment.user.pic';
 
+    case API_GET_SISTEM_FIRST_ACCOUNT = 'api.get.sistem.first.account';
+
     case API_GET_SISTEM_INFORMASI_UMUM = 'api.get.sistem.informasi.umum';
 
     case API_GET_SISTEM_IKHTISAR_PROFIL = 'api.get.sistem.ikhtisar.profil';

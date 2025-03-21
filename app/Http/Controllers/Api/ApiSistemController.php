@@ -63,21 +63,50 @@ class ApiSistemController extends ApiController {
         return $this->sistemService->delete($sistem);
     }
 
-    public function getSistems(Assignment $assignment)
+    public function getSistems(Assignment $assignment, Request $request)
     {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $intent = $request->get('intent');
+        switch ($intent) {
+            case IntentENum::API_GET_SISTEM_FIRST_ACCOUNT->value:
+                $assignmentUser = AssignmentUser::where([
+                    'user_id' => auth()->id(),
+                    'assignment_id' => $assignment->id
+                ])->firstOrFail();
 
-        return $assignmentUser->sistems; // Using the relationship defined in AssignmentUser
+                $firstSistem = Sistem::where('assignment_user_id', $assignmentUser->id)
+                    ->orderBy('created_at', 'asc')
+                ->first();
+
+                return new SistemResource($firstSistem);
+            default:
+                $assignmentUser = AssignmentUser::where([
+                    'user_id' => auth()->id(),
+                    'assignment_id' => $assignment->id
+                ])->firstOrFail();
+
+                return $assignmentUser->sistems;
+            }
     }
 
     public function getSistemDetail(Assignment $assignment, Sistem $sistem, Request $request)
     {
         $intent = $request->get('intent');
-
         switch ($intent) {
+            case IntentENum::API_GET_SISTEM_FIRST_ACCOUNT->value:
+                $assignmentUser = AssignmentUser::where([
+                    'user_id' => auth()->id(),
+                    'assignment_id' => $assignment->id
+                ])->firstOrFail();
+
+                if ($sistem->assignment_user_id !== $assignmentUser->id) {
+                    abort(403);
+                }
+
+                $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
+                        ->where('id', $sistem->id)
+                        ->first();
+                return 123;
+                return new SistemResource($sistems);
             case IntentEnum::API_GET_SISTEM_ALAMAT->value:
                 $assignmentUser = AssignmentUser::where([
                     'user_id' => auth()->id(),
