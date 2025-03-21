@@ -7,6 +7,7 @@ use App\Support\Enums\IntentEnum;
 class SistemResource extends JsonResource {
     public function toArray($request): array {
         $intent = $request->get('intent');
+        
         switch ($intent) {
             case IntentEnum::API_GET_SISTEM_ALAMAT->value:
                 return [

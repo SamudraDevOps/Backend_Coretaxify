@@ -92,7 +92,7 @@ class ApiSistemController extends ApiController {
     {
         $intent = $request->get('intent');
         switch ($intent) {
-            case IntentENum::API_GET_SISTEM_FIRST_ACCOUNT->value:
+            case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
                 $assignmentUser = AssignmentUser::where([
                     'user_id' => auth()->id(),
                     'assignment_id' => $assignment->id
@@ -103,9 +103,9 @@ class ApiSistemController extends ApiController {
                 }
 
                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                        ->where('id', $sistem->id)
-                        ->first();
-                return 123;
+                                   ->where('id', $sistem->id)
+                                   ->firstOrFail();
+
                 return new SistemResource($sistems);
             case IntentEnum::API_GET_SISTEM_ALAMAT->value:
                 $assignmentUser = AssignmentUser::where([
