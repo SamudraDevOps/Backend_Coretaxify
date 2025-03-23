@@ -50,6 +50,7 @@
                 return [
                      'id' => $this->id,
                      'field_edit_informasi' => new ProfilSayaResource($this->portal_saya->profil_saya),
+                     'alamat_utama_akun' => $this->alamat_utama_akun,
                  ];
          }
          return [
