@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Sistem;
+use App\Models\Assignment;
+use App\Models\PihakTerkait;
+use Illuminate\Http\Request;
+use App\Models\AssignmentUser;
+use App\Support\Enums\IntentEnum;
+use App\Http\Resources\PihakTerkaitResource;
 use App\Http\Requests\PihakTerkait\StorePihakTerkaitRequest;
 use App\Http\Requests\PihakTerkait\UpdatePihakTerkaitRequest;
-use App\Http\Resources\PihakTerkaitResource;
-use App\Models\PihakTerkait;
-use App\Models\Assignment;
-use App\Models\Sistem;
-use App\Support\Enums\IntentEnum;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiPihakTerkaitController extends ApiController {
     public function __construct(
@@ -20,8 +21,22 @@ class ApiPihakTerkaitController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $perPage = request()->get('perPage', 5);
+
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
+        }
+
+        Sistem::where('assignment_user_id', $assignmentUser->id)
+                ->where('id', $sistem->id)
+                ->firstOrFail();
+
 
         return PihakTerkaitResource::collection($this->pihakTerkaitService->getAllPaginated($request->query(), $perPage));
     }
@@ -31,14 +46,20 @@ class ApiPihakTerkaitController extends ApiController {
      */
     public function store(Assignment $assignment, Sistem $sistem, StorePihakTerkaitRequest $request) {
         // dd($request->all());
-        $validated = $request->validated();
-        $validated['intent'] = $request->get('intent');
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
 
-        switch ($validated['intent']) {
-            case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
-                return $this->pihakTerkaitService->create($validated,$sistem);
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
         }
 
+        Sistem::where('assignment_user_id', $assignmentUser->id)
+                ->where('id', $sistem->id)
+                ->firstOrFail();
+
+        return $this->pihakTerkaitService->create($request->validated(),$sistem);
     }
 
     /**

@@ -7,5 +7,5 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 interface SistemServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data): ?Model;
 
-    public function updateKuasaWajib(array $data);
+
 }

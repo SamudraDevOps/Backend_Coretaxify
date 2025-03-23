@@ -26,14 +26,15 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
             'akun_id' => $data['akun_id'],
             'nama_pengurus' => $data['nama_pengurus'],
             'npwp' => $data['npwp'],
-            // 'kewarganegaraan' => $data['kewarganegaraan'],
-            // 'negara_asal' => $data['negara_asal'],
-            // 'sub_orang_terkait' => $data['sub_orang_terkait'],
-            // 'email' => $data['email'],
-            // 'keterangan' => $data['keterangan'],
-            // 'tanggal_mulai' => $data['tanggal_mulai'],
-            // 'tanggal_berakhir' => $data['tanggal_berakhir'],
+            'kewarganegaraan' => $data['kewarganegaraan'],
+            'negara_asal' => $data['negara_asal'],
+            'sub_orang_terkait' => $data['sub_orang_terkait'],
+            'email' => $data['email'],
+            'keterangan' => $data['keterangan'],
+            'tanggal_mulai' => $data['tanggal_mulai'],
+            'tanggal_berakhir' => $data['tanggal_berakhir'],
             'id_penunjukkan_perwakilan' => $randomNumber,
+            'sistem_id' => $sistem->id,
         ]);
 
         $idAkunOp = $data['akun_id'];

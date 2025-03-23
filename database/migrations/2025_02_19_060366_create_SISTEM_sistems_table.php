@@ -40,6 +40,10 @@ return new class extends Migration
         Schema::table('unit_pajak_keluargas', function (Blueprint $table) {
             $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
         });
+
+        Schema::table('pihak_terkaits', function (Blueprint $table) {
+            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
+        });
     }
 
     /**

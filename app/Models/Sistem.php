@@ -39,6 +39,10 @@ class Sistem extends Model
     }
 
     public function unit_pajak_keluargas() {
-        return $this->hasMany(UnitPajakKeluarga::class, );
+        return $this->hasMany(UnitPajakKeluarga::class);
+    }
+
+    public function pihak_terkaits() {
+        return $this->hasMany(PihakTerkait::class, );
     }
 }

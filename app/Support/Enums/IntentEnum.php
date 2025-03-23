@@ -66,7 +66,7 @@ enum IntentEnum: string {
 
     case API_SISTEM_GET_PORTAL_SAYA = 'api.sistem.get.portal.saya';
 
-    case API_CREATE_PIHAK_TERKAIT = 'api.create.pihak.terkait';
+    case API_GET_KUASA_WAJIB_SAYA = 'api.get.kuasa.wajib.saya';
 
     case API_GET_ASSIGNMENT_USER_PIC = 'api.get.assignment.user.pic';
 
@@ -87,4 +87,6 @@ enum IntentEnum: string {
     case API_GET_SISTEM_DATA_EKONOMI_ORANG_PRIBADI = 'api.get.sistem.data.ekonomi.orang.pribadi';
 
     case API_GET_SISTEM_DATA_EKONOMI_BADAN = 'api.get.sistem.data.ekonomi.badan';
+
+    case API_GET_SISTEM_EDIT_INFORMASI_UMUM = 'api.get.sistem.edit.informasi.umum';
 }

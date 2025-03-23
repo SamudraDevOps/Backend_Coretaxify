@@ -79,12 +79,10 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
                 'bahasa' => 'Bahasa Indonesia',
             ])->id,
             'data_ekonomi_id' => DataEkonomi::create()->id,
-            'jenis_pajak_id' => JenisPajak::create()->id,
             'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
                 'nomor_identifikasi' => $sistem->npwp_akun,
             ])->id,
             'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
-            'objek_pajak_bumi_dan_bangunan_id' => ObjekPajakBumiDanBangunan::create()->id,
         ]);
 
         // Then create PortalSaya with the profil_saya_id
@@ -97,12 +95,5 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
     }
 
         return $sistem;
-    }
-
-    public function updateKuasaWajib($request) {
-        // $sistem = Sistem::find($request->id);
-        // $sistem->update([
-        //     'sistem_id' => $request->kuasa_wajib_pajak
-        // ]);
     }
 }

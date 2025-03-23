@@ -160,13 +160,10 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
                 Route::apiResource('detail-kontak', ApiDetailKontakController::class);
                 Route::apiResource('detail-bank', ApiDetailBankController::class);
-                Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
                 Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
                 Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
-                Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
                 Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
                 Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
-                Route::apiResource('manajemen-kasuses', ApiManajemenKasusController::class);
             });
 
             Route::prefix('psc')->group(function () {
@@ -258,11 +255,14 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::prefix('assignments')->group(function () {
                 Route::get('{assignment}/sistem', [ApiSistemController::class, 'getSistems']);
                 Route::get('{assignment}/sistem/{sistem}', [ApiSistemController::class, 'getSistemDetail']);
+
                 Route::post('{assignment}/sistem/{sistem}/pihak-terkait', [ApiPihakTerkaitController::class, 'store']);
+                Route::get('{assignment}/sistem/{sistem}/pihak-terkait', [ApiPihakTerkaitController::class, 'index']);
 
                 Route::get('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'update']);
 
+                Route::get('{assignment}/sistem/{sistem}/informasi-umum', [ApiSistemController::class, 'getSistemDetail']);
                 Route::get('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'update']);
 
@@ -295,10 +295,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
             Route::apiResource('detail-kontak', ApiDetailKontakController::class);
             Route::apiResource('detail-bank', ApiDetailBankController::class);
-            Route::apiResource('jenis-pajak', ApiJenisPajakController::class);
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
             Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
-            Route::apiResource('objek-pajak-bumi-dan-bangunan', ApiObjekPajakBumiDanBangunanController::class);
             Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
             Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
         });
