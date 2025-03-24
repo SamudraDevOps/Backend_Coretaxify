@@ -38,7 +38,7 @@ class ApiPihakTerkaitController extends ApiController {
                 ->firstOrFail();
 
 
-        return PihakTerkaitResource::collection($this->pihakTerkaitService->getAllPaginated($request->query(), $perPage));
+        return PihakTerkaitResource::collection($this->pihakTerkaitService->getAllBySistemId($request->query(), $sistem->id));
     }
 
     /**

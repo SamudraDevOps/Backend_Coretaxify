@@ -9,6 +9,7 @@ use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\Pic;
 use App\Support\Enums\IntentEnum;
+use Illuminate\Database\Eloquent\Collection;
 use App\Support\Interfaces\Repositories\PihakTerkaitRepositoryInterface;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
 
@@ -46,6 +47,12 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         ]);
 
         return $pihakTerkait;
+    }
 
+    public function getAllBySistemId(array $filters, int $sistemId): Collection
+    {
+        $repository = $this->repository; 
+
+        return $repository->getAllBySistemId($filters, $sistemId);
     }
 }

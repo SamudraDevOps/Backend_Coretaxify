@@ -9,6 +9,7 @@ use App\Traits\Repositories\HandlesFiltering;
 use App\Traits\Repositories\HandlesRelations;
 use App\Traits\Repositories\HandlesSorting;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class PihakTerkaitRepository extends BaseRepository implements PihakTerkaitRepositoryInterface {
     use HandlesFiltering, HandlesRelations, HandlesSorting;
@@ -29,5 +30,13 @@ class PihakTerkaitRepository extends BaseRepository implements PihakTerkaitRepos
         $query = $this->applySorting($query, $searchParams);
 
         return $query;
+    }
+
+    public function getAllBySistemId(array $filters, int $sistemId): Collection
+    {
+        $query = $this->applyFilters($filters);
+        $query->where('sistem_id', $sistemId);
+
+        return $query->get();
     }
 }
