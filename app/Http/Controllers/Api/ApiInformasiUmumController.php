@@ -36,20 +36,14 @@ class ApiInformasiUmumController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem, InformasiUmum $informasiUmum) {
+    public function show(Assignment $assignment, Sistem $sistem, InformasiUmum $informasiUmum, Request $request) {
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
-
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
+        $informasiUmum = $this->informasiUmumService->getInformasiUmumDetail(
+            $assignment,
+            $sistem,
+            $informasiUmum,
+            $request
+        );
 
         return new InformasiUmumResource($informasiUmum);
     }
@@ -59,20 +53,14 @@ class ApiInformasiUmumController extends ApiController {
      */
     public function update(Assignment $assignment, Sistem $sistem, UpdateInformasiUmumRequest $request, InformasiUmum $informasiUmum) {
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $informasiUmum = $this->informasiUmumService->updateInformasiUmum(
+            $assignment,
+            $sistem,
+            $informasiUmum,
+            $request->validated()
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        return $this->informasiUmumService->update($informasiUmum, $request->validated() );
+        return new InformasiUmumResource($informasiUmum);
     }
 
     /**
