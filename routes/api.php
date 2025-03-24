@@ -201,6 +201,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::prefix('student-psc')->group(function () {
                 // Student-psc only routes
                 Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
+                Route::prefix('groups')->group(function () {
+                    Route::get('{group}/assignments', [ApiGroupController::class, 'getAssignments']);
+                });
                 Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('sistems', ApiSistemController::class);
