@@ -57,123 +57,26 @@
 
      public function getSistems(Assignment $assignment, Request $request)
      {
-         $intent = $request->get('intent');
-         switch ($intent) {
-             case IntentENum::API_GET_SISTEM_FIRST_ACCOUNT->value:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
+         $result = $this->sistemService->getSystemsByAssignment($assignment, $request);
 
-                 $firstSistem = Sistem::where('assignment_user_id', $assignmentUser->id)
-                     ->orderBy('created_at', 'asc')
-                 ->first();
+         if ($request->get('intent') === IntentEnum::API_GET_SISTEM_FIRST_ACCOUNT->value) {
+             return new SistemResource($result);
+         }
 
-                 return new SistemResource($firstSistem);
-             default:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
-
-                 return $assignmentUser->sistems;
-             }
+         return $result;
      }
 
      public function getSistemDetail(Assignment $assignment, Sistem $sistem, Request $request)
      {
          $intent = $request->get('intent');
-         switch ($intent) {
-             case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
+         $result = $this->sistemService->getSystemDetail($assignment, $sistem, $request);
 
-                 if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                     abort(403);
-                 }
-
-                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                    ->where('id', $sistem->id)
-                                    ->firstOrFail();
-
-                 return new SistemResource($sistems);
-             case IntentEnum::API_GET_SISTEM_ALAMAT->value:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
-
-                 if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                     abort(403);
-                 }
-
-                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                    ->where('id', $sistem->id)
-                                    ->firstOrFail();
-
-                 return new SistemResource($sistems);
-             case IntentEnum::API_GET_SISTEM_IKHTISAR_PROFIL->value:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
-
-                 if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                     abort(403);
-                 }
-
-                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                    ->where('id', $sistem->id)
-                                    ->firstOrFail();
-
-                 return new SistemResource($sistems);
-             case IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
-
-                 if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                     abort(403);
-                 }
-
-                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                    ->whereIn('tipe_akun', ['Orang Pribadi', 'Orang Pribadi Lawan Transaksi'])
-                                    ->get();
-
-                 return SistemResource::collection($sistems);
-             case IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
-
-                 if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                     abort(403);
-                 }
-
-                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                    ->where('id', $sistem->id)
-                                    ->firstOrFail();
-
-                 return new PortalSayaResource($sistems->portal_saya);
-             default:
-                 $assignmentUser = AssignmentUser::where([
-                     'user_id' => auth()->id(),
-                     'assignment_id' => $assignment->id
-                 ])->firstOrFail();
-
-                 if ($sistem->assignment_user_id !== $assignmentUser->id) {
-                     abort(403);
-                 }
-
-                 $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)
-                                    ->where('id', $sistem->id)
-                                    ->firstOrFail();
-
-                 return new SistemResource($sistems);
+         if ($intent === IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value) {
+             return new PortalSayaResource($result);
+         } elseif ($intent === IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value) {
+             return SistemResource::collection($result);
+         } else {
+             return new SistemResource($result);
          }
      }
  }

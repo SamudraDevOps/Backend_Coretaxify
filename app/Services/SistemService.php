@@ -2,32 +2,34 @@
 
 namespace App\Services;
 
-use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
+use App\Models\Task;
+use App\Models\Sistem;
 use App\Models\Account;
-use App\Models\AlamatWajibPajak;
-use App\Models\Assignment;
-use App\Models\AssignmentUser;
-use App\Models\ContractTask;
-use App\Models\DataEkonomi;
-use App\Models\DetailBank;
-use App\Models\DetailKontak;
-use App\Models\InformasiUmum;
-use App\Models\JenisPajak;
 use App\Models\KodeKlu;
-use App\Models\ManajemenKasus;
-use App\Models\NomorIdentifikasiEksternal;
-use App\Models\ObjekPajakBumiDanBangunan;
-use App\Models\PenunjukkanWajibPajakSaya;
-use App\Models\PihakTerkait;
+use App\Models\Assignment;
+use App\Models\DetailBank;
+use App\Models\JenisPajak;
 use App\Models\PortalSaya;
 use App\Models\ProfilSaya;
-use App\Models\Sistem;
-use App\Models\Task;
+use App\Models\DataEkonomi;
+use App\Models\ContractTask;
+use App\Models\DetailKontak;
+use App\Models\PihakTerkait;
+use Illuminate\Http\Request;
+use App\Models\InformasiUmum;
+use App\Models\AssignmentUser;
+use App\Models\ManajemenKasus;
+use App\Models\AlamatWajibPajak;
+use App\Support\Enums\IntentEnum;
 use App\Models\TempatKegiatanUsaha;
-use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
-use App\Support\Interfaces\Services\SistemServiceInterface;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ObjekPajakBumiDanBangunan;
+use App\Models\PenunjukkanWajibPajakSaya;
+use App\Models\NomorIdentifikasiEksternal;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
+use App\Support\Interfaces\Services\SistemServiceInterface;
+use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
+use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
 class SistemService extends BaseCrudService implements SistemServiceInterface {
     protected function getRepositoryClass(): string {
@@ -93,7 +95,68 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         // Update sistem with portal_saya_id
         $sistem->update(['portal_saya_id' => $portal->id]);
     }
-
         return $sistem;
+    }
+
+    public function getSystemsByAssignment(Assignment $assignment, Request $request)
+    {
+        $intent = $request->get('intent');
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($intent === IntentEnum::API_GET_SISTEM_FIRST_ACCOUNT->value) {
+            return $this->getFirstSystemByAssignment($assignment);
+        }
+
+        /** @var SistemRepositoryInterface $repository */
+         $repository = $this->repository; 
+        return $repository->getByAssignmentUser($assignmentUser->id);
+    }
+
+    public function getFirstSystemByAssignment(Assignment $assignment)
+    {
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        /** @var SistemRepositoryInterface $repository */
+         $repository = $this->repository;
+        return $repository->getFirstByAssignmentUser($assignmentUser->id);
+    }
+
+    public function getSystemDetail(Assignment $assignment, Model $sistem, Request $request, string $intent = null)
+    {
+        $intent = $intent ?? $request->get('intent');
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+        ])->firstOrFail();
+
+        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+            abort(403);
+        }
+
+        /** @var SistemRepositoryInterface $repository */
+         $repository = $this->repository;
+
+        switch ($intent) {
+            case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
+            case IntentEnum::API_GET_SISTEM_ALAMAT->value:
+            case IntentEnum::API_GET_SISTEM_IKHTISAR_PROFIL->value:
+                return $repository->getByAssignmentUserAndId($assignmentUser->id, $sistem->id);
+
+            case IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value:
+                return $repository->getOrangPribadiByAssignmentUser($assignmentUser->id);
+
+            case IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value:
+                $sistem = $repository->getByAssignmentUserAndId($assignmentUser->id, $sistem->id);
+                return $sistem->portal_saya;
+
+            default:
+                return $repository->getByAssignmentUserAndId($assignmentUser->id, $sistem->id);
+        }
     }
 }
