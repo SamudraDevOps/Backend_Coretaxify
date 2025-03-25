@@ -287,6 +287,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::post('{assignment}/sistem/{sistem}/unit-pajak-keluarga', [ApiUnitPajakKeluargaController::class, 'store']);
                 Route::get('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'update']);
+                Route::delete('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'destroy']);
 
                 Route::put('{assignment}/sistem/{sistem}/nomor-identifikasi-eksternal/{nomorIdentifikasiEksternal}', [ApiNomorIdentifikasiEksternalController::class, 'update']);
             });
