@@ -282,6 +282,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::post('{assignment}/sistem/{sistem}/detail-bank', [ApiDetailBankController::class, 'store']);
                 Route::get('{assignment}/sistem/{sistem}/detail-bank/{detailBank}', [ApiDetailBankController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/detail-bank/{detailBank}', [ApiDetailBankController::class, 'update']);
+                Route::delete('{assignment}/sistem/{sistem}/detail-bank/{detailBank}', [ApiDetailBankController::class, 'destroy']);
 
                 Route::get('{assignment}/sistem/{sistem}/unit-pajak-keluarga', [ApiUnitPajakKeluargaController::class, 'index']);
                 Route::post('{assignment}/sistem/{sistem}/unit-pajak-keluarga', [ApiUnitPajakKeluargaController::class, 'store']);
