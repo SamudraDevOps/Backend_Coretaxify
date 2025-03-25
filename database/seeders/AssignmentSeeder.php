@@ -25,7 +25,7 @@ class AssignmentSeeder extends Seeder
         $assignment->users()->attach([3,4]);
 
         $assignment2 = Assignment::create([
-            'group_id' => 1,
+            'group_id' => 2,
             'user_id' => 5,
             'task_id' => 2,
             'name' => 'tugas psc',
@@ -33,6 +33,6 @@ class AssignmentSeeder extends Seeder
             'start_period' => '2024-02-02',
             'end_period' => '2024-02-03',
         ]);
-        $assignment2->users()->attach([3,4]);
+        $assignment2->users()->attach([16]);
     }
 }
