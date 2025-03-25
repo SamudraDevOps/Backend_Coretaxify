@@ -37,20 +37,14 @@ class ApiDataEkonomiController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem,DataEkonomi $dataEkonomi) {
-        // return 123;
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+    public function show(Assignment $assignment, Sistem $sistem, DataEkonomi $dataEkonomi, Request $request) {
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
+        $dataEkonomi = $this->dataEkonomiService->getdataEkonomiDetail(
+            $assignment,
+            $sistem,
+            $dataEkonomi,
+            $request
+        );
 
         return new DataEkonomiResource($dataEkonomi);
     }
@@ -60,24 +54,14 @@ class ApiDataEkonomiController extends ApiController {
      */
     public function update(Assignment $assignment, Sistem $sistem, UpdateDataEkonomiRequest $request, DataEkonomi $dataEkonomi) {
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $dataEkonomi = $this->dataEkonomiService->updateDataEkonomi(
+            $assignment,
+            $sistem,
+            $dataEkonomi,
+            $request->validated()
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($dataEkonomi->id !== $sistem->id) {
-        abort(403, 'hayo ngakses detail kontak punyak siapa.');
-        }
-
-        return $this->dataEkonomiService->update($dataEkonomi, $request->validated());
+        return new DataEkonomiResource($dataEkonomi);
     }
 
     /**
