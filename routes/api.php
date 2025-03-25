@@ -270,6 +270,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::post('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'store']);
                 Route::get('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'update']);
+                Route::delete('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'destroy']);
 
                 Route::get('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha', [ApiTempatKegiatanUsahaController::class, 'index']);
                 Route::post('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha', [ApiTempatKegiatanUsahaController::class, 'store']);
