@@ -276,6 +276,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::post('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha', [ApiTempatKegiatanUsahaController::class, 'store']);
                 Route::get('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha/{tempatKegiatanUsaha}', [ApiTempatKegiatanUsahaController::class, 'show']);
                 Route::put('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha/{tempatKegiatanUsaha}', [ApiTempatKegiatanUsahaController::class, 'update']);
+                Route::delete('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha/{tempatKegiatanUsaha}', [ApiTempatKegiatanUsahaController::class, 'destroy']);
 
                 Route::get('{assignment}/sistem/{sistem}/detail-bank', [ApiDetailBankController::class, 'index']);
                 Route::post('{assignment}/sistem/{sistem}/detail-bank', [ApiDetailBankController::class, 'store']);

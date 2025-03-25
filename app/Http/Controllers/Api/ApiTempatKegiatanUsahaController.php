@@ -6,6 +6,7 @@ use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
+use Illuminate\Http\JsonResponse;
 use App\Models\TempatKegiatanUsaha;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\TempatKegiatanUsahaResource;
@@ -22,68 +23,38 @@ class ApiTempatKegiatanUsahaController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = $request->get('perPage', 5);
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $tempatKegiatanUsahas = $this->tempatKegiatanUsahaService->getAllForSistem(
+            $assignment,
+            $sistem,
+            $request,
+            $perPage
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-
-
-        $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
-
-        return TempatKegiatanUsahaResource::collection($this->tempatKegiatanUsahaService->getAllPaginated($filters, $perPage));
+        return TempatKegiatanUsahaResource::collection($tempatKegiatanUsahas);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, StoreTempatKegiatanUsahaRequest $request) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $this->tempatKegiatanUsahaService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
+        $tempatKegiatanUsaha = $this->tempatKegiatanUsahaService->create($request->validated(), $sistem);
 
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        return $this->tempatKegiatanUsahaService->create($request->validated(),$sistem);
+        return new TempatKegiatanUsahaResource($tempatKegiatanUsaha);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, TempatKegiatanUsaha $tempatKegiatanUsaha) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
-
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($tempatKegiatanUsaha->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses punyak siapa.');
-        }
+        $tempatKegiatanUsaha = $this->tempatKegiatanUsahaService->getTempatKegiatanUsahaDetail(
+            $assignment,
+            $sistem,
+            $tempatKegiatanUsaha
+        );
 
         return new TempatKegiatanUsahaResource($tempatKegiatanUsaha);
     }
@@ -91,31 +62,96 @@ class ApiTempatKegiatanUsahaController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Assignment $assignment, Sistem $sistem, UpdateTempatKegiatanUsahaRequest $request, TempatKegiatanUsaha $tempatKegiatanUsaha) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+    public function update(
+        Assignment $assignment,
+        Sistem $sistem,
+        UpdateTempatKegiatanUsahaRequest $request,
+        TempatKegiatanUsaha $tempatKegiatanUsaha
+    ): TempatKegiatanUsahaResource {
+        $tempatKegiatanUsaha = $this->tempatKegiatanUsahaService->updateTempatKegiatanUsaha(
+            $assignment,
+            $sistem,
+            $tempatKegiatanUsaha,
+            $request->validated()
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($tempatKegiatanUsaha->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses  punyak siapa.');
-        }
-
-        return $this->tempatKegiatanUsahaService->update($tempatKegiatanUsaha, $request->validated());
+        return new TempatKegiatanUsahaResource($tempatKegiatanUsaha);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, TempatKegiatanUsaha $tempatKegiatanUsaha) {
-        return $this->tempatKegiatanUsahaService->delete($tempatKegiatanUsaha);
+    public function destroy(
+        Assignment $assignment,
+        Sistem $sistem,
+        TempatKegiatanUsaha $tempatKegiatanUsaha
+    ): JsonResponse {
+        $result = $this->tempatKegiatanUsahaService->deleteTempatKegiatanUsaha(
+            $assignment,
+            $sistem,
+            $tempatKegiatanUsaha
+        );
+
+        return response()->json([
+            'success' => $result,
+            'message' => $result ? 'Tempat kegiatan usaha deleted successfully' : 'Failed to delete tempat kegiatan usaha'
+        ]);
     }
+
+    //  /**
+    //  * Get tempat kegiatan usaha by NITKU.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByNitku(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->tempatKegiatanUsahaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $nitku = $request->get('nitku');
+    //     $tempatKegiatanUsahas = $this->tempatKegiatanUsahaService->getByNitku($nitku, $sistem->id);
+
+    //     return TempatKegiatanUsahaResource::collection($tempatKegiatanUsahas);
+    // }
+
+    // /**
+    //  * Get tempat kegiatan usaha by jenis TKU.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByJenisTku(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->tempatKegiatanUsahaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $jenisTku = $request->get('jenis_tku');
+    //     $tempatKegiatanUsahas = $this->tempatKegiatanUsahaService->getByJenisTku($jenisTku, $sistem->id);
+
+    //     return TempatKegiatanUsahaResource::collection($tempatKegiatanUsahas);
+    // }
+
+    // /**
+    //  * Get tempat kegiatan usaha by nama TKU.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByNamaTku(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->tempatKegiatanUsahaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $namaTku = $request->get('nama_tku');
+    //     $tempatKegiatanUsahas = $this->tempatKegiatanUsahaService->getByNamaTku($namaTku, $sistem->id);
+
+    //     return TempatKegiatanUsahaResource::collection($tempatKegiatanUsahas);
+    // }
 }
