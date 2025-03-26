@@ -148,6 +148,23 @@ class ApiGroupController extends ApiController {
 
     public function getAssignments(Request $request, Group $group) {
         $perPage = $request->get('perPage', 5);
+        $user = auth()->user();
+
+        // If user is a student (mahasiswa or mahasiswa-psc), only show assignments they've joined
+        if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+            $userId = $user->id;
+
+            // Get assignments from this group that the student has joined
+            $assignments = $group->assignments()
+                ->whereHas('users', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                })
+                ->paginate($perPage);
+
+            return AssignmentResource::collection($assignments);
+        }
+
+        // For other roles (dosen, psc, admin, etc.), show all assignments in the group
         return AssignmentResource::collection($group->assignments()->paginate($perPage));
     }
 

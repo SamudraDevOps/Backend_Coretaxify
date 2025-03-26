@@ -71,4 +71,9 @@ class ApiTaskController extends ApiController {
 
         return $user->contract->tasks;
     }
+
+    public function downloadPublic(Request $request, Task $task) {
+        // The 'signed' middleware has already verified the URL signature
+        return $this->taskService->downloadFile($task);
+    }
 }
