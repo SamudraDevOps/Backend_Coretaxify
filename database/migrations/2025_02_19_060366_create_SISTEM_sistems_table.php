@@ -42,7 +42,9 @@ return new class extends Migration
         });
 
         Schema::table('pihak_terkaits', function (Blueprint $table) {
-            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
+            $table->foreignId('akun_op')->references('id')->on('sistems');
+            $table->foreignId('sistem_id')->references('id')->on('sistems');
+
         });
     }
 

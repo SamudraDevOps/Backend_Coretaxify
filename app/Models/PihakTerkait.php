@@ -25,4 +25,10 @@ class PihakTerkait extends Model
     {
         return $this->hasOne(ProfilSaya::class);
     }
+
+    public function sistem()
+    {
+        return $this->belongsTo(Sistem::class, 'akun_op');
+    }
+
 }

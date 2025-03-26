@@ -27,13 +27,10 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         $randomNumber = 'DA' . mt_rand(10000000, 99999999);
 
         $pihakTerkait = PihakTerkait::create([
-            'akun_id' => $data['akun_id'],
-            'nama_pengurus' => $data['nama_pengurus'],
-            'npwp' => $data['npwp'],
+            'akun_op' => $data['akun_op'],
             'kewarganegaraan' => $data['kewarganegaraan'],
             'negara_asal' => $data['negara_asal'],
             'sub_orang_terkait' => $data['sub_orang_terkait'],
-            'email' => $data['email'],
             'keterangan' => $data['keterangan'],
             'tanggal_mulai' => $data['tanggal_mulai'],
             'tanggal_berakhir' => $data['tanggal_berakhir'],
@@ -41,7 +38,7 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
             'sistem_id' => $sistem->id,
         ]);
 
-        $idAkunOp = $data['akun_id'];
+        $idAkunOp = $data['akun_op'];
 
         Pic::create([
             'assignment_user_id' => $sistem->assignment_user_id,
@@ -124,9 +121,7 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait);
 
         // Also delete related PIC records if needed
-        dd($pihakTerkait->sistem_id);
-        // dd($sistem->id);
-        Pic::where('akun_op_id', $pihakTerkait->sistem_id)
+        Pic::where('akun_op_id', $pihakTerkait->akun_op)
             ->where('akun_badan_id', $sistem->id)
             ->delete();
 
