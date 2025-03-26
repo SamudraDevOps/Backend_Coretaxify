@@ -2,121 +2,189 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Sistem;
-use App\Models\Assignment;
-use App\Models\DetailKontak;
-use Illuminate\Http\Request;
-use App\Models\AssignmentUser;
-use App\Http\Controllers\Api\ApiController;
-use App\Http\Resources\DetailKontakResource;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\DetailKontak\StoreDetailKontakRequest;
 use App\Http\Requests\DetailKontak\UpdateDetailKontakRequest;
+use App\Http\Resources\DetailKontakResource;
+use App\Models\Assignment;
+use App\Models\DetailKontak;
+use App\Models\Sistem;
 use App\Support\Interfaces\Services\DetailKontakServiceInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class ApiDetailKontakController extends ApiController {
+class ApiDetailKontakController extends ApiController
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @param DetailKontakServiceInterface $detailKontakService
+     */
     public function __construct(
         protected DetailKontakServiceInterface $detailKontakService
     ) {}
 
     /**
      * Display a listing of the resource.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $perPage = request()->get('perPage', 5);
+    public function index(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    {
+        $perPage = $request->get('perPage', 5);
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $detailKontaks = $this->detailKontakService->getAllForSistem(
+            $assignment,
+            $sistem,
+            $request,
+            $perPage
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-
-
-        $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
-
-        return DetailKontakResource::collection($this->detailKontakService->getAllPaginated($filters, $perPage));
+        return DetailKontakResource::collection($detailKontaks);
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param StoreDetailKontakRequest $request
+     * @return DetailKontakResource
      */
-    public function store(Assignment $assignment, Sistem $sistem, StoreDetailKontakRequest $request) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+    public function store(Assignment $assignment, Sistem $sistem, StoreDetailKontakRequest $request): DetailKontakResource
+    {
+        // Authorize access to the sistem first
+        $this->detailKontakService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
+        $detailKontak = $this->detailKontakService->create($request->validated(), $sistem);
 
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        return $this->detailKontakService->create($request->validated(), $sistem);
+        return new DetailKontakResource($detailKontak);
     }
 
     /**
      * Display the specified resource.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param DetailKontak $detailKontak
+     * @return DetailKontakResource
      */
-    public function show(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
-
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($detailKontak->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses punyak siapa.');
-        }
+    public function show(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak): DetailKontakResource
+    {
+        $detailKontak = $this->detailKontakService->getDetailKontakDetail(
+            $assignment,
+            $sistem,
+            $detailKontak
+        );
 
         return new DetailKontakResource($detailKontak);
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param UpdateDetailKontakRequest $request
+     * @param DetailKontak $detailKontak
+     * @return DetailKontakResource
      */
-    public function update(Assignment $assignment, Sistem $sistem,UpdateDetailKontakRequest $request, DetailKontak $detailKontak) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+    public function update(
+        Assignment $assignment,
+        Sistem $sistem,
+        UpdateDetailKontakRequest $request,
+        DetailKontak $detailKontak
+    ): DetailKontakResource {
+        $detailKontak = $this->detailKontakService->updateDetailKontak(
+            $assignment,
+            $sistem,
+            $detailKontak,
+            $request->validated()
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($detailKontak->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses detail kontak punyak siapa.');
-        }
-
-
-        return $this->detailKontakService->update($detailKontak, $request->validated());
+        return new DetailKontakResource($detailKontak);
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param DetailKontak $detailKontak
+     * @return JsonResponse
      */
-    public function destroy(Request $request, DetailKontak $detailKontak) {
-        return $this->detailKontakService->delete($detailKontak);
+    public function destroy(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak): JsonResponse
+    {
+        $result = $this->detailKontakService->deleteDetailKontak(
+            $assignment,
+            $sistem,
+            $detailKontak
+        );
+
+        return response()->json([
+            'success' => $result,
+            'message' => $result ? 'Detail kontak deleted successfully' : 'Failed to delete detail kontak'
+        ]);
+    }
+
+    /**
+     * Get detail kontak by jenis kontak.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function getByJenisKontak(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    {
+        // Authorize access to the sistem first
+        $this->detailKontakService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+        $jenisKontak = $request->get('jenis_kontak');
+        $detailKontaks = $this->detailKontakService->getByJenisKontak($jenisKontak, $sistem->id);
+
+        return DetailKontakResource::collection($detailKontaks);
+    }
+
+    /**
+     * Get detail kontak by email.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function getByEmail(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    {
+        // Authorize access to the sistem first
+        $this->detailKontakService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+        $email = $request->get('email');
+        $detailKontaks = $this->detailKontakService->getByEmail($email, $sistem->id);
+
+        return DetailKontakResource::collection($detailKontaks);
+    }
+
+    /**
+     * Get detail kontak by phone number.
+     *
+     * @param Assignment $assignment
+     * @param Sistem $sistem
+     * @param Request $request
+     * @return AnonymousResourceCollection
+     */
+    public function getByPhoneNumber(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    {
+        // Authorize access to the sistem first
+        $this->detailKontakService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+        $phoneNumber = $request->get('phone');
+        $detailKontaks = $this->detailKontakService->getByPhoneNumber($phoneNumber, $sistem->id);
+
+        return DetailKontakResource::collection($detailKontaks);
     }
 }

@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Sistem;
+use App\Models\Assignment;
+use App\Models\PihakTerkait;
+use Illuminate\Http\Request;
+use App\Models\AssignmentUser;
+use App\Support\Enums\IntentEnum;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Resources\PihakTerkaitResource;
 use App\Http\Requests\PihakTerkait\StorePihakTerkaitRequest;
 use App\Http\Requests\PihakTerkait\UpdatePihakTerkaitRequest;
-use App\Http\Resources\PihakTerkaitResource;
-use App\Models\PihakTerkait;
-use App\Models\Assignment;
-use App\Models\Sistem;
-use App\Support\Enums\IntentEnum;
 use App\Support\Interfaces\Services\PihakTerkaitServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiPihakTerkaitController extends ApiController {
     public function __construct(
@@ -20,27 +23,44 @@ class ApiPihakTerkaitController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
+        $perPage = $request->get('perPage', 5);
 
-        return PihakTerkaitResource::collection($this->pihakTerkaitService->getAllPaginated($request->query(), $perPage));
+        // Authorize access to the sistem first
+        $this->pihakTerkaitService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+        // Get pihak terkait data
+        $pihakTerkaits = $this->pihakTerkaitService->getAllBySistemId($request->query(), $sistem->id);
+
+        return PihakTerkaitResource::collection($pihakTerkaits);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, StorePihakTerkaitRequest $request) {
-        // dd($request->all());
-        $validated = $request->validated();
-        $validated['intent'] = $request->get('intent');
+        $this->pihakTerkaitService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        switch ($validated['intent']) {
-            case IntentEnum::API_CREATE_PIHAK_TERKAIT->value:
-                return $this->pihakTerkaitService->create($validated,$sistem);
-        }
+        $pihakTerkait = $this->pihakTerkaitService->create($request->validated(), $sistem);
 
+        return new PihakTerkaitResource($pihakTerkait);
     }
 
+    public function destroy(
+        Assignment $assignment,
+        Sistem $sistem,
+        PihakTerkait $pihakTerkait
+        ): JsonResponse {
+            $result = $this->pihakTerkaitService->deletePihakTerkait(
+                $assignment,
+                $sistem,
+                $pihakTerkait
+            );
+        return response()->json([
+            'success' => $result,
+            'message' => $result ? 'Pihak terkait deleted successfully' : 'Failed to delete pihak terkait'
+        ]);
+    }
     /**
      * Display the specified resource.
      */
@@ -58,7 +78,4 @@ class ApiPihakTerkaitController extends ApiController {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, PihakTerkait $pihakTerkait) {
-        return $this->pihakTerkaitService->delete($pihakTerkait);
-    }
 }

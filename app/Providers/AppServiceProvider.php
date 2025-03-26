@@ -14,6 +14,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
         $this->app->register(\App\Providers\TelescopeServiceProvider::class);
         $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+
+        // $this->app->bind(
+        //     \App\Support\Interfaces\Repositories\InformasiUmumRepositoryInterface::class,
+        //     \App\Repositories\InformasiUmumRepository::class
+        // );
+
+        // $this->app->bind(
+        //     \App\Support\Interfaces\Services\InformasiUmumServiceInterface
     }
 
     /**

@@ -2,13 +2,24 @@
 
 namespace App\Http\Resources;
 
+use App\Support\Enums\IntentEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PihakTerkaitResource extends JsonResource {
     public function toArray($request): array {
+        $intent = $request->get('intent');
+        switch ($intent) {
+            case IntentEnum::API_GET_KUASA_WAJIB_SAYA->value:
+                return [
+                    'id' => $this->id,
+                    'npwp' => $this->npwp,
+                    'nama_pengurus' => $this->nama_pengurus,
+                    'id_penunjukkan_perwakilan' => $this->id_penunjukkan_perwakilan,
+                ];
+        }
+
         return [
             'id' => $this->id,
-
             'npwp' => $this->npwp,
             'nama_pengurus' => $this->nama_pengurus,
             'jenis_orang_terkait' => $this->jenis_orang_terkait,
@@ -22,7 +33,6 @@ class PihakTerkaitResource extends JsonResource {
             'is_penanggung_jawab' => $this->is_penanggung_jawab,
             'tanggal_mulai'  => $this->tanggal_mulai,
             'tanggal_berakhir' => $this->tanggal_berakhir,
-
             'adalah_data_eksternal' => $this->adalah_data_eksternal,
             'nomor_paspor' => $this->nomor_paspor,
             'presentasi_pemgegang_saham' => $this->presentasi_pemgegang_saham,

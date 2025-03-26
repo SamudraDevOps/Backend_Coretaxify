@@ -7,6 +7,7 @@ use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Models\UnitPajakKeluarga;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\UnitPajakKeluargaResource;
 use App\Http\Requests\UnitPajakKeluarga\StoreUnitPajakKeluargaRequest;
@@ -22,69 +23,38 @@ class ApiUnitPajakKeluargaController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = $request->get('perPage', 5);
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $unitPajakKeluargas = $this->unitPajakKeluargaService->getAllForSistem(
+            $assignment,
+            $sistem,
+            $request,
+            $perPage
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-
-
-        $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
-
-        return UnitPajakKeluargaResource::collection($this->unitPajakKeluargaService->getAllPaginated($filters, $perPage));
+        return UnitPajakKeluargaResource::collection($unitPajakKeluargas);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, StoreUnitPajakKeluargaRequest $request) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $this->unitPajakKeluargaService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
+        $unitPajakKeluarga = $this->unitPajakKeluargaService->create($request->validated(), $sistem);
 
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-        ->where('id', $sistem->id)
-        ->firstOrFail();
-
-        // dd($request->validated());
-        return $this->unitPajakKeluargaService->create($request->validated(), $sistem);
+        return new UnitPajakKeluargaResource($unitPajakKeluarga);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, UnitPajakKeluarga $unitPajakKeluarga) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
-
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($unitPajakKeluarga->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses punyak siapa.');
-        }
+        $unitPajakKeluarga = $this->unitPajakKeluargaService->getUnitPajakKeluargaDetail(
+            $assignment,
+            $sistem,
+            $unitPajakKeluarga
+        );
 
         return new UnitPajakKeluargaResource($unitPajakKeluarga);
     }
@@ -92,31 +62,116 @@ class ApiUnitPajakKeluargaController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Assignment $assignment, Sistem $sistem, UpdateUnitPajakKeluargaRequest $request, UnitPajakKeluarga $unitPajakKeluarga) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+    public function update(
+        Assignment $assignment,
+        Sistem $sistem,
+        UpdateUnitPajakKeluargaRequest $request,
+        UnitPajakKeluarga $unitPajakKeluarga
+    ): UnitPajakKeluargaResource {
+        $unitPajakKeluarga = $this->unitPajakKeluargaService->updateUnitPajakKeluarga(
+            $assignment,
+            $sistem,
+            $unitPajakKeluarga,
+            $request->validated()
+        );
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
-
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($unitPajakKeluarga->sistem_id !== $sistem->id) {
-        abort(403, 'hayo ngakses detail kontak punyak siapa.');
-        }
-
-        return $this->unitPajakKeluargaService->update($unitPajakKeluarga, $request->validated());
+        return new UnitPajakKeluargaResource($unitPajakKeluarga);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, UnitPajakKeluarga $unitPajakKeluarga) {
-        return $this->unitPajakKeluargaService->delete($unitPajakKeluarga);
+
+    public function destroy(
+        Assignment $assignment,
+        Sistem $sistem,
+        UnitPajakKeluarga $unitPajakKeluarga
+    ): JsonResponse {
+        $result = $this->unitPajakKeluargaService->deleteUnitPajakKeluarga(
+            $assignment,
+            $sistem,
+            $unitPajakKeluarga
+        );
+
+        return response()->json([
+            'success' => $result,
+            'message' => $result ? 'Unit pajak keluarga deleted successfully' : 'Failed to delete unit pajak keluarga'
+        ]);
     }
+
+    // /**
+    //  * Get unit pajak keluarga by NIK.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByNik(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->unitPajakKeluargaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $nik = $request->get('nik');
+    //     $unitPajakKeluargas = $this->unitPajakKeluargaService->getByNik($nik, $sistem->id);
+
+    //     return UnitPajakKeluargaResource::collection($unitPajakKeluargas);
+    // }
+
+    // /**
+    //  * Get unit pajak keluarga by nama anggota keluarga.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByNama(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->unitPajakKeluargaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $nama = $request->get('nama');
+    //     $unitPajakKeluargas = $this->unitPajakKeluargaService->getByNama($nama, $sistem->id);
+
+    //     return UnitPajakKeluargaResource::collection($unitPajakKeluargas);
+    // }
+
+    // /**
+    //  * Get unit pajak keluarga by status hubungan keluarga.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByStatusHubungan(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->unitPajakKeluargaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $statusHubungan = $request->get('status_hubungan');
+    //     $unitPajakKeluargas = $this->unitPajakKeluargaService->getByStatusHubungan($statusHubungan, $sistem->id);
+
+    //     return UnitPajakKeluargaResource::collection($unitPajakKeluargas);
+    // }
+
+    // /**
+    //  * Get unit pajak keluarga by nomor kartu keluarga.
+    //  *
+    //  * @param Assignment $assignment
+    //  * @param Sistem $sistem
+    //  * @param Request $request
+    //  * @return AnonymousResourceCollection
+    //  */
+    // public function getByNomorKK(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
+    // {
+    //     // Authorize access to the sistem first
+    //     $this->unitPajakKeluargaService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $nomorKK = $request->get('nomor_kk');
+    //     $unitPajakKeluargas = $this->unitPajakKeluargaService->getByNomorKK($nomorKK, $sistem->id);
+
+    //     return UnitPajakKeluargaResource::collection($unitPajakKeluargas);
+    // }
 }

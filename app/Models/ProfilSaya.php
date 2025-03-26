@@ -31,6 +31,10 @@ class ProfilSaya extends Model
         return $this->hasMany(DetailBank::class,    'sistem_id');
     }
 
+    public function pihak_terkaits() {
+        return $this->hasMany(PihakTerkait::class, 'sistem_id');
+    }
+
     public function penunjukkan_wajib_pajak_saya() {
         return $this->belongsTo(PenunjukkanWajibPajakSaya::class);
     }
@@ -39,18 +43,7 @@ class ProfilSaya extends Model
         return $this->belongsTo(NomorIdentifikasiEksternal::class);
     }
 
-    public function jenis_pajak() {
-        return $this->belongsTo(JenisPajak::class);
-    }
 
-    public function objek_pajak_bumi_dan_bangunan() {
-        return $this->belongsTo(ObjekPajakBumiDanBangunan::class);
-    }
-
-
-    public function pihak_terkait() {
-        return $this->belongsTo(PihakTerkait::class);
-    }
 
     public function portal_saya() {
         return $this->hasOne(PortalSaya::class);

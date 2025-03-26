@@ -9,12 +9,15 @@ use App\Traits\Repositories\HandlesFiltering;
 use App\Traits\Repositories\HandlesRelations;
 use App\Traits\Repositories\HandlesSorting;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use App\Support\Enums\IntentEnum;
 
 class SistemRepository extends BaseRepository implements SistemRepositoryInterface {
     use HandlesFiltering, HandlesRelations, HandlesSorting;
 
-    protected function getModelClass(): string {
+    protected function getModelClass(): string
+    {
         return Sistem::class;
     }
 
@@ -34,5 +37,31 @@ class SistemRepository extends BaseRepository implements SistemRepositoryInterfa
         $query = $this->applySorting($query, $searchParams);
 
         return $query;
+    }
+
+    public function getByAssignmentUser(int $assignmentUserId): Collection
+    {
+        return $this->getQuery()->where('assignment_user_id', $assignmentUserId)->get();
+    }
+
+    public function getFirstByAssignmentUser(int $assignmentUserId): ?Model
+    {
+        return $this->getQuery()->where('assignment_user_id', $assignmentUserId)
+            ->orderBy('created_at', 'asc')
+            ->first();
+    }
+
+    public function getByAssignmentUserAndId(int $assignmentUserId, int $sistemId): ?Model
+    {
+        return $this->getQuery()->where('assignment_user_id', $assignmentUserId)
+            ->where('id', $sistemId)
+            ->first();
+    }
+
+    public function getOrangPribadiByAssignmentUser(int $assignmentUserId): Collection
+    {
+        return $this->getQuery()->where('assignment_user_id', $assignmentUserId)
+            ->whereIn('tipe_akun', ['Orang Pribadi', 'Orang Pribadi Lawan Transaksi'])
+            ->get();
     }
 }
