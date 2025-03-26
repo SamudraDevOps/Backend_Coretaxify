@@ -10,6 +10,7 @@ use App\Support\Enums\IntentEnum;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use App\Support\Interfaces\Services\UserServiceInterface;
@@ -22,16 +23,27 @@ class UserService extends BaseCrudService implements UserServiceInterface {
     }
 
     public function create(array $data): ?Model {
+        if (User::where('email', $data['email'])->exists()) {
+            throw new \Exception('Email telah didaftarkan: ' . $data['email']);
+        }
+
         $plain_password = $this->generatePassword();
         $data['default_password'] = $plain_password;
         $data['password'] = $plain_password;
 
-        $user = parent::create($data);
-        $user->email_verified_at = now();
-        $user->save();
-        $this->assignRoleByIntent($user, $data['intent'] ?? null);
-        $this->sendEmail($user);
-        return $user;
+        try {
+            $user = parent::create($data);
+            $user->email_verified_at = now();
+            $user->save();
+            $this->assignRoleByIntent($user, $data['intent'] ?? null);
+            $this->sendEmail($user);
+            return $user;
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                throw new \Exception('Email telah didaftarkan:' . $data['email']);
+            }
+            throw $e;
+        }
     }
 
     public function assignRoleByIntent(Model $user, ?string $intent): void {
