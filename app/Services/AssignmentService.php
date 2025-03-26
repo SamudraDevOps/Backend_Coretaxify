@@ -138,10 +138,42 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     public function joinAssignment(array $data): ?Model {
         $assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
 
+        if (!$assignment) {
+            throw new \Exception('Assignment not found with the provided code.');
+        }
+
+        $userId = auth()->id();
+        $user = auth()->user();
+
+        // Check if the user is a student (mahasiswa or mahasiswa-psc)
+        if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+            // Get the group associated with this assignment
+            $groupId = $assignment->group_id;
+
+            // Check if the user is a member of this group
+            $isGroupMember = GroupUser::where('user_id', $userId)
+                ->where('group_id', $groupId)
+                ->exists();
+
+            if (!$isGroupMember) {
+                throw new \Exception('You can only join assignments from groups you are a member of.');
+            }
+        }
+
+        // Check if the user has already joined this assignment
+        $existingAssignment = AssignmentUser::where('user_id', $userId)
+            ->where('assignment_id', $assignment->id)
+            ->exists();
+
+        if ($existingAssignment) {
+            throw new \Exception('You have already joined this assignment.');
+        }
+
         $assignmentUser = AssignmentUser::create([
-            'user_id' => auth()->id(),
+            'user_id' => $userId,
             'assignment_id' => $assignment->id,
         ]);
+
         return $assignmentUser;
     }
 
