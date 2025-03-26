@@ -8,6 +8,8 @@ use App\Models\PihakTerkait;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Resources\PihakTerkaitResource;
 use App\Http\Requests\PihakTerkait\StorePihakTerkaitRequest;
 use App\Http\Requests\PihakTerkait\UpdatePihakTerkaitRequest;
@@ -22,46 +24,43 @@ class ApiPihakTerkaitController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = $request->get('perPage', 5);
 
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        // Authorize access to the sistem first
+        $this->pihakTerkaitService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
+        // Get pihak terkait data
+        $pihakTerkaits = $this->pihakTerkaitService->getAllBySistemId($request->query(), $sistem->id);
 
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-
-        return PihakTerkaitResource::collection($this->pihakTerkaitService->getAllBySistemId($request->query(), $sistem->id));
+        return PihakTerkaitResource::collection($pihakTerkaits);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, StorePihakTerkaitRequest $request) {
-        // dd($request->all());
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $this->pihakTerkaitService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
+        $pihakTerkait = $this->pihakTerkaitService->create($request->validated(), $sistem);
 
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        return $this->pihakTerkaitService->create($request->validated(),$sistem);
+        return new PihakTerkaitResource($pihakTerkait);
     }
 
+    public function destroy(
+        Assignment $assignment,
+        Sistem $sistem,
+        PihakTerkait $pihakTerkait
+        ): JsonResponse {
+            $result = $this->pihakTerkaitService->deletePihakTerkait(
+                $assignment,
+                $sistem,
+                $pihakTerkait
+            );
+        return response()->json([
+            'success' => $result,
+            'message' => $result ? 'Pihak terkait deleted successfully' : 'Failed to delete pihak terkait'
+        ]);
+    }
     /**
      * Display the specified resource.
      */
@@ -79,7 +78,4 @@ class ApiPihakTerkaitController extends ApiController {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, PihakTerkait $pihakTerkait) {
-        return $this->pihakTerkaitService->delete($pihakTerkait);
-    }
 }

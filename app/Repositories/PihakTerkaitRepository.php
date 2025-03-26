@@ -21,12 +21,42 @@ class PihakTerkaitRepository extends BaseRepository implements PihakTerkaitRepos
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        $query = $this->applySearchFilters($query, $searchParams, [
+            'nama_pengurus',
+            'npwp',
+            'email',
+            'keterangan'
+        ]);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        // Apply column filters
+        $query = $this->applyColumnFilters($query, $searchParams, [
+            'id',
+            'sistem_id',
+            'akun_id',
+            'kewarganegaraan',
+            'negara_asal',
+            'sub_orang_terkait'
+        ]);
 
+        // Apply date range filters
+        if (isset($searchParams['tanggal_mulai_from']) && isset($searchParams['tanggal_mulai_to'])) {
+            $query->whereBetween('tanggal_mulai', [
+                $searchParams['tanggal_mulai_from'],
+                $searchParams['tanggal_mulai_to']
+            ]);
+        }
+
+        if (isset($searchParams['tanggal_berakhir_from']) && isset($searchParams['tanggal_berakhir_to'])) {
+            $query->whereBetween('tanggal_berakhir', [
+                $searchParams['tanggal_berakhir_from'],
+                $searchParams['tanggal_berakhir_to']
+            ]);
+        }
+
+        // Apply relations
         $query = $this->applyResolvedRelations($query, $searchParams);
 
+        // Apply sorting
         $query = $this->applySorting($query, $searchParams);
 
         return $query;
