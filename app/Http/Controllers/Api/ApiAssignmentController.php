@@ -58,7 +58,18 @@ class ApiAssignmentController extends ApiController {
                 }
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
                 if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
-                    return $this->assignmentService->joinAssignment($request->validated());
+                    try {
+                        $result = $this->assignmentService->joinAssignment($request->validated());
+                        return response()->json ([
+                            'message' => 'You have successfully joined the assignment',
+                            'data' => $result,
+                        ], 200);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => $e->getMessage(),
+                        ], 403);
+
+                    }
                 } else {
                     return response()->json([
                         'message' => 'You are not authorized to join an assignment',
