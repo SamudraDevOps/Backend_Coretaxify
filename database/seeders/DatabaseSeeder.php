@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             ExamSeeder::class,
             AssignmentSeeder::class,
+            KodeTransaksiSeeder::class,
+            SatuanSeeder::class,
+            InformasiTambahanSeeder::class,
         ]);
     }
 }
