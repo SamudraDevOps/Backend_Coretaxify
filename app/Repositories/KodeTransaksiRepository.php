@@ -20,7 +20,11 @@ class KodeTransaksiRepository extends BaseRepository implements KodeTransaksiRep
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        if (isset($searchParams['jenis'])) {
+            $query->where('jenis', $searchParams['jenis']);
+        }
+
+        $query = $this->applySearchFilters($query, $searchParams, ['jenis']);
 
         $query = $this->applyColumnFilters($query, $searchParams, ['id']);
 

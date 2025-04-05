@@ -13,23 +13,25 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('akun_pengirim')->references('id')->on('sistems');
-            $table->foreignId('akun_penerima')->references('id')->on('sistems');
-            $table->string('nomor_faktur_pajak')->unique();
-            $table->string('masa_pajak');
-            $table->string('tahun');
-            $table->string('status_faktur');
-            $table->string('esign_status');
-            $table->string('harga_jual');
-            $table->string('dpp_nilai_lain');
-            $table->string('ppn');
-            $table->string('ppnbm');
-            $table->string('penandatangan');
-            $table->string('referensi');
-            $table->boolean('dilaporkan_oleh_penjual');
-            $table->boolean('dilaporkan_oleh_pemungut_ppn');
-            $table->date('tanggal_faktur_pajak');
-            $table->foreignId('kode_transaksi_id')->constrained()->onDelete('cascade');
+            $table->foreignId('akun_pengirim')->references('id')->on('sistems')->nulllable();
+            $table->foreignId('akun_penerima')->references('id')->on('sistems')->nulllable();
+            $table->string('nomor_faktur_pajak')->unique()->nulllable();
+            $table->string('masa_pajak')->nulllable();
+            $table->string('tahun')->nulllable();
+            $table->string('status_faktur')->nulllable();
+            $table->string('esign_status')->nulllable();
+            $table->string('harga_jual')->nulllable();
+            $table->string('dpp_nilai_lain')->nulllable();
+            $table->string('ppn')->nulllable();
+            $table->string('ppnbm')->nulllable();
+            $table->string('penandatangan')->nulllable();
+            $table->string('referensi')->nulllable();
+            $table->string('informasi_tambahan')->nulllable();
+            $table->string('cap_fasilitas')->nulllable();
+            $table->boolean('dilaporkan_oleh_penjual')->nulllable();
+            $table->boolean('dilaporkan_oleh_pemungut_ppn')->nulllable();
+            $table->date('tanggal_faktur_pajak')->nulllable();
+            $table->foreignId('kode_transaksi_id')->constrained()->onDelete('cascade')->nulllable();
             $table->timestamps();
         });
     }
