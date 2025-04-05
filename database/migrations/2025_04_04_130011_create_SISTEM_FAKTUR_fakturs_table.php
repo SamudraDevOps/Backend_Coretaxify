@@ -34,6 +34,10 @@ return new class extends Migration
             $table->foreignId('kode_transaksi_id')->constrained()->onDelete('cascade')->nulllable();
             $table->timestamps();
         });
+
+        Schema::table('detail_transaksis', function (Blueprint $table) {
+            $table->foreignId('faktur_id')->constrained()->onDelete('cascade');
+        });
     }
 
     /**
