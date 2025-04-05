@@ -18,9 +18,11 @@ class ApiSatuanController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        // $perPage = request()->get('perPage', 5);
 
-        return SatuanResource::collection($this->satuanService->getAllPaginated($request->query(), $perPage));
+        // return SatuanResource::collection($this->satuanService->getAllPaginated($request->query(), $perPage));
+
+        return SatuanResource::collection($this->satuanService->getAll($request->query()));
     }
 
     /**

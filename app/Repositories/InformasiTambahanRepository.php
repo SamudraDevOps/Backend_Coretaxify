@@ -20,7 +20,11 @@ class InformasiTambahanRepository extends BaseRepository implements InformasiTam
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        if (isset($searchParams['kode'])) {
+            $query->where('kode', $searchParams['kode']);
+        }
+
+        $query = $this->applySearchFilters($query, $searchParams, ['kode']);
 
         $query = $this->applyColumnFilters($query, $searchParams, ['id']);
 

@@ -18,9 +18,11 @@ class ApiInformasiTambahanController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        // $perPage = request()->get('perPage', 5);
 
-        return InformasiTambahanResource::collection($this->informasiTambahanService->getAllPaginated($request->query(), $perPage));
+        // return InformasiTambahanResource::collection($this->informasiTambahanService->getAllPaginated($request->query(), $perPage));
+
+        return InformasiTambahanResource::collection($this->informasiTambahanService->getAll($request->query()));
     }
 
     /**
