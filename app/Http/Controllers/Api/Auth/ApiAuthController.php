@@ -40,7 +40,8 @@ class ApiAuthController extends ApiController {
 
         if (!auth()->attempt($credentials)) {
             return response()->json([
-                'message' => __('auth.failed'),
+                'message' => "Mohon maaf, akun anda tidak terdaftar.",
+                // 'message' => __('auth.failed'),
             ], 401);
         }
 
@@ -48,7 +49,7 @@ class ApiAuthController extends ApiController {
 
         if (!$user->email_verified_at) {
             return response()->json([
-                'message' => 'Please verify your email with the OTP before logging in.',
+                'message' => 'Mohon verifikasi email anda terlebih dahulu.',
                 'verification_required' => true,
                 'user' => new UserResource($user),
                 'token' => $user->createToken('auth_token')->plainTextToken,
@@ -58,7 +59,7 @@ class ApiAuthController extends ApiController {
         $user = User::where('email', $request->email)->first();
 
         if (!$user->email_verified_at) {
-            return response()->json(['message' => 'Please verify your email with the OTP before logging in.'], 403);
+            return response()->json(['message' => 'Mohon verifikasi email anda terlebih dahulu.'], 403);
         }
 
         if (auth()->attempt($request->validated())) {
