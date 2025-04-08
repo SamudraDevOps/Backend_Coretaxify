@@ -99,6 +99,15 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return DetailTransaksi::create($detailTransaksiData);
     }
 
+    public function deleteDetailTransaksi($detailTransaksi)
+    {
+        if (!is_object($detailTransaksi)) {
+            $detailTransaksi = DetailTransaksi::findOrFail($detailTransaksi);
+        }
+
+        return $detailTransaksi->delete();
+    }
+
     public function getAllForSistem(
         Assignment $assignment,
         Sistem $sistem,
