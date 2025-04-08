@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
+use App\Http\Controllers\Api\ApiFakturController;
 use App\Http\Controllers\Api\ApiSatuanController;
 use App\Http\Controllers\Api\ApiSistemController;
 use App\Http\Controllers\Api\ApiAccountController;
@@ -300,10 +301,15 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::put('{assignment}/sistem/{sistem}/nomor-identifikasi-eksternal/{nomorIdentifikasiEksternal}', [ApiNomorIdentifikasiEksternalController::class, 'update']);
 
                 Route::prefix('faktur')->group(function () {
-                    Route::apiResource('kode-transaksi', ApiKodeTransaksiController::class);
-                    Route::apiResource('informasi-tambahan', ApiInformasiTambahanController::class);
-                    Route::apiResource('satuan', ApiSatuanController::class);
+                    Route::apiResource('kode-transaksi', ApiKodeTransaksiController::class, ['only' => ['index']]);
+                    Route::apiResource('informasi-tambahan', ApiInformasiTambahanController::class, ['only' => ['index']]);
+                    Route::apiResource('satuan', ApiSatuanController::class,  ['only' => ['index']]);
                 });
+
+                Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
+                Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
+                Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
+
             });
 
             Route::apiResource('sistem', ApiSistemController::class);

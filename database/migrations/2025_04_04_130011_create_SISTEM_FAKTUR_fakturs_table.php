@@ -26,12 +26,12 @@ return new class extends Migration
             $table->string('ppnbm')->nulllable();
             $table->string('penandatangan')->nulllable();
             $table->string('referensi')->nulllable();
+            $table->string('kode_transaksi')->nulllable();
             $table->string('informasi_tambahan')->nulllable();
             $table->string('cap_fasilitas')->nulllable();
             $table->boolean('dilaporkan_oleh_penjual')->nulllable();
             $table->boolean('dilaporkan_oleh_pemungut_ppn')->nulllable();
             $table->date('tanggal_faktur_pajak')->nulllable();
-            $table->foreignId('kode_transaksi_id')->constrained()->onDelete('cascade')->nulllable();
             $table->timestamps();
         });
 
