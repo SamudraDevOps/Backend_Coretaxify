@@ -10,8 +10,8 @@ class Sistem extends Model
 {
     protected $guarded = ['id'];
 
-    public function portal_saya() {
-        return $this->belongsTo(PortalSaya::class);
+    public function profil_saya(): BelongsTo {
+        return $this->belongsTo(ProfilSaya::class);
     }
 
     public function assignment_user(): BelongsTo {

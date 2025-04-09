@@ -1,12 +1,12 @@
 <?php
 
- namespace App\Http\Controllers\Api;
 
+namespace App\Http\Controllers\Api;
+
+ use App\Http\Resources\ProfilSayaResource;
  use App\Http\Requests\Sistem\StoreSistemRequest;
  use App\Http\Requests\Sistem\UpdateSistemRequest;
  use App\Http\Resources\SistemResource;
- use App\Http\Resources\PortalSayaResource;
- use App\Models\PortalSaya;
  use App\Models\Sistem;
  use App\Models\Assignment;
  use App\Models\AssignmentUser;
@@ -71,8 +71,8 @@
          $intent = $request->get('intent');
          $result = $this->sistemService->getSystemDetail($assignment, $sistem, $request);
 
-         if ($intent === IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value) {
-             return new PortalSayaResource($result);
+         if ($intent === IntentEnum::API_SISTEM_GET_PROFIL_SAYA->value) {
+             return new ProfilSayaResource($result);
          } elseif ($intent === IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value) {
              return SistemResource::collection($result);
          } else {

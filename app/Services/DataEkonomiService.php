@@ -142,7 +142,7 @@ class DataEkonomiService extends BaseCrudService implements DataEkonomiServiceIn
 
         // Additional check to ensure the data ekonomi belongs to the correct sistem
         // This assumes there's a relationship between sistem and data ekonomi through portal_saya and profil_saya
-        if ($dataEkonomi->id !== $sistem->portal_saya->profil_saya->data_ekonomi_id) {
+        if ($dataEkonomi->id !== $sistem->profil_saya->data_ekonomi_id) {
             abort(403, 'Unauthorized access to this data ekonomi');
         }
     }

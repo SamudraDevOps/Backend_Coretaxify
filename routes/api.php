@@ -21,7 +21,6 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
 use App\Http\Controllers\Api\ApiDetailBankController;
 use App\Http\Controllers\Api\ApiJenisPajakController;
-use App\Http\Controllers\Api\ApiPortalSayaController;
 use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
@@ -159,7 +158,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 });
 
                 Route::apiResource('sistem', ApiSistemController::class);
-                Route::apiResource('portal-saya', ApiPortalSayaController::class);
                 Route::apiResource('profil-saya', ApiProfilSayaController::class);
                 Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
                 Route::apiResource('detail-kontak', ApiDetailKontakController::class);
@@ -317,7 +315,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             });
 
             Route::apiResource('sistem', ApiSistemController::class);
-            Route::apiResource('portal-saya', ApiPortalSayaController::class);
             Route::apiResource('profil-saya', ApiProfilSayaController::class);
             Route::apiResource('informasi-umum', ApiInformasiUmumController::class);
             Route::apiResource('detail-kontak', ApiDetailKontakController::class);

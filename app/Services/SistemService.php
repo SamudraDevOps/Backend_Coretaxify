@@ -57,6 +57,20 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         foreach($dataAccount as $account) {
         $sistem = parent::create([
             'assignment_user_id' => $idAssignUser,
+            'profil_saya_id' => ProfilSaya::create([
+                'informasi_umum_id' => InformasiUmum::create([
+                    'nama' => $account->nama,
+                    'npwp' => $account->npwp,
+                    'jenis_wajib_pajak' => $account->account_type->name,
+                    'kategori_wajib_pajak' => $account->account_type->name,
+                    'bahasa' => 'Bahasa Indonesia',
+                ])->id,
+                'data_ekonomi_id' => DataEkonomi::create()->id,
+                'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
+                    'nomor_identifikasi' => $account->npwp,
+                ])->id,
+                'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
+            ])->id,
             'nama_akun' => $account->nama,
             'npwp_akun' => $account->npwp,
             'tipe_akun' => $account->account_type->name,
@@ -72,28 +86,20 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             $kategoriWajibPajak = 'Orang Pribadi';
         }
 
-        $profil = ProfilSaya::create([
-            'informasi_umum_id' => InformasiUmum::create([
-                'nama' => $sistem->nama_akun,
-                'npwp' => $sistem->npwp_akun,
-                'jenis_wajib_pajak' => $sistem->tipe_akun,
-                'kategori_wajib_pajak' => $kategoriWajibPajak,
-                'bahasa' => 'Bahasa Indonesia',
-            ])->id,
-            'data_ekonomi_id' => DataEkonomi::create()->id,
-            'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
-                'nomor_identifikasi' => $sistem->npwp_akun,
-            ])->id,
-            'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
-        ]);
-
-        // Then create PortalSaya with the profil_saya_id
-        $portal = PortalSaya::create([
-            'profil_saya_id' => $profil->id
-        ]);
-
-        // Update sistem with portal_saya_id
-        $sistem->update(['portal_saya_id' => $portal->id]);
+        // ProfilSaya::create([
+        //     'informasi_umum_id' => InformasiUmum::create([
+        //         'nama' => $sistem->nama_akun,
+        //         'npwp' => $sistem->npwp_akun,
+        //         'jenis_wajib_pajak' => $sistem->tipe_akun,
+        //         'kategori_wajib_pajak' => $kategoriWajibPajak,
+        //         'bahasa' => 'Bahasa Indonesia',
+        //     ])->id,
+        //     'data_ekonomi_id' => DataEkonomi::create()->id,
+        //     'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
+        //         'nomor_identifikasi' => $sistem->npwp_akun,
+        //     ])->id,
+        //     'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
+        // ]);
     }
         return $sistem;
     }
@@ -111,7 +117,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         }
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository; 
+         $repository = $this->repository;
         return $repository->getByAssignmentUser($assignmentUser->id);
     }
 
@@ -151,9 +157,9 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
             case IntentEnum::API_SISTEM_GET_AKUN_ORANG_PIBADI->value:
                 return $repository->getOrangPribadiByAssignmentUser($assignmentUser->id);
 
-            case IntentEnum::API_SISTEM_GET_PORTAL_SAYA->value:
+            case IntentEnum::API_SISTEM_GET_PROFIL_SAYA->value:
                 $sistem = $repository->getByAssignmentUserAndId($assignmentUser->id, $sistem->id);
-                return $sistem->portal_saya;
+                return $sistem->profil_saya;
 
             default:
                 return $repository->getByAssignmentUserAndId($assignmentUser->id, $sistem->id);

@@ -45,7 +45,7 @@ class ProfilSaya extends Model
 
 
 
-    public function portal_saya() {
-        return $this->hasOne(PortalSaya::class);
+    public function sistem() {
+        return $this->hasOne(Sistem::class);
     }
 }
