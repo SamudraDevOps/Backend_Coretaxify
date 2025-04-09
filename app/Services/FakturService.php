@@ -7,6 +7,7 @@ use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Models\DetailTransaksi;
+use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -28,9 +29,45 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             $data['akun_pengirim'] = $sistem->id;
         }
 
-        // Extract detail_transaksi data if it exists
+        $intent = $data['intent'] ?? null;
+        unset($data['intent']);
+
+        switch ($intent) {
+            case IntentEnum::API_CREATE_FAKTUR_DRAFT->value:
+                $data['is_draft'] = true;
+                break;
+
+            case IntentEnum::API_CREATE_FAKTUR_FIX->value:
+                $data['is_draft'] = false;
+                break;
+
+            default:
+                // Default behavior (no specific intent)
+                break;
+        }
+
         $detailTransaksiData = $data['detail_transaksi'] ?? null;
         unset($data['detail_transaksi']);
+
+        $totalDpp = 0;
+        $totalDppLain = 0;
+        $totalPpn = 0;
+        $totalPpnbm = 0;
+
+        if ($detailTransaksiData && is_array($detailTransaksiData)) {
+            foreach ($detailTransaksiData as $transaksi) {
+                $totalDpp += $transaksi['dpp'] ?? 0;
+                $totalDppLain += $transaksi['dpp_lain'] ?? 0;
+                $totalPpn += $transaksi['ppn'] ?? 0;
+                $totalPpnbm += $transaksi['ppnbm'] ?? 0;
+            }
+        }
+
+        // Assign totals to faktur data
+        $data['dpp'] = $totalDpp;
+        $data['dpp_lain'] = $totalDppLain;
+        $data['ppn'] = $totalPpn;
+        $data['ppnbm'] = $totalPpnbm;
 
         // Use database transaction to ensure data integrity
         return DB::transaction(function () use ($data, $detailTransaksiData) {
@@ -57,6 +94,12 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             // Update the faktur
             $faktur = parent::update($keyOrModel, $data);
 
+            // Initialize totals
+            $totalDpp = $faktur->dpp;
+            $totalDppLain = $faktur->dpp_lain;
+            $totalPpn = $faktur->ppn;
+            $totalPpnbm = $faktur->ppnbm;
+
             // Handle detail transaksi if provided
             if ($detailTransaksiData && is_array($detailTransaksiData)) {
                 // Process existing and new detail transaksi
@@ -67,27 +110,49 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                         // Update existing detail transaksi
                         $detailTransaksi = DetailTransaksi::find($transaksi['id']);
                         if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
+                            // Calculate differences
+                            $dppDiff = ($transaksi['dpp'] ?? 0) - ($detailTransaksi->dpp ?? 0);
+                            $dppLainDiff = ($transaksi['dpp_lain'] ?? 0) - ($detailTransaksi->dpp_lain ?? 0);
+                            $ppnDiff = ($transaksi['ppn'] ?? 0) - ($detailTransaksi->ppn ?? 0);
+                            $ppnbmDiff = ($transaksi['ppnbm'] ?? 0) - ($detailTransaksi->ppnbm ?? 0);
+
+                            // Update the detail transaksi
                             $detailTransaksi->update($transaksi);
                             $existingIds[] = $detailTransaksi->id;
+
+                            // Update totals with differences
+                            $totalDpp += $dppDiff;
+                            $totalDppLain += $dppLainDiff;
+                            $totalPpn += $ppnDiff;
+                            $totalPpnbm += $ppnbmDiff;
                         }
                     } else {
                         // Create new detail transaksi
                         $transaksi['faktur_id'] = $faktur->id;
                         $newDetail = DetailTransaksi::create($transaksi);
                         $existingIds[] = $newDetail->id;
+
+                        // Add new values to totals
+                        $totalDpp += $transaksi['dpp'] ?? 0;
+                        $totalDppLain += $transaksi['dpp_lain'] ?? 0;
+                        $totalPpn += $transaksi['ppn'] ?? 0;
+                        $totalPpnbm += $transaksi['ppnbm'] ?? 0;
                     }
                 }
-
-                // Delete any detail transaksi not in the request (optional)
-                // Uncomment if you want to remove details not included in the update
-                // DetailTransaksi::where('faktur_id', $faktur->id)
-                //     ->whereNotIn('id', $existingIds)
-                //     ->delete();
             }
+
+            // Update faktur totals
+            $faktur->update([
+                'dpp' => $totalDpp,
+                'dpp_lain' => $totalDppLain,
+                'ppn' => $totalPpn,
+                'ppnbm' => $totalPpnbm,
+            ]);
 
             return $faktur;
         });
     }
+
 
     public function addDetailTransaksi($faktur, array $detailTransaksiData)
     {
@@ -116,7 +181,26 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     ) {
         $this->authorizeAccess($assignment, $sistem);
 
-        $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
+        $intent = $request->query('intent');
+
+        switch ($intent) {
+            case IntentEnum::API_GET_FAKTUR_PENGIRIM->value:
+                $filters = array_merge($request->query(), ['akun_pengirim' => $sistem->id]);
+                break;
+
+            case IntentEnum::API_GET_FAKTUR_PENERIMA->value:
+                $filters = array_merge($request->query(),
+                [
+                    'akun_penerima' => $sistem->id,
+                    'is_draft' => false
+                ]);
+
+                break;
+
+            default:
+                $filters = array_merge($request->query(), ['akun_pengirim' => $sistem->id]);
+                break;
+        }
 
         return $this->getAllPaginated($filters, $perPage);
     }

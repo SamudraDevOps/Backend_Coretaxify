@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('tahun')->nulllable();
             $table->string('status_faktur')->nulllable();
             $table->string('esign_status')->nulllable();
-            $table->string('harga_jual')->nulllable();
-            $table->string('dpp_nilai_lain')->nulllable();
-            $table->string('ppn')->nulllable();
-            $table->string('ppnbm')->nulllable();
+            $table->decimal('dpp',18,2)->nullable();
+            $table->decimal('ppn',18,2)->nullable();
+            $table->decimal('dpp_lain',18,2)->nullable();
+            $table->decimal('ppnbm',18,2)->nullable();
             $table->string('penandatangan')->nulllable();
             $table->string('referensi')->nulllable();
             $table->string('kode_transaksi')->nulllable();
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('cap_fasilitas')->nulllable();
             $table->boolean('dilaporkan_oleh_penjual')->nulllable();
             $table->boolean('dilaporkan_oleh_pemungut_ppn')->nulllable();
+            $table->boolean('is_draft')->nulllable();
             $table->date('tanggal_faktur_pajak')->nulllable();
             $table->timestamps();
         });

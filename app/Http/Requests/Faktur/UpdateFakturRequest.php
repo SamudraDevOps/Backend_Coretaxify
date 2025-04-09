@@ -12,8 +12,7 @@ class UpdateFakturRequest extends FormRequest {
             'tahun' => 'nullable|string',
             'status_faktur' => 'nullable|string',
             'esign_status' => 'nullable|string',
-            'harga_jual' => 'nullable|string',
-            'dpp_nilai_lain' => 'nullable|string',
+            'dpp_lain' => 'nullable|string',
             'ppn' => 'nullable|string',
             'ppnbm' => 'nullable|string',
             'penandatangan' => 'nullable|string',
@@ -26,6 +25,7 @@ class UpdateFakturRequest extends FormRequest {
             'tanggal_faktur_pajak'=> 'nullable|date',
 
             'detail_transaksi' => 'nullable|array',
+            'detail_transaksi.*.id' => 'nullable|integer',
             'detail_transaksi.*.tipe' => 'nullable|string',
             'detail_transaksi.*.nama' => 'nullable|string',
             'detail_transaksi.*.kode' => 'nullable|string',

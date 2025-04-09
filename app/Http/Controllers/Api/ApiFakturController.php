@@ -21,10 +21,17 @@ class ApiFakturController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $perPage = request()->get('perPage', 5);
 
-        return FakturResource::collection($this->fakturService->getAllPaginated($request->query(), $perPage));
+        $fakturs = $this->fakturService->getAllForSistem(
+            $assignment,
+            $sistem,
+            $request,
+            $perPage
+        );
+
+        return FakturResource::collection($fakturs);
     }
 
     /**
@@ -33,7 +40,10 @@ class ApiFakturController extends ApiController {
     public function store(Assignment $assignment, Sistem $sistem, StoreFakturRequest $request) {
         $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        $faktur = $this->fakturService->create($request->validated(), $sistem);
+        $data = $request->validated();
+        $data['intent'] = $request->input('intent', null); // Get intent from request or use null
+
+        $faktur = $this->fakturService->create($data, $sistem);
 
         return new FakturResource($faktur);
     }
@@ -62,7 +72,7 @@ class ApiFakturController extends ApiController {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Faktur $faktur) {
+    public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur) {
         return $this->fakturService->delete($faktur);
     }
 

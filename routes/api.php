@@ -306,10 +306,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('satuan', ApiSatuanController::class,  ['only' => ['index']]);
                 });
 
-                Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
+                Route::get('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'index']);
                 Route::get('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'show']);
+                Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
                 Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
-                Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'delete']);
+                Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                 Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
                 Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 

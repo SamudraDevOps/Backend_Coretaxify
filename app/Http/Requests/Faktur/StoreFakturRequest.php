@@ -7,15 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreFakturRequest extends FormRequest {
     public function rules(): array {
         return [
+            'intent' => 'nullable|string',
             'akun_penerima' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
             'tahun' => 'nullable|string',
             'status_faktur' => 'nullable|string',
             'esign_status' => 'nullable|string',
-            'harga_jual' => 'nullable|string',
-            'dpp_nilai_lain' => 'nullable|string',
-            'ppn' => 'nullable|string',
-            'ppnbm' => 'nullable|string',
+            // 'dpp_lain' => 'nullable|numeric',
+            // 'ppn' => 'nullable|numeric',
+            // 'ppnbm' => 'nullable|numeric',
             'penandatangan' => 'nullable|string',
             'referensi' => 'nullable|string',
             'kode_transaksi' => 'nullable|string',

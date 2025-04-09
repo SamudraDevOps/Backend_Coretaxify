@@ -28,6 +28,25 @@ class FakturRepository extends BaseRepository implements FakturRepositoryInterfa
 
         $query = $this->applySorting($query, $searchParams);
 
+        $query = $this->buildFilterQuery($query, $searchParams);
+
+        return $query;
+    }
+
+    protected function buildFilterQuery(Builder $query, array $searchParams): Builder
+    {
+        if (isset($searchParams['akun_pengirim'])) {
+            $query->where('akun_pengirim', $searchParams['akun_pengirim']);
+        }
+
+        if (isset($searchParams['akun_penerima'])) {
+            $query->where('akun_penerima', $searchParams['akun_penerima']);
+        }
+
+        if (isset($searchParams['is_draft'])) {
+            $query->where('is_draft', $searchParams['is_draft']);
+        }
+
         return $query;
     }
 }

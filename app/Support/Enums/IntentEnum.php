@@ -89,4 +89,12 @@ enum IntentEnum: string {
     case API_GET_SISTEM_DATA_EKONOMI_BADAN = 'api.get.sistem.data.ekonomi.badan';
 
     case API_GET_SISTEM_EDIT_INFORMASI_UMUM = 'api.get.sistem.edit.informasi.umum';
+
+    case API_CREATE_FAKTUR_DRAFT = 'api.create.faktur.draft';
+
+    case API_CREATE_FAKTUR_FIX = 'api.create.faktur.fix';
+
+    case API_GET_FAKTUR_PENGIRIM = 'api.get.faktur.pengirim';
+
+    case API_GET_FAKTUR_PENERIMA = 'api.get.faktur.penerima';
 }
