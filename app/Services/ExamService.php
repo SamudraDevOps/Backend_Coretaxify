@@ -157,7 +157,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
     }
 
     public function downloadSupport(Exam $exam) {
-        $filename = $exam->filename;
+        $filename = $exam->supporting_file;
         $path = storage_path('app/public/support-file/' . $filename);
         return response()->download($path);
     }
