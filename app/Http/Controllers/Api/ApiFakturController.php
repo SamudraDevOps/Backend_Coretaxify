@@ -52,7 +52,8 @@ class ApiFakturController extends ApiController {
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
-        $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
+        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+
 
         $faktur->load('detail_transaksis');
         return new FakturResource($faktur);
@@ -62,7 +63,8 @@ class ApiFakturController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
-        $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
+        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+
 
         $updatedFaktur = $this->fakturService->update($faktur, $request->validated());
         $updatedFaktur->load('detail_transaksis');
@@ -72,7 +74,19 @@ class ApiFakturController extends ApiController {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur) {
+    public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur)
+    {
+        // Ensure the faktur belongs to the sistem
+        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+
+        $draft = $faktur->is_draft;
+
+        if ($draft) {
+            return response()->json([
+                'message' => 'Faktur masih dalam draft'
+            ], 400);
+        }
+
         return $this->fakturService->delete($faktur);
     }
 

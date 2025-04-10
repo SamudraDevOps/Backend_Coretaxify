@@ -5,6 +5,7 @@ namespace App\Support\Interfaces\Services;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Sistem;
+use App\Models\Faktur;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,8 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data , ?Sistem $sistem = null  ): ?Model;
 
     public function addDetailTransaksi(Faktur $faktur, array $detailTransaksiData);
+
+    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem);
 
     public function deleteDetailTransaksi($detailTransaksi);
 
