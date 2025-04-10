@@ -54,7 +54,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
     }
 
     public function joinExam(array $data): ?Model {
-        $exam = Exam::where('class_code', $data['class_code'])->first();
+        $exam = Exam::where('exam_code', $data['exam_code'])->first();
         $examId = $exam->id;
 
         $examUser = ExamUser::create([
