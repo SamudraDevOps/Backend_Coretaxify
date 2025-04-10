@@ -165,7 +165,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
                 Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
                 Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
-                Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
             });
 
             Route::prefix('psc')->group(function () {
@@ -322,7 +321,6 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
             Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
             Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
-            Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
         });
 
         Route::prefix('psc')->group(function () {

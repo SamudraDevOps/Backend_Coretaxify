@@ -12,7 +12,6 @@
              'informasi_umum' => new InformasiUmumResource($this->informasi_umum),
              'data_ekonomi' => new DataEkonomiResource($this->data_ekonomi),
              'nomor_identifikasi_eksternal' => new NomorIdentifikasiEksternalResource($this->nomor_identifikasi_eksternal),
-             'penunjukkan_wajib_pajak_saya' => new PenunjukkanWajibPajakSayaResource($this->penunjukkan_wajib_pajak_saya),
              'pihak_terkait' => PihakTerkaitResource::collection($this->pihak_terkaits),
              'detail_bank' => DetailBankResource::collection($this->detail_banks),
              'detail_kontak' => DetailKontakResource::collection($this->detail_kontaks),

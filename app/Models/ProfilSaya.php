@@ -35,15 +35,9 @@ class ProfilSaya extends Model
         return $this->hasMany(PihakTerkait::class, 'sistem_id');
     }
 
-    public function penunjukkan_wajib_pajak_saya() {
-        return $this->belongsTo(PenunjukkanWajibPajakSaya::class);
-    }
-
     public function nomor_identifikasi_eksternal() {
         return $this->belongsTo(NomorIdentifikasiEksternal::class);
     }
-
-
 
     public function sistem() {
         return $this->hasOne(Sistem::class);
