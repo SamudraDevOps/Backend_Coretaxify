@@ -111,7 +111,7 @@ class InformasiUmumService extends BaseCrudService implements InformasiUmumServi
         array $data
     ): ?Model
     {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccessToInformasiUmum($assignment, $sistem, $informasiUmum);
 
         return $this->update($informasiUmum, $data);
     }
@@ -138,5 +138,18 @@ class InformasiUmumService extends BaseCrudService implements InformasiUmumServi
         Sistem::where('assignment_user_id', $assignmentUser->id)
             ->where('id', $sistem->id)
             ->firstOrFail();
+    }
+
+    private function authorizeAccessToInformasiUmum(
+        Assignment $assignment,
+        Sistem $sistem,
+        InformasiUmum $informasiUmum
+    ): void {
+        $this->authorizeAccess($assignment, $sistem);
+
+        // Ensure the detail kontak belongs to the specified sistem
+        if ($informasiUmum->id !== $sistem->id) {
+            abort(403, 'Unauthorized access to this informasi Umum');
+        }
     }
 }
