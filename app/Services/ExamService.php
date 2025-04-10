@@ -72,6 +72,11 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
 
     public function joinExam(array $data): ?Model {
         $exam = Exam::where('exam_code', $data['exam_code'])->first();
+
+        if (!$exam) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException("Ujian dengan kode {$data['exam_code']} tidak ditemukan");
+        }
+
         $examId = $exam->id;
 
         $examUser = ExamUser::create([
