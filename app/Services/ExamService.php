@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\ExamUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use App\Support\Interfaces\Services\ExamServiceInterface;
@@ -44,6 +45,22 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         // $exam->users()->attach(auth()->id());
 
         return $exam;
+    }
+
+    public function update($keyOrModel, array $data): ?Model{
+        $exam = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
+        if(isset($data['supporting_file'])) {
+            Storage::disk('public')->delete('support-file.' . $exam->file_path);
+            $filename = $this->supportFile($data['supporting_file']);
+            $exam = parent::update($keyOrModel, $data);
+            $exam->update([
+                'supporting_file' => $filename,
+            ]);
+            return $exam;
+        }
+
+        return parent::update($keyOrModel, $data);
     }
 
     private function supportFile(UploadedFile $file) {
