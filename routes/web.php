@@ -9,7 +9,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('kode-transaksi', [ApiKodeTransaksiController::class, 'index']);
+
 
 Route::get('download/assignment/{assignment}', [ApiAssignmentController::class, 'downloadPublic'])
     ->name('download.assignment.file')
