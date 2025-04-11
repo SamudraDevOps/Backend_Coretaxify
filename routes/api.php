@@ -83,6 +83,8 @@ Route::get('/csrf-token', function (Request $request) {
 })->middleware('web');
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
+    Route::apiResource('kode-transaksi', ApiKodeTransaksiController::class, ['only' => ['index']]);
+    
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
