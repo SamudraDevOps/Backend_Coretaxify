@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\ExamUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use App\Support\Interfaces\Services\ExamServiceInterface;
@@ -46,6 +47,22 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
         return $exam;
     }
 
+    public function update($keyOrModel, array $data): ?Model{
+        $exam = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
+
+        if(isset($data['supporting_file'])) {
+            Storage::disk('public')->delete('support-file.' . $exam->file_path);
+            $filename = $this->supportFile($data['supporting_file']);
+            $exam = parent::update($keyOrModel, $data);
+            $exam->update([
+                'supporting_file' => $filename,
+            ]);
+            return $exam;
+        }
+
+        return parent::update($keyOrModel, $data);
+    }
+
     private function supportFile(UploadedFile $file) {
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('support-file', $filename, 'public');
@@ -54,7 +71,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
     }
 
     public function joinExam(array $data): ?Model {
-        $exam = Exam::where('class_code', $data['class_code'])->first();
+        $exam = Exam::where('exam_code', $data['exam_code'])->first();
         $examId = $exam->id;
 
         $examUser = ExamUser::create([
@@ -157,7 +174,7 @@ class ExamService extends BaseCrudService implements ExamServiceInterface {
     }
 
     public function downloadSupport(Exam $exam) {
-        $filename = $exam->filename;
+        $filename = $exam->supporting_file;
         $path = storage_path('app/public/support-file/' . $filename);
         return response()->download($path);
     }
