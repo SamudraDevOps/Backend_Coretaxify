@@ -8,7 +8,7 @@ class StoreFakturRequest extends FormRequest {
     public function rules(): array {
         return [
             'intent' => 'nullable|string',
-            'akun_penerima' => 'nullable|integer',
+            'akun_penerima_id' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
             'tahun' => 'nullable|string',
             'status_faktur' => 'nullable|string',

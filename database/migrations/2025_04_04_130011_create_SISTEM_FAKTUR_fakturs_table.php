@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('akun_pengirim')->references('id')->on('sistems')->nulllable();
-            $table->foreignId('akun_penerima')->references('id')->on('sistems')->nulllable();
+            $table->foreignId('akun_pengirim_id')->references('id')->on('sistems')->nulllable();
+            $table->foreignId('akun_penerima_id')->references('id')->on('sistems')->nulllable();
             $table->string('nomor_faktur_pajak')->unique()->nulllable();
             $table->string('masa_pajak')->nulllable();
             $table->string('tahun')->nulllable();

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateFakturRequest extends FormRequest {
     public function rules(): array {
         return [
-            'akun_penerima' => 'nullable|integer',
+            'akun_penerima_id' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
             'tahun' => 'nullable|string',
             'status_faktur' => 'nullable|string',

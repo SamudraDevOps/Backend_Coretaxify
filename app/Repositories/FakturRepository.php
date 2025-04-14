@@ -35,12 +35,12 @@ class FakturRepository extends BaseRepository implements FakturRepositoryInterfa
 
     protected function buildFilterQuery(Builder $query, array $searchParams): Builder
     {
-        if (isset($searchParams['akun_pengirim'])) {
-            $query->where('akun_pengirim', $searchParams['akun_pengirim']);
+        if (isset($searchParams['akun_pengirim_id'])) {
+            $query->where('akun_pengirim_id', $searchParams['akun_pengirim_id']);
         }
 
-        if (isset($searchParams['akun_penerima'])) {
-            $query->where('akun_penerima', $searchParams['akun_penerima']);
+        if (isset($searchParams['akun_penerima_id'])) {
+            $query->where('akun_penerima_id', $searchParams['akun_penerima_id']);
         }
 
         if (isset($searchParams['is_draft'])) {

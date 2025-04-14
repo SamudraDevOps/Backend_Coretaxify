@@ -13,4 +13,12 @@ class Faktur extends Model
     {
         return $this->hasMany(DetailTransaksi::class);
     }
+
+    public function akun_pengirim() {
+        return $this->belongsTo(Sistem::class, 'akun_pengirim_id');
+    }
+
+    public function akun_penerima() {
+        return $this->belongsTo(Sistem::class, 'akun_penerima_id');
+    }
 }

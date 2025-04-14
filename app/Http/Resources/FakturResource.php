@@ -16,10 +16,9 @@ class FakturResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'akun_pengirim' => $this->akun_pengirim,
-            'akun_penerima' => $this->akun_penerima,
+            'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
+            'akun_penerima_id' => new SistemResource($this->akun_penerima),
             'nomor_faktur_pajak' => $this->nomor_faktur_pajak,
-            'masa_pajak' => $this->masa_pajak,
             'tahun' => $this->tahun,
             'status_faktur' => $this->status_faktur,
             'esign_status' => $this->esign_status,

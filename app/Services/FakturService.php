@@ -27,7 +27,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $data['nomor_faktur_pajak'] = $randomNumber;
 
         if ($sistem) {
-            $data['akun_pengirim'] = $sistem->id;
+            $data['akun_pengirim_id'] = $sistem->id;
         }
 
         $intent = $data['intent'] ?? null;
@@ -198,20 +198,20 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
 
         switch ($intent) {
             case IntentEnum::API_GET_FAKTUR_PENGIRIM->value:
-                $filters = array_merge($request->query(), ['akun_pengirim' => $sistem->id]);
+                $filters = array_merge($request->query(), ['akun_pengirim_id' => $sistem->id]);
                 break;
 
             case IntentEnum::API_GET_FAKTUR_PENERIMA->value:
                 $filters = array_merge($request->query(),
                 [
-                    'akun_penerima' => $sistem->id,
+                    'akun_penerima_id' => $sistem->id,
                     'is_draft' => false
                 ]);
 
                 break;
 
             default:
-                $filters = array_merge($request->query(), ['akun_pengirim' => $sistem->id]);
+                $filters = array_merge($request->query(), ['akun_pengirim_id' => $sistem->id]);
                 break;
         }
 
@@ -236,7 +236,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
 
     public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem): void
     {
-        if ($faktur->akun_pengirim !== $sistem->id) {
+        if ($faktur->akun_pengirim_id !== $sistem->id) {
             abort(403, 'Unauthorized access to this faktur');
         }
     }
