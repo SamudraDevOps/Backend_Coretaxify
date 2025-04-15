@@ -2,11 +2,12 @@
 
 namespace App\Support\Interfaces\Services;
 
-use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudServiceInterface;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudServiceInterface;
 
 interface FakturServiceInterface extends BaseCrudServiceInterface {
 
@@ -14,7 +15,7 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
 
     public function addDetailTransaksi(Faktur $faktur, array $detailTransaksiData);
 
-    public function deleteDetailTransaksi($detailTransaksi);
+    public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksi);
 
     public function update($keyOrModel, array $data): ?Model;
 
@@ -24,5 +25,15 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
         Request $request,
         int $perPage = 5
     );
+
+    //  /**
+    //  * Add a detail transaksi to a faktur
+    //  */
+    // public function addDetailTransaksi(Faktur $faktur, array $data);
+
+    // /**
+    //  * Delete a detail transaksi from a faktur
+    //  */
+    // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId): bool;
 
 }

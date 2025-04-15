@@ -3,6 +3,7 @@
 // use Illuminate\Http\Request;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ApiPicController;
 use App\Http\Controllers\Api\ApiExamController;
 use App\Http\Controllers\Api\ApiRoleController;
 use App\Http\Controllers\Api\ApiTaskController;
@@ -149,64 +150,72 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
                 Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
-    
+
                 Route::prefix('assignments')->group(function () {
                     Route::get('{assignment}/sistem', [ApiSistemController::class, 'getSistems']);
                     Route::get('{assignment}/sistem/{sistem}', [ApiSistemController::class, 'getSistemDetail']);
-    
+
                     Route::post('{assignment}/sistem/{sistem}/pihak-terkait', [ApiPihakTerkaitController::class, 'store']);
                     Route::get('{assignment}/sistem/{sistem}/pihak-terkait', [ApiPihakTerkaitController::class, 'index']);
                     Route::delete('{assignment}/sistem/{sistem}/pihak-terkait/{pihakTerkait}', [ApiPihakTerkaitController::class, 'destroy']);
-    
+
                     Route::get('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'show']);
                     Route::put('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'update']);
-    
+
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum', [ApiSistemController::class, 'getSistemDetail']);
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'show']);
                     Route::put('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'update']);
-    
+
                     Route::get('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'store']);
                     Route::get('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'show']);
                     Route::put('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/detail-kontak/{detailKontak}', [ApiDetailKontakController::class, 'destroy']);
-    
+
                     Route::get('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha', [ApiTempatKegiatanUsahaController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha', [ApiTempatKegiatanUsahaController::class, 'store']);
                     Route::get('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha/{tempatKegiatanUsaha}', [ApiTempatKegiatanUsahaController::class, 'show']);
                     Route::put('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha/{tempatKegiatanUsaha}', [ApiTempatKegiatanUsahaController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/tempat-kegiatan-usaha/{tempatKegiatanUsaha}', [ApiTempatKegiatanUsahaController::class, 'destroy']);
-    
+
                     Route::get('{assignment}/sistem/{sistem}/detail-bank', [ApiDetailBankController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/detail-bank', [ApiDetailBankController::class, 'store']);
                     Route::get('{assignment}/sistem/{sistem}/detail-bank/{detailBank}', [ApiDetailBankController::class, 'show']);
                     Route::put('{assignment}/sistem/{sistem}/detail-bank/{detailBank}', [ApiDetailBankController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/detail-bank/{detailBank}', [ApiDetailBankController::class, 'destroy']);
-    
+
                     Route::get('{assignment}/sistem/{sistem}/unit-pajak-keluarga', [ApiUnitPajakKeluargaController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/unit-pajak-keluarga', [ApiUnitPajakKeluargaController::class, 'store']);
                     Route::get('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'show']);
                     Route::put('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'destroy']);
-    
+
                     Route::put('{assignment}/sistem/{sistem}/nomor-identifikasi-eksternal/{nomorIdentifikasiEksternal}', [ApiNomorIdentifikasiEksternalController::class, 'update']);
-    
+
                     Route::prefix('faktur')->group(function () {
                         Route::apiResource('kode-transaksi', ApiKodeTransaksiController::class, ['only' => ['index']]);
                         Route::apiResource('informasi-tambahan', ApiInformasiTambahanController::class, ['only' => ['index']]);
                         Route::apiResource('satuan', ApiSatuanController::class, ['only' => ['index']]);
                     });
-    
+
                     Route::get('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'index']);
                     Route::get('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'show']);
+                    // Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store'])->middleware('account.representation'); // must representing company
                     Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
+                    // Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update'])->middleware('account.representation'); // must representing company
                     Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                     Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
-    
+
+                    // Representation management
+                    Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
+                    Route::get('{assignment}/sistem/{sistem}/representatives', [ApiPicController::class, 'getCompanyRepresentatives']); // get list of company's representatives
+                    Route::post('{assignment}/sistem/{sistem}/representatives', [ApiPicController::class, 'assignRepresentative']);
+                    // Route::delete('{assignment}/sistem/{sistem}/representatives/{personalId}', [ApiPicController::class, 'removeRepresentative']);
+                    Route::post('{assignment}/sistem/{sistem}/check-representation', [ApiPicController::class, 'checkRepresentation']); // check is this account can represent selected company
                 });
-    
+
                 Route::apiResource('sistem', ApiSistemController::class);
                 Route::apiResource('profil-saya', ApiProfilSayaController::class);
                 Route::apiResource('informasi-umum', ApiInformasiUmumController::class);

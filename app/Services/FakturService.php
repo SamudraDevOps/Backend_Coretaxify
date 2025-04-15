@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
@@ -154,7 +155,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     }
 
 
-    public function addDetailTransaksi($faktur, array $detailTransaksiData)
+    public function addDetailTransaksi(Faktur $faktur, array $detailTransaksiData)
     {
         if (!is_object($faktur)) {
             $faktur = $this->repository->find($faktur);
@@ -164,7 +165,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return DetailTransaksi::create($detailTransaksiData);
     }
 
-    public function deleteDetailTransaksi($detailTransaksi)
+    public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksi)
     {
         if (!is_object($detailTransaksi)) {
             $detailTransaksi = DetailTransaksi::findOrFail($detailTransaksi);
