@@ -31,6 +31,7 @@ use App\Http\Controllers\Api\ApiInformasiUmumController;
 use App\Http\Controllers\Api\ApiKodeTransaksiController;
 use App\Http\Controllers\Api\ApiAssignmentUserController;
 use App\Http\Controllers\Api\ApiManajemenKasusController;
+use App\Http\Controllers\Api\ApiSistemTambahanController;
 use App\Http\Controllers\Api\ApiInformasiTambahanController;
 use App\Http\Controllers\Api\ApiUnitPajakKeluargaController;
 use App\Http\Controllers\Api\ApiTempatKegiatanUsahaController;
@@ -84,7 +85,7 @@ Route::get('/csrf-token', function (Request $request) {
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::apiResource('kode-transaksi', ApiKodeTransaksiController::class, ['only' => ['index']]);
-    
+
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
@@ -307,12 +308,19 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
                 Route::get('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'index']);
                 Route::get('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'show']);
+                Route::get('{assignment}/sistem/{sistem}/getAkun', [ApiFakturController::class, 'getCombinedAkunData']);
                 Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
                 Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                 Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                 Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
                 Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 
+                Route::apiResource('{assignment}/sistem/{sistem}/sistem-tambahan', ApiSistemTambahanController::class);
+                // Route::get('{assignment}/sistem/{sistem}/sistem-tambahan', [ApiSistemTambahanController::class, 'index']);
+                // Route::post('{assignment}/sistem/{sistem}/sistem-tambahan', [ApiSistemTambahanController::class, 'store']);
+                // Route::get('{assignment}/sistem/{sistem}/sistem-tambahan/{sistemTambahan}', [ApiSistemTambahanController::class, 'show']);
+                // Route::put('{assignment}/sistem/{sistem}/sistem-tambahan/{sistemTambahan}', [ApiSistemTambahanController::class, 'update']);
+                // Route::delete('{assignment}/sistem/{sistem}/sistem-tambahan/{sistemTambahan}', [ApiSistemTambahanController::class, 'destroy']);
             });
 
             Route::apiResource('sistem', ApiSistemController::class);

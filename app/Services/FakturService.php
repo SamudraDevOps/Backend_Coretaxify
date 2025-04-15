@@ -30,6 +30,8 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             $data['akun_pengirim_id'] = $sistem->id;
         }
 
+        
+
         $intent = $data['intent'] ?? null;
         unset($data['intent']);
 
@@ -37,11 +39,9 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             case IntentEnum::API_CREATE_FAKTUR_DRAFT->value:
                 $data['is_draft'] = true;
                 break;
-
             case IntentEnum::API_CREATE_FAKTUR_FIX->value:
                 $data['is_draft'] = false;
                 break;
-
             default:
                 // Default behavior (no specific intent)
                 break;

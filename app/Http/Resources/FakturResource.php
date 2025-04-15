@@ -14,6 +14,11 @@ class FakturResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $intent = $request->get('intent');
+
+         switch ($intent) {
+            
+         }        $detail_transaksis = $this->whenLoaded('detail_transaksis');
         return [
             'id' => $this->id,
             'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
