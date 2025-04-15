@@ -123,7 +123,7 @@ class ApiFakturController extends ApiController
                 return response()->json(['message' => 'Faktur not found'], 404);
             }
         }
-    public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
+    // public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
         $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
 
 
