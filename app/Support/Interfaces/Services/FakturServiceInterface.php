@@ -17,6 +17,8 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
 
     public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksi);
 
+    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem);
+
     public function update($keyOrModel, array $data): ?Model;
 
     public function getAllForSistem(
@@ -25,7 +27,6 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
         Request $request,
         int $perPage = 5
     );
-
     //  /**
     //  * Add a detail transaksi to a faktur
     //  */

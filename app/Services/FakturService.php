@@ -95,6 +95,18 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             // Update the faktur
             $faktur = parent::update($keyOrModel, $data);
 
+            // Split the nomor_faktur_pajak by '-'
+            $parts = explode('-', $faktur->nomor_faktur_pajak);
+
+                // Check if the second part exists and is '0', then change it to '1'
+            if (isset($parts[1]) && $parts[1] === '0') {
+                $parts[1] = '1';
+            }
+
+                // Join the parts back together
+            $faktur->nomor_faktur_pajak = implode('-', $parts);
+            $faktur->save();
+
             // Initialize totals
             $totalDpp = $faktur->dpp;
             $totalDppLain = $faktur->dpp_lain;
@@ -220,5 +232,12 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         Sistem::where('assignment_user_id', $assignmentUser->id)
         ->where('id', $sistem->id)
         ->firstOrFail();
+    }
+
+    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem): void
+    {
+        if ($faktur->akun_pengirim !== $sistem->id) {
+            abort(403, 'Unauthorized access to this faktur');
+        }
     }
 }

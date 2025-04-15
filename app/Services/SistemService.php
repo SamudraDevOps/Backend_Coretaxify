@@ -24,7 +24,6 @@ use App\Support\Enums\IntentEnum;
 use App\Models\TempatKegiatanUsaha;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ObjekPajakBumiDanBangunan;
-use App\Models\PenunjukkanWajibPajakSaya;
 use App\Models\NomorIdentifikasiEksternal;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use App\Support\Interfaces\Services\SistemServiceInterface;
@@ -69,7 +68,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
                 'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
                     'nomor_identifikasi' => $account->npwp,
                 ])->id,
-                'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
             ])->id,
             'nama_akun' => $account->nama,
             'npwp_akun' => $account->npwp,
@@ -98,7 +96,6 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         //     'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
         //         'nomor_identifikasi' => $sistem->npwp_akun,
         //     ])->id,
-        //     'penunjukkan_wajib_pajak_saya_id' => PenunjukkanWajibPajakSaya::create()->id,
         // ]);
     }
         return $sistem;
