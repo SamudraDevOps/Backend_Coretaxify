@@ -7,6 +7,7 @@ use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\AssignmentUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\SistemTambahanServiceInterface;
 use App\Support\Interfaces\Repositories\SistemTambahanRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
@@ -14,6 +15,12 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 class SistemTambahanService extends BaseCrudService implements SistemTambahanServiceInterface {
     protected function getRepositoryClass(): string {
         return SistemTambahanRepositoryInterface::class;
+    }
+
+    public function create(array $data, Sistem $sistem = null): ?Model {
+        $data['sistem_id'] = $sistem->id;
+
+        return $this->repository->create($data);
     }
 
     public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
