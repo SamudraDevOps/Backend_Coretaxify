@@ -14,15 +14,14 @@ class FakturResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $intent = $request->get('intent');
+        $akunPenerimaResource = $this->is_akun_tambahan
+            ? new SistemTambahanResource($this->akun_penerima_tambahan)
+            : new SistemResource($this->akun_penerima);
 
-         switch ($intent) {
-            
-         }        $detail_transaksis = $this->whenLoaded('detail_transaksis');
         return [
             'id' => $this->id,
             'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
-            'akun_penerima_id' => new SistemResource($this->akun_penerima),
+            'akun_penerima_id' => $akunPenerimaResource,
             'nomor_faktur_pajak' => $this->nomor_faktur_pajak,
             'tahun' => $this->tahun,
             'status_faktur' => $this->status_faktur,

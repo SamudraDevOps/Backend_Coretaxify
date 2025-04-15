@@ -21,4 +21,8 @@ class Faktur extends Model
     public function akun_penerima() {
         return $this->belongsTo(Sistem::class, 'akun_penerima_id');
     }
+
+    public function akun_penerima_tambahan() {
+        return $this->belongsTo(SistemTambahan::class, 'akun_penerima_id');
+    }
 }

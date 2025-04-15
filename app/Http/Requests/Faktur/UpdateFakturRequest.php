@@ -22,6 +22,7 @@ class UpdateFakturRequest extends FormRequest {
             'cap_fasilitas' => 'nullable|string',
             'dilaporkan_oleh_penjual' => 'nullable|boolean',
             'dilaporkan_oleh_pemungut_ppn' => 'nullable|boolean',
+            'is_akun_tambahan' => 'nullable|boolean',
             'tanggal_faktur_pajak'=> 'nullable|date',
 
             'detail_transaksi' => 'nullable|array',
