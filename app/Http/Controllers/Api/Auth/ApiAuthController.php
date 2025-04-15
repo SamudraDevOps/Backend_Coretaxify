@@ -37,6 +37,14 @@ class ApiAuthController extends ApiController {
     // LOGIN
     public function login(ApiAuthLoginRequest $request) {
         $credentials = $request->validated();
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && !auth()->attempt($credentials)) {
+            return response()->json([
+                'message' => "Mohon maaf, password anda salah.",
+            ], 401);
+
+        }
 
         if (!auth()->attempt($credentials)) {
             return response()->json([
