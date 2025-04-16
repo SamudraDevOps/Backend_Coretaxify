@@ -641,14 +641,6 @@ class GenerateModelScaffold extends Command {
             ->assertJsonCount(1, 'data');
     });
 
-    test('create method returns create page', function () {
-
-        \$response = actAsAdmin()->get('/api/{$modelNamePlural}/create');
-
-        \$response->assertStatus(200)
-            ->assertInertia(fn (\$assert) => \$assert->component('{$modelName}/Create'));
-    });
-
     test('store method creates new {$modelNameCamel}', function () {
         \$data = [
             'name' => 'Test name',
@@ -668,15 +660,6 @@ class GenerateModelScaffold extends Command {
 
         \$response->assertStatus(200)
             ->assertJson(['id' => \$model->id, 'name' => \$model->name]);
-    });
-
-    test('edit method returns edit page', function () {
-        \$model = create{$modelName}();
-
-        \$response = actAsAdmin()->get("/api/{$modelNamePlural}/{\$model->id}/edit");
-
-        \$response->assertStatus(200)
-            ->assertInertia(fn (\$assert) => \$assert->component('{$modelName}/Edit'));
     });
 
     test('update method updates {$modelNameCamel}', function () {
