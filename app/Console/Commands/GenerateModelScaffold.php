@@ -552,7 +552,7 @@ class GenerateModelScaffold extends Command {
     test('index method returns paginated {$modelRoute}', function () {
         create{$modelName}();
 
-        \$response = actAsSuperAdmin()->getJson('/{$modelRoute}?page=1&perPage=5');
+        \$response = actAsAdmin()->getJson('/{$modelRoute}?page=1&perPage=5');
 
         \$response->assertStatus(200)
             ->assertJsonStructure(['data', 'meta'])
@@ -561,7 +561,7 @@ class GenerateModelScaffold extends Command {
 
     test('create method returns create page', function () {
 
-        \$response = actAsSuperAdmin()->get('/{$modelRoute}/create');
+        \$response = actAsAdmin()->get('/{$modelRoute}/create');
 
         \$response->assertStatus(200)
             ->assertInertia(fn (\$assert) => \$assert->component('{$modelName}/Create'));
@@ -572,7 +572,7 @@ class GenerateModelScaffold extends Command {
             'name' => 'Test name',
         ];
 
-        \$response = actAsSuperAdmin()->postJson('/{$modelRoute}', \$data);
+        \$response = actAsAdmin()->postJson('/{$modelRoute}', \$data);
 
         \$response->assertStatus(201)
             ->assertJsonStructure(['id', 'name']);
@@ -582,7 +582,7 @@ class GenerateModelScaffold extends Command {
     test('show method returns {$modelName} details', function () {
         \$model = create{$modelName}();
 
-        \$response = actAsSuperAdmin()->getJson("/{$modelRoute}/{\$model->id}");
+        \$response = actAsAdmin()->getJson("/{$modelRoute}/{\$model->id}");
 
         \$response->assertStatus(200)
             ->assertJson(['id' => \$model->id, 'name' => \$model->name]);
@@ -591,7 +591,7 @@ class GenerateModelScaffold extends Command {
     test('edit method returns edit page', function () {
         \$model = create{$modelName}();
 
-        \$response = actAsSuperAdmin()->get("/{$modelRoute}/{\$model->id}/edit");
+        \$response = actAsAdmin()->get("/{$modelRoute}/{\$model->id}/edit");
 
         \$response->assertStatus(200)
             ->assertInertia(fn (\$assert) => \$assert->component('{$modelName}/Edit'));
@@ -603,7 +603,7 @@ class GenerateModelScaffold extends Command {
             'name' => 'Updated name',
         ];
 
-        \$response = actAsSuperAdmin()->putJson("/{$modelRoute}/{\$model->id}", \$updatedData);
+        \$response = actAsAdmin()->putJson("/{$modelRoute}/{\$model->id}", \$updatedData);
 
         \$response->assertStatus(200)
             ->assertJson(\$updatedData);
@@ -613,7 +613,7 @@ class GenerateModelScaffold extends Command {
     test('destroy method deletes {$modelName}', function () {
         \$model = create{$modelName}();
 
-        \$response = actAsSuperAdmin()->deleteJson("/{$modelRoute}/{\$model->id}");
+        \$response = actAsAdmin()->deleteJson("/{$modelRoute}/{\$model->id}");
 
         \$response->assertStatus(204);
         \$this->assertDatabaseMissing('{$modelRoute}', ['id' => \$model->id]);
@@ -634,7 +634,7 @@ class GenerateModelScaffold extends Command {
     test('index method returns paginated {$modelNamePlural}', function () {
         create{$modelName}();
 
-        \$response = actAsSuperAdmin()->getJson('/api/{$modelNamePlural}?page=1&perPage=5');
+        \$response = actAsAdmin()->getJson('/api/{$modelNamePlural}?page=1&perPage=5');
 
         \$response->assertStatus(200)
             ->assertJsonStructure(['data', 'meta'])
@@ -643,7 +643,7 @@ class GenerateModelScaffold extends Command {
 
     test('create method returns create page', function () {
 
-        \$response = actAsSuperAdmin()->get('/api/{$modelNamePlural}/create');
+        \$response = actAsAdmin()->get('/api/{$modelNamePlural}/create');
 
         \$response->assertStatus(200)
             ->assertInertia(fn (\$assert) => \$assert->component('{$modelName}/Create'));
@@ -654,7 +654,7 @@ class GenerateModelScaffold extends Command {
             'name' => 'Test name',
         ];
 
-        \$response = actAsSuperAdmin()->postJson('/api/{$modelNamePlural}', \$data);
+        \$response = actAsAdmin()->postJson('/api/{$modelNamePlural}', \$data);
 
         \$response->assertStatus(201)
             ->assertJsonStructure(['id', 'name']);
@@ -664,7 +664,7 @@ class GenerateModelScaffold extends Command {
     test('show method returns {$modelNameCamel} details', function () {
         \$model = create{$modelName}();
 
-        \$response = actAsSuperAdmin()->getJson("/api/{$modelNamePlural}/{\$model->id}");
+        \$response = actAsAdmin()->getJson("/api/{$modelNamePlural}/{\$model->id}");
 
         \$response->assertStatus(200)
             ->assertJson(['id' => \$model->id, 'name' => \$model->name]);
@@ -673,7 +673,7 @@ class GenerateModelScaffold extends Command {
     test('edit method returns edit page', function () {
         \$model = create{$modelName}();
 
-        \$response = actAsSuperAdmin()->get("/api/{$modelNamePlural}/{\$model->id}/edit");
+        \$response = actAsAdmin()->get("/api/{$modelNamePlural}/{\$model->id}/edit");
 
         \$response->assertStatus(200)
             ->assertInertia(fn (\$assert) => \$assert->component('{$modelName}/Edit'));
@@ -685,7 +685,7 @@ class GenerateModelScaffold extends Command {
             'name' => 'Updated name',
         ];
 
-        \$response = actAsSuperAdmin()->putJson("/api/{$modelNamePlural}/{\$model->id}", \$updatedData);
+        \$response = actAsAdmin()->putJson("/api/{$modelNamePlural}/{\$model->id}", \$updatedData);
 
         \$response->assertStatus(200)
             ->assertJson(\$updatedData);
@@ -695,7 +695,7 @@ class GenerateModelScaffold extends Command {
     test('destroy method deletes {$modelNameCamel}', function () {
         \$model = create{$modelName}();
 
-        \$response = actAsSuperAdmin()->deleteJson("/api/{$modelNamePlural}/{\$model->id}");
+        \$response = actAsAdmin()->deleteJson("/api/{$modelNamePlural}/{\$model->id}");
 
         \$response->assertStatus(204);
         \$this->assertDatabaseMissing('{$modelNamePlural}', ['id' => \$model->id]);
