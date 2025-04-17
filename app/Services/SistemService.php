@@ -2,31 +2,17 @@
 
 namespace App\Services;
 
-use App\Models\Task;
-use App\Models\Sistem;
 use App\Models\Account;
-use App\Models\KodeKlu;
 use App\Models\Assignment;
-use App\Models\DetailBank;
-use App\Models\JenisPajak;
-use App\Models\PortalSaya;
 use App\Models\ProfilSaya;
 use App\Models\DataEkonomi;
-use App\Models\ContractTask;
-use App\Models\DetailKontak;
-use App\Models\PihakTerkait;
 use Illuminate\Http\Request;
 use App\Models\InformasiUmum;
 use App\Models\AssignmentUser;
-use App\Models\ManajemenKasus;
-use App\Models\AlamatWajibPajak;
 use App\Support\Enums\IntentEnum;
-use App\Models\TempatKegiatanUsaha;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ObjekPajakBumiDanBangunan;
 use App\Models\NomorIdentifikasiEksternal;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Profiler\Profiler;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
