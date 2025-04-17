@@ -102,6 +102,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('users', ApiUserController::class);
                 Route::apiResource('accounts', ApiAccountController::class);
                 Route::apiResource('assignments', ApiAssignmentController::class);
+                Route::prefix('assignments')->group(function () {
+                    Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                });
                 Route::apiResource('groups', ApiGroupController::class);
                 Route::apiResource('roles', ApiRoleController::class);
                 Route::apiResource('tasks', ApiTaskController::class);
