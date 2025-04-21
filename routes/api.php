@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\ApiKodeTransaksiController;
 use App\Http\Controllers\Api\ApiAssignmentUserController;
 use App\Http\Controllers\Api\ApiManajemenKasusController;
 use App\Http\Controllers\Api\ApiSistemTambahanController;
+use App\Http\Controllers\Api\ApiDetailTransaksiController;
 use App\Http\Controllers\Api\ApiInformasiTambahanController;
 use App\Http\Controllers\Api\ApiUnitPajakKeluargaController;
 use App\Http\Controllers\Api\ApiTempatKegiatanUsahaController;
@@ -313,15 +314,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
                 Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                 Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
-                Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
-                Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 
                 Route::apiResource('{assignment}/sistem/{sistem}/sistem-tambahan', ApiSistemTambahanController::class);
-                // Route::get('{assignment}/sistem/{sistem}/sistem-tambahan', [ApiSistemTambahanController::class, 'index']);
-                // Route::post('{assignment}/sistem/{sistem}/sistem-tambahan', [ApiSistemTambahanController::class, 'store']);
-                // Route::get('{assignment}/sistem/{sistem}/sistem-tambahan/{sistemTambahan}', [ApiSistemTambahanController::class, 'show']);
-                // Route::put('{assignment}/sistem/{sistem}/sistem-tambahan/{sistemTambahan}', [ApiSistemTambahanController::class, 'update']);
-                // Route::delete('{assignment}/sistem/{sistem}/sistem-tambahan/{sistemTambahan}', [ApiSistemTambahanController::class, 'destroy']);
+
+                Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
+
             });
 
             Route::apiResource('sistem', ApiSistemController::class);
