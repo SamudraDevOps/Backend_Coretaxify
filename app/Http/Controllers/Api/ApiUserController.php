@@ -38,6 +38,13 @@ class ApiUserController extends ApiController {
             $students = [];
             $intent = $validated['intent']; // Get the intent once
 
+            // check if all data is not duplicated in database
+            foreach($request->input('students') as $studentData) {
+                if (User::where('email', $studentData['email'])->exists()) {
+                    return throw new \Exception('Email telah didaftarkan: ' . $studentData['email']);
+                }
+            }
+
             foreach ($request->input('students') as $studentData) {
                 // Add intent to each student's data
                 $studentData['intent'] = $intent;
