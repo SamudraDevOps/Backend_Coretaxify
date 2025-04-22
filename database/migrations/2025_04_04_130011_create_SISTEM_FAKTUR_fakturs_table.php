@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('akun_pengirim_id')->references('id')->on('sistems')->nulllable();
             $table->foreignId('akun_penerima_id')->references('id')->on('sistems')->nulllable();
             $table->boolean('is_draft')->nulllable();
+            $table->boolean('is_spt')->nulllable();
+            $table->boolean('is_kredit')->nulllable();
             $table->boolean('is_akun_tambahan')->nulllable();
             $table->string('nomor_faktur_pajak')->unique()->nulllable();
             $table->string('masa_pajak')->nulllable();

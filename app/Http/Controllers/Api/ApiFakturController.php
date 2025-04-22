@@ -182,7 +182,7 @@ class ApiFakturController extends ApiController
 
     //     return new FakturResource($updatedFaktur);
     // }
-    
+
     // public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
     //     $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
@@ -225,12 +225,61 @@ class ApiFakturController extends ApiController
         }
 
         $result = $this->fakturService->delete($faktur);
-
-        return response()->json([
-            'success' => $result,
-            'message' => $result ? 'Faktur deleted successfully' : 'Failed to delete faktur'
-        ]);
     }
+
+    public function deleteMultipleFakturs(Assignment $assignment, Sistem $sistem,Request $request)
+    {
+        $this->fakturService->authorizeAccess($assignment, $sistem);
+
+        $fakturIds = $request->input('faktur_ids', []);
+
+        if (empty($fakturIds)) {
+            return response()->json(['message' => 'No faktur IDs provided'], 400);
+        }
+
+        $fakturs = Faktur::whereIn('id', $fakturIds)->get();
+        foreach ($fakturs as $faktur) {
+            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+        }
+
+        Faktur::whereIn('id', $fakturIds)->delete();
+
+        return response()->json(['message' => 'Fakturs deleted successfully']);
+    }
+
+    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
+    {
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+            ])->firstOrFail();
+
+        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get()->map(function ($item) {
+            $item->is_akun_tambahan = false;
+            return $item;
+        });
+
+        $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
+            $item->is_akun_tambahan = true;
+            return $item;
+        });
+
+        return $sistems->concat($sistemTambahans);
+    }
+
+    // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
+    // {
+    //     $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
+    //         ->where('id', $detailTransaksiId)
+    //         ->firstOrFail();
+
+    //     $this->fakturService->deleteDetailTransaksi($detailTransaksi);
+
+    //     return response()->json([
+    //         'success' => $result,
+    //         'message' => $result ? 'Faktur deleted successfully' : 'Failed to delete faktur'
+    //     ]);
+    // }
     // public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur)
     // {
     //     return $this->fakturService->delete($faktur);
@@ -276,6 +325,7 @@ class ApiFakturController extends ApiController
             'message' => $result ? 'Detail transaksi deleted successfully' : 'Failed to delete detail transaksi'
         ]);
     }
+
     // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
     // {
     //     $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
@@ -340,24 +390,4 @@ class ApiFakturController extends ApiController
     //         'data' => $detailTransaksi
     //     ], 201);
     // }
-
-    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
-    {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-            ])->firstOrFail();
-
-        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get()->map(function ($item) {
-            $item->is_akun_tambahan = false;
-            return $item;
-        });
-
-        $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
-            $item->is_akun_tambahan = true;
-            return $item;
-        });
-
-        return $sistems->concat($sistemTambahans);
-    }
 }
