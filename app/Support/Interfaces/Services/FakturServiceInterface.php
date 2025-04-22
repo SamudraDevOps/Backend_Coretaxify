@@ -17,6 +17,8 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
 
     public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem);
 
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem);
+
     public function deleteDetailTransaksi($detailTransaksi);
 
     public function update($keyOrModel, array $data): ?Model;

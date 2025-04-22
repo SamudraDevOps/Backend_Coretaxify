@@ -21,6 +21,8 @@ class StoreFakturRequest extends FormRequest {
             'dilaporkan_oleh_penjual' => 'nullable|boolean',
             'dilaporkan_oleh_pemungut_ppn' => 'nullable|boolean',
             'is_akun_tambahan' => 'nullable|boolean',
+            'is_spt' => 'nullable|boolean',
+            'is_kredit' => 'nullable|boolean',
             'tanggal_faktur_pajak'=> 'nullable|date',
             'dpp' => 'nullable|numeric',
             'ppn' => 'nullable|numeric',

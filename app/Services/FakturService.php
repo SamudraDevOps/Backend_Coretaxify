@@ -219,7 +219,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return $this->getAllPaginated($filters, $perPage);
     }
 
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
     {
         $assignmentUser = AssignmentUser::where([
             'user_id' => Auth::id(),

@@ -92,6 +92,46 @@ class ApiFakturController extends ApiController {
         return $this->fakturService->delete($faktur);
     }
 
+    public function deleteMultipleFakturs(Assignment $assignment, Sistem $sistem,Request $request)
+    {
+        $this->fakturService->authorizeAccess($assignment, $sistem);
+
+        $fakturIds = $request->input('faktur_ids', []);
+
+        if (empty($fakturIds)) {
+            return response()->json(['message' => 'No faktur IDs provided'], 400);
+        }
+
+        $fakturs = Faktur::whereIn('id', $fakturIds)->get();
+        foreach ($fakturs as $faktur) {
+            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+        }
+
+        Faktur::whereIn('id', $fakturIds)->delete();
+
+        return response()->json(['message' => 'Fakturs deleted successfully']);
+    }
+
+    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
+    {
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+            ])->firstOrFail();
+
+        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get()->map(function ($item) {
+            $item->is_akun_tambahan = false;
+            return $item;
+        });
+
+        $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
+            $item->is_akun_tambahan = true;
+            return $item;
+        });
+
+        return $sistems->concat($sistemTambahans);
+    }
+
     public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
     {
         $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
@@ -114,25 +154,5 @@ class ApiFakturController extends ApiController {
             'message' => 'Detail transaksi added successfully',
             'data' => $detailTransaksi
         ], 201);
-    }
-
-    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
-    {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-            ])->firstOrFail();
-
-        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get()->map(function ($item) {
-            $item->is_akun_tambahan = false;
-            return $item;
-        });
-
-        $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
-            $item->is_akun_tambahan = true;
-            return $item;
-        });
-
-        return $sistems->concat($sistemTambahans);
     }
 }
