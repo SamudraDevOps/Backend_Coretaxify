@@ -53,7 +53,7 @@ class ApiAssignmentController extends ApiController {
                     return $this->assignmentService->create($request->validated());
                 } else {
                     return response()->json([
-                        'message' => 'You are not authorized to create an assignment',
+                        'message' => 'Anda tidak memiliki izin untuk membuat tugas / praktikum.',
                     ], 403);
                 }
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
@@ -61,7 +61,7 @@ class ApiAssignmentController extends ApiController {
                     try {
                         $result = $this->assignmentService->joinAssignment($request->validated());
                         return response()->json ([
-                            'message' => 'You have successfully joined the assignment',
+                            'message' => 'Anda berhasil bergabung dengan tugas / praktikum.',
                             'data' => $result,
                         ], 200);
                     } catch (\Exception $e) {
@@ -72,7 +72,7 @@ class ApiAssignmentController extends ApiController {
                     }
                 } else {
                     return response()->json([
-                        'message' => 'You are not authorized to join an assignment',
+                        'message' => 'Anda tidak memiliki izin untuk bergabung dengan tugas / praktikum.',
                     ], 403);
                 }
         }

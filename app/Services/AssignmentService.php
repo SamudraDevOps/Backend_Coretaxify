@@ -139,7 +139,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         $assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
 
         if (!$assignment) {
-            throw new \Exception('Assignment not found with the provided code.');
+            throw new \Exception('Tugas / praktikum tidak ditemukan.');
         }
 
         $userId = auth()->id();
@@ -156,7 +156,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
                 ->exists();
 
             if (!$isGroupMember) {
-                throw new \Exception('You can only join assignments from groups you are a member of.');
+                throw new \Exception('Anda hanya bisa bergabung dengan tugas / praktikum dari kelas yang Anda telah bergabung.');
             }
         }
 
@@ -166,7 +166,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             ->exists();
 
         if ($existingAssignment) {
-            throw new \Exception('You have already joined this assignment.');
+            throw new \Exception('Anda telah bergabung dengan tugas / praktikum ini.');
         }
 
         $assignmentUser = AssignmentUser::create([
