@@ -29,6 +29,9 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
                             ->where('assignment_id', $data['assignment'])
                             ->exists();
 
+        AssignmentUser::where('user_id', $userId)
+                        ->update(['is_start' => true]);
+
         if (!$assignmentExists) {
             abort(Response::HTTP_FORBIDDEN, 'No assignment exists for the current user.');
         }
