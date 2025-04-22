@@ -32,6 +32,8 @@ use App\Http\Controllers\Api\ApiInformasiUmumController;
 use App\Http\Controllers\Api\ApiKodeTransaksiController;
 use App\Http\Controllers\Api\ApiAssignmentUserController;
 use App\Http\Controllers\Api\ApiManajemenKasusController;
+use App\Http\Controllers\Api\ApiSistemTambahanController;
+use App\Http\Controllers\Api\ApiDetailTransaksiController;
 use App\Http\Controllers\Api\ApiInformasiTambahanController;
 use App\Http\Controllers\Api\ApiUnitPajakKeluargaController;
 use App\Http\Controllers\Api\ApiTempatKegiatanUsahaController;

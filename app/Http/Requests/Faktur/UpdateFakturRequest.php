@@ -7,14 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateFakturRequest extends FormRequest {
     public function rules(): array {
         return [
-            'akun_penerima' => 'nullable|integer',
+            'akun_penerima_id' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
             'tahun' => 'nullable|string',
             'status_faktur' => 'nullable|string',
             'esign_status' => 'nullable|string',
-            'dpp_lain' => 'nullable|string',
-            'ppn' => 'nullable|string',
-            'ppnbm' => 'nullable|string',
+            'dpp_lain' => 'nullable|numeric',
+            'dpp' => 'nullable|numeric',
+            'ppn' => 'nullable|numeric',
+            'ppnbm' => 'nullable|numeric',
             'penandatangan' => 'nullable|string',
             'referensi' => 'nullable|string',
             'kode_transaksi' => 'nullable|string',
@@ -22,6 +23,7 @@ class UpdateFakturRequest extends FormRequest {
             'cap_fasilitas' => 'nullable|string',
             'dilaporkan_oleh_penjual' => 'nullable|boolean',
             'dilaporkan_oleh_pemungut_ppn' => 'nullable|boolean',
+            'is_akun_tambahan' => 'nullable|boolean',
             'tanggal_faktur_pajak'=> 'nullable|date',
 
             'detail_transaksi' => 'nullable|array',

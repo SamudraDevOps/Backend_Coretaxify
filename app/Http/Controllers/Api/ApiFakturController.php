@@ -6,6 +6,8 @@ use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use App\Models\AssignmentUser;
+use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
 use App\Http\Resources\FakturResource;
 use App\Http\Requests\Faktur\StoreFakturRequest;
@@ -139,6 +141,12 @@ class ApiFakturController extends ApiController
     /**
      * Update the specified resource in storage.
      */
+    public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
+        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+
+        $updatedFaktur = $this->fakturService->update($faktur, $request->validated());
+        $updatedFaktur->load('detail_transaksis');
+
 
     public function update(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
     {
@@ -331,4 +339,24 @@ class ApiFakturController extends ApiController
     //         'data' => $detailTransaksi
     //     ], 201);
     // }
+
+    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
+    {
+        $assignmentUser = AssignmentUser::where([
+            'user_id' => auth()->id(),
+            'assignment_id' => $assignment->id
+            ])->firstOrFail();
+
+        $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get()->map(function ($item) {
+            $item->is_akun_tambahan = false;
+            return $item;
+        });
+
+        $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
+            $item->is_akun_tambahan = true;
+            return $item;
+        });
+
+        return $sistems->concat($sistemTambahans);
+    }
 }

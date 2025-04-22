@@ -56,7 +56,7 @@
          return [
              'id' => $this->id,
              'assignment_user' => $this->assignment_user,
-             'profil_saya' => new ProfilSayaResource($this->profil_saya),
+             'profil_saya' => $this->profil_saya,
              'nama_akun' => $this->nama_akun,
              'npwp_akun' => $this->npwp_akun,
              'tipe_akun' => $this->tipe_akun,

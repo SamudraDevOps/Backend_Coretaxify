@@ -6,18 +6,24 @@ use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\AssignmentUser;
-use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\Auth;
-use App\Support\Interfaces\Services\DetailTransaksiServiceInterface;
-use App\Support\Interfaces\Repositories\DetailTransaksiRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
+use App\Support\Interfaces\Services\SistemTambahanServiceInterface;
+use App\Support\Interfaces\Repositories\SistemTambahanRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
-class DetailTransaksiService extends BaseCrudService implements DetailTransaksiServiceInterface {
+class SistemTambahanService extends BaseCrudService implements SistemTambahanServiceInterface {
     protected function getRepositoryClass(): string {
-        return DetailTransaksiRepositoryInterface::class;
+        return SistemTambahanRepositoryInterface::class;
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Faktur $faktur): void
+    public function create(array $data, Sistem $sistem = null): ?Model {
+        $data['sistem_id'] = $sistem->id;
+
+        return $this->repository->create($data);
+    }
+
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
     {
         $assignmentUser = AssignmentUser::where([
             'user_id' => Auth::id(),
@@ -31,15 +37,11 @@ class DetailTransaksiService extends BaseCrudService implements DetailTransaksiS
         Sistem::where('assignment_user_id', $assignmentUser->id)
         ->where('id', $sistem->id)
         ->firstOrFail();
-
-        if ($faktur->akun_pengirim_id !== $sistem->id) {
-            abort(403, 'Unauthorized access to this faktur');
-        }
     }
 
-    public function authorizeDetailTraBelongsToFaktur(Faktur $faktur, DetailTransaksi $detailTransaksi): void
+    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem): void
     {
-        if ($faktur->id !== $detailTransaksi->faktur_id) {
+        if ($faktur->akun_pengirim !== $sistem->id) {
             abort(403, 'Unauthorized access to this faktur');
         }
     }

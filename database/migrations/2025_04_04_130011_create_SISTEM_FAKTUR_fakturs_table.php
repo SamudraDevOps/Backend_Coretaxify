@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('akun_pengirim')->references('id')->on('sistems')->nulllable();
-            $table->foreignId('akun_penerima')->references('id')->on('sistems')->nulllable();
+            $table->foreignId('akun_pengirim_id')->references('id')->on('sistems')->nulllable();
+            $table->foreignId('akun_penerima_id')->references('id')->on('sistems')->nulllable();
+            $table->boolean('is_draft')->nulllable();
+            $table->boolean('is_akun_tambahan')->nulllable();
             $table->string('nomor_faktur_pajak')->unique()->nulllable();
             $table->string('masa_pajak')->nulllable();
             $table->string('tahun')->nulllable();
@@ -31,7 +33,6 @@ return new class extends Migration
             $table->string('cap_fasilitas')->nulllable();
             $table->boolean('dilaporkan_oleh_penjual')->nulllable();
             $table->boolean('dilaporkan_oleh_pemungut_ppn')->nulllable();
-            $table->boolean('is_draft')->nulllable();
             $table->date('tanggal_faktur_pajak')->nulllable();
             $table->timestamps();
         });

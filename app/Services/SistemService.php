@@ -2,30 +2,17 @@
 
 namespace App\Services;
 
-use App\Models\Task;
-use App\Models\Sistem;
 use App\Models\Account;
-use App\Models\KodeKlu;
 use App\Models\Assignment;
-use App\Models\DetailBank;
-use App\Models\JenisPajak;
-use App\Models\PortalSaya;
 use App\Models\ProfilSaya;
 use App\Models\DataEkonomi;
-use App\Models\ContractTask;
-use App\Models\DetailKontak;
-use App\Models\PihakTerkait;
 use Illuminate\Http\Request;
 use App\Models\InformasiUmum;
 use App\Models\AssignmentUser;
-use App\Models\ManajemenKasus;
-use App\Models\AlamatWajibPajak;
 use App\Support\Enums\IntentEnum;
-use App\Models\TempatKegiatanUsaha;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ObjekPajakBumiDanBangunan;
 use App\Models\NomorIdentifikasiEksternal;
-use Symfony\Component\HttpKernel\Profiler\Profiler;
+use Symfony\Component\HttpFoundation\Response;
 use App\Support\Interfaces\Services\SistemServiceInterface;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
@@ -36,6 +23,16 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
     }
 
     public function create(array $data): ?Model {
+
+        $userId = auth()->id();
+        $assignmentExists = AssignmentUser::where('user_id', $userId)
+                            ->where('assignment_id', $data['assignment'])
+                            ->exists();
+
+        if (!$assignmentExists) {
+            abort(Response::HTTP_FORBIDDEN, 'No assignment exists for the current user.');
+        }
+
         $dataAssign = $data['assignment'];
         $user = auth()->user();
 
@@ -54,50 +51,39 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
                     ->get();
 
         foreach($dataAccount as $account) {
-        $sistem = parent::create([
-            'assignment_user_id' => $idAssignUser,
-            'profil_saya_id' => ProfilSaya::create([
-                'informasi_umum_id' => InformasiUmum::create([
-                    'nama' => $account->nama,
-                    'npwp' => $account->npwp,
-                    'jenis_wajib_pajak' => $account->account_type->name,
-                    'kategori_wajib_pajak' => $account->account_type->name,
-                    'bahasa' => 'Bahasa Indonesia',
+            $sistem = parent::create([
+                'assignment_user_id' => $idAssignUser,
+                'profil_saya_id' => ProfilSaya::create([
+                    'informasi_umum_id' => InformasiUmum::create([
+                        'nama' => $account->nama,
+                        'npwp' => $account->npwp,
+                        'jenis_wajib_pajak' => $account->account_type->name,
+                        'kategori_wajib_pajak' => $account->account_type->name,
+                        'bahasa' => 'Bahasa Indonesia',
+                    ])->id,
+                    'data_ekonomi_id' => DataEkonomi::create()->id,
+                    'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
+                        'nomor_identifikasi' => $account->npwp,
+                    ])->id,
                 ])->id,
-                'data_ekonomi_id' => DataEkonomi::create()->id,
-                'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
-                    'nomor_identifikasi' => $account->npwp,
-                ])->id,
-            ])->id,
-            'nama_akun' => $account->nama,
-            'npwp_akun' => $account->npwp,
-            'tipe_akun' => $account->account_type->name,
-            'alamat_utama_akun' => $account->alamat_utama,
-            'email_akun' => $account->email,
-        ]);
+                'nama_akun' => $account->nama,
+                'npwp_akun' => $account->npwp,
+                'tipe_akun' => $account->account_type->name,
+                'alamat_utama_akun' => $account->alamat_utama,
+                'email_akun' => $account->email,
+            ]);
 
-        $kategoriWajibPajak = $sistem->tipe_akun;
+            $kategoriWajibPajak = $sistem->tipe_akun;
 
-        if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi') {
-            $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
-        } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
-            $kategoriWajibPajak = 'Orang Pribadi';
+            if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi')
+            {
+                $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
+            }
+            elseif ($kategoriWajibPajak === 'Orang Pribadi')
+            {
+                $kategoriWajibPajak = 'Orang Pribadi';
+            }
         }
-
-        // ProfilSaya::create([
-        //     'informasi_umum_id' => InformasiUmum::create([
-        //         'nama' => $sistem->nama_akun,
-        //         'npwp' => $sistem->npwp_akun,
-        //         'jenis_wajib_pajak' => $sistem->tipe_akun,
-        //         'kategori_wajib_pajak' => $kategoriWajibPajak,
-        //         'bahasa' => 'Bahasa Indonesia',
-        //     ])->id,
-        //     'data_ekonomi_id' => DataEkonomi::create()->id,
-        //     'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
-        //         'nomor_identifikasi' => $sistem->npwp_akun,
-        //     ])->id,
-        // ]);
-    }
         return $sistem;
     }
 

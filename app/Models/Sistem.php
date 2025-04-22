@@ -48,4 +48,8 @@ class Sistem extends Model
     public function pihak_terkaits() {
         return $this->hasMany(PihakTerkait::class, );
     }
+
+    public function sistem_tambahans() {
+        return $this->hasMany(SistemTambahan::class, );
+    }
 }
