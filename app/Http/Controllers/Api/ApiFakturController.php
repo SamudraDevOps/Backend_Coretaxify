@@ -146,42 +146,43 @@ class ApiFakturController extends ApiController
 
         $updatedFaktur = $this->fakturService->update($faktur, $request->validated());
         $updatedFaktur->load('detail_transaksis');
-
-
-    public function update(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
-    {
-        // For personal accounts, check if they're representing a company
-        $representedCompanyId = $request->input('company_id');
-        $representedCompany = null;
-
-        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
-            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
-
-            // Check if this personal account can represent the company
-            if (!$this->permissionService->canPerformFakturAction($sistem, 'update', $representedCompany)) {
-                return response()->json(['message' => 'You cannot represent this company'], 403);
-            }
-
-            // Check if the faktur belongs to the represented company
-            if ($faktur->sistem_id !== $representedCompany->id) {
-                return response()->json(['message' => 'Faktur not found for this company'], 404);
-            }
-        } else {
-            // Check if the faktur belongs to the current sistem
-            if ($faktur->sistem_id !== $sistem->id) {
-                return response()->json(['message' => 'Faktur not found'], 404);
-            }
-        }
-
-        // Only draft fakturs can be updated
-        if ($faktur->status !== 'draft') {
-            return response()->json(['message' => 'Only draft fakturs can be updated'], 400);
-        }
-
-        $updatedFaktur = $this->fakturService->update($faktur, $request->all());
-
-        return new FakturResource($updatedFaktur);
     }
+
+    // public function update(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
+    // {
+    //     // For personal accounts, check if they're representing a company
+    //     $representedCompanyId = $request->input('company_id');
+    //     $representedCompany = null;
+
+    //     if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+    //         $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+    //         // Check if this personal account can represent the company
+    //         if (!$this->permissionService->canPerformFakturAction($sistem, 'update', $representedCompany)) {
+    //             return response()->json(['message' => 'You cannot represent this company'], 403);
+    //         }
+
+    //         // Check if the faktur belongs to the represented company
+    //         if ($faktur->sistem_id !== $representedCompany->id) {
+    //             return response()->json(['message' => 'Faktur not found for this company'], 404);
+    //         }
+    //     } else {
+    //         // Check if the faktur belongs to the current sistem
+    //         if ($faktur->sistem_id !== $sistem->id) {
+    //             return response()->json(['message' => 'Faktur not found'], 404);
+    //         }
+    //     }
+
+    //     // Only draft fakturs can be updated
+    //     if ($faktur->status !== 'draft') {
+    //         return response()->json(['message' => 'Only draft fakturs can be updated'], 400);
+    //     }
+
+    //     $updatedFaktur = $this->fakturService->update($faktur, $request->all());
+
+    //     return new FakturResource($updatedFaktur);
+    // }
+    
     // public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
     //     $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
