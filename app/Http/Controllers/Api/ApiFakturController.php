@@ -13,18 +13,46 @@ use App\Http\Resources\FakturResource;
 use App\Http\Requests\Faktur\StoreFakturRequest;
 use App\Http\Requests\Faktur\UpdateFakturRequest;
 use App\Support\Interfaces\Services\FakturServiceInterface;
+use App\Support\Interfaces\Services\PermissionServiceInterface;
+use App\Support\Interfaces\Services\PicServiceInterface;
 use App\Http\Requests\DetailTransaksi\StoreDetailTransaksiRequest;
 
-class ApiFakturController extends ApiController {
+class ApiFakturController extends ApiController
+{
     public function __construct(
-        protected FakturServiceInterface $fakturService
-    ) {}
+        protected FakturServiceInterface $fakturService,
+        protected PermissionServiceInterface $permissionService,
+        protected PicServiceInterface $picService
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $perPage = request()->get('perPage', 5);
+    public function index(Assignment $assignment, Sistem $sistem, Request $request)
+    {
+        $perPage = request()->get('perPage', 10);
+
+        // For personal accounts, check if they're representing a company
+        $representedCompanyId = $request->input('company_id');
+        $representedCompany = null;
+
+        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+            // Check if this personal account can represent the company
+            if (!$this->permissionService->canPerformFakturAction($sistem, 'view', $representedCompany)) {
+                return response()->json(['message' => 'You cannot represent this company'], 403);
+            }
+
+            // Use the company's ID to filter fakturs
+            $filters = array_merge($request->query(), ['sistem_id' => $representedCompany->id]);
+        } else {
+            // Use the current sistem's ID
+            $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
+        }
+
+        $fakturs = $this->fakturService->getAllPaginated($filters, $perPage);
 
         $fakturs = $this->fakturService->getAllForSistem(
             $assignment,
@@ -39,11 +67,31 @@ class ApiFakturController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Assignment $assignment, Sistem $sistem, StoreFakturRequest $request) {
-        $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
-
+    public function store(Assignment $assignment, Sistem $sistem, StoreFakturRequest $request)
+    {
         $data = $request->validated();
         $data['intent'] = $request->input('intent', null); // Get intent from request or use null
+
+        // For personal accounts, check if they're representing a company
+        $representedCompanyId = $request->input('company_id');
+        $representedCompany = null;
+
+        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+            // Check if this personal account can represent the company
+            if (!$this->permissionService->canPerformFakturAction($sistem, 'create', $representedCompany)) {
+                return response()->json(['message' => 'You cannot represent this company'], 403);
+            }
+
+            // Use the company's ID for the faktur
+            $data = array_merge($request->all(), ['sistem_id' => $representedCompany->id]);
+        } else {
+            // Use the current sistem's ID
+            $data = array_merge($request->all(), ['sistem_id' => $sistem->id]);
+        }
+
+        // $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
         $faktur = $this->fakturService->create($data, $sistem);
 
@@ -53,12 +101,41 @@ class ApiFakturController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
+    public function show(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
+    {
+        // For personal accounts, check if they're representing a company
+        $representedCompanyId = $request->input('company_id');
+        $representedCompany = null;
+
+        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+            // Check if this personal account can represent the company
+            if (!$this->permissionService->canPerformFakturAction($sistem, 'view', $representedCompany)) {
+                return response()->json(['message' => 'You cannot represent this company'], 403);
+            }
+
+            // Check if the faktur belongs to the represented company
+            if ($faktur->sistem_id !== $representedCompany->id) {
+                return response()->json(['message' => 'Faktur not found for this company'], 404);
+            }
+        } else {
+            // Check if the faktur belongs to the current sistem
+            if ($faktur->sistem_id !== $sistem->id) {
+                return response()->json(['message' => 'Faktur not found'], 404);
+            }
+        }
+    // public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
         $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
 
 
         $faktur->load('detail_transaksis');
+
         return new FakturResource($faktur);
+
+        // $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
+        // return new FakturResource($faktur);
+
     }
 
     /**
@@ -69,27 +146,85 @@ class ApiFakturController extends ApiController {
 
         $updatedFaktur = $this->fakturService->update($faktur, $request->validated());
         $updatedFaktur->load('detail_transaksis');
-
-        return new FakturResource($updatedFaktur);
     }
+
+    // public function update(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
+    // {
+    //     // For personal accounts, check if they're representing a company
+    //     $representedCompanyId = $request->input('company_id');
+    //     $representedCompany = null;
+
+    //     if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+    //         $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+    //         // Check if this personal account can represent the company
+    //         if (!$this->permissionService->canPerformFakturAction($sistem, 'update', $representedCompany)) {
+    //             return response()->json(['message' => 'You cannot represent this company'], 403);
+    //         }
+
+    //         // Check if the faktur belongs to the represented company
+    //         if ($faktur->sistem_id !== $representedCompany->id) {
+    //             return response()->json(['message' => 'Faktur not found for this company'], 404);
+    //         }
+    //     } else {
+    //         // Check if the faktur belongs to the current sistem
+    //         if ($faktur->sistem_id !== $sistem->id) {
+    //             return response()->json(['message' => 'Faktur not found'], 404);
+    //         }
+    //     }
+
+    //     // Only draft fakturs can be updated
+    //     if ($faktur->status !== 'draft') {
+    //         return response()->json(['message' => 'Only draft fakturs can be updated'], 400);
+    //     }
+
+    //     $updatedFaktur = $this->fakturService->update($faktur, $request->all());
+
+    //     return new FakturResource($updatedFaktur);
+    // }
+
+    // public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
+    //     $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
+
+    //     $updatedFaktur = $this->fakturService->update($faktur, $request->validated());
+    //     $updatedFaktur->load('detail_transaksis');
+    //     return new FakturResource($updatedFaktur);
+    // }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur)
+    public function destroy(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
     {
-        // Ensure the faktur belongs to the sistem
-        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+        // For personal accounts, check if they're representing a company
+        $representedCompanyId = $request->input('company_id');
+        $representedCompany = null;
 
-        $draft = $faktur->is_draft;
+        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
 
-        if ($draft) {
-            return response()->json([
-                'message' => 'Faktur masih dalam draft'
-            ], 400);
+            // Check if this personal account can represent the company
+            if (!$this->permissionService->canPerformFakturAction($sistem, 'delete', $representedCompany)) {
+                return response()->json(['message' => 'You cannot represent this company'], 403);
+            }
+
+            // Check if the faktur belongs to the represented company
+            if ($faktur->sistem_id !== $representedCompany->id) {
+                return response()->json(['message' => 'Faktur not found for this company'], 404);
+            }
+        } else {
+            // Check if the faktur belongs to the current sistem
+            if ($faktur->sistem_id !== $sistem->id) {
+                return response()->json(['message' => 'Faktur not found'], 404);
+            }
         }
 
-        return $this->fakturService->delete($faktur);
+        // Only draft fakturs can be deleted
+        if ($faktur->status !== 'draft') {
+            return response()->json(['message' => 'Only draft fakturs can be deleted'], 400);
+        }
+
+        $result = $this->fakturService->delete($faktur);
     }
 
     public function deleteMultipleFakturs(Assignment $assignment, Sistem $sistem,Request $request)
@@ -132,27 +267,127 @@ class ApiFakturController extends ApiController {
         return $sistems->concat($sistemTambahans);
     }
 
-    public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
-    {
-        $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
-            ->where('id', $detailTransaksiId)
-            ->firstOrFail();
+    // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
+    // {
+    //     $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
+    //         ->where('id', $detailTransaksiId)
+    //         ->firstOrFail();
 
-        $this->fakturService->deleteDetailTransaksi($detailTransaksi);
+    //     $this->fakturService->deleteDetailTransaksi($detailTransaksi);
+
+    //     return response()->json([
+    //         'success' => $result,
+    //         'message' => $result ? 'Faktur deleted successfully' : 'Failed to delete faktur'
+    //     ]);
+    // }
+    // public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur)
+    // {
+    //     return $this->fakturService->delete($faktur);
+    // }
+
+    /**
+     * Delete a detail transaksi from a faktur.
+     */
+    public function deleteDetailTransaksi(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur, $detailTransaksiId)
+    {
+        // For personal accounts, check if they're representing a company
+        $representedCompanyId = $request->input('company_id');
+        $representedCompany = null;
+
+        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+            // Check if this personal account can represent the company
+            if (!$this->permissionService->canPerformFakturAction($sistem, 'update', $representedCompany)) {
+                return response()->json(['message' => 'You cannot represent this company'], 403);
+            }
+
+            // Check if the faktur belongs to the represented company
+            if ($faktur->sistem_id !== $representedCompany->id) {
+                return response()->json(['message' => 'Faktur not found for this company'], 404);
+            }
+        } else {
+            // Check if the faktur belongs to the current sistem
+            if ($faktur->sistem_id !== $sistem->id) {
+                return response()->json(['message' => 'Faktur not found'], 404);
+            }
+        }
+
+        // Only draft fakturs can be updated
+        if ($faktur->status !== 'draft') {
+            return response()->json(['message' => 'Only draft fakturs can be updated'], 400);
+        }
+
+        $result = $this->fakturService->deleteDetailTransaksi($faktur, $detailTransaksiId);
 
         return response()->json([
-            'message' => 'Detail transaksi deleted successfully'
+            'success' => $result,
+            'message' => $result ? 'Detail transaksi deleted successfully' : 'Failed to delete detail transaksi'
         ]);
     }
 
-    public function addDetailTransaksi(Faktur $faktur, StoreDetailTransaksiRequest $request)
-    {
+    // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
+    // {
+    //     $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
+    //         ->where('id', $detailTransaksiId)
+    //         ->firstOrFail();
 
-        $detailTransaksi = $this->fakturService->addDetailTransaksi($faktur, $request->validated());
+    //     $this->fakturService->deleteDetailTransaksi($detailTransaksi);
+
+    //     return response()->json([
+    //         'message' => 'Detail transaksi deleted successfully'
+    //     ]);
+    // }
+
+    /**
+     * Add a detail transaksi to a faktur.
+     */
+    public function addDetailTransaksi(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
+    {
+        // For personal accounts, check if they're representing a company
+        $representedCompanyId = $request->input('company_id');
+        $representedCompany = null;
+
+        if ($representedCompanyId && $sistem->tipe_akun === 'Orang Pribadi') {
+            $representedCompany = Sistem::findOrFail($representedCompanyId)->first();
+
+            // Check if this personal account can represent the company
+            if (!$this->permissionService->canPerformFakturAction($sistem, 'update', $representedCompany)) {
+                return response()->json(['message' => 'You cannot represent this company'], 403);
+            }
+
+            // Check if the faktur belongs to the represented company
+            if ($faktur->sistem_id !== $representedCompany->id) {
+                return response()->json(['message' => 'Faktur not found for this company'], 404);
+            }
+        } else {
+            // Check if the faktur belongs to the current sistem
+            if ($faktur->sistem_id !== $sistem->id) {
+                return response()->json(['message' => 'Faktur not found'], 404);
+            }
+        }
+
+        // Only draft fakturs can be updated
+        if ($faktur->status !== 'draft') {
+            return response()->json(['message' => 'Only draft fakturs can be updated'], 400);
+        }
+
+        $data = array_merge($request->all(), ['faktur_id' => $faktur->id]);
+        $detailTransaksi = $this->fakturService->addDetailTransaksi($faktur, $data);
 
         return response()->json([
             'message' => 'Detail transaksi added successfully',
             'data' => $detailTransaksi
-        ], 201);
+        ]);
     }
+    // public function addDetailTransaksi(Faktur $faktur, StoreDetailTransaksiRequest $request)
+    // {
+
+    //     $detailTransaksi = $this->fakturService->addDetailTransaksi($faktur, $request->validated());
+
+    //     return response()->json([
+    //         'message' => 'Detail transaksi added successfully',
+    //         'data' => $detailTransaksi
+    //     ], 201);
+    // }
 }

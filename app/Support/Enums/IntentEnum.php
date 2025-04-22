@@ -36,7 +36,7 @@ enum IntentEnum: string {
 
     case API_USER_CREATE_ASSIGNMENT = 'api.user.create.assignment';
 
-    case API_USER_JOIN_ASSIGNMENT = 'api.user.assign.task';
+    case API_USER_JOIN_ASSIGNMENT = 'api.user.join.assignment';
 
     case API_USER_CREATE_EXAM = 'api.user.create.exam';
 

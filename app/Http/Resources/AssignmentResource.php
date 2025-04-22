@@ -14,6 +14,7 @@ class AssignmentResource extends JsonResource {
             'name' => $this->name,
             'assignment_code' => $this->assignment_code,
             'group_id' => $this->group_id,
+            'instansi' => $this->user->contract ? $this->user->contract->university->name : null,
             'group' => new GroupResource($this->group),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'users_count' => count($this->users),

@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
+            'account.type' => \App\Http\Middleware\CheckAccountType::class,
+            'account.representation' => \App\Http\Middleware\CheckRepresentation::class,
         ]);
         //
     })

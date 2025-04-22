@@ -23,10 +23,6 @@ class UserService extends BaseCrudService implements UserServiceInterface {
     }
 
     public function create(array $data): ?Model {
-        if (User::where('email', $data['email'])->exists()) {
-            throw new \Exception('Email telah didaftarkan: ' . $data['email']);
-        }
-
         $plain_password = $this->generatePassword();
         $data['default_password'] = $plain_password;
         $data['password'] = $plain_password;
