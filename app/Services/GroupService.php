@@ -43,6 +43,9 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
 
     public function joinGroup(array $data): ?Model {
         $group = Group::where('class_code', $data['class_code'])->first();
+        if (!$group) {
+            throw new \Exception('Kelas tidak ditemukan.');
+        }
         $groupId = $group->id;
 
         $groupUser = GroupUser::create([
