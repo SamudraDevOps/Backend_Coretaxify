@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
 use App\Http\Resources\ExamResource;
+use App\Http\Resources\UserResource;
 use App\Http\Requests\Exam\StoreExamRequest;
 use App\Http\Requests\Exam\UpdateExamRequest;
 use App\Support\Interfaces\Services\ExamServiceInterface;
@@ -95,7 +96,7 @@ class ApiExamController extends ApiController {
 
     public function getMembers(Request $request, Exam $exam) {
         $perPage = $request->get('perPage', 5);
-        return ExamResource::collection($exam->users()->paginate($perPage));
+        return UserResource::collection($exam->users()->paginate($perPage));
     }
 
     public function removeMember(Exam $exam, User $user) {
