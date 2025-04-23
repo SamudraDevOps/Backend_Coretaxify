@@ -7,6 +7,7 @@ use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
+use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\DB;
@@ -125,19 +126,27 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     unset($data['detail_transaksi']);
 
     return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-        // Update the faktur
+        $intent = $data['intent'] ?? null;
+        unset($data['intent']);
+
+        switch ($intent) {
+            case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
+                $data['is_draft'] = false;
+                break;
+            default:
+                // Default behavior (no specific intent)
+                break;
+        }
+
         $faktur = parent::update($keyOrModel, $data);
 
         $parts = explode('-', $faktur->nomor_faktur_pajak);
 
-            // Check if the second part exists and is '0', then change it to '1'
         if (isset($parts[1]) && $parts[1] === '0') {
             $parts[1] = '1';
         }
 
-        // Handle detail transaksi if provided
         if ($detailTransaksiData && is_array($detailTransaksiData)) {
-            // Process existing and new detail transaksi
             $existingIds = [];
 
             foreach ($detailTransaksiData as $transaksi) {
