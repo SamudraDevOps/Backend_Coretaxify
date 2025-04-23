@@ -67,7 +67,10 @@ class ApiFakturController extends ApiController {
     public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
         $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
 
-        $updatedFaktur = $this->fakturService->update($faktur, $request->validated());
+        $data = $request->validated();
+        $data['intent'] = $request->input('intent', null);
+
+        $updatedFaktur = $this->fakturService->update($faktur, $data);
         $updatedFaktur->load('detail_transaksis');
 
         return new FakturResource($updatedFaktur);
