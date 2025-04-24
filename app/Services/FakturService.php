@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Faktur;
+use App\Models\KodeTransaksi;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
@@ -23,7 +24,9 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     }
 
     public function create(array $data , ?Sistem $sistem = null  ): ?Model {
-        $randomNumber = '01-0-' . mt_rand(000000000000000, 999999999999999);
+        $kodeTransaksi = KodeTransaksi::where('kode', $data['kode_transaksi'])->first();
+
+        $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
 
