@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Support\Enums\FakturStatusEnum;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -15,14 +16,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('akun_pengirim_id')->references('id')->on('sistems')->nulllable();
             $table->foreignId('akun_penerima_id')->references('id')->on('sistems')->nulllable();
+            $table->foreignId('spt_ppns_id')->nullable()->constrained('spt_ppns')->onDelete('cascade');
             $table->boolean('is_draft')->nulllable();
-            $table->boolean('is_spt')->nulllable()->default(false);
-            $table->boolean('is_kredit')->nulllable()->default(false);
+            $table->boolean('is_kredit')->default(false);
             $table->boolean('is_akun_tambahan')->nulllable();
+            $table->enum('status', FakturStatusEnum::toArray())->nullable();
             $table->string('nomor_faktur_pajak')->unique()->nulllable();
             $table->string('masa_pajak')->nulllable();
             $table->string('tahun')->nulllable();
-            $table->string('status_faktur')->nulllable();
             $table->string('esign_status')->nulllable();
             $table->decimal('dpp',18,2)->nullable();
             $table->decimal('ppn',18,2)->nullable();

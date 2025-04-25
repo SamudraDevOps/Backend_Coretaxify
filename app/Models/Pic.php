@@ -19,4 +19,8 @@ class Pic extends Model
     public function assignment_user() {
         return $this->belongsTo(AssignmentUser::class);
     }
+
+    public function spt_ppns() {
+        return $this->belongsTo(SptPpn::class);
+    }
 }

@@ -9,8 +9,9 @@ class UpdateFakturRequest extends FormRequest {
         return [
             'akun_penerima_id' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
+            // 'spt_ppns_id' => 'nullable|integer',
             'tahun' => 'nullable|string',
-            'status_faktur' => 'nullable|string',
+            'status' => 'nullable|string',
             'esign_status' => 'nullable|string',
             'dpp_lain' => 'nullable|numeric',
             'dpp' => 'nullable|numeric',
@@ -24,6 +25,7 @@ class UpdateFakturRequest extends FormRequest {
             'dilaporkan_oleh_penjual' => 'nullable|boolean',
             'dilaporkan_oleh_pemungut_ppn' => 'nullable|boolean',
             'is_akun_tambahan' => 'nullable|boolean',
+            'is_kredit' => 'nullable|boolean',
             'tanggal_faktur_pajak'=> 'nullable|date',
 
             'detail_transaksi' => 'nullable|array',

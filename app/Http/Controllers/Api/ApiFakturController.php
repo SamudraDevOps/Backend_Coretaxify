@@ -10,6 +10,7 @@ use App\Models\AssignmentUser;
 use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
 use App\Http\Resources\FakturResource;
+use App\Support\Enums\FakturStatusEnum;
 use App\Http\Requests\Faktur\StoreFakturRequest;
 use App\Http\Requests\Faktur\UpdateFakturRequest;
 use App\Support\Interfaces\Services\FakturServiceInterface;
@@ -248,6 +249,26 @@ class ApiFakturController extends ApiController
         Faktur::whereIn('id', $fakturIds)->delete();
 
         return response()->json(['message' => 'Fakturs deleted successfully']);
+    }
+
+    public function multipleDraftFakturToFix(Assignment $assignment, Sistem $sistem, Request $request)
+    {
+        $this->fakturService->authorizeAccess($assignment, $sistem);
+
+        $fakturIds = $request->input('faktur_ids', []);
+
+        if (empty($fakturIds)) {
+            return response()->json(['message' => 'No faktur IDs provided'], 400);
+        }
+
+        $fakturs = Faktur::whereIn('id', $fakturIds)->get();
+        foreach ($fakturs as $faktur) {
+            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+        }
+
+        Faktur::whereIn('id', $fakturIds)->update(['is_draft' => false, 'status' => FakturStatusEnum::APPROVED->value]);
+
+        return response()->json(['message' => 'Fakturs berhasil dikirim ke SPT']);
     }
 
     public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)

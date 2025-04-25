@@ -9,9 +9,9 @@ class StoreFakturRequest extends FormRequest {
         return [
             'intent' => 'nullable|string',
             'akun_penerima_id' => 'nullable|integer',
+            // 'spt_ppns_id' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
             'tahun' => 'nullable|string',
-            'status_faktur' => 'nullable|string',
             'esign_status' => 'nullable|string',
             'penandatangan' => 'nullable|string',
             'referensi' => 'nullable|string',
@@ -21,7 +21,6 @@ class StoreFakturRequest extends FormRequest {
             'dilaporkan_oleh_penjual' => 'nullable|boolean',
             'dilaporkan_oleh_pemungut_ppn' => 'nullable|boolean',
             'is_akun_tambahan' => 'nullable|boolean',
-            'is_spt' => 'nullable|boolean',
             'is_kredit' => 'nullable|boolean',
             'tanggal_faktur_pajak'=> 'nullable|date',
             'dpp' => 'nullable|numeric',
