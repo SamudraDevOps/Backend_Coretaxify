@@ -138,9 +138,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('fakturs', function (Blueprint $table) {
-            $table->foreignId('spt_ppns_id')->constrained()->onDelete('cascade')->nullable();
-        });
+        // Schema::table('fakturs', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('spt_ppns_id')->nullable()->change();
+        //     $table->foreignId('spt_ppns_id')->onDelete('cascade')->nullable();
+        // });
     }
 
     /**

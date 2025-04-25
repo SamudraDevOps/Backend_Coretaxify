@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Models\Faktur;
-use App\Models\KodeTransaksi;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use App\Models\KodeTransaksi;
 use App\Models\AssignmentUser;
 use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\FakturServiceInterface;
 use App\Support\Interfaces\Repositories\FakturRepositoryInterface;
@@ -40,9 +41,11 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         switch ($intent) {
             case IntentEnum::API_CREATE_FAKTUR_DRAFT->value:
                 $data['is_draft'] = true;
+                $data['status'] = FakturStatusEnum::DRAFT->value;
                 break;
             case IntentEnum::API_CREATE_FAKTUR_FIX->value:
                 $data['is_draft'] = false;
+                $data['status'] = FakturStatusEnum::APPROVED->value;
                 break;
             default:
                 // Default behavior (no specific intent)
@@ -135,6 +138,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
                     $data['is_draft'] = false;
+                    $data['status'] = FakturStatusEnum::APPROVED->value;
                     break;
                 default:
                     // Default behavior (no specific intent)
