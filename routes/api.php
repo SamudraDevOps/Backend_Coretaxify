@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiFakturController;
 use App\Http\Controllers\Api\ApiSatuanController;
 use App\Http\Controllers\Api\ApiSistemController;
+use App\Http\Controllers\Api\ApiSptPpnController;
 use App\Http\Controllers\Api\ApiAccountController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
@@ -315,10 +316,14 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                 Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                 Route::post('{assignment}/sistem/{sistem}/faktur/delete-multiple', [ApiFakturController::class, 'deleteMultipleFakturs']);
+                Route::post('{assignment}/sistem/{sistem}/faktur/approve-multiple', [ApiFakturController::class, 'multipleDraftFakturToFix']);
 
                 Route::apiResource('{assignment}/sistem/{sistem}/sistem-tambahan', ApiSistemTambahanController::class);
 
                 Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
+
+                Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
+                Route::get('{assignment}/sistem/{sistem}/spt-ppn/periode', [ApiSptPpnController::class, 'checkPeriode']);
 
             });
 
