@@ -33,6 +33,8 @@ class SptPpnService extends BaseCrudService implements SptPpnServiceInterface {
             ->where('status', FakturStatusEnum::APPROVED->value)
             ->get();
 
+        // $data['kolom_1a2_dpp'] dokumen lain
+
         $fakturs1a2 = $fakturs->whereIn('kode_transaksi', [4, 5]);
         $data['kolom_1a2_dpp']      = $fakturs1a2->sum('dpp');
         $data['kolom_1a2_dpp_lain'] = $fakturs1a2->sum('dpp_lain');
@@ -45,6 +47,67 @@ class SptPpnService extends BaseCrudService implements SptPpnServiceInterface {
         $data['kolom_1a3_ppn']      = $fakturs1a3->sum('ppn');
         $data['kolom_1a3_ppnbm']    = $fakturs1a3->sum('ppnbm');
 
+        $fakturs1a4 = $fakturs->whereIn('kode_transaksi', [1, 9, 10]);
+        $data['kolom_1a4_dpp']      = $fakturs1a4->sum('dpp');
+        $data['kolom_1a4_ppn']      = $fakturs1a4->sum('ppn');
+        $data['kolom_1a4_ppnbm']    = $fakturs1a4->sum('ppnbm');
+
+        $fakturs1a6 = $fakturs->whereIn('kode_transaksi', [2, 3]);
+        $data['kolom_1a6_dpp']      = $fakturs1a6->sum('dpp');
+        $data['kolom_1a6_dpp_lain'] = $fakturs1a6->sum('dpp_lain');
+        $data['kolom_1a6_ppn']      = $fakturs1a6->sum('ppn');
+        $data['kolom_1a6_ppnbm']    = $fakturs1a6->sum('ppnbm');
+
+        $fakturs1a7 = $fakturs->where('kode_transaksi', 6);
+        $data['kolom_1a7_dpp']      = $fakturs1a7->sum('dpp');
+        $data['kolom_1a7_dpp_lain'] = $fakturs1a7->sum('dpp_lain');
+        $data['kolom_1a7_ppn']      = $fakturs1a7->sum('ppn');
+        $data['kolom_1a7_ppnbm']    = $fakturs1a7->sum('ppnbm');
+
+        $fakturs1a8 = $fakturs->where('kode_transaksi', 8);
+        $data['kolom_1a8_dpp']      = $fakturs1a8->sum('dpp');
+        $data['kolom_1a8_dpp_lain'] = $fakturs1a8->sum('dpp_lain');
+        $data['kolom_1a8_ppn']      = $fakturs1a8->sum('ppn');
+        $data['kolom_1a8_ppnbm']    = $fakturs1a8->sum('ppnbm');
+
+        $data['kolom_1a_jumlah_dpp'] =
+           ($data['kolom_1a1_dpp'] ?? 0)
+         + ($data['kolom_1a2_dpp'] ?? 0)
+         + ($data['kolom_1a3_dpp'] ?? 0)
+         + ($data['kolom_1a4_dpp'] ?? 0)
+         + ($data['kolom_1a5_dpp'] ?? 0)
+         + ($data['kolom_1a6_dpp'] ?? 0)
+         + ($data['kolom_1a7_dpp'] ?? 0)
+         + ($data['kolom_1a8_dpp'] ?? 0)
+         + ($data['kolom_1a9_dpp'] ?? 0);
+
+        $data['kolom_1a_jumlah_ppn'] =
+           ($data['kolom_1a2_ppn'] ?? 0)
+         + ($data['kolom_1a3_ppn'] ?? 0)
+         + ($data['kolom_1a5_ppn'] ?? 0)
+         + ($data['kolom_1a6_ppn'] ?? 0)
+         + ($data['kolom_1a7_ppn'] ?? 0)
+         + ($data['kolom_1a8_ppn'] ?? 0)
+         + ($data['kolom_1a9_ppn'] ?? 0);
+
+         $data['kolom_1a_jumlah_ppnbm'] =
+           ($data['kolom_1a2_ppnbm'] ?? 0)
+         + ($data['kolom_1a3_ppnbm'] ?? 0)
+         + ($data['kolom_1a5_ppnbm'] ?? 0)
+         + ($data['kolom_1a6_ppnbm'] ?? 0)
+         + ($data['kolom_1a7_ppnbm'] ?? 0)
+         + ($data['kolom_1a8_ppnbm'] ?? 0)
+         + ($data['kolom_1a9_ppnbm'] ?? 0);
+
+        $data['kolom_1c_dpp'] = $data['kolom_1a_jumlah_dpp'] + ($data['kolom_1b_dpp'] ?? 0);
+
+        $fakturs = Faktur::where('akun_penerima_id', $data['sistem_id'])
+            ->where('masa_pajak', $month)
+            ->where('tahun', $year)
+            ->where('status', FakturStatusEnum::APPROVED->value)
+            ->get();
+
+        dd($data);
         return parent::create($data);
     }
 

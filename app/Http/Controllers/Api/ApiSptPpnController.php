@@ -33,8 +33,10 @@ class ApiSptPpnController extends ApiController {
     public function store(Assignment $assignment, Sistem $sistem, Request $request) {
         $this->sptPpnService->authorizeAccess($assignment, $sistem);
 
-        // return $request->all();
-        return $this->sptPpnService->create($request->all());
+        $data = $request->all();
+        $data['sistem_id'] = $sistem->id;
+
+        return $this->sptPpnService->create($data);
     }
 
     /**

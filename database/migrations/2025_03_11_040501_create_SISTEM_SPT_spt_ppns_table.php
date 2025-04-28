@@ -56,7 +56,7 @@ return new class extends Migration
             $table->decimal('kolom_1a9_ppnbm',18,2)->nullable();
             $table->decimal('kolom_1a_jumlah_ppnbm',18,2)->nullable();
 
-            $table->decimal('kolom_2a_dpp_lain',18,2)->nullable();
+            $table->decimal('kolom_2a_dpp',18,2)->nullable();
             $table->decimal('kolom_2b_dpp_lain',18,2)->nullable();
             $table->decimal('kolom_2b_dpp',18,2)->nullable();
             $table->decimal('kolom_2c_dpp_lain',18,2)->nullable();

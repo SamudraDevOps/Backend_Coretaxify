@@ -21,7 +21,7 @@ class PicSeeder extends Seeder
 
         Pic::create([
             'akun_op_id' => '3',
-            'akun_badan_id' => '2',
+            'akun_badan_id' => '1',
             'assignment_user_id' => '1',
         ]);
     }
