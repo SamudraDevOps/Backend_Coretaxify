@@ -6,11 +6,14 @@ use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use App\Models\KodeTransaksi;
 use App\Models\AssignmentUser;
+use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\FakturServiceInterface;
 use App\Support\Interfaces\Repositories\FakturRepositoryInterface;
@@ -22,7 +25,9 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     }
 
     public function create(array $data , ?Sistem $sistem = null  ): ?Model {
-        $randomNumber = '01-0-' . mt_rand(000000000000000, 999999999999999);
+        $kodeTransaksi = KodeTransaksi::where('kode', $data['kode_transaksi'])->first();
+
+        $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
 
@@ -36,9 +41,11 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         switch ($intent) {
             case IntentEnum::API_CREATE_FAKTUR_DRAFT->value:
                 $data['is_draft'] = true;
+                $data['status'] = FakturStatusEnum::DRAFT->value;
                 break;
             case IntentEnum::API_CREATE_FAKTUR_FIX->value:
                 $data['is_draft'] = false;
+                $data['status'] = FakturStatusEnum::APPROVED->value;
                 break;
             default:
                 // Default behavior (no specific intent)
@@ -120,51 +127,60 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     // }
 
     public function update($keyOrModel, array $data): ?Model
-{
-    $detailTransaksiData = $data['detail_transaksi'] ?? null;
-    unset($data['detail_transaksi']);
+    {
+        $detailTransaksiData = $data['detail_transaksi'] ?? null;
+        unset($data['detail_transaksi']);
 
-    return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-        // Update the faktur
-        $faktur = parent::update($keyOrModel, $data);
+        return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
+            $intent = $data['intent'] ?? null;
+            unset($data['intent']);
 
-        $parts = explode('-', $faktur->nomor_faktur_pajak);
-
-            // Check if the second part exists and is '0', then change it to '1'
-        if (isset($parts[1]) && $parts[1] === '0') {
-            $parts[1] = '1';
-        }
-
-        // Handle detail transaksi if provided
-        if ($detailTransaksiData && is_array($detailTransaksiData)) {
-            // Process existing and new detail transaksi
-            $existingIds = [];
-
-            foreach ($detailTransaksiData as $transaksi) {
-                if (isset($transaksi['id'])) {
-                    // Update existing detail transaksi
-                    $detailTransaksi = DetailTransaksi::find($transaksi['id']);
-                    if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
-                        $detailTransaksi->update($transaksi);
-                        $existingIds[] = $detailTransaksi->id;
-                    }
-                } else {
-                    // Create new detail transaksi
-                    $transaksi['faktur_id'] = $faktur->id;
-                    $newDetail = DetailTransaksi::create($transaksi);
-                    $existingIds[] = $newDetail->id;
-                }
+            switch ($intent) {
+                case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
+                    $data['is_draft'] = false;
+                    $data['status'] = FakturStatusEnum::APPROVED->value;
+                    break;
+                default:
+                    // Default behavior (no specific intent)
+                    break;
             }
 
-            // Optional: Delete any detail transaksi not in the request
-            DetailTransaksi::where('faktur_id', $faktur->id)
-                ->whereNotIn('id', $existingIds)
-                ->delete();
-        }
+            $faktur = parent::update($keyOrModel, $data);
 
-        return $faktur;
-    });
-}
+            $parts = explode('-', $faktur->nomor_faktur_pajak);
+
+            if (isset($parts[1]) && $parts[1] === '0') {
+                $parts[1] = '1';
+            }
+
+            if ($detailTransaksiData && is_array($detailTransaksiData)) {
+                $existingIds = [];
+
+                foreach ($detailTransaksiData as $transaksi) {
+                    if (isset($transaksi['id'])) {
+                        // Update existing detail transaksi
+                        $detailTransaksi = DetailTransaksi::find($transaksi['id']);
+                        if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
+                            $detailTransaksi->update($transaksi);
+                            $existingIds[] = $detailTransaksi->id;
+                        }
+                    } else {
+                        // Create new detail transaksi
+                        $transaksi['faktur_id'] = $faktur->id;
+                        $newDetail = DetailTransaksi::create($transaksi);
+                        $existingIds[] = $newDetail->id;
+                    }
+                }
+
+                // Optional: Delete any detail transaksi not in the request
+                DetailTransaksi::where('faktur_id', $faktur->id)
+                    ->whereNotIn('id', $existingIds)
+                    ->delete();
+            }
+
+            return $faktur;
+        });
+    }
 
 
 

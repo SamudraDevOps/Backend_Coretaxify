@@ -86,6 +86,8 @@ Route::get('/csrf-token', function (Request $request) {
 })->middleware('web');
 
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
+    Route::get('kode-transaksi', [ApiKodeTransaksiController::class, 'index']);
+    Route::get('satuan', [ApiSatuanController::class, 'index']);
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
@@ -210,6 +212,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     // Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update'])->middleware('account.representation'); // must representing company
                     Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
+                    Route::get('{assignment}/sistem/{sistem}/getAkun', [ApiFakturController::class, 'getCombinedAkunData']);
                     Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 

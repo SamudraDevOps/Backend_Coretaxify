@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Support\Enums\FakturStatusEnum;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,29 +14,29 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('akun_pengirim_id')->references('id')->on('sistems')->nulllable();
-            $table->foreignId('akun_penerima_id')->references('id')->on('sistems')->nulllable();
-            $table->boolean('is_draft')->nulllable();
-            $table->boolean('is_spt')->nulllable();
-            $table->boolean('is_kredit')->nulllable();
-            $table->boolean('is_akun_tambahan')->nulllable();
-            $table->string('nomor_faktur_pajak')->unique()->nulllable();
-            $table->string('masa_pajak')->nulllable();
-            $table->string('tahun')->nulllable();
-            $table->string('status_faktur')->nulllable();
-            $table->string('esign_status')->nulllable();
+            $table->foreignId('akun_pengirim_id')->references('id')->on('sistems')->nullable();
+            $table->foreignId('akun_penerima_id')->references('id')->on('sistems')->nullable();
+            $table->foreignId('spt_ppns_id')->nullable()->constrained('spt_ppns')->onDelete('cascade');
+            $table->boolean('is_draft')->nullable();
+            $table->boolean('is_kredit')->default(false);
+            $table->boolean('is_akun_tambahan')->nullable();
+            $table->enum('status', FakturStatusEnum::toArray())->nullable();
+            $table->string('nomor_faktur_pajak')->unique()->nullable();
+            $table->string('masa_pajak')->nullable();
+            $table->string('tahun')->nullable();
+            $table->string('esign_status')->nullable();
             $table->decimal('dpp',18,2)->nullable();
             $table->decimal('ppn',18,2)->nullable();
             $table->decimal('dpp_lain',18,2)->nullable();
             $table->decimal('ppnbm',18,2)->nullable();
-            $table->string('penandatangan')->nulllable();
-            $table->string('referensi')->nulllable();
-            $table->string('kode_transaksi')->nulllable();
-            $table->string('informasi_tambahan')->nulllable();
-            $table->string('cap_fasilitas')->nulllable();
-            $table->boolean('dilaporkan_oleh_penjual')->nulllable();
-            $table->boolean('dilaporkan_oleh_pemungut_ppn')->nulllable();
-            $table->date('tanggal_faktur_pajak')->nulllable();
+            $table->string('penandatangan')->nullable();
+            $table->string('referensi')->nullable();
+            $table->string('kode_transaksi')->nullable();
+            $table->string('informasi_tambahan')->nullable();
+            $table->string('cap_fasilitas')->nullable();
+            $table->boolean('dilaporkan_oleh_penjual')->nullable();
+            $table->boolean('dilaporkan_oleh_pemungut_ppn')->nullable();
+            $table->date('tanggal_faktur_pajak')->nullable();
             $table->timestamps();
         });
 
