@@ -14,18 +14,20 @@ class FakturSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 12; $i++) {
-            $kodeTransaksi = (string) $i; // atau sesuai format yang kamu mau
+        for ($i = 1; $i <= 20; $i++) {
+
             $nomorFakturPajak = sprintf('%02d-0-%04d', $i, 4444 + $i); // contoh: 01-0-4445, 02-0-4446, dst
 
             if ($i >= 11){
                 $picId = 2;
                 $akunPengirimId = 3;
                 $akunPenerimaId = 2;
+                $kodeTransaksi = (string) $i - 10;
             }else{
                 $picId = 1;
                 $akunPengirimId = 2;
                 $akunPenerimaId = 1;
+                $kodeTransaksi = (string) $i;
             }
 
             $faktur = Faktur::create([

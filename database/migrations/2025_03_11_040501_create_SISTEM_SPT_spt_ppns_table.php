@@ -59,7 +59,7 @@ return new class extends Migration
             $table->decimal('kolom_2a_dpp',18,2)->nullable();
             $table->decimal('kolom_2b_dpp_lain',18,2)->nullable();
             $table->decimal('kolom_2b_dpp',18,2)->nullable();
-            $table->decimal('kolom_2c_dpp_lain',18,2)->nullable();
+            $table->decimal('kolom_2c_dpp',18,2)->nullable();
             $table->decimal('kolom_2d_dpp_lain',18,2)->nullable();
             $table->decimal('kolom_2a_ppnbm',18,2)->nullable();
             $table->decimal('kolom_2b_ppnbm',18,2)->nullable();
