@@ -117,17 +117,17 @@ class ApiFakturController extends ApiController
             }
 
             // Check if the faktur belongs to the represented company
-            if ($faktur->sistem_id !== $representedCompany->id) {
+            if ($faktur->akun_pengirim_id !== $representedCompany->id) {
                 return response()->json(['message' => 'Faktur not found for this company'], 404);
             }
         } else {
             // Check if the faktur belongs to the current sistem
-            if ($faktur->sistem_id !== $sistem->id) {
-                return response()->json(['message' => 'Faktur not found'], 404);
-            }
+            // if ($faktur->akun_pengirim_id !== $sistem->id) {
+            //     return response()->json(['message' => 'Faktur not found'], 404);
+            // }
+            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
         }
     // public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
-        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
 
 
         $faktur->load('detail_transaksis');
@@ -167,12 +167,12 @@ class ApiFakturController extends ApiController
     //         }
 
     //         // Check if the faktur belongs to the represented company
-    //         if ($faktur->sistem_id !== $representedCompany->id) {
+    //         if ($faktur->akun_pengirim_id !== $representedCompany->id) {
     //             return response()->json(['message' => 'Faktur not found for this company'], 404);
     //         }
     //     } else {
     //         // Check if the faktur belongs to the current sistem
-    //         if ($faktur->sistem_id !== $sistem->id) {
+    //         if ($faktur->akun_pengirim_id !== $sistem->id) {
     //             return response()->json(['message' => 'Faktur not found'], 404);
     //         }
     //     }
@@ -213,18 +213,18 @@ class ApiFakturController extends ApiController
             }
 
             // Check if the faktur belongs to the represented company
-            if ($faktur->sistem_id !== $representedCompany->id) {
+            if ($faktur->akun_pengirim_id !== $representedCompany->id) {
                 return response()->json(['message' => 'Faktur not found for this company'], 404);
             }
         } else {
             // Check if the faktur belongs to the current sistem
-            if ($faktur->sistem_id !== $sistem->id) {
+            if ($faktur->akun_pengirim_id !== $sistem->id) {
                 return response()->json(['message' => 'Faktur not found'], 404);
             }
         }
 
         // Only draft fakturs can be deleted
-        if ($faktur->status !== 'draft') {
+        if ($faktur->status !== FakturStatusEnum::DRAFT->value) {
             return response()->json(['message' => 'Only draft fakturs can be deleted'], 400);
         }
 
@@ -327,12 +327,12 @@ class ApiFakturController extends ApiController
             }
 
             // Check if the faktur belongs to the represented company
-            if ($faktur->sistem_id !== $representedCompany->id) {
+            if ($faktur->akun_pengirim_id !== $representedCompany->id) {
                 return response()->json(['message' => 'Faktur not found for this company'], 404);
             }
         } else {
             // Check if the faktur belongs to the current sistem
-            if ($faktur->sistem_id !== $sistem->id) {
+            if ($faktur->akun_pengirim_id !== $sistem->id) {
                 return response()->json(['message' => 'Faktur not found'], 404);
             }
         }
@@ -381,12 +381,12 @@ class ApiFakturController extends ApiController
             }
 
             // Check if the faktur belongs to the represented company
-            if ($faktur->sistem_id !== $representedCompany->id) {
+            if ($faktur->akun_pengirim_id !== $representedCompany->id) {
                 return response()->json(['message' => 'Faktur not found for this company'], 404);
             }
         } else {
             // Check if the faktur belongs to the current sistem
-            if ($faktur->sistem_id !== $sistem->id) {
+            if ($faktur->akun_pengirim_id !== $sistem->id) {
                 return response()->json(['message' => 'Faktur not found'], 404);
             }
         }
