@@ -99,4 +99,26 @@ enum IntentEnum: string {
     case API_GET_FAKTUR_PENERIMA = 'api.get.faktur.penerima';
 
     case API_UPDATE_FAKTUR_FIX = 'api.update.faktur.fix';
+
+    case API_BUPOT_BPPU = 'api.bupot.bppu';
+
+    case API_BUPOT_BPNR = 'api.bupot.bpnr';
+
+    case API_BUPOT_PS = 'api.bupot.ps';
+
+    case API_BUPOT_PSD = 'api.bupot.psd';
+
+    case API_BUPOT_BP21 = 'api.bupot.bp21';
+
+    case API_BUPOT_BP26 = 'api.bupot.bp26';
+
+    case API_BUPOT_BPA1 = 'api.bupot.bpa1';
+
+    case API_BUPOT_BPA2 = 'api.bupot.bpa2';
+
+    case API_BUPOT_BPBPT = 'api.bupot.bpbpt';
+
+    case API_BUPOT_DSBP = 'api.bupot.dsbp';
+
+
 }
