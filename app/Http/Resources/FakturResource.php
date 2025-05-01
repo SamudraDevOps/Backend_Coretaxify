@@ -43,7 +43,7 @@ class FakturResource extends JsonResource
             'dilaporkan_oleh_pemungut_ppn' => $this->dilaporkan_oleh_pemungut_ppn,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'detail_transaksis' => $this->whenLoaded('detail_transaksis', function() {
+            'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                 return $this->detail_transaksis->map(function($transaksi) {
                     return [
                         'id' => $transaksi->id,
