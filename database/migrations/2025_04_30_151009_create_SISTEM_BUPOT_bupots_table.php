@@ -51,7 +51,7 @@ return new class extends Migration
             $table->decimal('tunjangan_beras')->nullable();
             $table->decimal('penghasilan_tetap_lainnya')->nullable();
             $table->decimal('dasar_pengenaan_pajak')->nullable();
-            $table->decimal('tarif_pajak')->nullable();
+            $table->float('tarif_pajak')->nullable();
             $table->decimal('pajak_penghasilan')->nullable();
             $table->decimal('gaji_pokok_pensiun')->nullable();
             $table->decimal('pembulatan_kotor')->nullable();
