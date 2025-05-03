@@ -88,12 +88,12 @@ Route::get('/csrf-token', function (Request $request) {
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::get('kode-transaksi', [ApiKodeTransaksiController::class, 'index']);
     Route::get('satuan', [ApiSatuanController::class, 'index']);
-
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
+
         Route::post('/logout', [ApiAuthController::class, 'logout']);
         Route::get('/profile', [ApiAuthController::class, 'me']);
         Route::post('/profile/update', [ApiAuthController::class, 'updateProfile']);
@@ -151,7 +151,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             });
 
             Route::prefix('student')->group(function () {
-                // Student only routes
+                // Student only routes;
                 Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
@@ -262,6 +262,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             Route::apiResource('assignment-user', ApiAssignmentUserController::class);
             Route::apiResource('exams', ApiExamController::class, ['except' => ['update', 'destroy']]);
 
+
             Route::prefix('assignments')->group(function () {
                 Route::get('{assignment}/sistem', [ApiSistemController::class, 'getSistems']);
                 Route::get('{assignment}/sistem/{sistem}', [ApiSistemController::class, 'getSistemDetail']);
@@ -323,8 +324,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
 
                 Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
-                Route::get('{assignment}/sistem/{sistem}/spt-ppn/periode', [ApiSptPpnController::class, 'checkPeriode']);
 
+                Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptPpnController::class, 'checkPeriode']);
             });
 
             Route::apiResource('sistem', ApiSistemController::class);

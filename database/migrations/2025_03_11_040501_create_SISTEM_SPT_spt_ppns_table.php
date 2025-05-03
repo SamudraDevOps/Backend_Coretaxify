@@ -89,9 +89,9 @@ return new class extends Migration
             $table->decimal('cl_3f_ppn',18,2)->nullable();
             $table->decimal('cl_3g_ppn',18,2)->nullable();
             $table->string('cl_3h_diminta')->nullable();
-            $table->string('cl_3_nomor_rekening')->nullable();
-            $table->string('cl_3_nama_bank')->nullable();
-            $table->string('cl_3_nama_pemilik_rekening')->nullable();
+            $table->string('cl_3h_nomor_rekening')->nullable();
+            $table->string('cl_3h_nama_bank')->nullable();
+            $table->string('cl_3h_nama_pemilik_rekening')->nullable();
 
             $table->decimal('cl_4_ppn_terutang_dpp', 18, 2)->nullable();
             $table->decimal('cl_4_ppn_terutang', 18, 2)->nullable();
