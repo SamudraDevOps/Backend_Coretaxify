@@ -23,4 +23,8 @@ class Pic extends Model
     public function spt_ppns() {
         return $this->belongsTo(SptPpn::class);
     }
+
+    public function fakturs() {
+        return $this->hasMany(Faktur::class);
+    }
 }

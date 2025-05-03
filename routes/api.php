@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiFakturController;
 use App\Http\Controllers\Api\ApiSatuanController;
 use App\Http\Controllers\Api\ApiSistemController;
+use App\Http\Controllers\Api\ApiSptPpnController;
 use App\Http\Controllers\Api\ApiAccountController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
@@ -93,6 +94,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
+
         Route::post('/logout', [ApiAuthController::class, 'logout']);
         Route::get('/profile', [ApiAuthController::class, 'me']);
         Route::post('/profile/update', [ApiAuthController::class, 'updateProfile']);
@@ -152,7 +154,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             });
 
             Route::prefix('student')->group(function () {
-                // Student only routes
+                // Student only routes;
                 Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
@@ -223,7 +225,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
-                    Route::get('{assignment}/sistem/{sistem}/spt-ppn/periode', [ApiSptPpnController::class, 'checkPeriode']);
+                    Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptPpnController::class, 'checkPeriode']);
 
                 // Representation management
                 Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
