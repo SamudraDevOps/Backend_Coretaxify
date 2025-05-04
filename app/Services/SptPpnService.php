@@ -10,6 +10,7 @@ use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
+use App\Support\Enums\SptPpnEnum;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -30,9 +31,11 @@ class SptPpnService extends BaseCrudService implements SptPpnServiceInterface {
             switch ($intent) {
                 case IntentEnum::API_CREATE_SPT_PPN_BAYAR->value:
                     $data['is_pembetulan'] = true;
+                    $data['status'] = SptPpnEnum::DILAPORKAN->value;
                     break;
                 default:
-                $data['is_pembetulan'] = false ;
+                    $data['is_pembetulan'] = false ;
+                    $data['status'] = SptPpnEnum::DIBUAT->value;
                     break;
             }
 

@@ -43,8 +43,10 @@ class ApiSptPpnController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(SptPpn $sptPpn) {
-        return new SptPpnResource($sptPpn);
+    public function show(Assignment $assignment, Sistem $sistem, SptPpn $sptPpn, Request $request) {
+        $this->sptPpnService->authorizeAccess($assignment, $sistem);
+        
+        return new SptPpnResource($sptPpn, $request);
     }
 
     /**
