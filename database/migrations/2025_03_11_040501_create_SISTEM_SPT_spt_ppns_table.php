@@ -14,11 +14,10 @@ return new class extends Migration
     {
         Schema::create('spt_ppns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pic_id')->references('id')->on('pics')->nullable();
+            $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('periode')->nullable();
             $table->string('klasifikasi_lapangan_usaha')->nullable();
             $table->boolean('is_pembetulan')->nullable();
-            $table->enum('status', SptPpnEnum::toArray());
 
             $table->decimal('cl_1a1_dpp',18,2)->nullable();
             $table->decimal('cl_1a2_dpp',18,2)->nullable();

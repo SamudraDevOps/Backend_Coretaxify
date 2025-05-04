@@ -4,7 +4,7 @@ namespace App\Support\Enums;
 
 use App\Traits\Enums\Arrayable;
 
-enum SptPpnEnum: string {
+enum SptStatusEnum: string {
     use Arrayable;
 
     case DILAPORKAN = 'DILAPORKAN';
