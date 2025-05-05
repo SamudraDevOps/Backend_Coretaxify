@@ -16,8 +16,4 @@ class Bupot extends Model
         return $this->belongsTo(Sistem::class, 'representatif_id');
     }
 
-    public function dokumen_bupot() {
-        return $this->hasMany(BupotDokumen::class);
-    }
-
 }
