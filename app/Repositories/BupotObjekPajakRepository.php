@@ -20,7 +20,7 @@ class BupotObjekPajakRepository extends BaseRepository implements BupotObjekPaja
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        $query = $this->applySearchFilters($query, $searchParams, ['tipe_bupot', 'nama_objek_pajak']);
 
         $query = $this->applyColumnFilters($query, $searchParams, ['id']);
 
