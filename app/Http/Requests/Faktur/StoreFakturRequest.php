@@ -9,7 +9,7 @@ class StoreFakturRequest extends FormRequest {
         return [
             'intent' => 'nullable|string',
             'akun_penerima_id' => 'nullable|integer',
-            // 'spt_ppns_id' => 'nullable|integer',
+            'pic_id' => 'nullable|integer',
             'masa_pajak' => 'nullable|string',
             'tahun' => 'nullable|string',
             'esign_status' => 'nullable|string',

@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiFakturController;
 use App\Http\Controllers\Api\ApiSatuanController;
 use App\Http\Controllers\Api\ApiSistemController;
+use App\Http\Controllers\Api\ApiSptPpnController;
 use App\Http\Controllers\Api\ApiAccountController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
@@ -93,6 +94,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
+
         Route::post('/logout', [ApiAuthController::class, 'logout']);
         Route::get('/profile', [ApiAuthController::class, 'me']);
         Route::post('/profile/update', [ApiAuthController::class, 'updateProfile']);
@@ -152,7 +154,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
             });
 
             Route::prefix('student')->group(function () {
-                // Student only routes
+                // Student only routes;
                 Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
@@ -205,19 +207,28 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                         Route::apiResource('satuan', ApiSatuanController::class, ['only' => ['index']]);
                     });
 
+                    // Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update'])->middleware('account.representation'); // must representing company
+                    // Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store'])->middleware('account.representation'); // must representing company
                     Route::get('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'index']);
                     Route::get('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'show']);
-                    // Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store'])->middleware('account.representation'); // must representing company
                     Route::post('{assignment}/sistem/{sistem}/faktur', [ApiFakturController::class, 'store']);
-                    // Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update'])->middleware('account.representation'); // must representing company
                     Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                     Route::get('{assignment}/sistem/{sistem}/getAkun', [ApiFakturController::class, 'getCombinedAkunData']);
                     Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 
-                    // Representation management
-                    Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
+                    Route::post('{assignment}/sistem/{sistem}/faktur/approve-multiple', [ApiFakturController::class, 'multipleDraftFakturToFix']);
+
+                    Route::apiResource('{assignment}/sistem/{sistem}/sistem-tambahan', ApiSistemTambahanController::class);
+
+                    Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
+
+                    Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
+                    Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptPpnController::class, 'checkPeriode']);
+
+                // Representation management
+                Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
                     Route::get('{assignment}/sistem/{sistem}/representatives', [ApiPicController::class, 'getCompanyRepresentatives']); // get list of company's representatives
                     Route::post('{assignment}/sistem/{sistem}/representatives', [ApiPicController::class, 'assignRepresentative']);
                     // Route::delete('{assignment}/sistem/{sistem}/representatives/{personalId}', [ApiPicController::class, 'removeRepresentative']);
@@ -232,7 +243,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('pihak-terkait', ApiPihakTerkaitController::class);
                 Route::apiResource('data-ekonomi', ApiDataEkonomiController::class);
                 Route::apiResource('nomor-identifikasi-eksternal', ApiNomorIdentifikasiEksternalController::class);
-                Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
+                // Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
             });
 
             Route::prefix('psc')->group(function () {

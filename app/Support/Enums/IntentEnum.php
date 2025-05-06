@@ -100,6 +100,8 @@ enum IntentEnum: string {
 
     case API_UPDATE_FAKTUR_FIX = 'api.update.faktur.fix';
 
+    case API_CREATE_SPT_PPN_BAYAR = 'api.create.spt.ppn.bayar';
+
     case API_BUPOT_BPPU = 'api.bupot.bppu';
 
     case API_BUPOT_BPNR = 'api.bupot.bpnr';

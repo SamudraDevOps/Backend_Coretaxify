@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Pic;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PicSeeder extends Seeder
 {
@@ -12,6 +13,16 @@ class PicSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Pic::create([
+            'akun_op_id' => '1',
+            'akun_badan_id' => '2',
+            'assignment_user_id' => '1',
+        ]);
+
+        Pic::create([
+            'akun_op_id' => '3',
+            'akun_badan_id' => '1',
+            'assignment_user_id' => '1',
+        ]);
     }
 }

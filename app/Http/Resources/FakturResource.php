@@ -20,6 +20,7 @@ class FakturResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'pic_id' => $this->pic,
             'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
             'akun_penerima_id' => $akunPenerimaResource,
             'spt_ppns_id' => $this->spt_ppns_id,
