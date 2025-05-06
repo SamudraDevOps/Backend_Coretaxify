@@ -74,7 +74,7 @@ class ApiPicController extends ApiController
     public function getRepresentedCompanies(Assignment $assignment, Sistem $sistem)
     {
         // Ensure this is a personal account
-        if ($sistem->tipe_akun !== 'Orang Pribadi') {
+        if ($sistem->tipe_akun !== 'Orang Pribadi' && $sistem->tipe_akun !== 'Orang Pribadi Lawan Transaksi') {
             return response()->json(['message' => 'Akses ini hanya diperuntukkan untuk akun OP'], 400);
         }
 
