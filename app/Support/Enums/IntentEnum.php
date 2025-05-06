@@ -120,7 +120,5 @@ enum IntentEnum: string {
 
     case API_BUPOT_BPBPT = 'api.bupot.bpbpt';
 
-    case API_BUPOT_DSBP = 'api.bupot.dsbp';
-
-
+    // case API_BUPOT_DSBP = 'api.bupot.dsbp';
 }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('masa_awal')->nullable();
             $table->date('masa_akhir')->nullable();
             $table->boolean('pegawai_asing')->nullable();
+            $table->boolean('bekerja_di_lebih_dari_satu_pemberi_kerja')->nullable();
             $table->string('npwp_akun')->nullable();
             $table->string('nama_akun')->nullable();
             $table->string('tipe_akun')->nullable();
