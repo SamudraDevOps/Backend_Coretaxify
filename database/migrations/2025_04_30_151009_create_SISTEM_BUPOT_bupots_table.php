@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('pembuat_id')->constrained()->onDelete('cascade');
             $table->foreignId('representatif_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum('tipe_bupot', BupotTypeEnum::toArray())->nullable();
+            $table->string('nomor_pemotongan')->nullable();
             $table->date('masa_awal')->nullable();
             $table->date('masa_akhir')->nullable();
             $table->boolean('pegawai_asing')->nullable();
