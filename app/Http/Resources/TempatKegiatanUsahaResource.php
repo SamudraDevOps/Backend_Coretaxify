@@ -11,7 +11,7 @@ class TempatKegiatanUsahaResource extends JsonResource {
             'nitku' => $this->nitku,
             'jenis_tku' => $this->jenis_tku,
             'nama_tku' => $this->nama_tku,
-            'jenis_usaha' => $this->deskripsi_tku,
+            'jenis_usaha' => $this->jenis_usaha,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
