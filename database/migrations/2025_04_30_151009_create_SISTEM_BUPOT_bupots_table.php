@@ -1,11 +1,13 @@
 <?php
 
-use App\Support\Enums\BupotTypeEnum;
-use App\Support\Enums\GenderEnum;
 use App\Support\Enums\PTKPEnum;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Support\Enums\GenderEnum;
+use App\Support\Enums\BupotTypeEnum;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use App\Support\Enums\BupotDokumenTypeEnum;
+use App\Repositories\BupotDokumenRepository;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -51,6 +53,7 @@ return new class extends Migration
             $table->decimal('tunjangan_beras')->nullable();
             $table->decimal('penghasilan_tetap_lainnya')->nullable();
             $table->decimal('dasar_pengenaan_pajak')->nullable();
+            $table->float('persentase_penghasilan_bersih')->nullable();
             $table->float('tarif_pajak')->nullable();
             $table->decimal('pajak_penghasilan')->nullable();
             $table->decimal('gaji_pokok_pensiun')->nullable();
@@ -79,6 +82,10 @@ return new class extends Migration
             $table->decimal('pph_pasal_21_terutang_bupot_ini')->nullable();
             $table->string('kap')->nullable();
             $table->string('nitku')->nullable();
+            $table->enum('jenis_dokumen', BupotDokumenTypeEnum::toArray())->nullable();
+            $table->string('nomor_dokumen')->nullable();
+            $table->date('tanggal_dokumen')->nullable();
+            $table->string('nitku_dokumen')->nullable();
             $table->timestamps();
         });
     }
