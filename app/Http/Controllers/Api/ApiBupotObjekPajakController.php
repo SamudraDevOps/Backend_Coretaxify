@@ -72,10 +72,10 @@ class ApiBupotObjekPajakController extends ApiController
                 $filters['tipe_bupot'] = BupotTypeEnum::BPBPT->value;
                 return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
 
-            case IntentEnum::API_BUPOT_DSBP->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::DSBP->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
+            // case IntentEnum::API_BUPOT_DSBP->value:
+            //     $filters = $request->query();
+            //     $filters['tipe_bupot'] = BupotTypeEnum::DSBP->value;
+            //     return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
 
             default:
                 return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($request->query(), $perPage));

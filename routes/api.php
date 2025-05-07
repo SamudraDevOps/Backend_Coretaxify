@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ApiExamController;
 use App\Http\Controllers\Api\ApiRoleController;
 use App\Http\Controllers\Api\ApiTaskController;
 use App\Http\Controllers\Api\ApiUserController;
+use App\Http\Controllers\Api\ApiBupotController;
 use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiFakturController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\Api\ApiKodeTransaksiController;
 use App\Http\Controllers\Api\ApiAssignmentUserController;
 use App\Http\Controllers\Api\ApiManajemenKasusController;
 use App\Http\Controllers\Api\ApiSistemTambahanController;
+use App\Http\Controllers\Api\ApiBupotObjekPajakController;
 use App\Http\Controllers\Api\ApiDetailTransaksiController;
 use App\Http\Controllers\Api\ApiInformasiTambahanController;
 use App\Http\Controllers\Api\ApiUnitPajakKeluargaController;
@@ -101,6 +103,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::post('/verify-otp', [ApiAuthController::class, 'verifyOtp']);
         Route::post('/resend-otp', [ApiAuthController::class, 'resendOtp']);
         Route::get('/verification-status', [ApiAuthController::class, 'verificationStatus']);
+        Route::apiResource('bupot-objek-pajaks', ApiBupotObjekPajakController::class);
 
         Route::middleware('verified')->group(function () {
             Route::prefix('admin')->group(function () {
@@ -227,8 +230,13 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
                     Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptPpnController::class, 'checkPeriode']);
 
-                // Representation management
-                Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
+                    // BUPOT
+                    // menampilkan objek pajak udah ada di luar
+                    // menampilkan bupot by jenis. ditambah intent, misal api.bupot.bppu
+                    Route::apiResource('{assignment}/sistem/{sistem}/bupot', ApiBupotController::class);
+
+                    // Representation management
+                    Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
                     Route::get('{assignment}/sistem/{sistem}/representatives', [ApiPicController::class, 'getCompanyRepresentatives']); // get list of company's representatives
                     Route::post('{assignment}/sistem/{sistem}/representatives', [ApiPicController::class, 'assignRepresentative']);
                     // Route::delete('{assignment}/sistem/{sistem}/representatives/{personalId}', [ApiPicController::class, 'removeRepresentative']);
