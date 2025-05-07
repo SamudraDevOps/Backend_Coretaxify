@@ -18,8 +18,8 @@ return new class extends Migration
     {
         Schema::create('bupots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pembuat_id')->constrained()->onDelete('cascade');
-            $table->foreignId('representatif_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('pembuat_id')->references('id')->on('sistems')->onDelete('cascade');
+            $table->foreignId('representatif_id')->nullable()->references('id')->on('sistems')->onDelete('cascade');
             $table->enum('tipe_bupot', BupotTypeEnum::toArray())->nullable();
             $table->enum('status', ['normal', 'pembetulan'])->nullable();
             $table->enum('status_penerbitan', ['draft', 'terbit', 'tidak valid'])->nullable();
