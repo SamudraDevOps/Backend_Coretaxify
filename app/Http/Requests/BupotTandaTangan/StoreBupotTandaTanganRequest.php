@@ -7,7 +7,10 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreBupotTandaTanganRequest extends FormRequest {
     public function rules(): array {
         return [
-            // Add your validation rules here
+            'jenis_penandatanganan' => 'required|string|max:255',
+            'penyedia_penandatangan' => 'required|string|max:255',
+            'id_penandatangan' => 'required|string|max:255',
+            'katasandi_penandatangan' => 'required|string|max:255',
         ];
     }
 }
