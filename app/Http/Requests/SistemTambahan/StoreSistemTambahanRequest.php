@@ -10,6 +10,7 @@ class StoreSistemTambahanRequest extends FormRequest {
             'nama_akun' => 'nullable|string|max:255',
             'npwp_akun' => 'nullable|string|max:255',
             'tipe_akun' => 'nullable|string|max:255',
+            'negara_asal' => 'nullable|string|max:255',
             'alamat_utama_akun' => 'nullable|string|max:255',
             'email_akun' => 'nullable|email|max:255',
         ];
