@@ -9,7 +9,7 @@ class BupotResource extends JsonResource
 {
     public function toArray($request): array
     {
-        $intent = $this->get('intent');
+        $intent = $request->get('intent');
         switch ($intent) {
             case IntentEnum::API_BUPOT_BPPU->value:
                 return [
