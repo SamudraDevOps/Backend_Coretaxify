@@ -120,7 +120,23 @@ enum IntentEnum: string {
 
     case API_BUPOT_BPBPT = 'api.bupot.bpbpt';
 
-    case API_BUPOT_DSBP = 'api.bupot.dsbp';
+    case API_BUPOT_BPPU_SHOW = 'api.bupot.bppu.show';
 
+    case API_BUPOT_BPNR_SHOW = 'api.bupot.bpnr.show';
 
+    case API_BUPOT_PS_SHOW = 'api.bupot.ps.show';
+
+    case API_BUPOT_PSD_SHOW = 'api.bupot.psd.show';
+
+    case API_BUPOT_BP21_SHOW = 'api.bupot.bp21.show';
+
+    case API_BUPOT_BP26_SHOW = 'api.bupot.bp26.show';
+
+    case API_BUPOT_BPA1_SHOW = 'api.bupot.bpa1.show';
+
+    case API_BUPOT_BPA2_SHOW = 'api.bupot.bpa2.show';
+
+    case API_BUPOT_BPBPT_SHOW = 'api.bupot.bpbpt.show';
+
+    // case API_BUPOT_DSBP = 'api.bupot.dsbp';
 }
