@@ -14,10 +14,7 @@ return new class extends Migration
     {
         Schema::create('spt_ppns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('periode')->nullable();
             $table->string('klasifikasi_lapangan_usaha')->nullable();
-            $table->boolean('is_pembetulan')->nullable();
 
             $table->decimal('cl_1a1_dpp',18,2)->nullable();
             $table->decimal('cl_1a2_dpp',18,2)->nullable();

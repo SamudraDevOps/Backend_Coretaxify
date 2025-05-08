@@ -7,10 +7,14 @@ use App\Traits\Enums\Arrayable;
 enum SptStatusEnum: string {
     use Arrayable;
 
+    case KONSEP = 'KONSEP';
+
     case DILAPORKAN = 'DILAPORKAN';
+
     case DIBUAT = 'DIBUAT';
 
     case DIBATALKAN = 'DIBATALKAN';
+
     case DITOLAK = 'DITOLAK';
 
 }

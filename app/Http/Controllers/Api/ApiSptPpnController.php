@@ -35,7 +35,7 @@ class ApiSptPpnController extends ApiController {
 
         $data = $request->all();
         $data['intent'] = $request->intent;
-        $data['sistem_id'] = $sistem->id;
+        $data['spt_id'] = $request->spt;
 
         return $this->sptPpnService->create($data);
     }
@@ -45,7 +45,7 @@ class ApiSptPpnController extends ApiController {
      */
     public function show(Assignment $assignment, Sistem $sistem, SptPpn $sptPpn, Request $request) {
         $this->sptPpnService->authorizeAccess($assignment, $sistem);
-        
+
         return new SptPpnResource($sptPpn, $request);
     }
 
@@ -63,8 +63,4 @@ class ApiSptPpnController extends ApiController {
         return $this->sptPpnService->delete($sptPpn);
     }
 
-
-    public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request) {
-        return $this->sptPpnService->checkPeriode($assignment, $sistem, $request);
-    }
 }

@@ -12,19 +12,19 @@ class SptPpnResource extends JsonResource {
         switch ($intent) {
             case IntentEnum::API_SHOW_SPT_PPN->value:
 
-                $is_pembetulan = $this->is_pembetulan;
+                $is_can_pembetulan = $this->is_can_pembetulan;
 
-                if ($is_pembetulan) {
-                    $is_pembetulan = 'Amendment 01';
+                if ($is_can_pembetulan) {
+                    $is_can_pembetulan = 'Amendment 01';
                 } else {
-                    $is_pembetulan = 'Normal';
+                    $is_can_pembetulan = 'Normal';
                 }
 
                 return [
                     'id' => $this->id,
                     'masa_pajak' => $this->periode,
                     'jenis_pajak' => 'PPN',
-                    'model_spt' => $is_pembetulan,
+                    'model_spt' => $is_can_pembetulan,
                     'status' => $this->status,
                     'tanggal_dibuat' => $this->created_at,
                     'tanggal_jatuh_temp' => $this->cl10_batas_waktu,
@@ -33,10 +33,7 @@ class SptPpnResource extends JsonResource {
             default:
                 return [
                     'id' => $this->id,
-                    'pic_id' => $this->pic_id,
-                    'periode' => $this->periode,
                     'klasifikasi_lapangan_usaha' => $this->klasifikasi_lapangan_usaha,
-                    'is_pembetulan' => $this->is_pembetulan,
                     'cl_1a1_dpp' => $this->cl_1a1_dpp,
                     'cl_1a2_dpp' => $this->cl_1a2_dpp,
                     'cl_1a3_dpp' => $this->cl_1a3_dpp,

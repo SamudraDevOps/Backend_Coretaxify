@@ -18,6 +18,14 @@ return new class extends Migration
             $table->foreignId('assignment_user_id')->references('id')->on('assignment_users');
             $table->timestamps();
         });
+
+        Schema::table('spts', function (Blueprint $table) {
+            $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
+        });
+
+        Schema::table('fakturs', function (Blueprint $table) {
+            $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
+        });
     }
 
     /**

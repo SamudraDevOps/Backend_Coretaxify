@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('sistem_tambahans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sistem_id')->constrained()->onDelete('cascade')->nullable();
             $table->string('nama_akun')->nullable();
             $table->string('npwp_akun')->nullable();
             $table->string('tipe_akun')->nullable();

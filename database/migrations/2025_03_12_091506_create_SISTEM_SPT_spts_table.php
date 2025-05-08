@@ -19,10 +19,16 @@ return new class extends Migration
             $table->enum('status', SptStatusEnum::toArray())->nullable();
             $table->enum('model', SptModelEnum::toArray())->nullable();
             $table->enum('jenis_pajak', JenisPajakEnum::toArray())->nullable();
-            $table->string('masa_pajak')->nullable();
+            $table->boolean('is_can_pembetulan')->nullable();
+            $table->string('masa_bulan')->nullable();
+            $table->string('masa_tahun')->nullable();
             $table->date('tanggal_jatuh_tempo')->nullable();
             $table->date('tanggal_dibuat')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('spt_ppns', function (Blueprint $table) {
+            $table->foreignId('spt_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 

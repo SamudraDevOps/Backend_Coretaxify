@@ -13,7 +13,7 @@ enum JenisPajakEnum: string {
 
     case PPH = 'PPH';
 
-    case PPH_UNIFIKASI = 'PPH UNIFIKASI';
+    case PPH_UNIFIKASI = 'PPHUNIFIKASI';
 
-    case PPH_BADAN = 'PPH BADAN';
+    case PPH_BADAN = 'PPHBADAN';
 }

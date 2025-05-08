@@ -10,5 +10,6 @@ enum SptModelEnum: string {
     use Arrayable;
 
     case NORMAL = 'NORMAL';
+    
     case PEMBETULAN = 'PEMBETULAN';
 }
