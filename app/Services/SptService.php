@@ -11,9 +11,11 @@ use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
+use App\Http\Resources\SptResource;
 use App\Support\Enums\SptModelEnum;
 use App\Support\Enums\SptStatusEnum;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Enums\JenisPajakEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\SptServiceInterface;
@@ -23,6 +25,31 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 class SptService extends BaseCrudService implements SptServiceInterface {
     protected function getRepositoryClass(): string {
         return SptRepositoryInterface::class;
+    }
+
+    public function getAllForSpt(Sistem $sistem, int $perPage) {
+        $spts = Spt::where('sistem_id', $sistem->id)->paginate($perPage);
+
+        return $spts;
+    }
+
+    public function showDetailSpt(Spt $spt) {
+        switch ($spt->jenis_pajak) {
+            case JenisPajakEnum::PPN->value:
+                $spt->load('spt_ppn');
+                break;
+            case JenisPajakEnum::PPH->value:
+                // $spt->load('sptPph21');
+                break;
+            case JenisPajakEnum::PPH_UNIFIKASI->value:
+                // $spt->load('sptPph23');
+                break;
+            case JenisPajakEnum::PPH_BADAN->value:
+                // $spt->load('sptTahunan');
+                break;
+        }
+
+        return new SptResource($spt);
     }
 
     public function create(array $data): Model{
@@ -241,7 +268,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 'model' => SptModelEnum::NORMAL->value,
             ];
         }else {
-            if (!$$check->is_can_pembetulan) {
+            if (!$check->is_can_pembetulan) {
                 return response()->json([
                     'message' => 'Spt masih draft',
                     'code' => 101,

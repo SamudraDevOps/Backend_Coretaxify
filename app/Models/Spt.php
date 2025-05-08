@@ -12,4 +12,9 @@ class Spt extends Model
     {
         return $this->hasMany(Pic::class);
     }
+
+    public function spt_ppn()
+    {
+        return $this->hasOne(SptPpn::class);
+    }
 }

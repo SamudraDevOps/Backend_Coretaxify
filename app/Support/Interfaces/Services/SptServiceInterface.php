@@ -3,6 +3,7 @@
 namespace App\Support\Interfaces\Services;
 
 use App\Models\Sistem;
+use App\Models\Spt;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -14,4 +15,8 @@ interface SptServiceInterface extends BaseCrudServiceInterface {
     public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request);
 
     public function create(array $data): Model;
+
+    public function getAllForSpt(Sistem $sistem, int $perPage);
+
+    public function showDetailSpt(Spt $spt);
 }

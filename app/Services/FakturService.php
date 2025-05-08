@@ -72,60 +72,6 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         });
     }
 
-    // public function update($keyOrModel, array $data): ?Model {
-    //     $detailTransaksiData = $data['detail_transaksi'] ?? null;
-    //     unset($data['detail_transaksi']);
-
-    //     return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-    //         // Update the faktur
-    //         $faktur = parent::update($keyOrModel, $data);
-
-    //         // Split the nomor_faktur_pajak by '-'
-    //         $parts = explode('-', $faktur->nomor_faktur_pajak);
-
-    //             // Check if the second part exists and is '0', then change it to '1'
-    //         if (isset($parts[1]) && $parts[1] === '0') {
-    //             $parts[1] = '1';
-    //         }
-
-    //             // Join the parts back together
-    //         $faktur->nomor_faktur_pajak = implode('-', $parts);
-    //         $faktur->save();
-
-    //         // Initialize totals
-    //         // $detailTransaksiData = $data['detail_transaksi'] ?? null;
-    //         // unset($data['detail_transaksi']);
-
-    //         if ($detailTransaksiData && is_array($detailTransaksiData)) {
-    //             // Process existing and new detail transaksi
-    //             $existingIds = [];
-
-    //             foreach ($detailTransaksiData as $transaksi) {
-    //                 if (isset($transaksi['id'])) {
-    //                     // Update existing detail transaksi
-    //                     $detailTransaksi = DetailTransaksi::find($transaksi['id']);
-    //                     if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
-    //                         $detailTransaksi->update($transaksi);
-    //                         $existingIds[] = $detailTransaksi->id;
-    //                     }
-    //                 } else {
-    //                     // Create new detail transaksi
-    //                     $transaksi['faktur_id'] = $faktur->id;
-    //                     $newDetail = DetailTransaksi::create($transaksi);
-    //                     $existingIds[] = $newDetail->id;
-    //                 }
-    //             }
-
-    //             // Optional: Delete any detail transaksi not in the request
-    //             DetailTransaksi::where('faktur_id', $faktur->id)
-    //                 ->whereNotIn('id', $existingIds)
-    //                 ->delete();
-    //         }
-
-    //         return $faktur;
-    //     });
-    // }
-
     public function update($keyOrModel, array $data): ?Model
     {
         $detailTransaksiData = $data['detail_transaksi'] ?? null;
@@ -257,4 +203,58 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             abort(403, 'Unauthorized access to this faktur');
         }
     }
+
+        // public function update($keyOrModel, array $data): ?Model {
+    //     $detailTransaksiData = $data['detail_transaksi'] ?? null;
+    //     unset($data['detail_transaksi']);
+
+    //     return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
+    //         // Update the faktur
+    //         $faktur = parent::update($keyOrModel, $data);
+
+    //         // Split the nomor_faktur_pajak by '-'
+    //         $parts = explode('-', $faktur->nomor_faktur_pajak);
+
+    //             // Check if the second part exists and is '0', then change it to '1'
+    //         if (isset($parts[1]) && $parts[1] === '0') {
+    //             $parts[1] = '1';
+    //         }
+
+    //             // Join the parts back together
+    //         $faktur->nomor_faktur_pajak = implode('-', $parts);
+    //         $faktur->save();
+
+    //         // Initialize totals
+    //         // $detailTransaksiData = $data['detail_transaksi'] ?? null;
+    //         // unset($data['detail_transaksi']);
+
+    //         if ($detailTransaksiData && is_array($detailTransaksiData)) {
+    //             // Process existing and new detail transaksi
+    //             $existingIds = [];
+
+    //             foreach ($detailTransaksiData as $transaksi) {
+    //                 if (isset($transaksi['id'])) {
+    //                     // Update existing detail transaksi
+    //                     $detailTransaksi = DetailTransaksi::find($transaksi['id']);
+    //                     if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
+    //                         $detailTransaksi->update($transaksi);
+    //                         $existingIds[] = $detailTransaksi->id;
+    //                     }
+    //                 } else {
+    //                     // Create new detail transaksi
+    //                     $transaksi['faktur_id'] = $faktur->id;
+    //                     $newDetail = DetailTransaksi::create($transaksi);
+    //                     $existingIds[] = $newDetail->id;
+    //                 }
+    //             }
+
+    //             // Optional: Delete any detail transaksi not in the request
+    //             DetailTransaksi::where('faktur_id', $faktur->id)
+    //                 ->whereNotIn('id', $existingIds)
+    //                 ->delete();
+    //         }
+
+    //         return $faktur;
+    //     });
+    // }
 }

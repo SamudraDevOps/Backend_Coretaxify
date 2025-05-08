@@ -19,10 +19,14 @@ class ApiSptController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+
         $perPage = request()->get('perPage', 5);
 
-        return SptResource::collection($this->sptService->getAllPaginated($request->query(), $perPage));
+        $spts = $this->sptService->getAllForSpt($sistem, $perPage);
+
+        return SptResource::collection($spts);
     }
 
     /**
@@ -45,8 +49,12 @@ class ApiSptController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Spt $spt) {
-        return new SptResource($spt);
+    public function show(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+
+        $detail_spt = $this->sptService->showDetailSpt($spt);
+
+        return new SptResource($detail_spt);
     }
 
     /**

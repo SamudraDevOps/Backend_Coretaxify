@@ -225,10 +225,10 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
                     Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
 
+                    Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptController::class, 'checkPeriode']);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
-                    Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptController::class, 'checkPeriode']);
 
                 // Representation management
                 Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
