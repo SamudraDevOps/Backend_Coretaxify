@@ -27,6 +27,120 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return SptRepositoryInterface::class;
     }
 
+    public function calculateSpt(Spt $spt, Request $request) {
+        $data = SptPpn::where('id', $spt->id)->first();
+
+        $data['cl_1a1_dpp'] = $request['cl_1a1_dpp'];
+        $data['cl_1a5_dpp'] = $request['cl_1a5_dpp'];
+        $data['cl_1a9_dpp'] = $request['cl_1a9_dpp'];
+        $data['cl_1a5_ppn'] = $request['cl_1a5_ppn'];
+        $data['cl_1a9_ppn'] = $request['cl_1a9_ppn'];
+        $data['cl_1a5_ppnbm'] = $request['cl_1a5_ppnbm'];
+        $data['cl_1a9_ppnbm'] = $request['cl_1a9_ppnbm'];
+        $data['cl_2e_ppn'] = $request['cl_2e_ppn'];
+        $data['cl_2h_dpp'] = $request['cl_2h_dpp'];
+        $data['cl_2i_dpp'] = $request['cl_2i_dpp'];
+        $data['cl_3b_ppn'] = $request['cl_3b_ppn'];
+        $data['cl_3d_ppn'] = $request['cl_3d_ppn'];
+        $data['cl_3f_ppn'] = $request['cl_3f_ppn'];
+        $data['cl_6b_ppnbm'] = $request['cl_6b_ppnbm'];
+        $data['cl_6d_ppnbm'] = $request['cl_6d_ppnbm'];
+        $data['cl_7a_dpp'] = $request['cl_7a_dpp'];
+        $data['cl_7b_dpp'] = $request['cl_7b_dpp'];
+        $data['cl_7a_ppn'] = $request['cl_7a_ppn'];
+        $data['cl_7b_ppn'] = $request['cl_7b_ppn'];
+        $data['cl_7a_ppnbm'] = $request['cl_7a_ppnbm'];
+        $data['cl_7b_ppnbm'] = $request['cl_7b_ppnbm'];
+        $data['cl_7a_dpp_lain'] = $request['cl_7a_dpp_lain'];
+        $data['cl_7b_dpp_lain'] = $request['cl_7b_dpp_lain'];
+        $data['cl_8a_dpp'] = $request['cl_8a_dpp'];
+        $data['cl_8b_dpp'] = $request['cl_8b_dpp'];
+        $data['cl_8a_ppn'] = $request['cl_8a_ppn'];
+        $data['cl_8b_ppn'] = $request['cl_8b_ppn'];
+        $data['cl_8a_ppnbm'] = $request['cl_8a_ppnbm'];
+        $data['cl_8b_ppnbm'] = $request['cl_8b_ppnbm'];
+        $data['cl_8a_dpp_lain'] = $request['cl_8a_dpp_lain'];
+        $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
+
+        $data['cl_1a_jumlah_dpp'] =
+           ($data['cl_1a1_dpp'] ?? 0)
+         + ($data['cl_1a2_dpp'] ?? 0)
+         + ($data['cl_1a3_dpp'] ?? 0)
+         + ($data['cl_1a4_dpp'] ?? 0)
+         + ($request['cl_1a5_dpp'] ?? 0)
+         + ($data['cl_1a6_dpp'] ?? 0)
+         + ($data['cl_1a7_dpp'] ?? 0)
+         + ($data['cl_1a8_dpp'] ?? 0)
+         + ($request['cl_1a9_dpp'] ?? 0);
+
+        $data['cl_1a_jumlah_ppn'] =
+           ($data['cl_1a2_ppn'] ?? 0)
+         + ($data['cl_1a3_ppn'] ?? 0)
+         + ($request['cl_1a5_ppn'] ?? 0)
+         + ($data['cl_1a6_ppn'] ?? 0)
+         + ($data['cl_1a7_ppn'] ?? 0)
+         + ($data['cl_1a8_ppn'] ?? 0)
+         + ($request['cl_1a9_ppn'] ?? 0);
+
+         $data['cl_1a_jumlah_ppnbm'] =
+           ($data['cl_1a2_ppnbm'] ?? 0)
+         + ($data['cl_1a3_ppnbm'] ?? 0)
+         + ($request['cl_1a5_ppnbm'] ?? 0)
+         + ($data['cl_1a6_ppnbm'] ?? 0)
+         + ($data['cl_1a7_ppnbm'] ?? 0)
+         + ($data['cl_1a8_ppnbm'] ?? 0)
+         + ($request['cl_1a9_ppnbm'] ?? 0);
+
+        $data['cl_1c_dpp'] = $data['cl_1a_jumlah_dpp'] + ($data['cl_1b_dpp'] ?? 0);
+
+        $data['cl_2g_dpp'] =
+           ($data['cl_2a_dpp'] ?? 0)
+         + ($data['cl_2b_dpp'] ?? 0)
+         + ($data['cl_2c_dpp'] ?? 0)
+         + ($data['cl_2d_dpp'] ?? 0);
+
+         $data['cl_2g_ppn'] =
+            ($data['cl_2a_ppn'] ?? 0)
+         + ($data['cl_2b_ppn'] ?? 0)
+         + ($data['cl_2c_ppn'] ?? 0)
+         + ($data['cl_2d_ppn'] ?? 0);
+         + ($request['cl_2e_ppn'] ?? 0);
+
+         $data['cl_2j_dpp'] = ($data['cl_2g_dpp'] ?? 0 ) + ($request['cl_2h_dpp'] ?? 0 ) + ($request['cl_2i_dpp'] ?? 0 );
+
+         $data['cl_3a_ppn'] = ($data['cl_1a2_ppn'] ?? 0) + ($data['cl_1a3_ppn'] ?? 0) + ($data['cl_1a4_ppn'] ?? 0) + ($request['cl_1a5_ppn'] ?? 0);
+         $data['cl_3c_ppn'] = ($data['cl_2g_ppn'] ?? 0);
+         $data['cl_3e_ppn'] = ($data['cl_3a_ppn'] ?? 0) - ($request['cl_3b_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0) - ($request['cl_3d_ppn'] ?? 0);
+         $data['cl_3g_ppn'] = ($data['cl_3e_ppn'] ?? 0) - ($request['cl_3f_ppn'] ?? 0);
+
+         if ($data['cl_3g_ppn'] < 0){
+            $data['cl_3h_diminta'] = '0';
+         }
+
+         $cl_4_ppn_terutang_dpp = ($request['cl_4_ppn_terutang_dpp'] ?? 0);
+         $data['cl_4_ppn_terutang'] = $cl_4_ppn_terutang_dpp * 0.12;
+
+         $data['cl_6a_ppnbm'] = ($data['cl_1a2_ppnbm'] ?? 0) + ($data['cl_1a3_ppnbm'] ?? 0) + ($data['cl_1a4_ppnbm'] ?? 0) + ($request['cl_1a5_ppnbm'] ?? 0);
+         $data['cl_6c_ppnbm'] = ($data['cl_6a_ppnbm'] ?? 0) - ($request['cl_6b_ppnbm'] ?? 0);
+         $data['cl_6e_ppnbm'] = ($data['cl_6c_ppnbm'] ?? 0) - ($request['cl_6d_ppnbm'] ?? 0);
+         $data['cl_6f_diminta_pengembalian'] = $data['cl_6e_ppnbm'] < 0;
+
+         $data['cl_7c_dpp'] = ($request['cl_7a_dpp'] ?? 0) - ($request['cl_7b_dpp'] ?? 0);
+         $data['cl_7c_ppn'] = ($request['cl_7a_ppn'] ?? 0) - ($request['cl_7b_ppn'] ?? 0);
+         $data['cl_7c_ppnbm'] = ($request['cl_7a_ppnbm'] ?? 0) - ($request['cl_7b_ppnbm'] ?? 0);
+         $data['cl_7c_dpp_lain'] = ($request['cl_7a_dpp_lain'] ?? 0) - ($request['cl_7b_dpp_lain'] ?? 0);
+
+         $data['cl_8c_dpp'] = ($request['cl_8a_dpp'] ?? 0) - ($request['cl_8b_dpp'] ?? 0);
+         $data['cl_8c_ppn'] = ($request['cl_8a_ppn'] ?? 0) - ($request['cl_8b_ppn'] ?? 0);
+         $data['cl_8c_ppnbm'] = ($request['cl_8a_ppnbm'] ?? 0) - ($request['cl_8b_ppnbm'] ?? 0);
+         $data['cl_8c_dpp_lain'] = ($request['cl_8a_dpp_lain'] ?? 0) - ($request['cl_8b_dpp_lain'] ?? 0);
+
+        $data->save();
+        //isi sendiri 1a5 1a9 1b 2e 2f 2h 2i 3b 3d 3f 4 5 6b 6d 7a 7b 8 8ba
+        //calculate 1c 2g 2j 3g 3h 4 6a 6c 6f 7c 8c
+        return $data;
+    }
+
     public function getAllForSpt(Sistem $sistem, int $perPage) {
         $spts = Spt::where('sistem_id', $sistem->id)->paginate($perPage);
 

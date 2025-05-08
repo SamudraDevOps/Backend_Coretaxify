@@ -19,4 +19,6 @@ interface SptServiceInterface extends BaseCrudServiceInterface {
     public function getAllForSpt(Sistem $sistem, int $perPage);
 
     public function showDetailSpt(Spt $spt);
+
+    public function calculateSpt(Spt $spt, Request $request);
 }

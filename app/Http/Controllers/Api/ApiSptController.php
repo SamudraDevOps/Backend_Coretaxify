@@ -74,4 +74,10 @@ class ApiSptController extends ApiController {
     public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request) {
         return $this->sptService->checkPeriode($assignment, $sistem, $request);
     }
+
+    public function calculateSpt(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+        
+        return $this->sptService->calculateSpt($spt, $request);
+    }
 }

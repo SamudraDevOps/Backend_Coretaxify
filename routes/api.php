@@ -226,6 +226,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
 
                     Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptController::class, 'checkPeriode']);
+                    Route::put('{assignment}/sistem/{sistem}/spt/{spt}/calculate-spt', [ApiSptController::class, 'calculateSpt']);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
