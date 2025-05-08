@@ -22,8 +22,8 @@ return new class extends Migration
             // $table->foreignId('representatif_id')->nullable()->references('id')->on('sistems')->onDelete('cascade');
             $table->foreignId('tanda_tangan_bupot_id')->nullable()->references('id')->on('bupot_tanda_tangans'); //BELUM FIX
             $table->enum('tipe_bupot', BupotTypeEnum::toArray())->nullable();
-            $table->enum('status', ['normal', 'pembetulan'])->nullable();
-            $table->enum('status_penerbitan', ['draft', 'terbit', 'tidak valid'])->nullable();
+            $table->enum('status', ['normal', 'pembetulan', 'dihapus', 'pembatalan'])->nullable();
+            $table->enum('status_penerbitan', ['disimpan', 'disimpan tidak valid', 'terbit', 'tidak valid'])->nullable();
             $table->string('nomor_pemotongan')->nullable();
             $table->date('masa_awal')->nullable();
             $table->date('masa_akhir')->nullable();
