@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
 use App\Support\Enums\BupotTypeEnum;
 use App\Http\Resources\BupotResource;
+use App\Http\Requests\Bupot\HapusBupotRequest;
 use App\Http\Requests\Bupot\StoreBupotRequest;
+use App\Http\Requests\Bupot\TerbitBupotRequest;
 use App\Http\Requests\Bupot\UpdateBupotRequest;
 use App\Support\Interfaces\Services\BupotServiceInterface;
 
@@ -105,5 +107,13 @@ class ApiBupotController extends ApiController {
      */
     public function destroy(Request $request, Bupot $bupot) {
         return $this->bupotService->delete($bupot);
+    }
+
+    public function penerbitan(TerbitBupotRequest $request) {
+        return $this->bupotService->penerbitan($request->validated());
+    }
+
+    public function penghapusan(HapusBupotRequest $request) {
+        return $this->bupotService->penghapusan($request->validated());
     }
 }

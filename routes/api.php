@@ -234,6 +234,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     // menampilkan objek pajak udah ada di luar
                     // menampilkan bupot by jenis. ditambah intent, misal api.bupot.bppu
                     Route::apiResource('{assignment}/sistem/{sistem}/bupot', ApiBupotController::class);
+                    Route::post('{assignment}/sistem/{sistem}/bupot/approval', [ApiBupotController::class, 'penerbitan']);
+                    Route::post('{assignment}/sistem/{sistem}/bupot/refusal', [ApiBupotController::class, 'penghapusan']);
 
                     // Representation management
                     Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
