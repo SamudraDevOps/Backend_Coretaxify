@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Spt;
+use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
@@ -60,14 +61,20 @@ class ApiSptController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSptRequest $request, Spt $spt) {
-        return $this->sptService->update($spt, $request->validated());
+    public function update(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+
+        return $this->sptService->update($spt, $request);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Spt $spt) {
+    public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+        $fakturs = Faktur::where('spt_id',$spt->id )->get();
+        $fakturs->spt_id = null;
+
         return $this->sptService->delete($spt);
     }
 
@@ -77,7 +84,7 @@ class ApiSptController extends ApiController {
 
     public function calculateSpt(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem);
-        
+
         return $this->sptService->calculateSpt($spt, $request);
     }
 }

@@ -16,6 +16,8 @@ interface SptServiceInterface extends BaseCrudServiceInterface {
 
     public function create(array $data): Model;
 
+    public function update($spt, $request): Model;
+
     public function getAllForSpt(Sistem $sistem, int $perPage);
 
     public function showDetailSpt(Spt $spt);

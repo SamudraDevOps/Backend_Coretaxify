@@ -27,6 +27,52 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return SptRepositoryInterface::class;
     }
 
+    public function update ($spt, $request):Model{
+        $intent = $request['intent'];
+
+        $fields_spt_ppn = [
+            'cl_1a1_dpp', 'cl_1a5_dpp', 'cl_1a9_dpp', 'cl_1a5_ppn', 'cl_1a9_ppn','cl_1a5_ppnbm','cl_1a9_ppnbm','cl_2e_ppn','cl_2h_dpp','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_6b_ppnbm','cl_6d_ppnbm','cl_7a_dpp','cl_7b_dpp','cl_7a_ppn','cl_7b_ppn','cl_7a_ppnbm','cl_7b_ppnbm','cl_7a_dpp_lain','cl_7b_dpp_lain','cl_8a_dpp','cl_8b_dpp','cl_8a_ppn','cl_8b_ppn','cl_8a_ppnbm','cl_8b_ppnbm','cl_8a_dpp_lain','cl_8b_dpp_lain','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
+        ];
+        $requestData = is_array($request) ? $request : $request->all();
+
+        switch ($intent) {
+            case IntentEnum::API_UPDATE_SPT_PPN_BAYAR->value:
+
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                foreach ($fields_spt_ppn as $field) {
+                    if (array_key_exists($field, $requestData)) {
+                        $spt_ppn->$field = $requestData[$field];
+                    }
+                }
+
+                $spt_ppn->fill($requestData);
+                $spt_ppn->save();
+
+                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->save();
+                break;
+            case IntentEnum::API_UPDATE_SPT_PPN_KONSEP->value:
+
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                foreach ($fields_spt_ppn as $field) {
+                    if (array_key_exists($field, $requestData)) {
+                        $spt_ppn->$field = $requestData[$field];
+                    }
+                }
+
+                $spt_ppn->fill($requestData);
+                $spt_ppn->save();
+
+                $spt->status = SptStatusEnum::DIBUAT->value;
+                $spt->save();
+                break;
+        }
+
+        return $spt;
+    }
+
     public function calculateSpt(Spt $spt, Request $request) {
         $data = SptPpn::where('id', $spt->id)->first();
 
@@ -114,7 +160,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
          $data['cl_3g_ppn'] = ($data['cl_3e_ppn'] ?? 0) - ($request['cl_3f_ppn'] ?? 0);
 
          if ($data['cl_3g_ppn'] < 0){
-            $data['cl_3h_diminta'] = '0';
+            $data['cl_3h_diminta_pengembalian'] = '0';
          }
 
          $cl_4_ppn_terutang_dpp = ($request['cl_4_ppn_terutang_dpp'] ?? 0);
@@ -172,14 +218,14 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         $spt = parent::create($data);
 
-        $intent = $data['intent'];
+        // $intent = $data['intent'];
 
         $month = $data['masa_bulan'];
         $year = $data['masa_tahun'];
         $pic = $data['pic_id'];
 
-        switch ($intent) {
-            case IntentEnum::API_CREATE_SPT_PPN->value:
+        switch ($data['jenis_pajak']) {
+            case JenisPajakEnum::PPN->value:
                 $fakturs = Faktur::where('pic_id', $pic)
                 ->where('masa_pajak', $month)
                 ->where('tahun', $year)

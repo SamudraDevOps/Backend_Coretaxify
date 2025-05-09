@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('spt_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('spt_id')->nullable()->constrained();
             $table->boolean('is_draft')->nullable();
             $table->boolean('is_kredit')->default(false);
             $table->boolean('is_akun_tambahan')->nullable();
