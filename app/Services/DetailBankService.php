@@ -37,6 +37,7 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
     {
         $createData = [
             'nama_bank' => $data['nama_bank'],
+            'nama_pemilik_bank' => $data['nama_pemilik_bank'],
             'nomor_rekening_bank' => $data['nomor_rekening_bank'],
             'jenis_rekening_bank' => $data['jenis_rekening_bank'],
             'tanggal_mulai' => $data['tanggal_mulai'],
