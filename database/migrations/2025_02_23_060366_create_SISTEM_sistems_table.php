@@ -44,19 +44,6 @@ return new class extends Migration
             $table->foreignId('sistem_id')->references('id')->on('sistems');
         });
 
-        Schema::table('spts', function (Blueprint $table) {
-            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
-        });
-
-        Schema::table('sistem_tambahans', function (Blueprint $table) {
-            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
-        });
-
-        Schema::table('fakturs', function (Blueprint $table) {
-            $table->foreignId('akun_pengirim_id')->nullable()->references('id')->on('sistems');
-            $table->foreignId('akun_penerima_id')->nullable()->references('id')->on('sistems');
-        });
-
     }
 
     /**

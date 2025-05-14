@@ -16,6 +16,8 @@ return new class extends Migration
     {
         Schema::create('spts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sistem_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum('status', SptStatusEnum::toArray())->nullable();
             $table->enum('model', SptModelEnum::toArray())->nullable();
             $table->enum('jenis_pajak', JenisPajakEnum::toArray())->nullable();
