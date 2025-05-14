@@ -15,6 +15,9 @@ return new class extends Migration
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('spt_id')->nullable()->constrained();
+            $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('akun_pengirim_id')->nullable()->references('id')->on('sistems');
+            $table->foreignId('akun_penerima_id')->nullable()->references('id')->on('sistems');
             $table->boolean('is_draft')->nullable();
             $table->boolean('is_kredit')->default(false);
             $table->boolean('is_akun_tambahan')->nullable();
