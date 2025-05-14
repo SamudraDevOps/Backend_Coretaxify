@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Pic;
+use App\Models\Spt;
 use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\SptPpn;
@@ -10,6 +11,7 @@ use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
+use App\Support\Enums\SptPpnEnum;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -24,24 +26,34 @@ class SptPpnService extends BaseCrudService implements SptPpnServiceInterface {
 
     public function create(array $data): Model {
 
+        $masterSpt = Spt::where('id', $data['spt_id'])->first();
+
         $intent = $data['intent'] ?? null;
             unset($data['intent']);
 
             switch ($intent) {
                 case IntentEnum::API_CREATE_SPT_PPN_BAYAR->value:
-                    $data['is_pembetulan'] = true;
+
+                    if ($masterSpt) {
+                        $masterSpt->is_can_pembetulan = true;
+                        $masterSpt->save();
+                    }
                     break;
+
                 default:
-                $data['is_pembetulan'] = false ;
+                    if ($masterSpt) {
+                        $masterSpt->is_can_pembetulan = false;
+                        $masterSpt->save();
+                    }
                     break;
             }
 
         //alur normal
-        $periode = $data['periode'];
+        $month = $masterSpt->masa_bulan;
+        $year = $masterSpt->masa_tahun;
+        $pic = $masterSpt->pic_id;
 
-        [$month, $year] = explode(' ', $periode, 2);
-
-        $fakturs = Faktur::where('pic_id', $data['pic_id'])
+        $fakturs = Faktur::where('pic_id', $pic)
             ->where('masa_pajak', $month)
             ->where('tahun', $year)
             ->where('status', FakturStatusEnum::APPROVED->value)
@@ -194,43 +206,6 @@ class SptPpnService extends BaseCrudService implements SptPpnServiceInterface {
         return $spt_ppns;
     }
 
-    public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->authorizeAccess($assignment, $sistem);
-
-        $picId = $request->query('pic_id');
-        $periode = $request->query('periode');
-        $pic = Pic::where('id', $picId)->first();
-        if (!$pic) {
-            abort(404, 'Belum ada PIC');
-        }
-        $picId = $pic->id;
-
-        $check = SptPpn::where('pic_id', $picId)
-                       ->where('periode', $periode)
-                       ->first();
-
-        if (empty($check)) {
-            return [
-                //alur normal
-                'periode' => $request->input('periode'),
-            ];
-        }else {
-            if ($check->is_pembetulan == false) {
-                return response()->json([
-                    'message' => 'Spt Ppn masih draft',
-                    'code' => 101,
-                ]);
-            }else {
-                //alur pembetulan
-                return [
-                    'is_pembetulan' => $check->is_pembetulan,
-                    'checkId' => $check->id,
-                ];
-            }
-        }
-    }
-
-
     public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
     {
         $assignmentUser = AssignmentUser::where([
@@ -245,6 +220,5 @@ class SptPpnService extends BaseCrudService implements SptPpnServiceInterface {
         Sistem::where('assignment_user_id', $assignmentUser->id)
         ->where('id', $sistem->id)
         ->firstOrFail();
-
     }
 }

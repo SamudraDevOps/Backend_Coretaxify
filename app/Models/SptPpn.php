@@ -8,8 +8,8 @@ class SptPpn extends Model
 {
     protected $guarded = ['id'];
 
-    public function pics()
+    public function spt()
     {
-        return $this->hasMany(Pic::class);
+        return $this->belongsTo(Spt::class);
     }
 }

@@ -20,8 +20,8 @@ class Pic extends Model
         return $this->belongsTo(AssignmentUser::class);
     }
 
-    public function spt_ppns() {
-        return $this->belongsTo(SptPpn::class);
+    public function spts() {
+        return $this->belongsTo(Spt::class);
     }
 
     public function fakturs() {
