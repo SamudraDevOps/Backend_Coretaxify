@@ -150,6 +150,8 @@ class ApiFakturController extends ApiController
 
         $updatedFaktur = $this->fakturService->update($faktur, $data);
         $updatedFaktur->load('detail_transaksis');
+
+        return new FakturResource($updatedFaktur);
     }
 
     /**

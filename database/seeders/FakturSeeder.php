@@ -47,7 +47,7 @@ class FakturSeeder extends Seeder
                 'status' => 'APPROVED',
                 'dilaporkan_oleh_penjual' => false,
                 'dilaporkan_oleh_pemungut_ppn' => false,
-                'is_draft' => 0,
+                'is_draft' => false,
                 'is_akun_tambahan' => false,
                 'is_kredit' => false,
                 'dpp' => 30000,

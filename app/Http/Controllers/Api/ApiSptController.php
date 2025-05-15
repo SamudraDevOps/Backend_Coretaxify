@@ -84,7 +84,7 @@ class ApiSptController extends ApiController {
 
     public function calculateSpt(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem);
-
+        $request['sistem_id'] = $sistem->id;
         return $this->sptService->calculateSpt($spt, $request);
     }
 }

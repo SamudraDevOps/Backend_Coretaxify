@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_kredit')->default(false);
             $table->boolean('is_akun_tambahan')->nullable();
             $table->enum('status', FakturStatusEnum::toArray())->nullable();
-            $table->string('nomor_faktur_pajak')->unique()->nullable();
+            $table->string('nomor_faktur_pajak')->nullable();
             $table->string('masa_pajak')->nullable();
             $table->string('tahun')->nullable();
             $table->string('esign_status')->nullable();
