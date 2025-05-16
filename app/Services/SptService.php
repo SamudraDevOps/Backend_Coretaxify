@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use App\Models\Pic;
 use App\Models\Spt;
 use App\Models\Faktur;
@@ -297,19 +298,23 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     }
 
     public function create(array $data): Model{
-        $data['status'] = SptStatusEnum::KONSEP->value;
-        $data['is_can_pembetulan'] = false;
-
-        $spt = parent::create($data);
-
-        // $intent = $data['intent'];
-
         $month = $data['masa_bulan'];
         $year = $data['masa_tahun'];
         $pic = $data['pic_id'];
 
+        $data['is_can_pembetulan'] = false;
+        $data['tanggal_dibuat'] = Carbon::now()->format('Y-m-d');
+        $data['status'] = SptStatusEnum::KONSEP->value;
+
+        if ($data['jenis_pajak'] == JenisPajakEnum::PPN->value || JenisPajakEnum::PPH->value) {
+            $data['tanggal_jatuh_tempo'] = Carbon::now()->addMonth()->format('Y-m-d');
+        }
+
+        $spt = parent::create($data);
+
         switch ($data['jenis_pajak']) {
             case JenisPajakEnum::PPN->value:
+
                 $fakturs = Faktur::where('pic_id', $pic)
                 ->where('masa_pajak', $month)
                 ->where('tahun', $year)
@@ -489,7 +494,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 //alur pembetulan
                 return [
                     'model' => SptModelEnum::PEMBETULAN->value,
-                    'checkId' => $check->id,
+                    'masa_bulan' => $bulan,
+                    'masa_tahun' => $tahun,
+                    'jenis_pajak' => $jenis_pajak,
                 ];
             }
         }

@@ -18,6 +18,13 @@ class SptResource extends JsonResource {
             'masa_tahun' => $this->masa_tahun,
             'tanggal_jatuh_tempo' => $this->tanggal_jatuh_tempo,
             'tanggal_dibuat' => $this->tanggal_dibuat,
+            'nama_pengusaha' => $this->sistem->nama_akun,
+            'alamat' => $this->sistem->alamat_utama_akun,
+            'npwp' => $this->sistem->npwp_akun,
+            'nomer_telpon' => $this->sistem->profil_saya->detail_kontak->nomor_telpon ?? null,
+            'telepon_seluler' => $this->sistem->profil_saya->detail_kontak->nomor_handphone ?? null,
+            'kota_badan' => $this->sistem->kota_badan,
+            'nama_pic' => $this->pic->akun_op->nama_akun,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
