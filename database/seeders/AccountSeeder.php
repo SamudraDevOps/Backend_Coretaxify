@@ -44,6 +44,26 @@ class AccountSeeder extends Seeder
         ]);
 
         Account::create([
+            'task_id' => 1,
+            'account_type_id' => 2,
+            // 'group_id' => 1,
+            'nama' => 'Badan 2',
+            'npwp' => '35730117070',
+            'alamat_utama' => 'Jln. Badan 2',
+            'email' => 'badan2@example.com',
+        ]);
+
+        Account::create([
+            'task_id' => 1,
+            'account_type_id' => 3,
+            // 'group_id' => 1,
+            'nama' => 'Pardi Lawan Transaksi',
+            'npwp' => '35730118080',
+            'alamat_utama' => 'Jln. ALamat pardi Transaksi',
+            'email' => 'pardiLawan@example.com',
+        ]);
+
+        Account::create([
             'task_id' => 2,
             'account_type_id' => 1,
             // 'group_id' => 1,

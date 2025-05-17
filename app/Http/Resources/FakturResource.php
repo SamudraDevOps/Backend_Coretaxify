@@ -20,7 +20,8 @@ class FakturResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'pic_id' => $this->pic,
+            'sistem_id' => $this->sistem_id,
+            'pic_id' => $this->pic_id,
             'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
             'akun_penerima_id' => $akunPenerimaResource,
             'is_draft' => $this->is_draft,
@@ -33,7 +34,7 @@ class FakturResource extends JsonResource
             'masa_pajak' => $this->masa_pajak,
             'tahun' => $this->tahun,
             'esign_status' => $this->esign_status,
-            'penandatangan' => $this->penandatangan,
+            'penandatangan' => $this->pic->akun_op->nama_akun,
             'referensi' => $this->referensi,
             'kode_transaksi' => $this->kode_transaksi,
             'informasi_tambahan' => $this->informasi_tambahan,

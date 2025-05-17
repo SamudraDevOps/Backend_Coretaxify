@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('spt_id')->nullable()->constrained();
+            $table->foreignId('sistem_id')->nullable()->constrained();
             $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('akun_pengirim_id')->nullable()->references('id')->on('sistems');
             $table->foreignId('akun_penerima_id')->nullable()->references('id')->on('sistems');

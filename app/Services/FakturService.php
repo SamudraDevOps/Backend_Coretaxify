@@ -31,6 +31,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
+        $data['sistem_id'] = $sistem->id;
 
         if ($sistem) {
             $data['akun_pengirim_id'] = $sistem->id;
@@ -46,6 +47,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 break;
             case IntentEnum::API_CREATE_FAKTUR_FIX->value:
                 $data['is_draft'] = false;
+                $data['esign_status'] = 'DONE';
                 $data['status'] = FakturStatusEnum::APPROVED->value;
                 break;
             default:
@@ -85,6 +87,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
                     $data['is_draft'] = false;
+                    $data['esign_status'] = 'DONE';
                     $data['status'] = FakturStatusEnum::APPROVED->value;
                     break;
                 default:

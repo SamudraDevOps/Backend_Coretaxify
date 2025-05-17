@@ -63,6 +63,7 @@ class ApiSptController extends ApiController {
      */
     public function update(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
         $this->sptService->authorizeAccess($assignment, $sistem);
+        $request['sistem_id'] = $sistem->id;
 
         return $this->sptService->update($spt, $request);
     }

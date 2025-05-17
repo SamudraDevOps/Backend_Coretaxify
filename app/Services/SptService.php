@@ -119,7 +119,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
         $data['sistem_id'] = $request['sistem_id'];
 
-        $fakturs = Faktur::where('pic_id', $pic)
+        $fakturs = Faktur::where('sistem_id', $request['sistem_id'])
             ->where('masa_pajak', $month)
             ->where('tahun', $year)
             ->where('status', FakturStatusEnum::APPROVED->value)
@@ -315,7 +315,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         switch ($data['jenis_pajak']) {
             case JenisPajakEnum::PPN->value:
 
-                $fakturs = Faktur::where('pic_id', $pic)
+                $fakturs = Faktur::where('sistem_id', $data['sistem_id'])
                 ->where('masa_pajak', $month)
                 ->where('tahun', $year)
                 ->where('status', FakturStatusEnum::APPROVED->value)
@@ -422,18 +422,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['spt_id'] = $spt->id;
                 SptPpn::create($data_spt_ppn);
 
-                Faktur::where('pic_id', $pic)
-                    ->where('masa_pajak', $month)
-                    ->where('tahun', $year)
-                    ->where('status', FakturStatusEnum::APPROVED->value)
-                    ->update(['spt_id' => $spt->id]);
-
-                Faktur::where('akun_penerima_id', $data['sistem_id'])
-                    ->where('masa_pajak', $month)
-                    ->where('tahun', $year)
-                    ->where('status', FakturStatusEnum::APPROVED->value)
-                    ->update(['spt_id' => $spt->id]);
-
                 break;
         }
         return $spt;
@@ -474,8 +462,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                        ->where('jenis_pajak', $jenis_pajak)
                        ->where('masa_bulan', $bulan)
                        ->where('masa_tahun', $tahun)
-                       ->first();
+                       ->latest()->first();
 
+        // return $check;
         if (empty($check)) {
             return [
                 //alur normal
