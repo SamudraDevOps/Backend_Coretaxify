@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Support\Enums\SptPpnEnum;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,10 +14,7 @@ return new class extends Migration
     {
         Schema::create('spt_ppns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pic_id')->references('id')->on('pics')->nullable();
-            $table->string('periode')->nullable();
             $table->string('klasifikasi_lapangan_usaha')->nullable();
-            $table->boolean('is_pembetulan')->nullable();
 
             $table->decimal('cl_1a1_dpp',18,2)->nullable();
             $table->decimal('cl_1a2_dpp',18,2)->nullable();
@@ -27,7 +25,7 @@ return new class extends Migration
             $table->decimal('cl_1a7_dpp',18,2)->nullable();
             $table->decimal('cl_1a8_dpp',18,2)->nullable();
             $table->decimal('cl_1a9_dpp',18,2)->nullable();
-            $table->decimal('cl_1a_jumlah_dpp',18,2)->nullable();
+            $table->decimal('cl_1a_jumlah_dpp',18 ,2)->nullable();
             $table->decimal('cl_1b_dpp',18,2)->nullable();
             $table->decimal('cl_1c_dpp',18,2)->nullable();
             $table->decimal('cl_1a2_dpp_lain',18,2)->nullable();

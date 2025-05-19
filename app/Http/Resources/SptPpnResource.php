@@ -2,16 +2,16 @@
 
 namespace App\Http\Resources;
 
+use App\Support\Enums\IntentEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SptPpnResource extends JsonResource {
     public function toArray($request): array {
+        $intent = $request->get('intent');
+
         return [
             'id' => $this->id,
-            'pic_id' => $this->pic_id,
-            'periode' => $this->periode,
             'klasifikasi_lapangan_usaha' => $this->klasifikasi_lapangan_usaha,
-            'is_pembetulan' => $this->is_pembetulan,
             'cl_1a1_dpp' => $this->cl_1a1_dpp,
             'cl_1a2_dpp' => $this->cl_1a2_dpp,
             'cl_1a3_dpp' => $this->cl_1a3_dpp,

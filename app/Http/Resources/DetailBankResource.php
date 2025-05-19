@@ -9,6 +9,7 @@ class DetailBankResource extends JsonResource {
         return [
             'id' => $this->id,
             'nama_bank' => $this->nama_bank,
+            'nama_pemilik_bank' => $this->nama_pemilik_bank,
             'nomor_rekening_bank' => $this->nomor_rekening_bank,
             'jenis_rekening_bank' => $this->jenis_rekening_bank,
             'tanggal_mulai' => $this->tanggal_mulai,

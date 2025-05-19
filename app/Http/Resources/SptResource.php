@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Support\Enums\JenisPajakEnum;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class SptResource extends JsonResource {
+    public function toArray($request): array {
+
+        $data = [
+            'id' => $this->id,
+            'status' => $this->status,
+            'model' => $this->model,
+            'jenis_pajak' => $this->jenis_pajak,
+            'is_can_pembetulan' => $this->is_can_pembetulan,
+            'masa_bulan' => $this->masa_bulan,
+            'masa_tahun' => $this->masa_tahun,
+            'tanggal_jatuh_tempo' => $this->tanggal_jatuh_tempo,
+            'tanggal_dibuat' => $this->tanggal_dibuat,
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
+        ];
+
+        // Tambahkan detail SPT berdasarkan jenis_pajak
+        switch ($this->jenis_pajak) {
+            case JenisPajakEnum::PPN->value:
+                $data['detail_spt'] = new SptPpnResource($this->whenLoaded('spt_ppn'));
+                break;
+            case JenisPajakEnum::PPH->value:
+                // $data['detail'] = new SptPph21Resource($this->whenLoaded('sptPph21'));
+                break;
+            case JenisPajakEnum::PPH_UNIFIKASI->value:
+                // $data['detail'] = new SptPph23Resource($this->whenLoaded('sptPph23'));
+                break;
+            case JenisPajakEnum::PPH_BADAN->value:
+                // $data['detail'] = new SptTahunanResource($this->whenLoaded('sptTahunan'));
+                break;
+        }
+
+        return $data;
+    }
+}

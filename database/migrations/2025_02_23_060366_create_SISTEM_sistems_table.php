@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('assignment_user_id')->nullable()->constrained();
             $table->foreignId('profil_saya_id')->nullable()->constrained();
-            // $table->foreignId('spt_id')->nullable()->constrained();
-            // $table->foreignId('faktur_id')->nullable()->constrained();
             $table->string('nama_akun');
             $table->string('npwp_akun');
             $table->string('tipe_akun');
@@ -44,8 +42,8 @@ return new class extends Migration
         Schema::table('pihak_terkaits', function (Blueprint $table) {
             $table->foreignId('akun_op')->references('id')->on('sistems');
             $table->foreignId('sistem_id')->references('id')->on('sistems');
-
         });
+
     }
 
     /**
