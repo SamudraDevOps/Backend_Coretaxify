@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
+use App\Support\Enums\JenisSptPpnEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FakturResource extends JsonResource
@@ -17,6 +19,77 @@ class FakturResource extends JsonResource
         $akunPenerimaResource = $this->is_akun_tambahan
             ? new SistemTambahanResource($this->akun_penerima_tambahan)
             : new SistemResource($this->akun_penerima);
+
+        $intent = $request->query('intent');
+
+        switch($intent) {
+            case JenisSptPpnEnum::A1->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::A2->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                    ];
+            case JenisSptPpnEnum::B1->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::B2->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::B3->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::C->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+        }
 
         return [
             'id' => $this->id,

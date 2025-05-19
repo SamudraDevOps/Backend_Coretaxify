@@ -17,6 +17,8 @@ use App\Support\Enums\SptModelEnum;
 use App\Support\Enums\SptStatusEnum;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Enums\JenisPajakEnum;
+use App\Http\Resources\FakturResource;
+use App\Support\Enums\JenisSptPpnEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\SptServiceInterface;
@@ -476,7 +478,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         }else {
             if (!$check->is_can_pembetulan) {
                 return response()->json([
-                    'message' => 'Spt masih draft',
+                    'message' => 'Spt Dalam Kondisi Konsep',
                     'code' => 101,
                 ]);
             }else {
@@ -488,6 +490,42 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     'jenis_pajak' => $jenis_pajak,
                 ];
             }
+        }
+    }
+
+    public function showFakturSptPpn($spt, Request $request) {
+
+        $fakturKeluaran = Faktur::where('sistem_id', $request['sistem_id'])
+                        ->where('status', FakturStatusEnum::APPROVED->value)
+                        ->where('masa_pajak', $spt->masa_bulan)
+                        ->where('tahun', $spt->masa_tahun)
+                        ->get();
+
+        $fakturMasukan = Faktur::where('akun_penerima_id', $request['sistem_id'])
+                        ->where('status', FakturStatusEnum::APPROVED->value)
+                        ->where('masa_pajak', $spt->masa_bulan)
+                        ->where('tahun', $spt->masa_tahun)
+                        ->get();
+
+        $jenisSptPpn = $request['jenis_spt_ppn'];
+
+        switch ($jenisSptPpn) {
+            case JenisSptPpnEnum::A1->value:
+                // return FakturResource::collection($fakturKeluaran);
+            case JenisSptPpnEnum::A2->value:
+                return FakturResource::collection($fakturKeluaran);
+            case JenisSptPpnEnum::B1->value:
+                // return FakturResource::collection($fakturKeluaran);
+            case JenisSptPpnEnum::B2->value:
+                $fakturMasukanB2 = $fakturMasukan->where('is_kredit', true);
+                return FakturResource::collection($fakturMasukanB2);
+            case JenisSptPpnEnum::C->value:
+                $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm === null || $f->ppnbm = 0);
+                return FakturResource::collection($fakturMasukanC);
+            default:
+                return response()->json([
+                    'message' => 'Intent tidak valid',
+                ], 400);
         }
     }
 

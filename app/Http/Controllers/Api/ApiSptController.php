@@ -88,4 +88,11 @@ class ApiSptController extends ApiController {
         $request['sistem_id'] = $sistem->id;
         return $this->sptService->calculateSpt($spt, $request);
     }
+
+    public function showFaktuSptPpn(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+
+        $request['sistem_id'] = $sistem->id;
+        return $this->sptService->showFakturSptPpn($spt, $request);
+    }
 }

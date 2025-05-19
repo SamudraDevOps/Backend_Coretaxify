@@ -228,6 +228,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptController::class, 'checkPeriode']);
                     Route::put('{assignment}/sistem/{sistem}/spt/{spt}/calculate-spt', [ApiSptController::class, 'calculateSpt']);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
+                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFaktuSptPpn']);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
 
