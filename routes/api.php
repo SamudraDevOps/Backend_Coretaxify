@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
 use App\Http\Controllers\Api\ApiDetailBankController;
 use App\Http\Controllers\Api\ApiJenisPajakController;
+use App\Http\Controllers\Api\ApiPembayaranController;
 use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
@@ -230,6 +231,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
                     Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFaktuSptPpn']);
 
+                    Route::apiResource('{assignment}/sistem/{sistem}/pembayaran', ApiPembayaranController::class);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
 
                 // Representation management

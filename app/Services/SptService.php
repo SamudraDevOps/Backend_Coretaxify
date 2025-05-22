@@ -9,6 +9,8 @@ use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\SptPpn;
 use App\Models\Assignment;
+use App\Models\Pembayaran;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
@@ -32,6 +34,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
     public function update ($spt, $request):Model{
         $intent = $request['intent'];
+        $sistem_id = $request['sistem_id'];
 
         // $fields_spt_ppn = [
         //     'cl_1a1_dpp', 'cl_1a5_dpp', 'cl_1a9_dpp', 'cl_1a5_ppn', 'cl_1a9_ppn','cl_1a5_ppnbm','cl_1a9_ppnbm','cl_2e_ppn','cl_2h_dpp','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_6b_ppnbm','cl_6d_ppnbm','cl_7a_dpp','cl_7b_dpp','cl_7a_ppn','cl_7b_ppn','cl_7a_ppnbm','cl_7b_ppnbm','cl_7a_dpp_lain','cl_7b_dpp_lain','cl_8a_dpp','cl_8b_dpp','cl_8a_ppn','cl_8b_ppn','cl_8a_ppnbm','cl_8b_ppnbm','cl_8a_dpp_lain','cl_8b_dpp_lain','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
@@ -43,8 +46,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         $requestData = is_array($request) ? $request : $request->all();
 
+        $masaAktif = Carbon::now()->addWeek();
+
         switch ($intent) {
-            case IntentEnum::API_UPDATE_SPT_PPN_BAYAR->value:
+            case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_KODE_BILLING->value:
                 $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
 
@@ -60,10 +65,74 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->status = SptStatusEnum::DILAPORKAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
+
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
+
+                if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
+                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn;
+                }else {
+                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn;
+                }
+
+                $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                $dataPembayaran['sistem_id'] = $request['sistem_id'];
+                $dataPembayaran['pic_id'] = $request['pic_id'];
+                $dataPembayaran['kode_billing'] = $randomNumber;
+                $dataPembayaran['kapKjs'] = '411211-100';
+                $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                Pembayaran::create($dataPembayaran);
                 break;
-            default:
+            case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
 
                 $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                $sistem = Sistem::find($sistem_id);
+
+                foreach ($fields_spt_ppn as $field) {
+                    if (array_key_exists($field, $requestData)) {
+                        $spt_ppn->$field = $requestData[$field];
+                    }
+                }
+
+                $spt_ppn->fill($requestData);
+                $spt_ppn->save();
+
+                $spt->status = SptStatusEnum::DIBUAT->value;
+                $spt->is_can_pembetulan = true;
+                $spt->save();
+
+                $ntpn = Str::random(16);
+
+                if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
+                    $bayar = $spt_ppn->cl_3f_ppn;
+                }else {
+                    $bayar = $spt_ppn->cl_3g_ppn;
+                }
+
+                $hasil = $sistem->saldo - $bayar;
+
+                if ($hasil < 0) {
+                    throw new \Exception('Saldo Tidak Mencukupi', 101);
+                } else {
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['sistem_id'] = $request['sistem_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['kapKjs'] = '411211-100';
+                    $dataPembayaran['is_paid'] = true;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $pembayaran = Pembayaran::create($dataPembayaran);
+                    return $pembayaran;
+                }
+            default:
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                $sistem = Sistem::find($sistem_id);
 
                 foreach ($fields_spt_ppn as $field) {
                     if (array_key_exists($field, $requestData)) {
@@ -76,7 +145,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $spt->status = SptStatusEnum::DIBUAT->value;
                 $spt->save();
-                break;
         }
 
         return $spt;
@@ -423,7 +491,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_ppn['spt_id'] = $spt->id;
                 SptPpn::create($data_spt_ppn);
-
                 break;
         }
         return $spt;

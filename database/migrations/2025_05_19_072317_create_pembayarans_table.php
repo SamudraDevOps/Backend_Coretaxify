@@ -17,8 +17,12 @@ return new class extends Migration
             $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('kode_billing')->nullable();
             $table->string('kapKjs')->nullable();
+            $table->string('masa_bulan')->nullable();
+            $table->string('masa_tahun')->nullable();
             $table->string('keterangan')->nullable();
-            $table->boolean('is_paid')->nullable();
+            $table->string('ntpn')->nullable();
+            $table->date('masa_aktif')->nullable();
+            $table->boolean('is_paid')->nullable()->default(false);
             $table->decimal('nilai',18,2)->nullable();
             $table->timestamps();
         });

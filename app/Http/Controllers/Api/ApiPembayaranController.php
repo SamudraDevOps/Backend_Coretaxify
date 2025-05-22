@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Sistem;
+use App\Models\Assignment;
+use App\Models\Pembayaran;
+use Illuminate\Http\Request;
+use App\Http\Resources\PembayaranResource;
 use App\Http\Requests\Pembayaran\StorePembayaranRequest;
 use App\Http\Requests\Pembayaran\UpdatePembayaranRequest;
-use App\Http\Resources\PembayaranResource;
-use App\Models\Pembayaran;
 use App\Support\Interfaces\Services\PembayaranServiceInterface;
-use Illuminate\Http\Request;
 
 class ApiPembayaranController extends ApiController {
     public function __construct(
@@ -17,10 +19,14 @@ class ApiPembayaranController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Assignment $assignment, Sistem $sistem,Request $request) {
         $perPage = request()->get('perPage', 5);
 
-        return PembayaranResource::collection($this->pembayaranService->getAllPaginated($request->query(), $perPage));
+        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+
+        $pembayarans = $this->pembayaranService->getAllForPembayaran($sistem, $perPage);
+
+        return PembayaranResource::collection($pembayarans);
     }
 
     /**
@@ -33,15 +39,22 @@ class ApiPembayaranController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Pembayaran $pembayaran) {
+    public function show(Assignment $assignment, Sistem $sistem,Pembayaran $pembayaran) {
+        $this->pembayaranService->authorizeAccess($assignment, $sistem);
         return new PembayaranResource($pembayaran);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePembayaranRequest $request, Pembayaran $pembayaran) {
-        return $this->pembayaranService->update($pembayaran, $request->validated());
+    public function update(Assignment $assignment, Sistem $sistem, Request $request, Pembayaran $pembayaran) {
+        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+        $pembayaran->is_paid = true;
+        $pembayaran->save();
+
+        $sistem->saldo = ($sistem->saldo ?? 0) + ($pembayaran->nilai ?? 0);
+        $sistem->save();
+        return $this->pembayaranService->update($pembayaran, $request->all());
     }
 
     /**
