@@ -45,7 +45,7 @@ return new class extends Migration
             $table->enum('ptkp_akun', PTKPEnum::toArray())->nullable();
             $table->string('posisi_akun')->nullable();
             $table->string('fasilitas_pajak')->nullable();
-            $table->string('nama_objek_pajak')->nullable(); //BELUM FIX
+            $table->text('nama_objek_pajak')->nullable(); //BELUM FIX
             $table->string('jenis_pajak')->nullable(); //BELUM FIX
             $table->string('kode_objek_pajak')->nullable(); //BELUM FIX
             $table->string('sifat_pajak_penghasilan')->nullable();
