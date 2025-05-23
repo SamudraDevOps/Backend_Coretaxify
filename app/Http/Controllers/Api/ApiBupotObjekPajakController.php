@@ -78,7 +78,7 @@ class ApiBupotObjekPajakController extends ApiController
             //     return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
 
             default:
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($request->query(), $perPage));
+                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAll($request->query()));
         }
     }
 
