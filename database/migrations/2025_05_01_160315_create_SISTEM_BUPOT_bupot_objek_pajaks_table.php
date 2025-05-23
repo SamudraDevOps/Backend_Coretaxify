@@ -15,10 +15,11 @@ return new class extends Migration
         Schema::create('bupot_objek_pajaks', function (Blueprint $table) {
             $table->id();
             $table->enum('tipe_bupot', BupotTypeEnum::toArray());
-            $table->string('nama_objek_pajak');
+            $table->text('nama_objek_pajak');
             $table->string('jenis_pajak');
             $table->string('kode_objek_pajak');
             $table->float('tarif_pajak');
+            $table->string('sifat_pajak_penghasilan');
             $table->timestamps();
         });
     }

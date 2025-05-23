@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             KodeTransaksiSeeder::class,
             SatuanSeeder::class,
             InformasiTambahanSeeder::class,
+            BupotObjekPajakSeeder::class,
         ]);
     }
 }
