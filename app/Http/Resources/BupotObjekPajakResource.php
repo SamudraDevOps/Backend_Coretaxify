@@ -13,6 +13,7 @@ class BupotObjekPajakResource extends JsonResource {
             'jenis_pajak' => $this->jenis_pajak,
             'kode_objek_pajak' => $this->kode_objek_pajak,
             'tarif_pajak' => $this->tarif_pajak,
+            'sifat_pajak_penghasilan' => $this->tarif_pajak,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
