@@ -32,8 +32,14 @@ class ApiPembayaranController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePembayaranRequest $request) {
-        return $this->pembayaranService->create($request->validated());
+    public function store(Assignment $assignment, Sistem $sistem, Request $request) {
+        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+
+        $randomNumber = mt_rand(100000000000000, 999999999999999);
+        $request['kode_billing'] = $randomNumber;
+        $request['sistem_id'] = $sistem->id;
+
+        return $this->pembayaranService->create($request->all());
     }
 
     /**
