@@ -111,9 +111,13 @@ class InformasiUmumService extends BaseCrudService implements InformasiUmumServi
         array $data
     ): ?Model
     {
-        $this->authorizeAccessToInformasiUmum($assignment, $sistem, $informasiUmum);
+        // $this->authorizeAccessToInformasiUmum($assignment, $sistem, $informasiUmum);
 
-        return $this->update($informasiUmum, $data);
+        $sistem = Sistem::with('profil_saya.informasi_umum')->findOrFail($sistem->id);
+
+        $sistem->profil_saya->informasi_umum->update($data);
+
+        return $informasiUmum;
     }
 
     /**

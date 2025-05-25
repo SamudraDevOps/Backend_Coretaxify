@@ -45,24 +45,11 @@ class ApiNomorIdentifikasiEksternalController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(Assignment $assignment, Sistem $sistem, UpdateNomorIdentifikasiEksternalRequest $request, NomorIdentifikasiEksternal $nomorIdentifikasiEksternal) {
-        $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
-            'assignment_id' => $assignment->id
-        ])->firstOrFail();
+        $sistem = Sistem::with('profil_saya.nomor_identifikasi_eksternal')->findOrFail($sistem->id);
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
-            abort(403);
-        }
+        $sistem->profil_saya->nomor_identifikasi_eksternal->update($request->validated());
 
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-                ->where('id', $sistem->id)
-                ->firstOrFail();
-
-        if ($nomorIdentifikasiEksternal->id !== $sistem->id) {
-        abort(403, 'hayo ngakses detail kontak punyak siapa.');
-        }
-
-        return $this->nomorIdentifikasiEksternalService->update($nomorIdentifikasiEksternal, $request->validated());
+        return $nomorIdentifikasiEksternal;
     }
 
     /**
