@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             AssignmentSeeder::class,
             KodeTransaksiSeeder::class,
             SatuanSeeder::class,
+            KapKjsSeeder::class,
             InformasiTambahanSeeder::class,
         ]);
     }
