@@ -14,4 +14,14 @@ class Pembayaran extends Model
     {
         return $this->belongsTo(Sistem::class);
     }
+
+    public function kap_kjs(): BelongsTo
+    {
+        return $this->belongsTo(KapKjs::class);
+    }
+
+    public function pic(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

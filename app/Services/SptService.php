@@ -35,7 +35,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     public function update ($spt, $request):Model{
         $intent = $request['intent'];
         $sistem_id = $request['sistem_id'];
-
+        $ntpn = Str::random(16);
         // $fields_spt_ppn = [
         //     'cl_1a1_dpp', 'cl_1a5_dpp', 'cl_1a9_dpp', 'cl_1a5_ppn', 'cl_1a9_ppn','cl_1a5_ppnbm','cl_1a9_ppnbm','cl_2e_ppn','cl_2h_dpp','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_6b_ppnbm','cl_6d_ppnbm','cl_7a_dpp','cl_7b_dpp','cl_7a_ppn','cl_7b_ppn','cl_7a_ppnbm','cl_7b_ppnbm','cl_7a_dpp_lain','cl_7b_dpp_lain','cl_8a_dpp','cl_8b_dpp','cl_8a_ppn','cl_8b_ppn','cl_8a_ppnbm','cl_8b_ppnbm','cl_8a_dpp_lain','cl_8b_dpp_lain','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
         // ];
@@ -79,7 +79,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $dataPembayaran['sistem_id'] = $request['sistem_id'];
                 $dataPembayaran['pic_id'] = $request['pic_id'];
                 $dataPembayaran['kode_billing'] = $randomNumber;
-                $dataPembayaran['kapKjs'] = '411211-100';
+                $dataPembayaran['kap_kjs_id'] = 49;
+                $dataPembayaran['ntpn'] = $ntpn;
                 $dataPembayaran['masa_aktif'] = $masaAktif;
 
                 Pembayaran::create($dataPembayaran);
@@ -103,8 +104,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->is_can_pembetulan = true;
                 $spt->save();
 
-                $ntpn = Str::random(16);
-
                 if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
                     $bayar = $spt_ppn->cl_3f_ppn;
                 }else {
@@ -122,7 +121,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['sistem_id'] = $request['sistem_id'];
                     $dataPembayaran['pic_id'] = $request['pic_id'];
                     $dataPembayaran['ntpn'] = $ntpn;
-                    $dataPembayaran['kapKjs'] = '411211-100';
+                    $dataPembayaran['kap_kjs_id'] = 49;
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
 

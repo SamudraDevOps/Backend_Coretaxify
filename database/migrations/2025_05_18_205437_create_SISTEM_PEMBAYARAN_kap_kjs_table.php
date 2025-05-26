@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('kap_kjs', function (Blueprint $table) {
             $table->id();
-            $table->string('kode');
-            $table->string('ket_1');
-            $table->string('ket_2');
+            $table->string('kode')->nullable();
+            $table->string('ket_1')->nullable();
+            $table->string('ket_2')->nullable();
             $table->timestamps();
         });
     }

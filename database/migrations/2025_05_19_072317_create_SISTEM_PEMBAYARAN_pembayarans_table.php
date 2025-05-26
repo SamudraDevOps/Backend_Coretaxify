@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sistem_id')->nullable()->constrained();
             $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('kap_kjs_id')->nullable()->constrained();
             $table->string('kode_billing')->nullable();
-            $table->string('kapKjs')->nullable();
             $table->string('masa_bulan')->nullable();
             $table->string('masa_tahun')->nullable();
             $table->string('keterangan')->nullable();
