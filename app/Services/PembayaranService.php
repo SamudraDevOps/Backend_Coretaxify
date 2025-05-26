@@ -39,4 +39,12 @@ class PembayaranService extends BaseCrudService implements PembayaranServiceInte
 
         return $pembayarans;
     }
+
+    public function getAllForSudahPembayaran(Sistem $sistem, int $perPage) {
+        $pembayarans = Pembayaran::where('sistem_id', $sistem->id)
+                        ->where('is_paid', true)
+                        ->paginate($perPage);
+
+        return $pembayarans;
+    }
 }

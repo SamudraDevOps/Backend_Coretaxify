@@ -12,4 +12,6 @@ interface PembayaranServiceInterface extends BaseCrudServiceInterface {
     public function authorizeAccess(Assignment $assignment, Sistem $sistem):void;
 
     public function getAllForPembayaran(Sistem $sistem, int $perPage);
+
+    public function getAllForSudahPembayaran(Sistem $sistem, int $perPage);
 }

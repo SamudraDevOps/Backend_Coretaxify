@@ -107,4 +107,6 @@ enum IntentEnum: string {
     case API_UPDATE_SPT_PPN_KONSEP = 'api.update.spt.ppn.konsep';
 
     case API_SHOW_DETAIL_SPT = 'api.show.detail.spt';
+
+    case API_GET_SUDAH_PEMBAYARAN = 'api.get.sudah.pembayaran';
 }

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\PembayaranResource;
+use App\Models\KapKjs;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
+use App\Http\Resources\PembayaranResource;
 use App\Http\Requests\Pembayaran\StorePembayaranRequest;
 use App\Http\Requests\Pembayaran\UpdatePembayaranRequest;
 use App\Support\Interfaces\Services\PembayaranServiceInterface;
@@ -25,7 +27,11 @@ class ApiPembayaranController extends ApiController {
 
         $this->pembayaranService->authorizeAccess($assignment, $sistem);
 
-        $pembayarans = $this->pembayaranService->getAllForPembayaran($sistem, $perPage);
+        if($request['intent'] == IntentEnum::API_GET_SUDAH_PEMBAYARAN->value){
+            $pembayarans = $this->pembayaranService->getAllForSudahPembayaran($sistem, $perPage);
+        } else {
+            $pembayarans = $this->pembayaranService->getAllForPembayaran($sistem, $perPage);
+        }
 
         return PembayaranResource::collection($pembayarans);
     }
@@ -39,12 +45,57 @@ class ApiPembayaranController extends ApiController {
         $randomNumber = mt_rand(100000000000000, 999999999999999);
         $ntpn = Str::random(16);
 
+        $checkDate = $request['masa_bulan'];
+
+        if ($checkDate){
+            $bulanMap = [
+                'Januari'   => '01',
+                'Februari'  => '02',
+                'Maret'     => '03',
+                'April'     => '04',
+                'Mei'       => '05',
+                'Juni'      => '06',
+                'Juli'      => '07',
+                'Agustus'   => '08',
+                'September' => '09',
+                'Oktober'   => '10',
+                'November'  => '11',
+                'Desember'  => '12',
+            ];
+            $masa_bulan = $request['masa_bulan'];
+            $masa_tahun = $request['masa_tahun'];
+            $bulanAngka = $bulanMap[$masa_bulan] ?? '00';
+            $masa_pajak = $bulanAngka . $masa_tahun;
+        } else {
+            $masa_bulan = $request['masa_bulan'];
+            $masa_tahun = $request['masa_tahun'];
+            $masa_pajak = '0112'. $masa_tahun;
+        }
+
+        $sistem = Sistem::where('id', $sistem->id)->first();
+        $kapKjs = KapKjs::where('id', $request['kap_kjs_id'])->first();
+
         $request['ntpn'] = $ntpn;
         $request['kode_billing'] = $randomNumber;
         $request['sistem_id'] = $sistem->id;
 
-        if ($request['kap_kjs_id'] != 44){
-            return new PembayaranResource($request);
+        if ($request['kap_kjs_id'] !== 44){
+            return response()->json(
+                [
+                'pic_id' => $request['pic_id'],
+                'npwp' => $sistem->npwp_akun,
+                'nama' => $sistem->nama_akun,
+                'alamat' => $sistem->alamat_utama_akun,
+                'kode_billing' => $request['kode_billing'],
+                'kapKjs' => $kapKjs->kode,
+                'masa_bulan' =>  $request['masa_bulan'],
+                'masa_tahun' => $request['masa_tahun'],
+                'masa_pajak' => $masa_pajak,
+                'keterangan' => $request['keterangan'],
+                'ntpn' => null,
+                'is_paid' => false,
+                'nilai' => $request['nilai'],
+                ]);
         }
 
         return $this->pembayaranService->create($request->all());

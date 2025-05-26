@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiDummyController;
 use App\Http\Controllers\Api\ApiGroupController;
 use App\Http\Controllers\Api\ApiFakturController;
+use App\Http\Controllers\Api\ApiKapKjsController;
 use App\Http\Controllers\Api\ApiSatuanController;
 use App\Http\Controllers\Api\ApiSistemController;
 use App\Http\Controllers\Api\ApiSptPpnController;
@@ -91,6 +92,7 @@ Route::get('/csrf-token', function (Request $request) {
 Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::get('kode-transaksi', [ApiKodeTransaksiController::class, 'index']);
     Route::get('satuan', [ApiSatuanController::class, 'index']);
+    Route::get('kap-kjs', [ApiKapKjsController::class, 'index']);
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
