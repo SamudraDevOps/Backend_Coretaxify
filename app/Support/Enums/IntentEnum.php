@@ -141,4 +141,7 @@ enum IntentEnum: string {
     case API_BUPOT_BPBPT_SHOW = 'api.bupot.bpbpt.show';
 
     // case API_BUPOT_DSBP = 'api.bupot.dsbp';
+    case API_SHOW_DETAIL_SPT = 'api.show.detail.spt';
+
+    case API_GET_SUDAH_PEMBAYARAN = 'api.get.sudah.pembayaran';
 }
