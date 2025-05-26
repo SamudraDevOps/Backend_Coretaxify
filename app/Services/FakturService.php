@@ -13,6 +13,7 @@ use App\Models\DetailTransaksi;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\FakturResource;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\FakturServiceInterface;
@@ -30,6 +31,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
+        $data['sistem_id'] = $sistem->id;
 
         if ($sistem) {
             $data['akun_pengirim_id'] = $sistem->id;
@@ -45,6 +47,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 break;
             case IntentEnum::API_CREATE_FAKTUR_FIX->value:
                 $data['is_draft'] = false;
+                $data['esign_status'] = 'DONE';
                 $data['status'] = FakturStatusEnum::APPROVED->value;
                 break;
             default:
@@ -84,6 +87,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
                     $data['is_draft'] = false;
+                    $data['esign_status'] = 'DONE';
                     $data['status'] = FakturStatusEnum::APPROVED->value;
                     break;
                 default:
@@ -91,13 +95,27 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                     break;
             }
 
-            $faktur = parent::update($keyOrModel, $data);
+            if ($keyOrModel->is_draft == false){
+                $dataFakturOld = Faktur::where('id', $keyOrModel->id)->first();
 
-            $parts = explode('-', $faktur->nomor_faktur_pajak);
+                $dataFakturOld['status'] = FakturStatusEnum::AMENDED->value;
+                $dataFakturOld->save();
 
-            if (isset($parts[1]) && $parts[1] === '0') {
-                $parts[1] = '1';
+                $dataFakturNew = $dataFakturOld->toArray();
+                unset($dataFakturNew['id'], $dataFakturNew['created_at'], $dataFakturNew['updated_at']);
+
+                $parts = explode('-', $dataFakturNew['nomor_faktur_pajak']);
+                if (isset($parts[1]) && $parts[1] === '0') {
+                    $parts[1] = '1';
+                }
+
+                $dataFakturNew['nomor_faktur_pajak'] = implode('-', $parts);
+                $dataFakturNew['status'] = FakturStatusEnum::APPROVED->value;
+                $faktur = parent::create($dataFakturNew);
+            } else {
+                $faktur = parent::update($keyOrModel, $data);
             }
+
 
             if ($detailTransaksiData && is_array($detailTransaksiData)) {
                 $existingIds = [];

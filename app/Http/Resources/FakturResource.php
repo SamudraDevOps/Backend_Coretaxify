@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Support\Enums\IntentEnum;
+use App\Support\Enums\JenisSptPpnEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FakturResource extends JsonResource
@@ -18,12 +20,83 @@ class FakturResource extends JsonResource
             ? new SistemTambahanResource($this->akun_penerima_tambahan)
             : new SistemResource($this->akun_penerima);
 
+        $intent = $request->query('intent');
+
+        switch($intent) {
+            case JenisSptPpnEnum::A1->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::A2->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                    ];
+            case JenisSptPpnEnum::B1->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::B2->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::B3->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+            case JenisSptPpnEnum::C->value:
+                return [
+                    'nama_pembeli' => $this->akun_op->nama_akun,
+                    'npwp' => $this->akun_op->npwp,
+                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                    'dpp' => $this->dpp,
+                    'dpp_lain' => $this->dpp_lain,
+                    'ppn' => $this->ppn,
+                    'ppnbm' => $this->ppnbm,
+                ];
+        }
+
         return [
             'id' => $this->id,
-            'pic_id' => $this->pic,
+            'sistem_id' => $this->sistem_id,
+            'pic_id' => $this->pic_id,
             'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
             'akun_penerima_id' => $akunPenerimaResource,
-            'spt_ppns_id' => $this->spt_ppns_id,
             'is_draft' => $this->is_draft,
             'status' => $this->status,
             'dpp' => $this->dpp,
@@ -34,7 +107,7 @@ class FakturResource extends JsonResource
             'masa_pajak' => $this->masa_pajak,
             'tahun' => $this->tahun,
             'esign_status' => $this->esign_status,
-            'penandatangan' => $this->penandatangan,
+            'penandatangan' => $this->pic->akun_op->nama_akun,
             'referensi' => $this->referensi,
             'kode_transaksi' => $this->kode_transaksi,
             'informasi_tambahan' => $this->informasi_tambahan,

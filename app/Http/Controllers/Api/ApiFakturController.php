@@ -151,6 +151,8 @@ class ApiFakturController extends ApiController
 
         $updatedFaktur = $this->fakturService->update($faktur, $data);
         $updatedFaktur->load('detail_transaksis');
+
+        return new FakturResource($updatedFaktur);
     }
 
     /**
@@ -224,7 +226,11 @@ class ApiFakturController extends ApiController
             $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
         }
 
-        Faktur::whereIn('id', $fakturIds)->update(['is_draft' => false, 'status' => FakturStatusEnum::APPROVED->value]);
+        Faktur::whereIn('id', $fakturIds)
+                ->update(['is_draft' => false,
+                        'status' => FakturStatusEnum::APPROVED->value,
+                        'esign_status' => 'DONE']);
+
 
         return response()->json(['message' => 'Fakturs berhasil dikirim ke SPT']);
     }

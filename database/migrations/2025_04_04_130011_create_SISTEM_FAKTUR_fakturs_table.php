@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('fakturs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('spt_id')->nullable()->constrained();
+            $table->foreignId('sistem_id')->nullable()->constrained();
             $table->foreignId('pic_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('akun_pengirim_id')->nullable()->references('id')->on('sistems');
             $table->foreignId('akun_penerima_id')->nullable()->references('id')->on('sistems');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_kredit')->default(false);
             $table->boolean('is_akun_tambahan')->nullable();
             $table->enum('status', FakturStatusEnum::toArray())->nullable();
-            $table->string('nomor_faktur_pajak')->unique()->nullable();
+            $table->string('nomor_faktur_pajak')->nullable();
             $table->string('masa_pajak')->nullable();
             $table->string('tahun')->nullable();
             $table->string('esign_status')->nullable();

@@ -24,8 +24,8 @@ class DataEkonomiResource extends JsonResource {
                     'peredaran_bruto' => $this->peredaran_bruto,
                     'metode_pembukuan' => $this->metode_pembukuan,
                     'mata_uang_pembukuan' => $this->mata_uang_pembukuan,
-                    'created_at' => $this->created_at->toDateTimeString(),
-                    'updated_at' => $this->updated_at->toDateTimeString(),
+                    // 'created_at' => $this->created_at->toDateTimeString(),
+                    // 'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
             case IntentEnum::API_GET_SISTEM_DATA_EKONOMI_BADAN->value:
                 return [
@@ -36,8 +36,8 @@ class DataEkonomiResource extends JsonResource {
                     'merek_dagang' => $this->merek_dagang,
                     'omset_per_tahun' => $this->omset_per_tahun,
                     'jumlah_peredaran_bruto' => $this->jumlah_peredaran_bruto,
-                    'created_at' => $this->created_at->toDateTimeString(),
-                    'updated_at' => $this->updated_at->toDateTimeString(),
+                    // 'created_at' => $this->created_at->toDateTimeString(),
+                    // 'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
         }
         return [
@@ -57,8 +57,8 @@ class DataEkonomiResource extends JsonResource {
             'merek_dagang' => $this->merek_dagang,
             'omset_per_tahun' => $this->omset_per_tahun,
             'jumlah_peredaran_bruto' => $this->jumlah_peredaran_bruto,
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
+            // 'created_at' => $this->created_at->toDateTimeString(),
+            // 'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }

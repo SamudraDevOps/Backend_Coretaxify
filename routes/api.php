@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
 use App\Http\Controllers\Api\ApiDetailBankController;
 use App\Http\Controllers\Api\ApiJenisPajakController;
+use App\Http\Controllers\Api\ApiPembayaranController;
 use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
@@ -173,11 +174,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::delete('{assignment}/sistem/{sistem}/pihak-terkait/{pihakTerkait}', [ApiPihakTerkaitController::class, 'destroy']);
 
                     Route::get('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'show']);
-                    Route::put('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/data-ekonomi', [ApiDataEkonomiController::class, 'update']);
 
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum', [ApiSistemController::class, 'getSistemDetail']);
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'show']);
-                    Route::put('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/informasi-umum', [ApiInformasiUmumController::class, 'update']);
 
                     Route::get('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'store']);
@@ -203,7 +204,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::put('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/unit-pajak-keluarga/{unitPajakKeluarga}', [ApiUnitPajakKeluargaController::class, 'destroy']);
 
-                    Route::put('{assignment}/sistem/{sistem}/nomor-identifikasi-eksternal/{nomorIdentifikasiEksternal}', [ApiNomorIdentifikasiEksternalController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/nomor-identifikasi-eksternal', [ApiNomorIdentifikasiEksternalController::class, 'update']);
 
                     Route::prefix('faktur')->group(function () {
                         Route::apiResource('kode-transaksi', ApiKodeTransaksiController::class, ['only' => ['index']]);
@@ -231,7 +232,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptController::class, 'checkPeriode']);
                     Route::put('{assignment}/sistem/{sistem}/spt/{spt}/calculate-spt', [ApiSptController::class, 'calculateSpt']);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
+                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFaktuSptPpn']);
 
+                    Route::apiResource('{assignment}/sistem/{sistem}/pembayaran', ApiPembayaranController::class);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);
 
                     // BUPOT
