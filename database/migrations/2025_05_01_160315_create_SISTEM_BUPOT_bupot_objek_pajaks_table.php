@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('kode_objek_pajak');
             $table->float('tarif_pajak');
             $table->string('sifat_pajak_penghasilan');
+            $table->decimal('dasar_pengenaan_pajak')->nullable();
             $table->timestamps();
         });
     }
