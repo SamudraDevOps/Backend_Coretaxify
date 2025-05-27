@@ -80,10 +80,23 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $detailTransaksiData = $data['detail_transaksi'] ?? null;
         unset($data['detail_transaksi']);
 
+        $intent = $data['intent'] ?? null;
+
+        switch ($intent) {
+            case IntentEnum::API_UPDATE_FAKTUR_KREDITKAN->value:
+                $data['is_kredit'] = true;
+                return parent::update($keyOrModel, $data);
+                // break;
+            case IntentEnum::API_UPDATE_FAKTUR_TIDAK_KREDITKAN->value:
+                $data['is_kredit'] = false;
+                return parent::update($keyOrModel, $data);
+                // break;
+        }
+
         return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-            $intent = $data['intent'] ?? null;
             unset($data['intent']);
 
+            $intent = $data['intent'] ?? null;
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
                     $data['is_draft'] = false;

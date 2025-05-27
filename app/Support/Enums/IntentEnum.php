@@ -109,4 +109,8 @@ enum IntentEnum: string {
     case API_SHOW_DETAIL_SPT = 'api.show.detail.spt';
 
     case API_GET_SUDAH_PEMBAYARAN = 'api.get.sudah.pembayaran';
+
+    case API_UPDATE_FAKTUR_KREDITKAN = 'api.update.faktur.kreditkan';
+
+    case API_UPDATE_FAKTUR_TIDAK_KREDITKAN = 'api.update.faktur.tidak.kreditkan';
 }
