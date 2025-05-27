@@ -226,9 +226,9 @@ class ApiFakturController extends ApiController
         // }
 
         Faktur::whereIn('id', $fakturIds)
-                ->update(['is_draft' => false,
-                        'status' => FakturStatusEnum::APPROVED->value,
-                        'esign_status' => 'DONE']);
+        ->update(['is_draft' => false,
+        'status' => FakturStatusEnum::APPROVED->value,
+        'esign_status' => 'DONE']);
 
 
         return response()->json(['message' => 'Fakturs berhasil dikirim ke SPT']);

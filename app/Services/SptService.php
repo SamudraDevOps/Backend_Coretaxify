@@ -266,6 +266,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             ->where('masa_pajak', $month)
             ->where('tahun', $year)
             ->where('status', FakturStatusEnum::APPROVED->value)
+            ->where('is_kredit', true)
             ->get();
 
         $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
@@ -431,6 +432,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     ->where('masa_pajak', $month)
                     ->where('tahun', $year)
                     ->where('status', FakturStatusEnum::APPROVED->value)
+                    ->where('is_kredit', true)
                     ->get();
 
                 $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
