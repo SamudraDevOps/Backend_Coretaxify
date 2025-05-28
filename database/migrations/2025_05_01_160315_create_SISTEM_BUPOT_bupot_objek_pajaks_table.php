@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('jenis_pajak')->nullable();
             $table->string('kode_objek_pajak')->nullable();
             $table->float('tarif_pajak')->nullable();
+            $table->string('kap')->nullable();
             $table->float('persentase_penghasilan_bersih')->nullable();
             $table->string('sifat_pajak_penghasilan')->nullable();
             $table->timestamps();
