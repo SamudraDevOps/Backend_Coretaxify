@@ -39,7 +39,7 @@ class ApiSptController extends ApiController {
         $data = $request->all();
         $data['masa_bulan'] = $request->masa_bulan;
         $data['masa_tahun'] = $request->masa_tahun;
-        $data['sistem_id'] = $sistem->id;
+        $data['badan_id'] = $sistem->id;
         $data['pic_id'] = $request->pic_id;
         $data['jenis_pajak'] = $request->jenis_pajak;
         $data['model'] = $request->model;
@@ -63,7 +63,7 @@ class ApiSptController extends ApiController {
      */
     public function update(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
         $this->sptService->authorizeAccess($assignment, $sistem);
-        $request['sistem_id'] = $sistem->id;
+        $request['badan_id'] = $sistem->id;
         $request['pic_id'] = $request->pic_id;
 
         return $this->sptService->update($spt, $request);
@@ -86,14 +86,14 @@ class ApiSptController extends ApiController {
 
     public function calculateSpt(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem);
-        $request['sistem_id'] = $sistem->id;
+        $request['badan_id'] = $sistem->id;
         return $this->sptService->calculateSpt($spt, $request);
     }
 
     public function showFaktuSptPpn(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem);
 
-        $request['sistem_id'] = $sistem->id;
+        $request['badan_id'] = $sistem->id;
         return $this->sptService->showFakturSptPpn($spt, $request);
     }
 }

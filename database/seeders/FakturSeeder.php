@@ -32,7 +32,7 @@ class FakturSeeder extends Seeder
 
             $faktur = Faktur::create([
                 'pic_id' => $picId,
-                'sistem_id' => 2,
+                'badan_id' => 2,
                 'akun_pengirim_id' => $akunPengirimId,
                 'akun_penerima_id' => $akunPenerimaId,
                 'masa_pajak' => 'April',
@@ -48,7 +48,7 @@ class FakturSeeder extends Seeder
                 'dilaporkan_oleh_pemungut_ppn' => false,
                 'is_draft' => false,
                 'is_akun_tambahan' => false,
-                'is_kredit' => false,
+                'is_kredit' => true,
                 'dpp' => 30000,
                 'dpp_lain' => 30000,
                 'ppn' => 30000,
@@ -81,7 +81,7 @@ class FakturSeeder extends Seeder
 
         $faktur = Faktur::create([
                 'pic_id' => 3,
-                'sistem_id' => 4,
+                'badan_id' => 4,
                 'akun_pengirim_id' => 5,
                 'akun_penerima_id' => 4,
                 'masa_pajak' => 'April',
@@ -97,7 +97,7 @@ class FakturSeeder extends Seeder
                 'dilaporkan_oleh_pemungut_ppn' => false,
                 'is_draft' => false,
                 'is_akun_tambahan' => false,
-                'is_kredit' => false,
+                'is_kredit' => true,
                 'dpp' => 999999,
                 'dpp_lain' => 300009,
                 'ppn' => 300009,

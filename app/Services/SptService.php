@@ -34,7 +34,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
     public function update ($spt, $request):Model{
         $intent = $request['intent'];
-        $sistem_id = $request['sistem_id'];
+        $sistem_id = $request['badan_id'];
         $ntpn = Str::random(16);
         // $fields_spt_ppn = [
         //     'cl_1a1_dpp', 'cl_1a5_dpp', 'cl_1a9_dpp', 'cl_1a5_ppn', 'cl_1a9_ppn','cl_1a5_ppnbm','cl_1a9_ppnbm','cl_2e_ppn','cl_2h_dpp','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_6b_ppnbm','cl_6d_ppnbm','cl_7a_dpp','cl_7b_dpp','cl_7a_ppn','cl_7b_ppn','cl_7a_ppnbm','cl_7b_ppnbm','cl_7a_dpp_lain','cl_7b_dpp_lain','cl_8a_dpp','cl_8b_dpp','cl_8a_ppn','cl_8b_ppn','cl_8a_ppnbm','cl_8b_ppnbm','cl_8a_dpp_lain','cl_8b_dpp_lain','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
@@ -76,7 +76,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                 $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
-                $dataPembayaran['sistem_id'] = $request['sistem_id'];
+                $dataPembayaran['badan_id'] = $request['badan_id'];
                 $dataPembayaran['pic_id'] = $request['pic_id'];
                 $dataPembayaran['kode_billing'] = $randomNumber;
                 $dataPembayaran['kap_kjs_id'] = 49;
@@ -118,7 +118,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                     $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
-                    $dataPembayaran['sistem_id'] = $request['sistem_id'];
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
                     $dataPembayaran['pic_id'] = $request['pic_id'];
                     $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['kap_kjs_id'] = 49;
@@ -188,7 +188,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
         $data['sistem_id'] = $request['sistem_id'];
 
-        $fakturs = Faktur::where('sistem_id', $request['sistem_id'])
+        $fakturs = Faktur::where('badan_id', $request['badan_id'])
             ->where('masa_pajak', $month)
             ->where('tahun', $year)
             ->where('status', FakturStatusEnum::APPROVED->value)
@@ -262,10 +262,11 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         $data['cl_1c_dpp'] = $data['cl_1a_jumlah_dpp'] + ($data['cl_1b_dpp'] ?? 0);
 
-        $faktursMasukan = Faktur::where('akun_penerima_id', $data['sistem_id'])
+        $faktursMasukan = Faktur::where('akun_penerima_id', $data['badan_id'])
             ->where('masa_pajak', $month)
             ->where('tahun', $year)
             ->where('status', FakturStatusEnum::APPROVED->value)
+            ->where('is_kredit', true)
             ->get();
 
         $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
@@ -329,7 +330,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         $sptPpn = SptPpn::where('spt_id', $spt->id)->first();
 
-        $skipKeys = ['sistem_id'];
+        $skipKeys = ['badan_id'];
         foreach ($data as $key => $value) {
             if (in_array($key, $skipKeys)) continue;
             $sptPpn->$key = $value;
@@ -342,7 +343,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     }
 
     public function getAllForSpt(Sistem $sistem, int $perPage) {
-        $spts = Spt::where('sistem_id', $sistem->id)->paginate($perPage);
+        $spts = Spt::where('badan_id', $sistem->id)->paginate($perPage);
 
         return $spts;
     }
@@ -384,7 +385,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         switch ($data['jenis_pajak']) {
             case JenisPajakEnum::PPN->value:
 
-                $fakturs = Faktur::where('sistem_id', $data['sistem_id'])
+                $fakturs = Faktur::where('badan_id', $data['badan_id'])
                 ->where('masa_pajak', $month)
                 ->where('tahun', $year)
                 ->where('status', FakturStatusEnum::APPROVED->value)
@@ -427,10 +428,11 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['cl_1a8_ppn']      = $fakturs1a8->sum('ppn');
                 $data_spt_ppn['cl_1a8_ppnbm']    = $fakturs1a8->sum('ppnbm');
 
-                $faktursMasukan = Faktur::where('akun_penerima_id', $data['sistem_id'])
+                $faktursMasukan = Faktur::where('akun_penerima_id', $data['badan_id'])
                     ->where('masa_pajak', $month)
                     ->where('tahun', $year)
                     ->where('status', FakturStatusEnum::APPROVED->value)
+                    ->where('is_kredit', true)
                     ->get();
 
                 $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
@@ -561,13 +563,13 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
     public function showFakturSptPpn($spt, Request $request) {
 
-        $fakturKeluaran = Faktur::where('sistem_id', $request['sistem_id'])
+        $fakturKeluaran = Faktur::where('badan_id', $request['badan_id'])
                         ->where('status', FakturStatusEnum::APPROVED->value)
                         ->where('masa_pajak', $spt->masa_bulan)
                         ->where('tahun', $spt->masa_tahun)
                         ->get();
 
-        $fakturMasukan = Faktur::where('akun_penerima_id', $request['sistem_id'])
+        $fakturMasukan = Faktur::where('akun_penerima_id', $request['badan_id'])
                         ->where('status', FakturStatusEnum::APPROVED->value)
                         ->where('masa_pajak', $spt->masa_bulan)
                         ->where('tahun', $spt->masa_tahun)

@@ -77,9 +77,9 @@ class ApiPembayaranController extends ApiController {
 
         $request['ntpn'] = $ntpn;
         $request['kode_billing'] = $randomNumber;
-        $request['sistem_id'] = $sistem->id;
+        $request['badan\_id'] = $sistem->id;
 
-        if ($request['kap_kjs_id'] !== 44){
+        if ($request['kap_kjs_id'] !== 42){
             return response()->json(
                 [
                 'pic_id' => $request['pic_id'],
@@ -117,7 +117,7 @@ class ApiPembayaranController extends ApiController {
         $pembayaran->is_paid = true;
         $pembayaran->save();
 
-        if ($pembayaran->kap_kjs_id == 44) {
+        if ($pembayaran->kap_kjs_id == 42) {
             $sistem->saldo = ($sistem->saldo ?? 0) + ($pembayaran->nilai ?? 0);
             $sistem->save();
         }else {
