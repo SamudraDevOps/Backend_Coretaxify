@@ -32,7 +32,7 @@ class FakturSeeder extends Seeder
 
             $faktur = Faktur::create([
                 'pic_id' => $picId,
-                'sistem_id' => 2,
+                'badan_id' => 2,
                 'akun_pengirim_id' => $akunPengirimId,
                 'akun_penerima_id' => $akunPenerimaId,
                 'masa_pajak' => 'April',
@@ -81,7 +81,7 @@ class FakturSeeder extends Seeder
 
         $faktur = Faktur::create([
                 'pic_id' => 3,
-                'sistem_id' => 4,
+                'badan_id' => 4,
                 'akun_pengirim_id' => 5,
                 'akun_penerima_id' => 4,
                 'masa_pajak' => 'April',
