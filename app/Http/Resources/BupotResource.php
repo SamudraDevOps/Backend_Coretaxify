@@ -235,6 +235,7 @@ class BupotResource extends JsonResource
                     'masa_awal' => $this->masa_awal,
                     'status' => $this->status,
                     'fasilitas_pajak' => $this->fasilitas_pajak,
+                    'recipient_number' => $this->recipient_number,
                     'npwp_akun' => $this->npwp_akun,
                     'nama_akun' => $this->nama_akun,
                     'alamat_utama_akun' => $this->alamat_utama_akun,
