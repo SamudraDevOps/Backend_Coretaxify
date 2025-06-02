@@ -77,7 +77,7 @@ class ApiPembayaranController extends ApiController {
 
         $request['ntpn'] = $ntpn;
         $request['kode_billing'] = $randomNumber;
-        $request['sistem_id'] = $sistem->id;
+        $request['badan\_id'] = $sistem->id;
 
         if ($request['kap_kjs_id'] !== 42){
             return response()->json(

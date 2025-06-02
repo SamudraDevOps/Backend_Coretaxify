@@ -12,7 +12,7 @@ class Spt extends Model
 
     public function pic()
     {
-        return $this->belongsTo(Pic::class);
+        return $this->belongsTo(Sistem::class, 'pic_id');
     }
 
     public function spt_ppn()
@@ -22,6 +22,6 @@ class Spt extends Model
 
     public function sistem(): BelongsTo
     {
-        return $this->belongsTo(Sistem::class);
+        return $this->belongsTo(Sistem::class, 'badan_id');
     }
 }

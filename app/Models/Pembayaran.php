@@ -12,7 +12,7 @@ class Pembayaran extends Model
 
     public function sistem(): BelongsTo
     {
-        return $this->belongsTo(Sistem::class);
+        return $this->belongsTo(Sistem::class, 'badan_id');
     }
 
     public function kap_kjs(): BelongsTo
@@ -22,6 +22,6 @@ class Pembayaran extends Model
 
     public function pic(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Sistem::class, 'pic_id');
     }
 }
