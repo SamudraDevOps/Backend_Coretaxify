@@ -22,8 +22,8 @@ return new class extends Migration
             // $table->foreignId('representatif_id')->nullable()->references('id')->on('sistems')->onDelete('cascade');
             $table->foreignId('tanda_tangan_bupot_id')->nullable()->references('id')->on('bupot_tanda_tangans'); //BELUM FIX
             $table->enum('tipe_bupot', BupotTypeEnum::toArray())->nullable();
-            $table->enum('status', ['normal', 'pembetulan', 'dihapus', 'pembatalan'])->nullable();
-            $table->enum('status_penerbitan', ['disimpan', 'disimpan tidak valid', 'terbit', 'tidak valid'])->nullable();
+            $table->enum('status', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan'])->nullable();
+            $table->enum('status_penerbitan', ['draft', 'published', 'invalid'])->nullable();
             $table->string('nomor_pemotongan')->nullable();
             $table->date('masa_awal')->nullable();
             $table->date('masa_akhir')->nullable();
@@ -45,7 +45,8 @@ return new class extends Migration
             $table->enum('ptkp_akun', PTKPEnum::toArray())->nullable();
             $table->string('posisi_akun')->nullable();
             $table->string('fasilitas_pajak')->nullable();
-            $table->string('nama_objek_pajak')->nullable(); //BELUM FIX
+            $table->string('recipient_number')->nullable();
+            $table->text('nama_objek_pajak')->nullable(); //BELUM FIX
             $table->string('jenis_pajak')->nullable(); //BELUM FIX
             $table->string('kode_objek_pajak')->nullable(); //BELUM FIX
             $table->string('sifat_pajak_penghasilan')->nullable();

@@ -20,9 +20,9 @@ class BupotRepository extends BaseRepository implements BupotRepositoryInterface
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['tipe_bupot', 'status', 'status_penerbitan']);
+        $query = $this->applySearchFilters($query, $searchParams, ['nomor_pemotongan']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'tipe_bupot', 'status', 'status_penerbitan']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 

@@ -24,62 +24,8 @@ class ApiBupotObjekPajakController extends ApiController
     public function index(Request $request)
     {
         $perPage = request()->get('perPage', 5);
-        $intent = request()->get('intent');
 
-        switch ($intent) {
-            case IntentEnum::API_BUPOT_BPPU->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BPPU->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_BPNR->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BPNR->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_PS->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::PS->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_PSD->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::PSD->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_BP21->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BP21->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_BP26->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BP26->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_BPA1->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BPA1->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_BPA2->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BPA2->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            case IntentEnum::API_BUPOT_BPBPT->value:
-                $filters = $request->query();
-                $filters['tipe_bupot'] = BupotTypeEnum::BPBPT->value;
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            // case IntentEnum::API_BUPOT_DSBP->value:
-            //     $filters = $request->query();
-            //     $filters['tipe_bupot'] = BupotTypeEnum::DSBP->value;
-            //     return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($filters, $perPage));
-
-            default:
-                return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAllPaginated($request->query(), $perPage));
-        }
+        return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAll($request->query()));
     }
 
     /**

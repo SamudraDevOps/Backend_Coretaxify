@@ -22,7 +22,7 @@ class BupotObjekPajakRepository extends BaseRepository implements BupotObjekPaja
 
         $query = $this->applySearchFilters($query, $searchParams, ['tipe_bupot', 'nama_objek_pajak']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'tipe_bupot']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 
