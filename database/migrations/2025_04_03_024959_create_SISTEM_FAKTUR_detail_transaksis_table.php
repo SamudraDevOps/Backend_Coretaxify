@@ -25,6 +25,9 @@ return new class extends Migration
             $table->decimal('ppn',18,2)->nullable();
             $table->decimal('dpp_lain',18,2)->nullable();
             $table->decimal('ppnbm',18,2)->nullable();
+            $table->decimal('ppn_retur',18,2)->nullable();
+            $table->decimal('dpp_lain_retur',18,2)->nullable();
+            $table->decimal('ppnbm_retur',18,2)->nullable();
             $table->decimal('tarif_ppnbm',18,2)->nullable();
             $table->timestamps();
         });

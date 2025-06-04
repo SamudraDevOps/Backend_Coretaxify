@@ -20,6 +20,9 @@ class UpdateDetailTransaksiRequest extends FormRequest {
             'ppn' => 'nullable|numeric',
             'dpp_lain' => 'nullable|numeric',
             'ppnbm' => 'nullable|numeric',
+            'ppn_retur' => 'nullable|numeric',
+            'dpp_lain_retur' => 'nullable|numeric',
+            'ppnbm_retur' => 'nullable|numeric',
             'tarif_ppnbm' => 'nullable|numeric',
         ];
     }

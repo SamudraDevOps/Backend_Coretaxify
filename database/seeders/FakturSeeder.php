@@ -23,11 +23,13 @@ class FakturSeeder extends Seeder
                 $akunPengirimId = 3;
                 $akunPenerimaId = 2;
                 $kodeTransaksi = (string) $i - 10;
+                $is_kredit = true;
             }else{
                 $picId = 1;
                 $akunPengirimId = 2;
                 $akunPenerimaId = 1;
                 $kodeTransaksi = (string) $i;
+                $is_kredit = false;
             }
 
             $faktur = Faktur::create([
@@ -48,11 +50,11 @@ class FakturSeeder extends Seeder
                 'dilaporkan_oleh_pemungut_ppn' => false,
                 'is_draft' => false,
                 'is_akun_tambahan' => false,
-                'is_kredit' => true,
-                'dpp' => 30000,
-                'dpp_lain' => 30000,
+                'is_kredit' => $is_kredit,
+                'dpp' => 300000,
+                'dpp_lain' => 40000,
                 'ppn' => 30000,
-                'ppnbm' => 30000,
+                'ppnbm' => 10000,
             ]);
 
             $details = [
@@ -65,10 +67,10 @@ class FakturSeeder extends Seeder
                     'harga_satuan' => 125000,
                     'total_harga' => 250000,
                     'pemotongan_harga' => 10000,
-                    'dpp' => 240000,
+                    'dpp' => 300000,
                     'ppn' => 24000,
-                    'dpp_lain' => 0,
-                    'ppnbm' => 0,
+                    'dpp_lain' => 40000,
+                    'ppnbm' => 10000,
                     'tarif_ppnbm' => 0,
                 ],
             ];
@@ -97,7 +99,7 @@ class FakturSeeder extends Seeder
                 'dilaporkan_oleh_pemungut_ppn' => false,
                 'is_draft' => false,
                 'is_akun_tambahan' => false,
-                'is_kredit' => true,
+                'is_kredit' => false,
                 'dpp' => 999999,
                 'dpp_lain' => 300009,
                 'ppn' => 300009,
