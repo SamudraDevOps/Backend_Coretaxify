@@ -26,8 +26,10 @@ return new class extends Migration
             $table->decimal('cl_1a8_dpp',18,2)->nullable();
             $table->decimal('cl_1a9_dpp',18,2)->nullable();
             $table->decimal('cl_1a_jumlah_dpp',18 ,2)->nullable();
-            $table->decimal('cl_1b_dpp',18,2)->nullable();
-            $table->decimal('cl_1c_dpp',18,2)->nullable();
+            $table->decimal('cl_1b_jumlah_dpp',18 ,2)->nullable();
+            $table->decimal('cl_1c_jumlah_dpp',18 ,2)->nullable();
+            // $table->decimal('cl_1b_dpp',18,2)->nullable();
+            // $table->decimal('cl_1c_dpp',18,2)->nullable();
             $table->decimal('cl_1a2_dpp_lain',18,2)->nullable();
             $table->decimal('cl_1a3_dpp_lain',18,2)->nullable();
             $table->decimal('cl_1a5_dpp_lain',18,2)->nullable();
