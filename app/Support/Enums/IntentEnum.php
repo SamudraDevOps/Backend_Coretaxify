@@ -148,4 +148,10 @@ enum IntentEnum: string {
     case API_UPDATE_FAKTUR_KREDITKAN = 'api.update.faktur.kreditkan';
 
     case API_UPDATE_FAKTUR_TIDAK_KREDITKAN = 'api.update.faktur.tidak.kreditkan';
+
+    case API_UPDATE_FAKTUR_RETUR = 'api.update.faktur.retur';
+
+    case API_GET_FAKTUR_RETUR_KELUARAN = 'api.get.faktur.retur.keluaran';
+
+    case API_GET_FAKTUR_RETUR_MASUKAN = 'api.get.faktur.retur.masukan';
 }

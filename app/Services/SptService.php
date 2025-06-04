@@ -162,6 +162,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_1a9_ppn'] = $request['cl_1a9_ppn'];
         $data['cl_1a5_ppnbm'] = $request['cl_1a5_ppnbm'];
         $data['cl_1a9_ppnbm'] = $request['cl_1a9_ppnbm'];
+        $data['cl_1b_jumlah_dpp'] = $request['cl_1b_jumlah_dpp'];
         $data['cl_2e_ppn'] = $request['cl_2e_ppn'];
         $data['cl_2h_dpp'] = $request['cl_2h_dpp'];
         $data['cl_2i_dpp'] = $request['cl_2i_dpp'];
@@ -259,7 +260,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
          + ($data['cl_1a8_ppnbm'] ?? 0)
          + ($data['cl_1a9_ppnbm'] ?? 0);
 
-        $data['cl_1c_dpp'] = $data['cl_1a_jumlah_dpp'] + ($data['cl_1b_dpp'] ?? 0);
+        $data['cl_1c_jumlah_dpp'] = $data['cl_1a_jumlah_dpp'] + ($data['cl_1b_jumlah_dpp'] ?? 0);
 
         $faktursMasukan = Faktur::where('akun_penerima_id', $request['badan_id'])
             ->where('masa_pajak', $month)
