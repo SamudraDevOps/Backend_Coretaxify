@@ -20,13 +20,13 @@ class FakturResource extends JsonResource
             ? new SistemTambahanResource($this->akun_penerima_tambahan)
             : new SistemResource($this->akun_penerima);
 
-        $intent = $request->query('intent');
-
+        $intent = $request->query('jenis_spt_ppn');
+        // dd($intent);
         switch($intent) {
             case JenisSptPpnEnum::A1->value:
                 return [
-                    'nama_pembeli' => $this->akun_op->nama_akun,
-                    'npwp' => $this->akun_op->npwp,
+                    'nama_pembeli' => $this->pic->nama_akun,
+                    'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -36,8 +36,8 @@ class FakturResource extends JsonResource
                 ];
             case JenisSptPpnEnum::A2->value:
                 return [
-                    'nama_pembeli' => $this->akun_op->nama_akun,
-                    'npwp' => $this->akun_op->npwp,
+                    'nama_pembeli' => $this->pic->nama_akun,
+                    'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -47,8 +47,8 @@ class FakturResource extends JsonResource
                     ];
             case JenisSptPpnEnum::B1->value:
                 return [
-                    'nama_pembeli' => $this->akun_op->nama_akun,
-                    'npwp' => $this->akun_op->npwp,
+                    'nama_pembeli' => $this->pic->nama_akun,
+                    'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -58,19 +58,19 @@ class FakturResource extends JsonResource
                 ];
             case JenisSptPpnEnum::B2->value:
                 return [
-                    'nama_pembeli' => $this->akun_op->nama_akun,
-                    'npwp' => $this->akun_op->npwp,
+                    'nama_pembeli' => $this->pic->nama_akun,
+                    'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
-                    'dpp_lain' => $this->dpp_lain,
-                    'ppn' => $this->ppn,
-                    'ppnbm' => $this->ppnbm,
+                    'dpp_lain' => ($this->dpp_lain ?? 0) - ($this->dpp_lain_retur ?? 0),
+                    'ppn' => ($this->ppn ?? 0) - ($this->ppn_retur ?? 0),
+                    'ppnbm' => ($this->ppnbm ?? 0) - ($this->ppnbm_retur ?? 0),
                 ];
             case JenisSptPpnEnum::B3->value:
                 return [
-                    'nama_pembeli' => $this->akun_op->nama_akun,
-                    'npwp' => $this->akun_op->npwp,
+                    'nama_pembeli' => $this->pic->nama_akun,
+                    'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -80,8 +80,8 @@ class FakturResource extends JsonResource
                 ];
             case JenisSptPpnEnum::C->value:
                 return [
-                    'nama_pembeli' => $this->akun_op->nama_akun,
-                    'npwp' => $this->akun_op->npwp,
+                    'nama_pembeli' => $this->pic->nama_akun,
+                    'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,

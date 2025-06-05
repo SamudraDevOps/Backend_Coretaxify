@@ -22,7 +22,7 @@ class ApiPembayaranController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Assignment $assignment, Sistem $sistem,Request $request) {
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $perPage = request()->get('perPage', 5);
 
         $this->pembayaranService->authorizeAccess($assignment, $sistem);
@@ -33,8 +33,18 @@ class ApiPembayaranController extends ApiController {
             $pembayarans = $this->pembayaranService->getAllForPembayaran($sistem, $perPage);
         }
 
-        return PembayaranResource::collection($pembayarans);
+        // Jika paginator
+        $total_nilai = $pembayarans->getCollection()->sum('nilai');
+        // Jika collection biasa, pakai: $total_nilai = $pembayarans->sum('nilai');
+
+        return PembayaranResource::collection($pembayarans)
+            ->additional([
+                'meta' => [
+                    'total_nilai' => $total_nilai
+                ]
+            ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -73,30 +83,30 @@ class ApiPembayaranController extends ApiController {
         }
 
         $sistem = Sistem::where('id', $sistem->id)->first();
-        $kapKjs = KapKjs::where('id', $request['kap_kjs_id'])->first();
+        // $kapKjs = KapKjs::where('id', $request['kap_kjs_id'])->first();
 
         $request['ntpn'] = $ntpn;
         $request['kode_billing'] = $randomNumber;
-        $request['badan\_id'] = $sistem->id;
+        $request['badan_id'] = $sistem->id;
 
-        if ($request['kap_kjs_id'] !== 42){
-            return response()->json(
-                [
-                'pic_id' => $request['pic_id'],
-                'npwp' => $sistem->npwp_akun,
-                'nama' => $sistem->nama_akun,
-                'alamat' => $sistem->alamat_utama_akun,
-                'kode_billing' => $request['kode_billing'],
-                'kapKjs' => $kapKjs->kode,
-                'masa_bulan' =>  $request['masa_bulan'],
-                'masa_tahun' => $request['masa_tahun'],
-                'masa_pajak' => $masa_pajak,
-                'keterangan' => $request['keterangan'],
-                'ntpn' => null,
-                'is_paid' => false,
-                'nilai' => $request['nilai'],
-                ]);
-        }
+        // if ($request['kap_kjs_id'] !== 42){
+        //     return response()->json(
+        //         [
+        //         'pic_id' => $request['pic_id'],
+        //         'npwp' => $sistem->npwp_akun,
+        //         'nama' => $sistem->nama_akun,
+        //         'alamat' => $sistem->alamat_utama_akun,
+        //         'kode_billing' => $request['kode_billing'],
+        //         'kapKjs' => $kapKjs->kode,
+        //         'masa_bulan' =>  $request['masa_bulan'],
+        //         'masa_tahun' => $request['masa_tahun'],
+        //         'masa_pajak' => $masa_pajak,
+        //         'keterangan' => $request['keterangan'],
+        //         'ntpn' => null,
+        //         'is_paid' => false,
+        //         'nilai' => $request['nilai'],
+        //     ]);
+        // }
 
         return $this->pembayaranService->create($request->all());
     }
@@ -120,7 +130,7 @@ class ApiPembayaranController extends ApiController {
         if ($pembayaran->kap_kjs_id == 42) {
             $sistem->saldo = ($sistem->saldo ?? 0) + ($pembayaran->nilai ?? 0);
             $sistem->save();
-        }else {
+        }else if($pembayaran->kap_kjs_id == 49){
             if ($pembayaran->nilai > $sistem->saldo) {
                 throw new \Exception('Saldo tidak mencukupi', 400);
             }
