@@ -56,6 +56,7 @@ class ApiBupotController extends ApiController {
     }
 
     public function penerbitan(TerbitBupotRequest $request) {
+        \Illuminate\Support\Facades\Log::info('Request data: ' . json_encode($request->validated()));
         return $this->bupotService->penerbitan($request->validated());
     }
 

@@ -26,32 +26,36 @@ class BupotService extends BaseCrudService implements BupotServiceInterface {
     }
 
     public function penerbitan(array $data) {
-        if(!isset($data['id'])) {
-            foreach($data['id'] as $id) {
+        if(isset($data['ids'])) {
+            foreach($data['ids'] as $id) {
                 $bupot = $this->repository->find($id);
-                if($bupot->status_penerbitan = 'disimpan') {
-                    $bupot->status = 'terbit';
-                } else if ($bupot->status_penerbitan = 'disimpan tidak valid') {
+                if($bupot->status_penerbitan == 'draft' && ($bupot->status == 'normal' || $bupot->status == 'pembetulan')) {
+                    $bupot->status_penerbitan = 'published';
+                    $bupot->save();
+                } else if ($bupot->status_penerbitan == 'draft' && $bupot->status == 'invalid') {
                     return response()->json([
                         'message' => 'BUPOT tidak dapat diterbitkan karena statusnya disimpan tidak valid'
                     ], 422);
                 }
-                $bupot->status_penerbitan = 'terbit';
+                $bupot->status_penerbitan = 'published';
                 $bupot->save();
             }
         }
     }
 
     public function penghapusan(array $data) {
-        if(!isset($data['id'])) {
-            foreach($data['id'] as $id) {
+        if(isset($data['ids'])) {
+            foreach($data['ids'] as $id) {
                 $bupot = $this->repository->find($id);
-                if($bupot->status_penerbitan = 'terbit') {
+                if($bupot->status_penerbitan == 'published') {
                     $bupot->status = 'pembatalan';
-                } else if ($bupot->status_penerbitan = 'disimpan' || $bupot->status_penerbitan = 'disimpan tidak valid') {
+                    $bupot->status_penerbitan = 'invalid';
+                    $bupot->save();
+                } else if ($bupot->status_penerbitan == 'draft') {
                     $bupot->status = 'dihapus';
+                    $bupot->status_penerbitan = 'invalid';
                 }
-                $bupot->status_penerbitan = 'tidak valid';
+                $bupot->status_penerbitan == 'invalid';
                 $bupot->save();
             }
         }
