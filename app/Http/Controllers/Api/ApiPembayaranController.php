@@ -22,7 +22,7 @@ class ApiPembayaranController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Assignment $assignment, Sistem $sistem,Request $request) {
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $perPage = request()->get('perPage', 5);
 
         $this->pembayaranService->authorizeAccess($assignment, $sistem);
@@ -33,8 +33,18 @@ class ApiPembayaranController extends ApiController {
             $pembayarans = $this->pembayaranService->getAllForPembayaran($sistem, $perPage);
         }
 
-        return PembayaranResource::collection($pembayarans);
+        // Jika paginator
+        $total_nilai = $pembayarans->getCollection()->sum('nilai');
+        // Jika collection biasa, pakai: $total_nilai = $pembayarans->sum('nilai');
+
+        return PembayaranResource::collection($pembayarans)
+            ->additional([
+                'meta' => [
+                    'total_nilai' => $total_nilai
+                ]
+            ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
