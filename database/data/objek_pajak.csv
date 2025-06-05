@@ -373,3 +373,6 @@ BP 21,Uang Pesangon yang Dibayarkan Sekaligus,Pasal 21,21-401-01,,Final,411121-1
 BP 21,"Uang Manfaat Pensiun, Tunjangan Hari Tua, atau Jaminan Hari Tua yang Dibayarkan Sekaligus",Pasal 21,21-401-02,,Final,411121-100,100
 BP 21,Penghasilan yang Diterima atau Diperoleh Pegawai Tetap di Daerah Tertentu yang Tidak Memenuhi Persyaratan Fasilitas,Pasal 21,21-100-37,,Final,411121-100,100
 BP 26,"Imbalan Sehubungan dengan Jasa, Pekerjaan dan Kegiatan, Hadiah dan Penghargaan, Pensiun dan Pembayaran Berkala Lainnya yang Dipotong PPh Pasal 26",Pasal 26,27-100-99,20,Final,411127-100,100
+Bukti Pemotongan Bulanan Pegawai Tetap,Penghasilan yang Diterima atau Diperoleh Pegawai Tetap,Pasal 21,21-100-01,,,411121-100,
+Bukti Pemotongan Bulanan Pegawai Tetap,Penghasilan yang Diterima atau Diperoleh Pensiunan Secara Teratur,Pasal 21,21-100-02,,,411121-100,
+Bukti Pemotongan Bulanan Pegawai Tetap,Penghasilan yang Diterima atau Diperoleh Pegawai Tetap yang Menerima Fasilitas di Daerah Tertentu,Pasal 21,21-100-32,,,411121-100,
