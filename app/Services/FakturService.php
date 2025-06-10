@@ -152,19 +152,18 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 $faktur = parent::update($keyOrModel, $data);
             }
 
-
             if ($detailTransaksiData && is_array($detailTransaksiData)) {
                 $existingIds = [];
 
                 foreach ($detailTransaksiData as $transaksi) {
-                    if ($faktur->id) {
+                    if (isset($transaksi['id'])) {
                         // Update existing detail transaksi
-                        if ($faktur->id) {
-                            $detailTransaksi = DetailTransaksi::find($faktur->id);
-                            if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
-                                $detailTransaksi->update($transaksi);
-                                $existingIds[] = $detailTransaksi->id;
-                            }
+                        $detailTransaksi = DetailTransaksi::where('id', $transaksi['id'])
+                            ->where('faktur_id', $faktur->id)
+                            ->first();
+                        if ($detailTransaksi) {
+                            $detailTransaksi->update($transaksi);
+                            $existingIds[] = $detailTransaksi->id;
                         }
                     } else {
                         // Create new detail transaksi
@@ -174,7 +173,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                     }
                 }
 
-                // Optional: Delete any detail transaksi not in the request
+                // Delete detail transaksi not in request
                 DetailTransaksi::where('faktur_id', $faktur->id)
                     ->whereNotIn('id', $existingIds)
                     ->delete();
