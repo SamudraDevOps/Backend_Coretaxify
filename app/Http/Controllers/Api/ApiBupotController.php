@@ -37,21 +37,21 @@ class ApiBupotController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Bupot $bupot) {
+    public function show(Request $request, $assignment, $sistem, Bupot $bupot) {
         return new BupotResource($bupot);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBupotRequest $request, Bupot $bupot) {
+    public function update(UpdateBupotRequest $request, $assignment, $sistem, Bupot $bupot) {
         return $this->bupotService->update($bupot, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Bupot $bupot) {
+    public function destroy(Request $request, $assignment, $sistem,  Bupot $bupot) {
         return $this->bupotService->delete($bupot);
     }
 

@@ -16,9 +16,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BPPU->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'npwp_akun' => 'sometimes|string|max:255',
@@ -41,9 +41,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BPNR->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'fasilitas_pajak' => 'sometimes|string|max:255',
@@ -72,9 +72,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_PS->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'fasilitas_pajak' => 'sometimes|string|max:255',
@@ -95,9 +95,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_PSD->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'fasilitas_pajak' => 'sometimes|string|max:255',
@@ -118,9 +118,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BP21->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'npwp_akun' => 'sometimes|string|max:255',
@@ -146,9 +146,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BP26->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'fasilitas_pajak' => 'sometimes|string|max:255',
@@ -177,11 +177,11 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BPA1->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
                     'bekerja_di_lebih_dari_satu_pemberi_kerja' => 'sometimes|boolean',
-                    'masa_awal' => 'sometimes|date_format:Y-m',
-                    'masa_akhir' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
+                    'masa_akhir' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'pegawai_asing' => 'sometimes|boolean',
@@ -229,11 +229,11 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BPA2->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
                     'bekerja_di_lebih_dari_satu_pemberi_kerja' => 'sometimes|boolean',
-                    'masa_awal' => 'sometimes|date_format:Y-m',
-                    'masa_akhir' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
+                    'masa_akhir' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'npwp_akun' => 'sometimes|string|max:255',
@@ -278,9 +278,9 @@ class UpdateBupotRequest extends FormRequest {
             case IntentEnum::API_BUPOT_BPBPT->value:
                 return [
                     'pembuat_id' => 'sometimes|exists:sistems,id',
-                    'representatif_id' => 'sometimes|exists:sistems,id',
+                    'representatif_id' => 'nullable|exists:sistems,id',
                     'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
-                    'masa_awal' => 'sometimes|date_format:Y-m',
+                    'masa_awal' => 'sometimes|date',
                     'status' => 'sometimes|in:' . implode(',', ['valid', 'invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan']),
                     'status_penerbitan' => 'sometimes|in:' . implode(',', ['draft', 'published', 'invalid']),
                     'pegawai_asing' => 'sometimes|boolean',
@@ -304,7 +304,7 @@ class UpdateBupotRequest extends FormRequest {
             // case IntentEnum::API_BUPOT_DSBP->value:
             //     return [
             //         'pembuat_id' => 'sometimes|exists:sistems,id',
-            //         'representatif_id' => 'sometimes|exists:sistems,id',
+            //         'representatif_id' => 'nullable|exists:sistems,id',
             //         'tipe_bupot' => 'sometimes|in:' . implode(',', BupotTypeEnum::toArray()),
             //     ];
         }
