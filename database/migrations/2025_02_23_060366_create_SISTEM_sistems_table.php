@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('tipe_akun');
             $table->string('alamat_utama_akun');
             $table->string('email_akun');
+            $table->decimal('saldo',18,2)->default(0);
             $table->timestamps();
         });
 

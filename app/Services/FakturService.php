@@ -13,6 +13,7 @@ use App\Models\DetailTransaksi;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\FakturResource;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\FakturServiceInterface;
@@ -30,6 +31,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
+        $data['badan_id'] = $sistem->id;
 
         if ($sistem) {
             $data['akun_pengirim_id'] = $sistem->id;
@@ -45,6 +47,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 break;
             case IntentEnum::API_CREATE_FAKTUR_FIX->value:
                 $data['is_draft'] = false;
+                $data['esign_status'] = 'DONE';
                 $data['status'] = FakturStatusEnum::APPROVED->value;
                 break;
             default:
@@ -77,13 +80,50 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $detailTransaksiData = $data['detail_transaksi'] ?? null;
         unset($data['detail_transaksi']);
 
+        $intent = $data['intent'] ?? null;
+
+        switch ($intent) {
+            case IntentEnum::API_UPDATE_FAKTUR_KREDITKAN->value:
+                $data['is_kredit'] = true;
+                return parent::update($keyOrModel, $data);
+                // break;
+            case IntentEnum::API_UPDATE_FAKTUR_TIDAK_KREDITKAN->value:
+                $data['is_kredit'] = false;
+                return parent::update($keyOrModel, $data);
+                // break;
+            case IntentEnum::API_UPDATE_FAKTUR_RETUR->value:
+                return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
+                    unset($data['intent']);
+
+                $data['is_retur'] = true;
+                $faktur = parent::update($keyOrModel,$data);
+
+                if ($detailTransaksiData && is_array($detailTransaksiData)) {
+                    $existingIds = [];
+
+                    foreach ($detailTransaksiData as $transaksi) {
+                        if ($faktur->id) {
+                            $detailTransaksi = DetailTransaksi::find($faktur->id);
+                            if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
+                                $detailTransaksi->update($transaksi);
+                                $existingIds[] = $detailTransaksi->id;
+                            }
+                        }
+                    }
+                }
+
+                return $faktur;
+            });
+        }
+
         return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-            $intent = $data['intent'] ?? null;
             unset($data['intent']);
 
+            $intent = $data['intent'] ?? null;
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
                     $data['is_draft'] = false;
+                    $data['esign_status'] = 'DONE';
                     $data['status'] = FakturStatusEnum::APPROVED->value;
                     break;
                 default:
@@ -91,12 +131,25 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                     break;
             }
 
-            $faktur = parent::update($keyOrModel, $data);
+            if ($keyOrModel->is_draft == false){
+                $dataFakturOld = Faktur::where('id', $keyOrModel->id)->first();
 
-            $parts = explode('-', $faktur->nomor_faktur_pajak);
+                $dataFakturOld['status'] = FakturStatusEnum::AMENDED->value;
+                $dataFakturOld->save();
 
-            if (isset($parts[1]) && $parts[1] === '0') {
-                $parts[1] = '1';
+                $dataFakturNew = $dataFakturOld->toArray();
+                unset($dataFakturNew['id'], $dataFakturNew['created_at'], $dataFakturNew['updated_at']);
+
+                $parts = explode('-', $dataFakturNew['nomor_faktur_pajak']);
+                if (isset($parts[1]) && $parts[1] === '0') {
+                    $parts[1] = '1';
+                }
+
+                $dataFakturNew['nomor_faktur_pajak'] = implode('-', $parts);
+                $dataFakturNew['status'] = FakturStatusEnum::APPROVED->value;
+                $faktur = parent::create($dataFakturNew);
+            } else {
+                $faktur = parent::update($keyOrModel, $data);
             }
 
             if ($detailTransaksiData && is_array($detailTransaksiData)) {
@@ -105,8 +158,10 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 foreach ($detailTransaksiData as $transaksi) {
                     if (isset($transaksi['id'])) {
                         // Update existing detail transaksi
-                        $detailTransaksi = DetailTransaksi::find($transaksi['id']);
-                        if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
+                        $detailTransaksi = DetailTransaksi::where('id', $transaksi['id'])
+                            ->where('faktur_id', $faktur->id)
+                            ->first();
+                        if ($detailTransaksi) {
                             $detailTransaksi->update($transaksi);
                             $existingIds[] = $detailTransaksi->id;
                         }
@@ -118,7 +173,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                     }
                 }
 
-                // Optional: Delete any detail transaksi not in the request
+                // Delete detail transaksi not in request
                 DetailTransaksi::where('faktur_id', $faktur->id)
                     ->whereNotIn('id', $existingIds)
                     ->delete();
@@ -127,8 +182,6 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             return $faktur;
         });
     }
-
-
 
     public function addDetailTransaksi(Faktur $faktur, array $detailTransaksiData)
     {
@@ -163,16 +216,26 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             case IntentEnum::API_GET_FAKTUR_PENGIRIM->value:
                 $filters = array_merge($request->query(), ['akun_pengirim_id' => $sistem->id]);
                 break;
-
             case IntentEnum::API_GET_FAKTUR_PENERIMA->value:
                 $filters = array_merge($request->query(),
                 [
                     'akun_penerima_id' => $sistem->id,
                     'is_draft' => false
                 ]);
-
                 break;
-
+            case IntentEnum::API_GET_FAKTUR_RETUR_KELUARAN->value:
+                $filters = array_merge([
+                    'akun_pengirim_id' => $sistem->id,
+                    'is_retur' => 1
+                ], $request->query());
+                break;
+            case IntentEnum::API_GET_FAKTUR_RETUR_MASUKAN->value:
+                $filters = array_merge($request->query(),
+                [
+                    'akun_penerima_id' => $sistem->id,
+                    'is_retur' => true
+                ]);
+                break;
             default:
                 $filters = array_merge($request->query(), ['akun_pengirim_id' => $sistem->id]);
                 break;

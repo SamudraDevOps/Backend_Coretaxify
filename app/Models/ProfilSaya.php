@@ -19,6 +19,11 @@ class ProfilSaya extends Model
     public function detail_kontaks() {
         return $this->hasMany(DetailKontak::class, 'sistem_id');
     }
+
+    public function detail_kontak() {
+        return $this->hasOne(DetailKontak::class, 'sistem_id');
+    }
+
     public function tempat_kegiatan_usahas() {
         return $this->hasMany(TempatKegiatanUsaha::class, 'sistem_id');
     }

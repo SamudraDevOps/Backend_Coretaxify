@@ -15,7 +15,7 @@ class Faktur extends Model
     }
 
     public function pic() {
-        return $this->belongsTo(Pic::class);
+        return $this->belongsTo(Sistem::class, 'pic_id');
     }
 
     public function akun_pengirim() {

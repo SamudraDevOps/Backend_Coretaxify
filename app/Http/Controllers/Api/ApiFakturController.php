@@ -126,7 +126,7 @@ class ApiFakturController extends ApiController
             // if ($faktur->akun_pengirim_id !== $sistem->id) {
             //     return response()->json(['message' => 'Faktur not found'], 404);
             // }
-            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+            // $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
         }
     // public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
 
@@ -143,14 +143,16 @@ class ApiFakturController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Assignment $assignment, Sistem $sistem, UpdateFakturRequest $request, Faktur $faktur) {
-        $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+    public function update(Assignment $assignment, Sistem $sistem, Request $request, Faktur $faktur) {
+        // $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
 
-        $data = $request->validated();
+        $data = $request->toArray();
         $data['intent'] = $request->input('intent', null);
 
         $updatedFaktur = $this->fakturService->update($faktur, $data);
         $updatedFaktur->load('detail_transaksis');
+
+        return new FakturResource($updatedFaktur);
     }
 
     /**
@@ -199,10 +201,10 @@ class ApiFakturController extends ApiController
             return response()->json(['message' => 'No faktur IDs provided'], 400);
         }
 
-        $fakturs = Faktur::whereIn('id', $fakturIds)->get();
-        foreach ($fakturs as $faktur) {
-            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
-        }
+        // $fakturs = Faktur::whereIn('id', $fakturIds)->get();
+        // foreach ($fakturs as $faktur) {
+        //     $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+        // }
 
         Faktur::whereIn('id', $fakturIds)->delete();
 
@@ -219,12 +221,16 @@ class ApiFakturController extends ApiController
             return response()->json(['message' => 'No faktur IDs provided'], 400);
         }
 
-        $fakturs = Faktur::whereIn('id', $fakturIds)->get();
-        foreach ($fakturs as $faktur) {
-            $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
-        }
+        // $fakturs = Faktur::whereIn('id', $fakturIds)->get();
+        // foreach ($fakturs as $faktur) {
+        //     $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
+        // }
 
-        Faktur::whereIn('id', $fakturIds)->update(['is_draft' => false, 'status' => FakturStatusEnum::APPROVED->value]);
+        Faktur::whereIn('id', $fakturIds)
+        ->update(['is_draft' => false,
+        'status' => FakturStatusEnum::APPROVED->value,
+        'esign_status' => 'DONE']);
+
 
         return response()->json(['message' => 'Fakturs berhasil dikirim ke SPT']);
     }

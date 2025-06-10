@@ -47,6 +47,10 @@ class FakturRepository extends BaseRepository implements FakturRepositoryInterfa
             $query->where('is_draft', $searchParams['is_draft']);
         }
 
+        if (isset($searchParams['is_retur'])) {
+            $query->where('is_retur', $searchParams['is_retur']);
+        }
+
         return $query;
     }
 }

@@ -111,9 +111,13 @@ class DataEkonomiService extends BaseCrudService implements DataEkonomiServiceIn
         array $data
     ): ?Model
     {
-        $this->authorizeAccess($assignment, $sistem, $dataEkonomi);
+        // $this->authorizeAccess($assignment, $sistem, $dataEkonomi);
 
-        return $this->update($dataEkonomi, $data);
+        $sistem = Sistem::with('profil_saya.data_ekonomi')->findOrFail($sistem->id);
+
+        $sistem->profil_saya->data_ekonomi->update($data);
+
+        return $dataEkonomi;
     }
 
     /**
@@ -135,15 +139,15 @@ class DataEkonomiService extends BaseCrudService implements DataEkonomiServiceIn
             abort(403, 'Unauthorized access to this sistem');
         }
 
-        // Verify the sistem exists for this assignment user
-        Sistem::where('assignment_user_id', $assignmentUser->id)
-            ->where('id', $sistem->id)
-            ->firstOrFail();
+        // // Verify the sistem exists for this assignment user
+        // Sistem::where('assignment_user_id', $assignmentUser->id)
+        //     ->where('id', $sistem->id)
+        //     ->firstOrFail();
 
-        // Additional check to ensure the data ekonomi belongs to the correct sistem
-        // This assumes there's a relationship between sistem and data ekonomi through portal_saya and profil_saya
-        if ($dataEkonomi->id !== $sistem->profil_saya->data_ekonomi_id) {
-            abort(403, 'Unauthorized access to this data ekonomi');
-        }
+        // // Additional check to ensure the data ekonomi belongs to the correct sistem
+        // // This assumes there's a relationship between sistem and data ekonomi through portal_saya and profil_saya
+        // if ($dataEkonomi->id !== $sistem->profil_saya->data_ekonomi_id) {
+        //     abort(403, 'Unauthorized access to this data ekonomi');
+        // }
     }
 }
