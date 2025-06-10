@@ -22,7 +22,7 @@ class BupotRepository extends BaseRepository implements BupotRepositoryInterface
 
         $query = $this->applySearchFilters($query, $searchParams, ['nomor_pemotongan']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'tipe_bupot', 'status', 'status_penerbitan']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'pembuat_id', 'tipe_bupot', 'status', 'status_penerbitan']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 
