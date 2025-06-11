@@ -17,43 +17,47 @@ use App\Support\Interfaces\Services\SistemServiceInterface;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
-class SistemService extends BaseCrudService implements SistemServiceInterface {
-    protected function getRepositoryClass(): string {
+class SistemService extends BaseCrudService implements SistemServiceInterface
+{
+    protected function getRepositoryClass(): string
+    {
         return SistemRepositoryInterface::class;
     }
 
-    public function create(array $data): ?Model {
+    public function create(array $data): ?Model
+    {
 
         $userId = auth()->id();
         $assignmentExists = AssignmentUser::where('user_id', $userId)
-                            ->where('assignment_id', $data['assignment'])
-                            ->exists();
+            ->where('assignment_id', $data['assignment'])
+            ->exists();
 
-        AssignmentUser::where('user_id', $userId)
-                        ->update(['is_start' => true]);
 
         if (!$assignmentExists) {
             abort(Response::HTTP_FORBIDDEN, 'No assignment exists for the current user.');
         }
 
+        AssignmentUser::where('user_id', $userId)
+            ->update(['is_start' => true]);
+
         $dataAssign = $data['assignment'];
         $user = auth()->user();
 
         $assignUser_id = AssignmentUser::where('user_id', $user->id)
-                        ->where('assignment_id', $dataAssign)
-                        ->first()->assignment_id;
+            ->where('assignment_id', $dataAssign)
+            ->first()->assignment_id;
 
         $idAssignUser = AssignmentUser::where('user_id', $user->id)
-                        ->where('assignment_id', $dataAssign)
-                        ->first()->id;
+            ->where('assignment_id', $dataAssign)
+            ->first()->id;
 
         $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
 
         $dataAccount = Account::where('task_id', $task_id)
-                    ->select('nama', 'npwp','account_type_id','alamat_utama','email')
-                    ->get();
+            ->select('nama', 'npwp', 'account_type_id', 'alamat_utama', 'email')
+            ->get();
 
-        foreach($dataAccount as $account) {
+        foreach ($dataAccount as $account) {
             $sistem = parent::create([
                 'assignment_user_id' => $idAssignUser,
                 'profil_saya_id' => ProfilSaya::create([
@@ -78,12 +82,9 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
 
             $kategoriWajibPajak = $sistem->tipe_akun;
 
-            if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi')
-            {
+            if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi') {
                 $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
-            }
-            elseif ($kategoriWajibPajak === 'Orang Pribadi')
-            {
+            } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
                 $kategoriWajibPajak = 'Orang Pribadi';
             }
         }
@@ -103,7 +104,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         }
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository;
+        $repository = $this->repository;
         return $repository->getByAssignmentUser($assignmentUser->id);
     }
 
@@ -115,7 +116,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         ])->firstOrFail();
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository;
+        $repository = $this->repository;
         return $repository->getFirstByAssignmentUser($assignmentUser->id);
     }
 
@@ -132,7 +133,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         }
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository;
+        $repository = $this->repository;
 
         switch ($intent) {
             case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
