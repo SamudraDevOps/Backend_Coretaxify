@@ -20,6 +20,11 @@ class Spt extends Model
         return $this->hasOne(SptPpn::class);
     }
 
+    public function spt_pph()
+    {
+        return $this->hasOne(SptPph::class);
+    }
+
     public function sistem(): BelongsTo
     {
         return $this->belongsTo(Sistem::class, 'badan_id');

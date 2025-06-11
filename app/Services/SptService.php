@@ -354,7 +354,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->load('spt_ppn');
                 break;
             case JenisPajakEnum::PPH->value:
-                // $spt->load('sptPph21');
+                $spt->load('spt_pph');
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
                 // $spt->load('sptPph23');
