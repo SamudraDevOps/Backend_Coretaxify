@@ -14,6 +14,7 @@ class StoreInformasiUmumRequest extends FormRequest {
             'kategori_wajib_pajak' => 'nullable|string',
             'negara_asal' => 'nullable|string',
             'tanggal_keputusan_pengesahan' => 'nullable|date',
+            'nomor_keputusan_pengesahan' => 'nullable|string',
             'nomor_keputusan_pengesahan_perubahan' => 'nullable|string',
             'tanggal_surat_keputusasan_pengesahan_perubahan' => 'nullable|date',
             'dead_of_establishment_document_number' => 'nullable|string',

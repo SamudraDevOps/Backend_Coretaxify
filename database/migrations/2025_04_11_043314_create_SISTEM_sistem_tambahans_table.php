@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama_akun')->nullable();
             $table->string('npwp_akun')->nullable();
             $table->string('tipe_akun')->nullable();
+            $table->string('negara_asal')->nullable();
             $table->string('alamat_utama_akun')->nullable();
             $table->string('email_akun')->nullable();
             $table->timestamps();

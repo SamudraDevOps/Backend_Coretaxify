@@ -11,11 +11,12 @@ use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
 use App\Http\Resources\FakturResource;
 use App\Support\Enums\FakturStatusEnum;
+use App\Http\Resources\CombinedAccountResource;
 use App\Http\Requests\Faktur\StoreFakturRequest;
 use App\Http\Requests\Faktur\UpdateFakturRequest;
+use App\Support\Interfaces\Services\PicServiceInterface;
 use App\Support\Interfaces\Services\FakturServiceInterface;
 use App\Support\Interfaces\Services\PermissionServiceInterface;
-use App\Support\Interfaces\Services\PicServiceInterface;
 use App\Http\Requests\DetailTransaksi\StoreDetailTransaksiRequest;
 
 class ApiFakturController extends ApiController
@@ -241,17 +242,18 @@ class ApiFakturController extends ApiController
             'assignment_id' => $assignment->id
             ])->firstOrFail();
 
+
         $sistems = Sistem::where('assignment_user_id', $assignmentUser->id)->get()->map(function ($item) {
             $item->is_akun_tambahan = false;
             return $item;
         });
-
         $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
             $item->is_akun_tambahan = true;
             return $item;
         });
+        // dd($sistemTambahans);
 
-        return $sistems->concat($sistemTambahans);
+        return CombinedAccountResource::collection($sistems->concat($sistemTambahans));
     }
 
     public function deleteDetailTransaksi(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur, $detailTransaksiId)

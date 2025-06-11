@@ -21,6 +21,8 @@ class GroupSeeder extends Seeder
                 'class_code' => 'ABCD',
                 'status' => 'ACTIVE',
             ]);
+        $groups->users()->attach([3,4]);
+
         $groups2 = Group::create([
                 'name' => 'Kelas PSC',
                 'user_id' => 5,
