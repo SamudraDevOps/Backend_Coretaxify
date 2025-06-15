@@ -7,6 +7,7 @@ use App\Models\Pic;
 use App\Models\Spt;
 use App\Models\Faktur;
 use App\Models\Sistem;
+use App\Models\SptPph;
 use App\Models\SptPpn;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
@@ -42,6 +43,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         $fields_spt_ppn = [
             'cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
+        ];
+
+        $fields_spt_pph = [
+            'cl_bp1_2', 'cl_bp1_3', 'cl_bp2_2', 'cl_bp2_3'
         ];
 
         $requestData = is_array($request) ? $request : $request->all();
@@ -492,6 +497,17 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_ppn['spt_id'] = $spt->id;
                 SptPpn::create($data_spt_ppn);
+                break;
+            case JenisPajakEnum::PPH->value:
+                $fakturs = Faktur::where('badan_id', $data['badan_id'])
+                ->where('masa_pajak', $month)
+                ->where('tahun', $year)
+                ->where('status', FakturStatusEnum::APPROVED->value)
+                ->get();
+
+                $data_spt_ppn['spt_id'] = $spt->id;
+
+                SptPph::create($data_spt_pph);
                 break;
         }
         return $spt;
