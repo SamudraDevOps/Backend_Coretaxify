@@ -103,7 +103,8 @@ class ApiUserController extends ApiController {
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, User $user) {
-        if ($user->hasRole('admin')) {
+        $authUser = auth()->user();
+        if ($authUser->hasRole('admin')) {
             return $this->userService->delete($user);
         }
         return response()->json([
