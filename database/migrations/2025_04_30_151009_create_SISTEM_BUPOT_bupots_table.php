@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('bupots', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pembuat_id')->references('id')->on('sistems')->onDelete('cascade');
-            // $table->foreignId('representatif_id')->nullable()->references('id')->on('sistems')->onDelete('cascade');
+            $table->foreignId('representatif_id')->nullable()->references('id')->on('sistems')->onDelete('cascade');
             $table->foreignId('tanda_tangan_bupot_id')->nullable()->references('id')->on('bupot_tanda_tangans'); //BELUM FIX
             $table->enum('tipe_bupot', BupotTypeEnum::toArray())->nullable();
             $table->enum('status', ['invalid', 'normal', 'pembetulan', 'dihapus', 'pembatalan'])->nullable();
@@ -55,7 +55,7 @@ return new class extends Migration
             $table->decimal('tunjangan_istri', 17, 0)->nullable();
             $table->decimal('tunjangan_anak', 17, 0)->nullable();
             $table->decimal('tunjangan_perbaikan_penghasilan', 17, 0)->nullable();
-            $table->decimal('tunjungan_struktural_fungsional', 17, 0)->nullable();
+            $table->decimal('tunjangan_struktural_fungsional', 17, 0)->nullable();
             $table->decimal('tunjangan_beras', 17, 0)->nullable();
             $table->decimal('penghasilan_tetap_lainnya', 17, 0)->nullable();
             $table->decimal('dasar_pengenaan_pajak', 17, 0)->nullable();
