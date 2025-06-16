@@ -8,7 +8,7 @@ class HapusBupotRequest extends FormRequest {
     public function rules(): array {
         return [
             // Add your validation rules here
-            'id' => 'required|array'
+            'ids' => 'required|array'
         ];
     }
 }

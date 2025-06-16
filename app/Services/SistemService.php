@@ -18,80 +18,78 @@ use App\Support\Interfaces\Services\SistemServiceInterface;
 use App\Support\Interfaces\Repositories\SistemRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
-class SistemService extends BaseCrudService implements SistemServiceInterface {
-    protected function getRepositoryClass(): string {
+class SistemService extends BaseCrudService implements SistemServiceInterface
+{
+    protected function getRepositoryClass(): string
+    {
         return SistemRepositoryInterface::class;
     }
 
-    public function create(array $data): ?Model {
+    public function create(array $data): ?Model
+    {
 
-        return DB::transaction(function () use ($data) {
-            $userId = auth()->id();
-            $assignmentExists = AssignmentUser::where('user_id', $userId)
-                                ->where('assignment_id', $data['assignment'])
-                                ->exists();
+        $userId = auth()->id();
+        $assignmentExists = AssignmentUser::where('user_id', $userId)
+            ->where('assignment_id', $data['assignment'])
+            ->exists();
 
-            AssignmentUser::where('user_id', $userId)
-                            ->update(['is_start' => true]);
 
-            if (!$assignmentExists) {
-                abort(Response::HTTP_FORBIDDEN, 'No assignment exists for the current user.');
-            }
+        if (!$assignmentExists) {
+            abort(Response::HTTP_FORBIDDEN, 'No assignment exists for the current user.');
+        }
 
-            $dataAssign = $data['assignment'];
-            $user = auth()->user();
+        AssignmentUser::where('user_id', $userId)
+            ->update(['is_start' => true]);
 
-            $assignUser_id = AssignmentUser::where('user_id', $user->id)
-                            ->where('assignment_id', $dataAssign)
-                            ->first()->assignment_id;
+        $dataAssign = $data['assignment'];
+        $user = auth()->user();
 
-            $idAssignUser = AssignmentUser::where('user_id', $user->id)
-                            ->where('assignment_id', $dataAssign)
-                            ->first()->id;
+        $assignUser_id = AssignmentUser::where('user_id', $user->id)
+            ->where('assignment_id', $dataAssign)
+            ->first()->assignment_id;
 
-            $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
+        $idAssignUser = AssignmentUser::where('user_id', $user->id)
+            ->where('assignment_id', $dataAssign)
+            ->first()->id;
 
-            $dataAccount = Account::where('task_id', $task_id)
-                        ->select('nama', 'npwp','account_type_id','alamat_utama','email')
-                        ->get();
+        $task_id = Assignment::where('id', $assignUser_id)->first()->task_id;
 
-            foreach($dataAccount as $account) {
-                $sistem = parent::create([
-                    'assignment_user_id' => $idAssignUser,
-                    'profil_saya_id' => ProfilSaya::create([
-                        'informasi_umum_id' => InformasiUmum::create([
-                            'nama' => $account->nama,
-                            'npwp' => $account->npwp,
-                            'jenis_wajib_pajak' => $account->account_type->name,
-                            'kategori_wajib_pajak' => $account->account_type->name,
-                            'bahasa' => 'Bahasa Indonesia',
-                        ])->id,
-                        'data_ekonomi_id' => DataEkonomi::create()->id,
-                        'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
-                            'nomor_identifikasi' => $account->npwp,
-                        ])->id,
+        $dataAccount = Account::where('task_id', $task_id)
+            ->select('nama', 'npwp', 'account_type_id', 'alamat_utama', 'email')
+            ->get();
+
+        foreach ($dataAccount as $account) {
+            $sistem = parent::create([
+                'assignment_user_id' => $idAssignUser,
+                'profil_saya_id' => ProfilSaya::create([
+                    'informasi_umum_id' => InformasiUmum::create([
+                        'nama' => $account->nama,
+                        'npwp' => $account->npwp,
+                        'jenis_wajib_pajak' => $account->account_type->name,
+                        'kategori_wajib_pajak' => $account->account_type->name,
+                        'bahasa' => 'Bahasa Indonesia',
                     ])->id,
-                    dd('123'),
-                    'nama_akun' => $account->nama,
-                    'npwp_akun' => $account->npwp,
-                    'tipe_akun' => $account->account_type->name,
-                    'alamat_utama_akun' => $account->alamat_utama,
-                    'email_akun' => $account->email,
-                ]);
+                    'data_ekonomi_id' => DataEkonomi::create()->id,
+                    'nomor_identifikasi_eksternal_id' => NomorIdentifikasiEksternal::create([
+                        'nomor_identifikasi' => $account->npwp,
+                    ])->id,
+                ])->id,
+                'nama_akun' => $account->nama,
+                'npwp_akun' => $account->npwp,
+                'tipe_akun' => $account->account_type->name,
+                'alamat_utama_akun' => $account->alamat_utama,
+                'email_akun' => $account->email,
+            ]);
 
-                $kategoriWajibPajak = $sistem->tipe_akun;
+            $kategoriWajibPajak = $sistem->tipe_akun;
 
-                if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi')
-                {
-                    $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
-                }
-                elseif ($kategoriWajibPajak === 'Orang Pribadi')
-                {
-                    $kategoriWajibPajak = 'Orang Pribadi';
-                }
+            if ($kategoriWajibPajak === 'Badan' || $kategoriWajibPajak === 'Badan Lawan Transaksi') {
+                $kategoriWajibPajak = 'Perseroan Terbatas (PT)';
+            } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
+                $kategoriWajibPajak = 'Orang Pribadi';
             }
             return $sistem;
-        });
+        }
     }
 
     public function getSystemsByAssignment(Assignment $assignment, Request $request)
@@ -107,7 +105,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         }
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository;
+        $repository = $this->repository;
         return $repository->getByAssignmentUser($assignmentUser->id);
     }
 
@@ -119,7 +117,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         ])->firstOrFail();
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository;
+        $repository = $this->repository;
         return $repository->getFirstByAssignmentUser($assignmentUser->id);
     }
 
@@ -136,7 +134,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface {
         }
 
         /** @var SistemRepositoryInterface $repository */
-         $repository = $this->repository;
+        $repository = $this->repository;
 
         switch ($intent) {
             case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM->value:
