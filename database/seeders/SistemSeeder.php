@@ -42,14 +42,18 @@ class SistemSeeder extends Seeder
                             'nomor_identifikasi' => $account->npwp,
                         ])->id,
                     ])->id,
-                'nama_akun' => 'Akun 1',
-                'npwp_akun' => '123456789012345',
-                'tipe_akun' => 'Perorangan',
-                'alamat_utama_akun' => 'Jl. Contoh No. 123',
-                'email_akun' => 'akun1@example.com',
-                'saldo' => 1000000,
+                'nama_akun' => $account->nama,
+                'npwp_akun' => $account->npwp,
+                'tipe_akun' => $account->account_type->name,
+                'alamat_utama_akun' => $account->alamat_utama,
+                'email_akun' => $account->email,
+                'saldo' => 10
             ]);
         }
+
+        $assignmentUser->update([
+            'is_start' => true,
+        ]);
 
     }
 }
