@@ -6,6 +6,7 @@ use App\Models\KapKjs;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
@@ -88,6 +89,8 @@ class ApiPembayaranController extends ApiController {
         $request['ntpn'] = $ntpn;
         $request['kode_billing'] = $randomNumber;
         $request['badan_id'] = $sistem->id;
+        $request['masa_pajak'] = $masa_pajak;
+        $request['masa_aktif'] = Carbon::now() -> addWeek();
 
         // if ($request['kap_kjs_id'] !== 42){
         //     return response()->json(

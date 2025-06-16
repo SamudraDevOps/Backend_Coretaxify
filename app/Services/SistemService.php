@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\InformasiUmum;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\NomorIdentifikasiEksternal;
 use Symfony\Component\HttpFoundation\Response;
@@ -87,8 +88,8 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
             } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
                 $kategoriWajibPajak = 'Orang Pribadi';
             }
+            return $sistem;
         }
-        return $sistem;
     }
 
     public function getSystemsByAssignment(Assignment $assignment, Request $request)

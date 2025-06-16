@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use Illuminate\Support\Facades\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -60,4 +61,10 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\CheckRole::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('pembayaran:update-masa-aktif')->everyMinute();
+    }
+
 }

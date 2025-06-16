@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             BupotObjekPajakSeeder::class,
             SistemSeeder::class,
             BupotSeeder::class,
+            PicSeeder::class,
+            FakturSeeder::class,
         ]);
     }
 }
