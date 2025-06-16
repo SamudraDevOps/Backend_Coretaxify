@@ -94,7 +94,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
             'status_penerbitan' => 'published',
@@ -128,7 +128,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
             'status_penerbitan' => 'published',
@@ -153,7 +153,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[3],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
             'status_penerbitan' => 'published',
@@ -178,7 +178,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[4],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
             'status_penerbitan' => 'published',
@@ -209,7 +209,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[5],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
             'status_penerbitan' => 'published',
@@ -243,7 +243,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[6],
             'bekerja_di_lebih_dari_satu_pemberi_kerja' => false,
             'masa_awal' => '2024-01-01',
             'masa_akhir' => '2024-12-31',
@@ -298,7 +298,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[7],
             'bekerja_di_lebih_dari_satu_pemberi_kerja' => false,
             'masa_awal' => '2024-01-01',
             'masa_akhir' => '2024-12-31',
@@ -350,7 +350,7 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
             'representatif_id' => $sistemIds[array_rand($sistemIds)],
-            'tipe_bupot' => BupotTypeEnum::toArray()[0],
+            'tipe_bupot' => BupotTypeEnum::toArray()[8],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
             'status_penerbitan' => 'published',

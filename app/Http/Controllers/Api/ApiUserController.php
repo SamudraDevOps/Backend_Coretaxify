@@ -103,6 +103,11 @@ class ApiUserController extends ApiController {
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, User $user) {
-        return $this->userService->delete($user);
+        if ($user->hasRole('admin')) {
+            return $this->userService->delete($user);
+        }
+        return response()->json([
+            'message' => 'You are not authorized to delete the user'
+        ], 403);
     }
 }
