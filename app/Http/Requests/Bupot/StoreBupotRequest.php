@@ -132,7 +132,7 @@ class StoreBupotRequest extends FormRequest {
                     'jenis_pajak' => 'required|string|max:255',
                     'kode_objek_pajak' => 'required|string|max:255',
                     'sifat_pajak_penghasilan' => 'required|string|max:255',
-                    'bruto_2_tahun' => 'required|numeric|min:0',
+                    'bruto_2_tahun' => 'sometimes|numeric|min:0',
                     'dasar_pengenaan_pajak' => 'required|numeric|min:0',
                     'persentase_penghasilan_bersih' => 'required|numeric|min:0',
                     'tarif_pajak' => 'required|numeric|min:0',
