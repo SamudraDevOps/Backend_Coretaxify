@@ -26,7 +26,7 @@ class NewUserMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New '. $this->user->roles . ' Mail',
+            subject: 'New '. $this->user->roles->description . ' Mail',
         );
     }
 
