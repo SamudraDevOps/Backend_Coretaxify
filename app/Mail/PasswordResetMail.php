@@ -39,7 +39,7 @@ class PasswordResetMail extends Mailable
         //     view: 'view.name',
         // );
         return new Content(
-            text: 'emails.password-reset',
+            view: 'emails.password-reset',
             with: [
                 'name' => $this->user->name,
                 'email' => $this->user->email,

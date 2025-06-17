@@ -42,7 +42,7 @@ class SendOtpMail extends Mailable
         //     view: 'view.name',
         // );
         return new Content(
-            text: 'emails.otp',
+            view: 'emails.otp',
             with: [
                 'otp' => $this->otp,
             ]
