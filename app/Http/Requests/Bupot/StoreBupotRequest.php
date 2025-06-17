@@ -288,7 +288,7 @@ class StoreBupotRequest extends FormRequest {
                     'nama_akun' => 'required|string|max:255',
                     'alamat_utama_akun' => 'required|string|max:255',
                     'nomor_paspor_akun' => 'sometimes|string|max:255',
-                    'negara_akun' => 'required|string|max:255',
+                    'negara_akun' => 'sometimes|string|max:255',
                     'ptkp_akun' => 'required|in:' . implode(',', PTKPEnum::toArray()),
                     'posisi_akun' => 'sometimes|string|max:255',
                     'fasilitas_pajak' => 'required|string|max:255',
