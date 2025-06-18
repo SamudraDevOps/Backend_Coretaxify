@@ -88,8 +88,8 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
             } elseif ($kategoriWajibPajak === 'Orang Pribadi') {
                 $kategoriWajibPajak = 'Orang Pribadi';
             }
-            return $sistem;
         }
+        return $sistem;
     }
 
     public function getSystemsByAssignment(Assignment $assignment, Request $request)
