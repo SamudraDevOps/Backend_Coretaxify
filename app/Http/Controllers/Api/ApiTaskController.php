@@ -19,7 +19,7 @@ class ApiTaskController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
         $user = auth()->user();
 
          // $tasks = $this->taskService->getTasksByUserId($user->id);
@@ -66,7 +66,7 @@ class ApiTaskController extends ApiController {
     }
 
     public function getContractTasks(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
         $user = auth()->user();
 
         return $user->contract->tasks;

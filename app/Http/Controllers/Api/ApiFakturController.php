@@ -33,7 +33,7 @@ class ApiFakturController extends ApiController
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request)
     {
-        $perPage = request()->get('perPage', 10);
+        $perPage = request()->get('perPage', 20);
 
         // For personal accounts, check if they're representing a company
         $representedCompanyId = $request->input('company_id');

@@ -23,7 +23,7 @@ class ApiBupotObjekPajakController extends ApiController
      */
     public function index(Request $request)
     {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
 
         return BupotObjekPajakResource::collection($this->bupotObjekPajakService->getAll($request->query()));
     }

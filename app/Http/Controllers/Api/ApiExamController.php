@@ -21,7 +21,7 @@ class ApiExamController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
         $intent = request()->get('intent');
         $user = auth()->user();
 
@@ -95,7 +95,7 @@ class ApiExamController extends ApiController {
     }
 
     public function getMembers(Request $request, Exam $exam) {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
         return UserResource::collection($exam->users()->paginate($perPage));
     }
 

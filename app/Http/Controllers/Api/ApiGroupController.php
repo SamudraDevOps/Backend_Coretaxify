@@ -27,7 +27,7 @@ class ApiGroupController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
         $intent = request()->get('intent');
         $user = auth()->user();
 
@@ -133,7 +133,7 @@ class ApiGroupController extends ApiController {
     }
 
     public function getMembers(Request $request, Group $group) {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
         return UserResource::collection($group->users()->paginate($perPage));
     }
 
@@ -147,7 +147,7 @@ class ApiGroupController extends ApiController {
     }
 
     public function getAssignments(Request $request, Group $group) {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
         $user = auth()->user();
 
         // If user is a student (mahasiswa or mahasiswa-psc), only show assignments they've joined
@@ -192,7 +192,7 @@ class ApiGroupController extends ApiController {
     }
 
     public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment) {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
         return UserResource::collection($assignment->users()->paginate($perPage));
     }
 

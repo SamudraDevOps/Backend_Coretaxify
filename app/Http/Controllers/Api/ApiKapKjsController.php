@@ -18,7 +18,7 @@ class ApiKapKjsController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        // $perPage = request()->get('perPage', 5);
+        // $perPage = request()->get('perPage', 20);
 
         // return KapKjsResource::collection($this->kapKjsService->getAllPaginated($request->query(), $perPage));
 

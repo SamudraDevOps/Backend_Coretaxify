@@ -22,7 +22,7 @@ class ApiDetailTransaksiController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
 
         return DetailTransaksiResource::collection($this->detailTransaksiService->getAllPaginated($request->query(), $perPage));
     }

@@ -21,7 +21,7 @@ class ApiAssignmentController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
         $intent = request()->get('intent');
         $user = auth()->user();
 
@@ -105,7 +105,7 @@ class ApiAssignmentController extends ApiController {
         return $this->assignmentService->delete($assignment);
     }
     public function getMembers(Request $request, Assignment $assignment) {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
         return UserResource::collection($assignment->users()->paginate($perPage));
     }
 

@@ -35,7 +35,7 @@ class ApiDetailBankController extends ApiController
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
     {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
 
         $detailBanks = $this->detailBankService->getAllForSistem(
             $assignment,

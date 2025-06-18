@@ -23,7 +23,7 @@ class ApiTempatKegiatanUsahaController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
 
         $tempatKegiatanUsahas = $this->tempatKegiatanUsahaService->getAllForSistem(
             $assignment,

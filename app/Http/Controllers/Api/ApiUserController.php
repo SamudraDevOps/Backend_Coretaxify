@@ -19,7 +19,7 @@ class ApiUserController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
 
         return UserResource::collection($this->userService->getAllPaginated($request->query(), $perPage));
     }

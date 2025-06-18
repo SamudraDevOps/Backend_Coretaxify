@@ -366,7 +366,7 @@ class GenerateModelScaffold extends Command {
             public function __construct(protected {$modelName}ServiceInterface \${$modelNameCamel}Service) {}
 
             public function index(Request \$request) {
-                \$perPage = \$request->get('perPage', 10);
+                \$perPage = \$request->get('perPage', 20);
                 \$data = {$modelName}Resource::collection(\$this->{$modelNameCamel}Service->getAllPaginated(\$request->query(), \$perPage));
 
                 if (\$this->ajax()) {
@@ -442,7 +442,7 @@ class GenerateModelScaffold extends Command {
          * Display a listing of the resource.
          */
         public function index(Request \$request) {
-            \$perPage = request()->get('perPage', 5);
+            \$perPage = request()->get('perPage', 20);
 
             return {$modelName}Resource::collection(\$this->{$modelNameCamel}Service->getAllPaginated(\$request->query(), \$perPage));
         }

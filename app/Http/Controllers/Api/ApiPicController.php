@@ -28,7 +28,7 @@ class ApiPicController extends ApiController
      */
     public function index(Request $request)
     {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
 
         return PicResource::collection($this->picService->getAllPaginated($request->query(), $perPage));
     }

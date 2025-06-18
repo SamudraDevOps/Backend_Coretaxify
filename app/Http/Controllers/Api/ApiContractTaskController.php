@@ -18,7 +18,7 @@ class ApiContractTaskController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
 
         return ContractTaskResource::collection($this->contractTaskService->getAllPaginated($request->query(), $perPage));
     }

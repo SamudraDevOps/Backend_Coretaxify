@@ -23,7 +23,7 @@ class ApiSptController extends ApiController {
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem);
 
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
 
         $spts = $this->sptService->getAllForSpt($sistem, $perPage);
 

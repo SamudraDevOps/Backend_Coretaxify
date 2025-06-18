@@ -35,7 +35,7 @@ class ApiDetailKontakController extends ApiController
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request): AnonymousResourceCollection
     {
-        $perPage = $request->get('perPage', 5);
+        $perPage = $request->get('perPage', 20);
 
         $detailKontaks = $this->detailKontakService->getAllForSistem(
             $assignment,

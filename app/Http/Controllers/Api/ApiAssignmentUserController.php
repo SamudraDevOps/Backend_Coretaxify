@@ -20,7 +20,7 @@ class ApiAssignmentUserController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $perPage = request()->get('perPage', 5);
+        $perPage = request()->get('perPage', 20);
         $user = auth()->user();
         $assignmentUser = $this->assignmentUserService->getAssignmentUserByUserId($user->id, $perPage);
 
