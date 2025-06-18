@@ -105,10 +105,16 @@ class ApiUserController extends ApiController {
     public function destroy(Request $request, User $user) {
         $authUser = auth()->user();
         if ($authUser->hasRole('admin')) {
-            return $this->userService->delete($user);
+            try {
+                return $this->userService->delete($user);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => "Penghapusan pengguna tidak diizinkan. Pengguna telah terdaftar pada kelas atau praktikum."
+                ], );
+            }
         }
         return response()->json([
-            'message' => 'You are not authorized to delete the user'
+            'message' => 'Anda tidak diizinkan untuk menghapus data pengguna ini.'
         ], 403);
     }
 }
