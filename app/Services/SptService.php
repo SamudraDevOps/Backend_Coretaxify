@@ -20,6 +20,7 @@ use App\Http\Resources\SptResource;
 use App\Support\Enums\SptModelEnum;
 use App\Support\Enums\BupotTypeEnum;
 use App\Support\Enums\SptStatusEnum;
+use App\Support\Helpers\MonthHelper;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Enums\JenisPajakEnum;
 use App\Http\Resources\FakturResource;
@@ -136,8 +137,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     return $pembayaran;
                 }
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_KODE_BILLING->value:
-                $spt_pph = SptPpn::where('spt_id', $spt->id)->first();
-
+                $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
                 foreach ($fields_spt_pph as $field) {
                     if (array_key_exists($field, $requestData)) {
@@ -152,24 +152,69 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->is_can_pembetulan = true;
                 $spt->save();
 
-                $randomNumber = mt_rand(100000000000000, 999999999999999);
+                // Generate group identifier untuk mengelompokkan 4 pembayaran
+                $groupId = Str::uuid();
 
-                $total_bayar = $spt_pph->cl_bp1_4 + $spt_pph->cl_bp2_4;
+                // Array pembayaran yang akan dibuat
+                $pembayaranData = [];
 
-                $hasil = $sistem->saldo - $total_bayar;
+                // cl_bp1_4 - PPh 21
+                if ($spt_pph->cl_bp1_4 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp1_4,
+                        'kap_kjs_id' => 50, // PPh 21
+                        'jenis_pembayaran' => 'cl_bp1_4',
+                    ];
+                }
 
-                $dataPembayaran['nilai'] = $total_bayar;
+                // cl_bp1_7 - PPh 21 Ditanggung Pemerintah
+                if ($spt_pph->cl_bp1_7 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp1_7,
+                        'kap_kjs_id' => 51, // PPh 21 DTP
+                        'jenis_pembayaran' => 'cl_bp1_7',
+                    ];
+                }
 
-                $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
-                $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
-                $dataPembayaran['badan_id'] = $request['badan_id'];
-                $dataPembayaran['pic_id'] = $request['pic_id'];
-                $dataPembayaran['kode_billing'] = $randomNumber;
-                $dataPembayaran['kap_kjs_id'] = 50;
-                $dataPembayaran['ntpn'] = $ntpn;
-                $dataPembayaran['masa_aktif'] = $masaAktif;
+                // cl_bp2_4 - PPh 26
+                if ($spt_pph->cl_bp2_4 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp2_4,
+                        'kap_kjs_id' => 52, // PPh 26
+                        'jenis_pembayaran' => 'cl_bp2_4',
+                    ];
+                }
 
-                Pembayaran::create($dataPembayaran);
+                // cl_bp2_7 - PPh 26 Ditanggung Pemerintah
+                if ($spt_pph->cl_bp2_7 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp2_7,
+                        'kap_kjs_id' => 53, // PPh 26 DTP
+                        'jenis_pembayaran' => 'cl_bp2_7',
+                    ];
+                }
+
+                // Buat pembayaran untuk setiap item
+                foreach ($pembayaranData as $data) {
+                    $randomNumber = mt_rand(100000000000000, 999999999999999);
+
+                    $dataPembayaran = [
+                        'nilai' => $data['nilai'],
+                        'masa_bulan' => $spt->masa_bulan,
+                        'masa_tahun' => $spt->masa_tahun,
+                        'badan_id' => $request['badan_id'],
+                        'pic_id' => $request['pic_id'],
+                        'kode_billing' => $randomNumber,
+                        'kap_kjs_id' => $data['kap_kjs_id'],
+                        'ntpn' => $ntpn,
+                        'masa_aktif' => $masaAktif,
+                        'spt_id' => $spt->id, // Tambahkan referensi ke SPT
+                        'group_id' => $groupId, // Untuk mengelompokkan
+                        'jenis_pembayaran' => $data['jenis_pembayaran'], // Identifier jenis
+                    ];
+
+                    Pembayaran::create($dataPembayaran);
+                }
                 break;
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_DEPOSIT->value:
                 $spt_pph = SptPpn::where('spt_id', $spt->id)->first();
@@ -593,8 +638,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 SptPpn::create($data_spt_ppn);
                 break;
             case JenisPajakEnum::PPH->value:
-                $bupots = Bupot::where('badan_id', $data['badan_id'])
-                ->whereMonth('masa_awal', $month)
+                $monthNumber = MonthHelper::getMonthNumber($month);
+
+                $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->whereMonth('masa_awal', $monthNumber)
                 ->whereYear('masa_awal', $year)
                 ->get();
 
@@ -604,12 +651,31 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $total_bp21 = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value);
                 $total_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value);
 
-                $data_spt_pph['cl_bp1_1'] = $total_pemotongan->sum('') + $total_bp21->sum('');
-                $data_spt_pph['cl_bp1_7'] = $total_pemotongan->sum('') + $total_bp21->sum('pph_pasal_21_ditanggung_pemerintah');
-                $data_spt_pph['cl_bp1_5'] = $total_pemotongan->where('status', 'pembetulan')->sum('') + $total_bp21->where('status', 'pembetulan')->sum('pph_pasal_21_ditanggung_pemerintah');
-                $data_spt_pph['cl_bp2_1'] = $total_bp26->sum('pph_pasal_21_potongan_bpa1_sebelumnya');
-                $data_spt_pph['cl_bp2_7'] = $total_pemotongan->sum('') + $total_bp26->sum('pph_pasal_21_ditanggung_pemerintah');
-                $data_spt_pph['cl_bp2_5'] = $total_pemotongan->where('status', 'pembetulan')->sum('') + $total_bp26->where('status', 'pembetulan')->sum('pph_pasal_21_ditanggung_pemerintah');
+                $a = $total_pemotongan->sum('pajak_penghasilan') ?? 0;
+                $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_1'] = $a + $b;
+
+                $c = $total_pemotongan->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $d = $total_bp21->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $data_spt_pph['cl_bp1_7'] = $c + $d;
+
+                $e = $total_pemotongan->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f = $total_bp21->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_5'] = $e + $f;
+
+                $a2 = $total_pemotongan->sum('pajak_penghasilan') ?? 0;
+                $b2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_1'] = $a2 + $b2;
+
+                $c2 = $total_pemotongan->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $d2 = $total_bp26->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $data_spt_pph['cl_bp1_7'] = $c2 + $d2;
+
+                $e2 = $total_pemotongan->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f2 = $total_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_5'] = $e2 + $f2;
+
+                $data_spt_pph['spt_id'] = $spt->id;
 
                 SptPph::create($data_spt_pph);
                 break;
