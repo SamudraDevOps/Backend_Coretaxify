@@ -679,6 +679,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 SptPph::create($data_spt_pph);
                 break;
+            case JenisPajakEnum::PPH_UNIFIKASI->value:
+                
         }
         return $spt;
     }

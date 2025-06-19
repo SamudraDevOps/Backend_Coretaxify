@@ -25,6 +25,11 @@ class Spt extends Model
         return $this->hasOne(SptPph::class);
     }
 
+    public function spt_unifikasi()
+    {
+        return $this->hasOne(SptUnifikasi::class);
+    }
+
     public function sistem(): BelongsTo
     {
         return $this->belongsTo(Sistem::class, 'badan_id');
