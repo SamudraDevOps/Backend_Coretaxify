@@ -331,6 +331,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8b_ppnbm'] = $request['cl_8b_ppnbm'];
         $data['cl_8a_dpp_lain'] = $request['cl_8a_dpp_lain'];
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
+        $data['cl_5_ppn_wajib'] = $request['cl_5_ppn_wajib'];
 
         $fakturs = Faktur::where('badan_id', $request['badan_id'])
             ->where('masa_pajak', $month)
@@ -454,7 +455,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             $data['cl_3h_diminta'] = '0';
          }
 
-         $cl_4_ppn_terutang_dpp = ($data['cl_4_ppn_terutang_dpp'] ?? 0);
+         $cl_4_ppn_terutang_dpp = ($request['cl_4_ppn_terutang_dpp'] ?? 0);
          $data['cl_4_ppn_terutang'] = $cl_4_ppn_terutang_dpp * 0.12;
 
          $data['cl_6a_ppnbm'] = ($data['cl_1a2_ppnbm'] ?? 0) + ($data['cl_1a3_ppnbm'] ?? 0) + ($data['cl_1a4_ppnbm'] ?? 0) + ($data['cl_1a5_ppnbm'] ?? 0);
@@ -473,7 +474,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
          $data['cl_8c_dpp_lain'] = ($data['cl_8a_dpp_lain'] ?? 0) - ($data['cl_8b_dpp_lain'] ?? 0);
 
         $sptPpn = SptPpn::where('spt_id', $spt->id)->first();
-
         $skipKeys = ['badan_id'];
         foreach ($data as $key => $value) {
             if (in_array($key, $skipKeys)) continue;
