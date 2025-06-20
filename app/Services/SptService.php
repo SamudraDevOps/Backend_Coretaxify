@@ -507,7 +507,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_ppn['spt_id'] = $spt->id;
 
-                SptPph::create($data_spt_pph);
+                // SptPph::create($data_spt_pph);
                 break;
         }
         return $spt;
@@ -537,7 +537,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $tahun = $request->query('masa_tahun');
         $jenis_pajak = $request->query('jenis_pajak');
 
-        $pic = Pic::where('id', $picId)->first();
+        $pic = Sistem::where('id', $picId)->first();
         if (!$pic) {
             abort(404, 'Belum ada PIC');
         }
