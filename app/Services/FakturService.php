@@ -62,7 +62,6 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return DB::transaction(function () use ($data, $detailTransaksiData) {
             // Create the faktur
             $faktur = parent::create($data);
-
             // Create detail transaksi if provided
             if ($detailTransaksiData && is_array($detailTransaksiData)) {
                 foreach ($detailTransaksiData as $transaksi) {
@@ -71,10 +70,10 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 }
             }
 
+            $this->recalculateFakturTotals($faktur);
             return $faktur;
         });
     }
-
     public function update($keyOrModel, array $data): ?Model
     {
         $detailTransaksiData = $data['detail_transaksi'] ?? null;
@@ -111,8 +110,6 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                         }
                     }
                 }
-
-                return $faktur;
             });
         }
 
@@ -122,6 +119,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             $intent = $data['intent'] ?? null;
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
+                    dd($data);
                     $data['is_draft'] = false;
                     $data['esign_status'] = 'DONE';
                     $data['status'] = FakturStatusEnum::APPROVED->value;
@@ -131,66 +129,49 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                     break;
             }
 
-            if ($keyOrModel->is_draft == false){
+            if ($keyOrModel->is_draft == false) {
+                // Faktur sudah fix, buat faktur baru (amendment)
                 $dataFakturOld = Faktur::where('id', $keyOrModel->id)->first();
 
-                $dataFakturOld['status'] = FakturStatusEnum::AMENDED->value;
+                // Update status faktur lama menjadi AMENDED
+                $dataFakturOld->status = FakturStatusEnum::AMENDED->value;
                 $dataFakturOld->save();
 
+                // Siapkan data untuk faktur baru
                 $dataFakturNew = $dataFakturOld->toArray();
                 unset($dataFakturNew['id'], $dataFakturNew['created_at'], $dataFakturNew['updated_at']);
 
+                // Update nomor faktur pajak (ubah bagian kedua dari 0 ke 1)
                 $parts = explode('-', $dataFakturNew['nomor_faktur_pajak']);
                 if (isset($parts[1]) && $parts[1] === '0') {
                     $parts[1] = '1';
                 }
-
                 $dataFakturNew['nomor_faktur_pajak'] = implode('-', $parts);
+
+                // Merge dengan data update yang diberikan
+                $dataFakturNew = array_merge($dataFakturNew, $data);
                 $dataFakturNew['status'] = FakturStatusEnum::APPROVED->value;
-                $faktur = parent::create($dataFakturNew);
+
+                // Buat faktur baru
+                $fakturBaru = parent::create($dataFakturNew);
+
+                // Duplikat detail transaksi dari faktur lama ke faktur baru
+                $this->duplicateDetailTransaksi($dataFakturOld->id, $fakturBaru->id);
+
+                // Hitung ulang total dari detail transaksi
+                $this->recalculateFakturTotals($fakturBaru);
+
+                return $fakturBaru;
             } else {
+                // Faktur masih draft, update biasa
                 $faktur = parent::update($keyOrModel, $data);
+
+                // Hitung ulang total dari detail transaksi yang ada
+                $this->recalculateFakturTotals($faktur);
+
+                return $faktur;
             }
-
-            if ($detailTransaksiData && is_array($detailTransaksiData)) {
-                $existingIds = [];
-
-                foreach ($detailTransaksiData as $transaksi) {
-                    if (isset($transaksi['id'])) {
-                        // Update existing detail transaksi
-                        $detailTransaksi = DetailTransaksi::where('id', $transaksi['id'])
-                            ->where('faktur_id', $faktur->id)
-                            ->first();
-                        if ($detailTransaksi) {
-                            $detailTransaksi->update($transaksi);
-                            $existingIds[] = $detailTransaksi->id;
-                        }
-                    } else {
-                        // Create new detail transaksi
-                        $transaksi['faktur_id'] = $faktur->id;
-                        $newDetail = DetailTransaksi::create($transaksi);
-                        $existingIds[] = $newDetail->id;
-                    }
-                }
-
-                // Delete detail transaksi not in request
-                DetailTransaksi::where('faktur_id', $faktur->id)
-                    ->whereNotIn('id', $existingIds)
-                    ->delete();
-            }
-
-            return $faktur;
         });
-    }
-
-    public function addDetailTransaksi(Faktur $faktur, array $detailTransaksiData)
-    {
-        if (!is_object($faktur)) {
-            $faktur = $this->repository->find($faktur);
-        }
-
-        $detailTransaksiData['faktur_id'] = $faktur->id;
-        return DetailTransaksi::create($detailTransaksiData);
     }
 
     public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksi)
@@ -265,6 +246,36 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         if ($faktur->akun_pengirim_id !== $sistem->id) {
             abort(403, 'Unauthorized access to this faktur');
         }
+    }
+
+    /**
+ * Duplikat detail transaksi dari faktur lama ke faktur baru
+ */
+    private function duplicateDetailTransaksi(int $fakturLamaId, int $fakturBaruId): void
+    {
+        $detailTransaksiLama = DetailTransaksi::where('faktur_id', $fakturLamaId)->get();
+
+        foreach ($detailTransaksiLama as $detail) {
+            $detailArray = $detail->toArray();
+            unset($detailArray['id'], $detailArray['created_at'], $detailArray['updated_at']);
+            $detailArray['faktur_id'] = $fakturBaruId;
+
+            DetailTransaksi::create($detailArray);
+        }
+    }
+
+    private function recalculateFakturTotals($faktur): void
+    {
+        $detailTransaksis = DetailTransaksi::where('faktur_id', $faktur->id)->get();
+
+        $totals = [
+            'ppn' => $detailTransaksis->sum('ppn'),
+            'ppnbm' => $detailTransaksis->sum('ppnbm'),
+            'dpp' => $detailTransaksis->sum('dpp'),
+            'dpp_lain' => $detailTransaksis->sum('dpp_lain'),
+        ];
+
+        parent::update($faktur, $totals);
     }
 
         // public function update($keyOrModel, array $data): ?Model {

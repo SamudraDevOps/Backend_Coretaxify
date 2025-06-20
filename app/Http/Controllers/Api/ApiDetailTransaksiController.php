@@ -30,17 +30,17 @@ class ApiDetailTransaksiController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Assignment $assignment, Sistem $sistem, Faktur $faktur, StoreDetailTransaksiRequest $request) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
-
-        return $this->detailTransaksiService->create($request->validated());
+    public function store(Assignment $assignment, Sistem $sistem, Faktur $faktur, Request $request) {
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+        $request['faktur_id'] = $faktur->id;
+        return $this->detailTransaksiService->create($request->all());
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
 
         return new DetailTransaksiResource($detailTransaksi);
@@ -49,18 +49,18 @@ class ApiDetailTransaksiController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Assignment $assignment, Sistem $sistem, Faktur $faktur, UpdateDetailTransaksiRequest $request, DetailTransaksi $detailTransaksi) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+    public function update(Assignment $assignment, Sistem $sistem, Faktur $faktur, Request $request, DetailTransaksi $detailTransaksi) {
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
-
-        return $this->detailTransaksiService->update($detailTransaksi, $request->validated());
+        $request['faktur_id'] = $faktur->id;
+        return $this->detailTransaksiService->update($detailTransaksi, $request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
 
         return $this->detailTransaksiService->delete($detailTransaksi);

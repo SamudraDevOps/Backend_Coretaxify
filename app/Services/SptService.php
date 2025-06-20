@@ -680,7 +680,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 SptPph::create($data_spt_pph);
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
-                
+
         }
         return $spt;
     }
@@ -709,7 +709,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $tahun = $request->query('masa_tahun');
         $jenis_pajak = $request->query('jenis_pajak');
 
-        $pic = Pic::where('id', $picId)->first();
+        $pic = Sistem::where('id', $picId)->first();
         if (!$pic) {
             abort(404, 'Belum ada PIC');
         }
