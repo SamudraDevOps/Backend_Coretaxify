@@ -114,12 +114,10 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         }
 
         return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-            unset($data['intent']);
 
             $intent = $data['intent'] ?? null;
             switch ($intent) {
                 case IntentEnum::API_UPDATE_FAKTUR_FIX->value:
-                    dd($data);
                     $data['is_draft'] = false;
                     $data['esign_status'] = 'DONE';
                     $data['status'] = FakturStatusEnum::APPROVED->value;
@@ -130,57 +128,38 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             }
 
             if ($keyOrModel->is_draft == false) {
-                // Faktur sudah fix, buat faktur baru (amendment)
                 $dataFakturOld = Faktur::where('id', $keyOrModel->id)->first();
 
-                // Update status faktur lama menjadi AMENDED
                 $dataFakturOld->status = FakturStatusEnum::AMENDED->value;
                 $dataFakturOld->save();
 
-                // Siapkan data untuk faktur baru
                 $dataFakturNew = $dataFakturOld->toArray();
                 unset($dataFakturNew['id'], $dataFakturNew['created_at'], $dataFakturNew['updated_at']);
 
-                // Update nomor faktur pajak (ubah bagian kedua dari 0 ke 1)
                 $parts = explode('-', $dataFakturNew['nomor_faktur_pajak']);
                 if (isset($parts[1]) && $parts[1] === '0') {
                     $parts[1] = '1';
                 }
                 $dataFakturNew['nomor_faktur_pajak'] = implode('-', $parts);
 
-                // Merge dengan data update yang diberikan
                 $dataFakturNew = array_merge($dataFakturNew, $data);
                 $dataFakturNew['status'] = FakturStatusEnum::APPROVED->value;
 
-                // Buat faktur baru
                 $fakturBaru = parent::create($dataFakturNew);
 
-                // Duplikat detail transaksi dari faktur lama ke faktur baru
                 $this->duplicateDetailTransaksi($dataFakturOld->id, $fakturBaru->id);
 
-                // Hitung ulang total dari detail transaksi
                 $this->recalculateFakturTotals($fakturBaru);
 
                 return $fakturBaru;
             } else {
-                // Faktur masih draft, update biasa
                 $faktur = parent::update($keyOrModel, $data);
 
-                // Hitung ulang total dari detail transaksi yang ada
                 $this->recalculateFakturTotals($faktur);
 
                 return $faktur;
             }
         });
-    }
-
-    public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksi)
-    {
-        if (!is_object($detailTransaksi)) {
-            $detailTransaksi = DetailTransaksi::findOrFail($detailTransaksi);
-        }
-
-        return $detailTransaksi->delete();
     }
 
     public function getAllForSistem(
@@ -259,9 +238,30 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             $detailArray = $detail->toArray();
             unset($detailArray['id'], $detailArray['created_at'], $detailArray['updated_at']);
             $detailArray['faktur_id'] = $fakturBaruId;
-
+            $detailArray['is_tambahan'] = false;
+            $detailArray['is_lama'] = false;
+            $detailArray['tipe_lama'] = null;
+            $detailArray['nama_lama'] = null;
+            $detailArray['kode_lama'] = null;
+            $detailArray['kuantitas_lama'] = null;
+            $detailArray['satuan_lama'] = null;
+            $detailArray['harga_satuan_lama'] = null;
+            $detailArray['total_harga_lama'] = null;
+            $detailArray['pemotongan_harga_lama'] = null;
+            $detailArray['dpp_lama'] = null;
+            $detailArray['ppn_lama'] = null;
+            $detailArray['dpp_lain_lama'] = null;
+            $detailArray['ppnbm_lama'] = null;
+            $detailArray['ppn_retur_lama'] = null;
+            $detailArray['dpp_lain_retur_lama'] = null;
+            $detailArray['ppnbm_retur_lama'] = null;
+            $detailArray['tarif_ppnbm_lama'] = null;
             DetailTransaksi::create($detailArray);
         }
+
+        DetailTransaksi::where('faktur_id', $fakturLamaId)
+                        ->where('is_tambahan', true)
+                        ->forceDelete();
     }
 
     private function recalculateFakturTotals($faktur): void

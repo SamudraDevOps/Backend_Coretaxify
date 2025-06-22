@@ -130,14 +130,18 @@ class ApiFakturController extends ApiController
         }
     // public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur) {
 
-
-        $faktur->load('detail_transaksis');
+        if ($faktur->status != FakturStatusEnum::APPROVED->value) {
+            $faktur->load(['detail_transaksis' => function ($query) {
+                $query->withTrashed();
+            }]);
+        }
+        else {
+            $faktur->load(['detail_transaksis' => function ($query) {
+                $query->withoutTrashed();
+            }]);
+        }
 
         return new FakturResource($faktur);
-
-        // $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
-        // return new FakturResource($faktur);
-
     }
 
     /**
