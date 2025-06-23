@@ -581,44 +581,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') - $fakturs2d->sum('ppn_retur');
                 $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') - $fakturs2d->sum('ppnbm_retur');
 
-                //    ($data_spt_ppn['cl_2a_dpp'] ?? 0)
-                //  + ($data_spt_ppn['cl_2b_dpp'] ?? 0)
-                //  + ($data_spt_ppn['cl_2c_dpp'] ?? 0)
-                //  + ($data_spt_ppn['cl_2d_dpp'] ?? 0);
-
-                //  $data_spt_ppn['cl_2g_ppn'] =
-                //     ($data_spt_ppn['cl_2a_ppn'] ?? 0)
-                //  + ($data_spt_ppn['cl_2b_ppn'] ?? 0)
-                //  + ($data_spt_ppn['cl_2c_ppn'] ?? 0)
-                //  + ($data_spt_ppn['cl_2d_ppn'] ?? 0);
-                //  + ($data_spt_ppn['cl_2e_ppn'] ?? 0);
-
-                //  $data_spt_ppn['cl_2j_dpp'] = ($data_spt_ppn['cl_2g_dpp'] ?? 0 ) + ($data_spt_ppn['cl_2h_dpp'] ?? 0 ) + ($data_spt_ppn['cl_2i_dpp'] ?? 0 );
-
-                //  $data_spt_ppn['cl_3a_ppn'] = ($data_spt_ppn['cl_1a2_ppn'] ?? 0) + ($data_spt_ppn['cl_1a3_ppn'] ?? 0) + ($data_spt_ppn['cl_1a4_ppn'] ?? 0) + ($data_spt_ppn['cl_1a5_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_3c_ppn'] = ($data_spt_ppn['cl_2g_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_3e_ppn'] = ($data_spt_ppn['cl_3a_ppn'] ?? 0) - ($data_spt_ppn['cl_3b_ppn'] ?? 0) - ($data_spt_ppn['cl_3c_ppn'] ?? 0) - ($data_spt_ppn['cl_3c_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_3g_ppn'] = ($data_spt_ppn['cl_3e_ppn'] ?? 0) - ($data_spt_ppn['cl_3f_ppn'] ?? 0);
-
-                //  $cl_4_ppn_terutang_dpp = ($data_spt_ppn['cl_4_ppn_terutang_dpp'] ?? 0);
-                //  $data_spt_ppn['cl_4_ppn_terutang'] = $cl_4_ppn_terutang_dpp * 0.12;
-
-                //  $data_spt_ppn['cl_6a_ppnbm'] = ($data_spt_ppn['cl_1a2_ppnbm'] ?? 0) + ($data_spt_ppn['cl_1a3_ppnbm'] ?? 0) + ($data_spt_ppn['cl_1a4_ppnbm'] ?? 0) + ($data_spt_ppn['cl_1a5_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_6c_ppnbm'] = ($data_spt_ppn['cl_6a_ppnbm'] ?? 0) - ($data_spt_ppn['cl_6b_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_6e_ppnbm'] = ($data_spt_ppn['cl_6c_ppnbm'] ?? 0) - ($data_spt_ppn['cl_6d_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_6f_diminta_pengembalian'] = $data_spt_ppn['cl_6e_ppnbm'] < 0;
-
-                //  $data_spt_ppn['cl_7c_dpp'] = ($data_spt_ppn['cl_7a_dpp'] ?? 0) - ($data_spt_ppn['cl_7b_dpp'] ?? 0);
-                //  $data_spt_ppn['cl_7c_ppn'] = ($data_spt_ppn['cl_7a_ppn'] ?? 0) - ($data_spt_ppn['cl_7b_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_7c_ppnbm'] = ($data_spt_ppn['cl_7a_ppnbm'] ?? 0) - ($data_spt_ppn['cl_7b_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_7c_dpp_lain'] = ($data_spt_ppn['cl_7a_dpp_lain'] ?? 0) - ($data_spt_ppn['cl_7b_dpp_lain'] ?? 0);
-
-                //  $data_spt_ppn['cl_8c_dpp'] = ($data_spt_ppn['cl_8a_dpp'] ?? 0) - ($data_spt_ppn['cl_8b_dpp'] ?? 0);
-                //  $data_spt_ppn['cl_8c_ppn'] = ($data_spt_ppn['cl_8a_ppn'] ?? 0) - ($data_spt_ppn['cl_8b_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_8c_ppnbm'] = ($data_spt_ppn['cl_8a_ppnbm'] ?? 0) - ($data_spt_ppn['cl_8b_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_8c_dpp_lain'] = ($data_spt_ppn['cl_8a_dpp_lain'] ?? 0) - ($data_spt_ppn['cl_8b_dpp_lain'] ?? 0);
-                // dd($data_spt_ppn);
-
                 $data_spt_ppn['spt_id'] = $spt->id;
                 SptPpn::create($data_spt_ppn);
                 break;
@@ -665,7 +627,16 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 // SptPph::create($data_spt_pph);
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
+                $monthNumber = MonthHelper::getMonthNumber($month);
 
+                $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $year)
+                ->get();
+
+                $data_spt_uni = [];
+
+                // $cl_1 =
         }
         return $spt;
     }

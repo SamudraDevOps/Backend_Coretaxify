@@ -45,9 +45,9 @@ class ApiSistemTambahanController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSistemTambahanRequest $request, SistemTambahan $sistemTambahan) {
-        return $this->sistemTambahanService->update($sistemTambahan, $request->validated());
-    }
+    public function update(Assignment $assignment, Sistem $sistem, UpdateSistemTambahanRequest $request, SistemTambahan $sistemTambahan) {
+    return $this->sistemTambahanService->update($sistemTambahan, $request->validated());
+}
 
     /**
      * Remove the specified resource from storage.
