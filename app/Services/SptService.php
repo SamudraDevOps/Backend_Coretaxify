@@ -45,7 +45,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         // ];
 
         $fields_spt_ppn = [
-            'cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
+            'cl_1a9_dpp','cl_1a9_dpp_lain','cl_1a9_ppn','cl_1a9_ppnbm','cl_2e_ppn','cl_2f_ppn','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_2i_dpp','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening','cl_4_ppn_terutang_dpp','cl_5_ppn_wajib'
         ];
 
         $fields_spt_pph = [
@@ -56,20 +56,34 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         $masaAktif = Carbon::now()->addWeek();
 
+        if ($spt->jenis_pajak == JenisPajakEnum::PPN->value) {
+            $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+
+            foreach ($fields_spt_ppn as $field) {
+                if (array_key_exists($field, $requestData)) {
+                    $spt_ppn->$field = $requestData[$field];
+                }
+            }
+
+            $spt_ppn->fill($requestData);
+            $spt_ppn->save();
+        } elseif ($spt->jenis_pajak == JenisPajakEnum::PPH->value) {
+            $spt_pph = SptPpn::where('spt_id', $spt->id)->first();
+
+
+            foreach ($fields_spt_pph as $field) {
+                if (array_key_exists($field, $requestData)) {
+                    $spt_pph->$field = $requestData[$field];
+                }
+            }
+
+            $spt_ppn->fill($requestData);
+            $spt_ppn->save();
+        }
+
         switch ($intent) {
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_KODE_BILLING->value:
-                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
-
-
-                foreach ($fields_spt_ppn as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_ppn->$field = $requestData[$field];
-                    }
-                }
-
-                $spt_ppn->fill($requestData);
-                $spt_ppn->save();
-
                 $spt->status = SptStatusEnum::DILAPORKAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
@@ -94,18 +108,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
-                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
-
                 $sistem = Sistem::find($sistem_id);
-
-                foreach ($fields_spt_ppn as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_ppn->$field = $requestData[$field];
-                    }
-                }
-
-                $spt_ppn->fill($requestData);
-                $spt_ppn->save();
 
                 $spt->status = SptStatusEnum::DIBUAT->value;
                 $spt->is_can_pembetulan = true;
@@ -137,17 +140,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     return $pembayaran;
                 }
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_KODE_BILLING->value:
-                $spt_pph = SptPph::where('spt_id', $spt->id)->first();
-
-                foreach ($fields_spt_pph as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_pph->$field = $requestData[$field];
-                    }
-                }
-
-                $spt_pph->fill($requestData);
-                $spt_pph->save();
-
                 $spt->status = SptStatusEnum::DILAPORKAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
@@ -217,19 +209,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 }
                 break;
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_DEPOSIT->value:
-                $spt_pph = SptPpn::where('spt_id', $spt->id)->first();
-
-                $sistem = Sistem::find($sistem_id);
-
-                foreach ($fields_spt_pph as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_pph->$field = $requestData[$field];
-                    }
-                }
-
-                $spt_pph->fill($requestData);
-                $spt_pph->save();
-
                 $spt->status = SptStatusEnum::DIBUAT->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
@@ -255,39 +234,39 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
                 }
-            case IntentEnum::API_UPDATE_SPT_PPH_KONSEP->value:
-                $spt_pph = SptPph::where('spt_id', $spt->id)->first();
+            // case IntentEnum::API_UPDATE_SPT_PPH_KONSEP->value:
+            //     $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
 
-                foreach ($fields_spt_pph as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_pph->$field = $requestData[$field];
-                    }
-                }
+            //     foreach ($fields_spt_pph as $field) {
+            //         if (array_key_exists($field, $requestData)) {
+            //             $spt_pph->$field = $requestData[$field];
+            //         }
+            //     }
 
-                $spt_pph->fill($requestData);
-                $spt_pph->save();
+            //     $spt_pph->fill($requestData);
+            //     $spt_pph->save();
 
-                $spt->status = SptStatusEnum::DILAPORKAN->value;
-                $spt->save();
-                break;
-            default:
-                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+            //     $spt->status = SptStatusEnum::DILAPORKAN->value;
+            //     $spt->save();
+            //     break;
+            // default:
+            //     $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
-                $sistem = Sistem::find($sistem_id);
+            //     $sistem = Sistem::find($sistem_id);
 
-                foreach ($fields_spt_ppn as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_ppn->$field = $requestData[$field];
-                    }
-                }
+            //     foreach ($fields_spt_pph as $field) {
+            //         if (array_key_exists($field, $requestData)) {
+            //             $spt_ppn->$field = $requestData[$field];
+            //         }
+            //     }
 
-                $spt_ppn->fill($requestData);
-                $spt_ppn->save();
+            //     $spt_ppn->fill($requestData);
+            //     $spt_ppn->save();
 
-                $spt->status = SptStatusEnum::DIBUAT->value;
-                $spt->save();
-                break;
+            //     $spt->status = SptStatusEnum::DIBUAT->value;
+            //     $spt->save();
+            //     break;
         }
 
         return $spt;
@@ -332,6 +311,12 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8a_dpp_lain'] = $request['cl_8a_dpp_lain'];
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
         $data['cl_5_ppn_wajib'] = $request['cl_5_ppn_wajib'];
+
+        $data['cl_4_ppn_terutang_dpp'] = $request['cl_4_ppn_terutang_dpp'];
+        $data['cl_1a9_dpp_lain'] = $request['cl_1a9_dpp_lain'];
+        $data['cl_1a9_dpp_lain'] = $request['cl_1a9_dpp_lain'];
+        $data['cl_2f_ppn'] = $request['cl_2f_ppn'];
+        $data['cl_2e_ppn'] = $request['cl_2e_ppn'];
 
         $fakturs = Faktur::where('badan_id', $request['badan_id'])
             ->where('masa_pajak', $month)
