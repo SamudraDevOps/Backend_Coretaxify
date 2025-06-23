@@ -30,17 +30,21 @@ class ApiDetailTransaksiController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Assignment $assignment, Sistem $sistem, Faktur $faktur, StoreDetailTransaksiRequest $request) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+    public function store(Assignment $assignment, Sistem $sistem, Faktur $faktur, Request $request) {
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+        $request['faktur_id'] = $faktur->id;
 
-        return $this->detailTransaksiService->create($request->validated());
+        if (!$faktur->is_draft){
+            $request['is_tambahan'] = true;
+        }
+        return $this->detailTransaksiService->create($request->all());
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
 
         return new DetailTransaksiResource($detailTransaksi);
@@ -49,20 +53,73 @@ class ApiDetailTransaksiController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Assignment $assignment, Sistem $sistem, Faktur $faktur, UpdateDetailTransaksiRequest $request, DetailTransaksi $detailTransaksi) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+    public function update(Assignment $assignment, Sistem $sistem, Faktur $faktur, Request $request, DetailTransaksi $detailTransaksi) {
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
+        $request['faktur_id'] = $faktur->id;
 
-        return $this->detailTransaksiService->update($detailTransaksi, $request->validated());
+        if (!$faktur->is_draft) {
+            if (!$detailTransaksi->is_lama){
+                $this->moveCurrentDataToLamaColumns($detailTransaksi, $request->all());
+            }
+            // return $this->detailTransaksiService->update($detailTransaksi, $request->all());
+        }
+        return $this->detailTransaksiService->update($detailTransaksi, $request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi) {
-        $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
+        // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
 
-        return $this->detailTransaksiService->delete($detailTransaksi);
+        if ($faktur->is_draft || $detailTransaksi->is_tambahan) {
+            return DetailTransaksi::where('id', $detailTransaksi->id)->forceDelete();
+        } else {
+            return $this->detailTransaksiService->softDelete($detailTransaksi);
+        }
+
+    }
+
+    private function moveCurrentDataToLamaColumns(DetailTransaksi $detailTransaksi, array $newData): void
+    {
+        // Mapping kolom normal ke kolom _lama
+        $columnMapping = [
+            'tipe' => 'tipe_lama',
+            'nama' => 'nama_lama',
+            'kode' => 'kode_lama',
+            'kuantitas' => 'kuantitas_lama',
+            'satuan' => 'satuan_lama',
+            'harga_satuan' => 'harga_satuan_lama',
+            'total_harga' => 'total_harga_lama',
+            'pemotongan_harga' => 'pemotongan_harga_lama',
+            'dpp' => 'dpp_lama',
+            'ppn' => 'ppn_lama',
+            'dpp_lain' => 'dpp_lain_lama',
+            'ppnbm' => 'ppnbm_lama',
+            'ppn_retur' => 'ppn_retur_lama',
+            'dpp_lain_retur' => 'dpp_lain_retur_lama',
+            'ppnbm_retur' => 'ppnbm_retur_lama',
+            'tarif_ppnbm' => 'tarif_ppnbm_lama',
+        ];
+
+        $dataToUpdate = [];
+
+        $dataToUpdate['is_lama'] = true;
+
+        // Pindahkan data current ke kolom _lama hanya untuk field yang akan diupdate
+        foreach ($columnMapping as $normalColumn => $lamaColumn) {
+            // Hanya pindahkan jika ada data baru untuk kolom tersebut
+            if (array_key_exists($normalColumn, $newData)) {
+                // Pindahkan nilai current ke kolom _lama
+                $dataToUpdate[$lamaColumn] = $detailTransaksi->$normalColumn;
+            }
+        }
+
+        // Update detail transaksi dengan data lama
+        if (!empty($dataToUpdate)) {
+            $detailTransaksi->update($dataToUpdate);
+        }
     }
 }

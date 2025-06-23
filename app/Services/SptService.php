@@ -5,6 +5,7 @@ namespace App\Services;
 use Carbon\Carbon;
 use App\Models\Pic;
 use App\Models\Spt;
+use App\Models\Bupot;
 use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\SptPph;
@@ -17,7 +18,9 @@ use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
 use App\Http\Resources\SptResource;
 use App\Support\Enums\SptModelEnum;
+use App\Support\Enums\BupotTypeEnum;
 use App\Support\Enums\SptStatusEnum;
+use App\Support\Helpers\MonthHelper;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Enums\JenisPajakEnum;
 use App\Http\Resources\FakturResource;
@@ -46,7 +49,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         ];
 
         $fields_spt_pph = [
-            'cl_bp1_2', 'cl_bp1_3', 'cl_bp2_2', 'cl_bp2_3'
+            'cl_bp1_2', 'cl_bp1_3', 'cl_bp1_4', 'cl_bp1_6','cl_bp2_2', 'cl_bp2_3', 'cl_bp2_4', 'cl_bp2_6'
         ];
 
         $requestData = is_array($request) ? $request : $request->all();
@@ -91,7 +94,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
-
                 $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
                 $sistem = Sistem::find($sistem_id);
@@ -120,6 +122,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 if ($hasil < 0) {
                     throw new \Exception('Saldo Tidak Mencukupi', 101);
                 } else {
+                    $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                     $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
@@ -133,6 +136,141 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
                 }
+            case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_KODE_BILLING->value:
+                $spt_pph = SptPph::where('spt_id', $spt->id)->first();
+
+                foreach ($fields_spt_pph as $field) {
+                    if (array_key_exists($field, $requestData)) {
+                        $spt_pph->$field = $requestData[$field];
+                    }
+                }
+
+                $spt_pph->fill($requestData);
+                $spt_pph->save();
+
+                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->is_can_pembetulan = true;
+                $spt->save();
+
+                // Generate group identifier untuk mengelompokkan 4 pembayaran
+                $groupId = Str::uuid();
+
+                // Array pembayaran yang akan dibuat
+                $pembayaranData = [];
+
+                // cl_bp1_4 - PPh 21
+                if ($spt_pph->cl_bp1_4 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp1_4,
+                        'kap_kjs_id' => 50, // PPh 21
+                        'jenis_pembayaran' => 'cl_bp1_4',
+                    ];
+                }
+
+                // cl_bp1_7 - PPh 21 Ditanggung Pemerintah
+                if ($spt_pph->cl_bp1_7 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp1_7,
+                        'kap_kjs_id' => 51, // PPh 21 DTP
+                        'jenis_pembayaran' => 'cl_bp1_7',
+                    ];
+                }
+
+                // cl_bp2_4 - PPh 26
+                if ($spt_pph->cl_bp2_4 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp2_4,
+                        'kap_kjs_id' => 52, // PPh 26
+                        'jenis_pembayaran' => 'cl_bp2_4',
+                    ];
+                }
+
+                // cl_bp2_7 - PPh 26 Ditanggung Pemerintah
+                if ($spt_pph->cl_bp2_7 > 0) {
+                    $pembayaranData[] = [
+                        'nilai' => $spt_pph->cl_bp2_7,
+                        'kap_kjs_id' => 53, // PPh 26 DTP
+                        'jenis_pembayaran' => 'cl_bp2_7',
+                    ];
+                }
+
+                // Buat pembayaran untuk setiap item
+                foreach ($pembayaranData as $data) {
+                    $randomNumber = mt_rand(100000000000000, 999999999999999);
+
+                    $dataPembayaran = [
+                        'nilai' => $data['nilai'],
+                        'masa_bulan' => $spt->masa_bulan,
+                        'masa_tahun' => $spt->masa_tahun,
+                        'badan_id' => $request['badan_id'],
+                        'pic_id' => $request['pic_id'],
+                        'kode_billing' => $randomNumber,
+                        'kap_kjs_id' => $data['kap_kjs_id'],
+                        'ntpn' => $ntpn,
+                        'masa_aktif' => $masaAktif,
+                        'spt_id' => $spt->id, // Tambahkan referensi ke SPT
+                        'group_id' => $groupId, // Untuk mengelompokkan
+                        'jenis_pembayaran' => $data['jenis_pembayaran'], // Identifier jenis
+                    ];
+
+                    Pembayaran::create($dataPembayaran);
+                }
+                break;
+            case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_DEPOSIT->value:
+                $spt_pph = SptPpn::where('spt_id', $spt->id)->first();
+
+                $sistem = Sistem::find($sistem_id);
+
+                foreach ($fields_spt_pph as $field) {
+                    if (array_key_exists($field, $requestData)) {
+                        $spt_pph->$field = $requestData[$field];
+                    }
+                }
+
+                $spt_pph->fill($requestData);
+                $spt_pph->save();
+
+                $spt->status = SptStatusEnum::DIBUAT->value;
+                $spt->is_can_pembetulan = true;
+                $spt->save();
+
+                $total_bayar = $spt_pph->cl_bp1_4 + $spt_pph->cl_bp2_4;
+
+                $hasil = $sistem->saldo - $total_bayar;
+
+                if ($hasil < 0) {
+                    throw new \Exception('Saldo Tidak Mencukupi', 101);
+                } else {
+                    $dataPembayaran['nilai'] = $total_bayar;
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['kap_kjs_id'] = 50;
+                    $dataPembayaran['is_paid'] = true;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $pembayaran = Pembayaran::create($dataPembayaran);
+                    return $pembayaran;
+                }
+            case IntentEnum::API_UPDATE_SPT_PPH_KONSEP->value:
+                $spt_pph = SptPph::where('spt_id', $spt->id)->first();
+
+
+                foreach ($fields_spt_pph as $field) {
+                    if (array_key_exists($field, $requestData)) {
+                        $spt_pph->$field = $requestData[$field];
+                    }
+                }
+
+                $spt_pph->fill($requestData);
+                $spt_pph->save();
+
+                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->save();
+                break;
             default:
                 $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
@@ -149,6 +287,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $spt->status = SptStatusEnum::DIBUAT->value;
                 $spt->save();
+                break;
         }
 
         return $spt;
@@ -192,6 +331,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8b_ppnbm'] = $request['cl_8b_ppnbm'];
         $data['cl_8a_dpp_lain'] = $request['cl_8a_dpp_lain'];
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
+        $data['cl_5_ppn_wajib'] = $request['cl_5_ppn_wajib'];
 
         $fakturs = Faktur::where('badan_id', $request['badan_id'])
             ->where('masa_pajak', $month)
@@ -315,7 +455,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             $data['cl_3h_diminta'] = '0';
          }
 
-         $cl_4_ppn_terutang_dpp = ($data['cl_4_ppn_terutang_dpp'] ?? 0);
+         $cl_4_ppn_terutang_dpp = ($request['cl_4_ppn_terutang_dpp'] ?? 0);
          $data['cl_4_ppn_terutang'] = $cl_4_ppn_terutang_dpp * 0.12;
 
          $data['cl_6a_ppnbm'] = ($data['cl_1a2_ppnbm'] ?? 0) + ($data['cl_1a3_ppnbm'] ?? 0) + ($data['cl_1a4_ppnbm'] ?? 0) + ($data['cl_1a5_ppnbm'] ?? 0);
@@ -334,7 +474,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
          $data['cl_8c_dpp_lain'] = ($data['cl_8a_dpp_lain'] ?? 0) - ($data['cl_8b_dpp_lain'] ?? 0);
 
         $sptPpn = SptPpn::where('spt_id', $spt->id)->first();
-
         $skipKeys = ['badan_id'];
         foreach ($data as $key => $value) {
             if (in_array($key, $skipKeys)) continue;
@@ -499,16 +638,49 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 SptPpn::create($data_spt_ppn);
                 break;
             case JenisPajakEnum::PPH->value:
-                $fakturs = Faktur::where('badan_id', $data['badan_id'])
-                ->where('masa_pajak', $month)
-                ->where('tahun', $year)
-                ->where('status', FakturStatusEnum::APPROVED->value)
+                $monthNumber = MonthHelper::getMonthNumber($month);
+
+                $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $year)
                 ->get();
 
-                $data_spt_ppn['spt_id'] = $spt->id;
+                $data_spt_pph = [];
+
+                $total_pemotongan = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value);
+                $total_bp21 = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value);
+                $total_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value);
+
+                $a = $total_pemotongan->sum('pajak_penghasilan') ?? 0;
+                $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_1'] = $a + $b;
+
+                $c = $total_pemotongan->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $d = $total_bp21->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $data_spt_pph['cl_bp1_7'] = $c + $d;
+
+                $e = $total_pemotongan->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f = $total_bp21->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_5'] = $e + $f;
+
+                $a2 = $total_pemotongan->sum('pajak_penghasilan') ?? 0;
+                $b2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_1'] = $a2 + $b2;
+
+                $c2 = $total_pemotongan->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $d2 = $total_bp26->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $data_spt_pph['cl_bp1_7'] = $c2 + $d2;
+
+                $e2 = $total_pemotongan->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f2 = $total_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_5'] = $e2 + $f2;
+
+                $data_spt_pph['spt_id'] = $spt->id;
 
                 // SptPph::create($data_spt_pph);
                 break;
+            case JenisPajakEnum::PPH_UNIFIKASI->value:
+
         }
         return $spt;
     }

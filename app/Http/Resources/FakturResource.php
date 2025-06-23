@@ -168,22 +168,7 @@ class FakturResource extends JsonResource
                     'updated_at' => $this->updated_at,
                     'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                         return $this->detail_transaksis->map(function($transaksi) {
-                            return [
-                                'id' => $transaksi->id,
-                                'tipe' => $transaksi->tipe,
-                                'nama' => $transaksi->nama,
-                                'kode' => $transaksi->kode,
-                                'kuantitas' => $transaksi->kuantitas,
-                                'satuan' => $transaksi->satuan,
-                                'harga_satuan' => $transaksi->harga_satuan,
-                                'total_harga' => $transaksi->total_harga,
-                                'pemotongan_harga' => $transaksi->pemotongan_harga,
-                                'dpp' => $transaksi->dpp,
-                                'dpp_lain_retur' => $transaksi->dpp_lain_retur,
-                                'ppn_retur' => $transaksi->ppn_retur,
-                                'ppnbm_retur' => $transaksi->ppnbm_retur,
-                                'tarif_ppnbm' => $transaksi->tarif_ppnbm,
-                            ];
+                            return $this->mapDetailTransaksiWithFallback($transaksi);
                         });
                     }),
                 ];
@@ -220,27 +205,36 @@ class FakturResource extends JsonResource
             'updated_at' => $this->updated_at,
             'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                 return $this->detail_transaksis->map(function($transaksi) {
-                    return [
-                        'id' => $transaksi->id,
-                        'tipe' => $transaksi->tipe,
-                        'nama' => $transaksi->nama,
-                        'kode' => $transaksi->kode,
-                        'kuantitas' => $transaksi->kuantitas,
-                        'satuan' => $transaksi->satuan,
-                        'harga_satuan' => $transaksi->harga_satuan,
-                        'total_harga' => $transaksi->total_harga,
-                        'pemotongan_harga' => $transaksi->pemotongan_harga,
-                        'dpp' => $transaksi->dpp,
-                        'ppn' => $transaksi->ppn,
-                        'dpp_lain' => $transaksi->dpp_lain,
-                        'ppnbm' => $transaksi->ppnbm,
-                        'dpp_lain_retur' => $transaksi->dpp_lain_retur,
-                        'ppn_retur' => $transaksi->ppn_retur,
-                        'ppnbm_retur' => $transaksi->ppnbm_retur,
-                        'tarif_ppnbm' => $transaksi->tarif_ppnbm,
-                    ];
+                    return $this->mapDetailTransaksiWithFallback($transaksi);
                 });
             }),
+        ];
+    }
+
+    private function mapDetailTransaksiWithFallback($transaksi): array
+    {
+        return [
+            'id' => $transaksi->id,
+            'tipe' => $transaksi->tipe_lama ?? $transaksi->tipe,
+            'nama' => $transaksi->nama_lama ?? $transaksi->nama,
+            'kode' => $transaksi->kode_lama ?? $transaksi->kode,
+            'kuantitas' => $transaksi->kuantitas_lama ?? $transaksi->kuantitas,
+            'satuan' => $transaksi->satuan_lama ?? $transaksi->satuan,
+            'harga_satuan' => $transaksi->harga_satuan_lama ?? $transaksi->harga_satuan,
+            'total_harga' => $transaksi->total_harga_lama ?? $transaksi->total_harga,
+            'pemotongan_harga' => $transaksi->pemotongan_harga_lama ?? $transaksi->pemotongan_harga,
+            'dpp' => $transaksi->dpp_lama ?? $transaksi->dpp,
+            'ppn' => $transaksi->ppn_lama ?? $transaksi->ppn,
+            'dpp_lain' => $transaksi->dpp_lain_lama ?? $transaksi->dpp_lain,
+            'ppnbm' => $transaksi->ppnbm_lama ?? $transaksi->ppnbm,
+            'dpp_lain_retur' => $transaksi->dpp_lain_retur_lama ?? $transaksi->dpp_lain_retur,
+            'ppn_retur' => $transaksi->ppn_retur_lama ?? $transaksi->ppn_retur,
+            'ppnbm_retur' => $transaksi->ppnbm_retur_lama ?? $transaksi->ppnbm_retur,
+            'tarif_ppnbm' => $transaksi->tarif_ppnbm_lama ?? $transaksi->tarif_ppnbm,
+
+            // Tambahan info untuk tracking
+            'is_tambahan' => $transaksi->is_tambahan ?? false,
+            'is_lama' => $transaksi->is_lama ?? false,
         ];
     }
 }
