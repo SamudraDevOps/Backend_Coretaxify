@@ -298,34 +298,6 @@ class ApiFakturController extends ApiController
         ]);
     }
 
-    // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId)
-    // {
-    //     $detailTransaksi = DetailTransaksi::where('faktur_id', $faktur->id)
-    //         ->where('id', $detailTransaksiId)
-    //         ->firstOrFail();
-
-    //     $this->fakturService->deleteDetailTransaksi($detailTransaksi);
-
-    //     return response()->json([
-    //         'message' => 'Detail transaksi deleted successfully'
-    //     ]);
-    // }
-
-    /**
-     * Add a detail transaksi to a faktur.
-     */
-
-    // public function addDetailTransaksi(Faktur $faktur, StoreDetailTransaksiRequest $request)
-    // {
-
-    //     $detailTransaksi = $this->fakturService->addDetailTransaksi($faktur, $request->validated());
-
-    //     return response()->json([
-    //         'message' => 'Detail transaksi added successfully',
-    //         'data' => $detailTransaksi
-    //     ], 201);
-    // }
-
         // public function update(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
     // {
     //     // For personal accounts, check if they're representing a company
