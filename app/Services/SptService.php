@@ -45,7 +45,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         // ];
 
         $fields_spt_ppn = [
-            'cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
+            'cl_1a9_dpp','cl_1a9_dpp_lain','cl_1a9_ppn','cl_1a9_ppnbm','cl_2e_ppn','cl_2f_ppn','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_2i_dpp','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening','cl_4_ppn_terutang_dpp','cl_5_ppn_wajib'
         ];
 
         $fields_spt_pph = [
@@ -332,6 +332,12 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8a_dpp_lain'] = $request['cl_8a_dpp_lain'];
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
         $data['cl_5_ppn_wajib'] = $request['cl_5_ppn_wajib'];
+
+        $data['cl_4_ppn_terutang_dpp'] = $request['cl_4_ppn_terutang_dpp'];
+        $data['cl_1a9_dpp_lain'] = $request['cl_1a9_dpp_lain'];
+        $data['cl_1a9_dpp_lain'] = $request['cl_1a9_dpp_lain'];
+        $data['cl_2f_ppn'] = $request['cl_2f_ppn'];
+        $data['cl_2e_ppn'] = $request['cl_2e_ppn'];
 
         $fakturs = Faktur::where('badan_id', $request['badan_id'])
             ->where('masa_pajak', $month)
