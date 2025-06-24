@@ -44,6 +44,8 @@ enum IntentEnum: string {
 
     case API_GET_GROUP_ALL = 'api.get.group.all';
 
+    case API_GET_SELF_ASSIGNMENT_ALL = 'api.get.self.assignment.all';
+
     case API_GET_ASSIGNMENT_ALL = 'api.get.assignment.all';
 
     case API_GET_GROUP_WITH_ASSIGNMENTS = 'api.get.group.with.assignments';
