@@ -135,7 +135,10 @@ class ApiPembayaranController extends ApiController {
             $sistem->save();
         }else if($pembayaran->kap_kjs_id == 49){
             if ($pembayaran->nilai > $sistem->saldo) {
-                throw new \Exception('Saldo tidak mencukupi', 400);
+                return response()->json([
+                    'message' => 'Saldo tidak mencukupi',
+                    'code' => 400
+                ], 400);
             }
             $saldo = ($sistem->saldo ?? 0) - ($pembayaran->nilai ?? 0);
             $sistem->saldo = $saldo;
