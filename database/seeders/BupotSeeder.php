@@ -34,10 +34,10 @@ class BupotSeeder extends Seeder
         }
 
         // Create BUPOT BPPU
-        // $this->createBupotBPPU($sistemIds);
+        $this->createBupotBPPU($sistemIds);
 
-        // // Create BUPOT BPNR
-        // $this->createBupotBPNR($sistemIds);
+        // Create BUPOT BPNR
+        $this->createBupotBPNR($sistemIds);
 
         // Create BUPOT PS
         $this->createBupotPS($sistemIds);
@@ -59,6 +59,10 @@ class BupotSeeder extends Seeder
 
         // Create BUPOT BPBPT
         $this->createBupotBPBPT($sistemIds);
+
+        $this->createKolom3Tanggung();
+        $this->createKolom2LainTanggung();
+        $this->createBPPULainTanggung();
     }
 
     private function createBupotBPPU(array $sistemIds): void
@@ -374,22 +378,24 @@ class BupotSeeder extends Seeder
         ]);
     }
 
-    private function createKolom3Tanggung():void
+        private function createKolom3Tanggung():void
     {
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
             'kap' => '411128-100',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
         ]);
 
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 12111,
             'kap' => '411128-402',
         ]);
@@ -397,8 +403,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 13111,
             'kap' => '411128-403',
         ]);
@@ -406,8 +413,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1411,
             'kap' => '411128-600',
         ]);
@@ -415,8 +423,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 15111,
             'kap' => '411129-600',
         ]);
@@ -424,8 +433,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 16111,
             'kap' => '411122-100',
         ]);
@@ -433,8 +443,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 175111,
             'kap' => '411122-900',
         ]);
@@ -442,8 +453,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 23',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 18111,
             'kap' => '411122-910',
         ]);
@@ -451,8 +463,9 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 23',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 19111,
             'kap' => '411124-100',
         ]);
@@ -460,14 +473,15 @@ class BupotSeeder extends Seeder
         Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
             'jenis_pajak' => 'Pasal 26',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 110111,
             'kap' => '411127-110',
         ]);
     }
 
-        private function createKolom2LainTanggung():void
+    private function createKolom2LainTanggung():void
     {
         Bupot::create([
             'pembuat_id' => 2,
@@ -475,6 +489,7 @@ class BupotSeeder extends Seeder
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
             'kap' => '411128-100',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
         ]);
 
@@ -483,6 +498,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-402',
         ]);
@@ -492,6 +508,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-403',
         ]);
@@ -501,6 +518,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
         ]);
@@ -510,6 +528,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411129-600',
         ]);
@@ -519,6 +538,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411122-100',
         ]);
@@ -528,6 +548,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411122-900',
         ]);
@@ -537,6 +558,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411122-910',
         ]);
@@ -546,6 +568,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 23',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411124-100',
         ]);
@@ -555,12 +578,13 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 26',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411127-110',
         ]);
     }
 
-        private function createBPPULainTanggung():void
+    private function createBPPULainTanggung():void
     {
         Bupot::create([
             'pembuat_id' => 2,
@@ -568,6 +592,7 @@ class BupotSeeder extends Seeder
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
             'kap' => '411128-100',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
         ]);
 
@@ -576,6 +601,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-402',
         ]);
@@ -585,6 +611,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-403',
         ]);
@@ -594,6 +621,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
         ]);
@@ -603,6 +631,7 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411129-600',
         ]);
@@ -612,44 +641,28 @@ class BupotSeeder extends Seeder
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411122-100',
-        ]);
-
-        Bupot::create([
-            'pembuat_id' => 2,
-            'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Fasilitas Lainnya',
-            'jenis_pajak' => 'Pasal 22',
-            'pph_pasal_21_ditanggung_pemerintah' => 1111,
-            'kap' => '411122-900',
-        ]);
-
-        Bupot::create([
-            'pembuat_id' => 2,
-            'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Fasilitas Lainnya',
-            'jenis_pajak' => 'Pasal 22',
-            'pph_pasal_21_ditanggung_pemerintah' => 1111,
-            'kap' => '411122-910',
-        ]);
-
-        Bupot::create([
-            'pembuat_id' => 2,
-            'tipe_bupot' => BupotTypeEnum::toArray()[1],
-            'fasilitas_pajak' => 'Fasilitas Lainnya',
-            'jenis_pajak' => 'Pasal 23',
-            'pph_pasal_21_ditanggung_pemerintah' => 1111,
-            'kap' => '411124-100',
-        ]);
-
-        Bupot::create([
+            ]);
+             Bupot::create([
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 26',
+            'pajak_penghasilan' => rand(5000, 50000),
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
-            'kap' => '411127-110',
-        ]);
-    }
+            'kap' => '411122-100',
+            ]);
+               Bupot::create([
+            'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[1],
+            'fasilitas_pajak' => 'Fasilitas Lainnya',
+            'jenis_pajak' => 'Pasal 23',
+            'pajak_penghasilan' => rand(5000, 50000),
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411122-100',
+            ]);
 }
+}
+
