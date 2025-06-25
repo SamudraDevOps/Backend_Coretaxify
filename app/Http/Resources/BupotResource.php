@@ -10,6 +10,14 @@ class BupotResource extends JsonResource
     public function toArray($request): array
     {
         $intent = $request->get('intent');
+
+        if ($request['jenis_spt_pph'] == 'L1') {
+            $intent = IntentEnum::API_BUPOT_BPPU->value;
+        }else if ($request['jenis_spt_pph'] == 'L3') {
+            $intent = IntentEnum::API_BUPOT_BP21->value;
+            $intent = IntentEnum::API_BUPOT_BP26->value;
+        }
+
         switch ($intent) {
             case IntentEnum::API_BUPOT_BPPU->value:
                 return [
