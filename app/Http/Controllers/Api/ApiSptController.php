@@ -90,10 +90,17 @@ class ApiSptController extends ApiController {
         return $this->sptService->calculateSpt($spt, $request);
     }
 
-    public function showFaktuSptPpn(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
+    public function showFakturSptPpn(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem);
 
         $request['badan_id'] = $sistem->id;
         return $this->sptService->showFakturSptPpn($spt, $request);
+    }
+
+    public function showBupotSptPph(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+
+        $request['badan_id'] = $sistem->id;
+        return $this->sptService->showBupotSptPph($spt, $request);
     }
 }

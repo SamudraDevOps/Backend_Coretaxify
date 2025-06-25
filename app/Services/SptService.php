@@ -22,8 +22,10 @@ use App\Support\Enums\BupotTypeEnum;
 use App\Support\Enums\SptStatusEnum;
 use App\Support\Helpers\MonthHelper;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BupotResource;
 use App\Support\Enums\JenisPajakEnum;
 use App\Http\Resources\FakturResource;
+use App\Support\Enums\JenisSptPphEnum;
 use App\Support\Enums\JenisSptPpnEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -594,33 +596,36 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_pph = [];
 
-                $total_pemotongan = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value);
+                $total_pemotongan_lain = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
+                    ->where('fasilitas_pajak', 'Pph Ditanggung Pemerintah (DTP)');
+                $total_pemotongan_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
+                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
                 $total_bp21 = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value);
                 $total_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value);
 
-                $a = $total_pemotongan->sum('pajak_penghasilan') ?? 0;
+                $a = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
                 $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp1_1'] = $a + $b;
+                $data_spt_pph['cl_bp2_1'] = $a + $b;
 
-                $c = $total_pemotongan->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
-                $d = $total_bp21->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
+                $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
+                $d = $total_bp21->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp1_7'] = $c + $d;
 
-                $e = $total_pemotongan->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $e = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
                 $f = $total_bp21->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp1_5'] = $e + $f;
 
-                $a2 = $total_pemotongan->sum('pajak_penghasilan') ?? 0;
+                $a2 = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
                 $b2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp1_1'] = $a2 + $b2;
+                $data_spt_pph['cl_bp2_1'] = $a2 + $b2;
 
-                $c2 = $total_pemotongan->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
-                $d2 = $total_bp26->sum('pph_pasal_21_ditanggung_pemerintah') ?? 0;
-                $data_spt_pph['cl_bp1_7'] = $c2 + $d2;
+                $c2 = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
+                $d2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_7'] = $c2 + $d2;
 
-                $e2 = $total_pemotongan->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $e2 = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
                 $f2 = $total_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp1_5'] = $e2 + $f2;
+                $data_spt_pph['cl_bp2_5'] = $e2 + $f2;
 
                 $data_spt_pph['spt_id'] = $spt->id;
 
@@ -734,6 +739,35 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             case JenisSptPpnEnum::C->value:
                 $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm === null || $f->ppnbm = 0);
                 return FakturResource::collection($fakturMasukanC);
+            default:
+                return response()->json([
+                    'message' => 'Intent tidak valid',
+                ], 400);
+        }
+    }
+
+    public function showBupotSptPph($spt, Request $request) {
+        $month = $spt->masa_bulan;
+        $monthNumber = MonthHelper::getMonthNumber($month);
+
+        $bupots = Bupot::where('pembuat_id', $spt->badan_id)
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $spt->masa_tahun)
+                ->get();
+
+        $jenisSptPph = $request['jenis_spt_pph'];
+        // dd($jenisSptPph);
+
+        switch ($jenisSptPph) {
+            case JenisSptPphEnum::L1->value:
+                $bpbpt = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value);
+                return BupotResource::collection($bpbpt);
+            case JenisSptPphEnum::L3->value:
+               $combinedBupots = $bupots->whereIn('tipe_bupot', [
+                BupotTypeEnum::BP21->value,
+                BupotTypeEnum::BP26->value
+            ]);
+                return BupotResource::collection($combinedBupots);
             default:
                 return response()->json([
                     'message' => 'Intent tidak valid',
