@@ -242,7 +242,7 @@ class BupotSeeder extends Seeder
         ]);
     }
 
-        private function createBupotBPA1(array $sistemIds): void
+    private function createBupotBPA1(array $sistemIds): void
     {
         Bupot::create([
             'pembuat_id' => $sistemIds[array_rand($sistemIds)],
@@ -381,6 +381,7 @@ class BupotSeeder extends Seeder
         private function createKolom3Tanggung():void
     {
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -391,6 +392,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -401,6 +403,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -411,6 +414,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -421,6 +425,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -431,6 +436,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -441,6 +447,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -451,6 +458,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -461,6 +469,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -471,6 +480,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
@@ -484,6 +494,7 @@ class BupotSeeder extends Seeder
     private function createKolom2LainTanggung():void
     {
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -494,6 +505,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -504,6 +516,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -514,6 +527,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -524,6 +538,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -534,6 +549,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -544,6 +560,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -554,6 +571,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -564,6 +582,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -574,6 +593,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -587,6 +607,7 @@ class BupotSeeder extends Seeder
     private function createBPPULainTanggung():void
     {
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -597,6 +618,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -607,6 +629,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -617,6 +640,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[0],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -627,6 +651,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -637,6 +662,7 @@ class BupotSeeder extends Seeder
         ]);
 
         Bupot::create([
+            'masa_awal' => '2024-01-01',
             'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
@@ -646,7 +672,8 @@ class BupotSeeder extends Seeder
             'kap' => '411122-100',
             ]);
              Bupot::create([
-            'pembuat_id' => 2,
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 26',
@@ -655,7 +682,8 @@ class BupotSeeder extends Seeder
             'kap' => '411122-100',
             ]);
                Bupot::create([
-            'pembuat_id' => 2,
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
             'tipe_bupot' => BupotTypeEnum::toArray()[1],
             'fasilitas_pajak' => 'Fasilitas Lainnya',
             'jenis_pajak' => 'Pasal 23',
@@ -665,4 +693,3 @@ class BupotSeeder extends Seeder
             ]);
 }
 }
-
