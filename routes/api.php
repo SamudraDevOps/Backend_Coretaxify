@@ -126,11 +126,13 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('universities', ApiUniversityController::class);
                 Route::apiResource('contract', ApiContractController::class);
                 Route::apiResource('account-types', ApiAccountTypeController::class);
+                Route::apiResource('assignment-user', ApiAssignmentUserController::class);
             });
 
             Route::prefix('lecturer')->group(function () {
                 // Lecturer only routes
                 Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
+                Route::apiResource('assignment-user', ApiAssignmentUserController::class);
                 Route::apiResource('groups', ApiGroupController::class);
                 Route::prefix('groups')->group(function () {
                     Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);

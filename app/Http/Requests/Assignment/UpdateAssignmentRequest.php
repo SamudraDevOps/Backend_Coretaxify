@@ -9,12 +9,12 @@ class UpdateAssignmentRequest extends FormRequest {
     public function rules(): array {
         return [
             // 'groups' => 'sometimes|array',
-            'task_id' => 'sometimes|exists:tasks,id',
-            'name' => 'sometimes|string',
-            'assignment_code' => 'sometimes|string',
-            'start_period' => 'sometimes|date_format:Y-m-d H:i:s',
-            'end_period' => 'sometimes|date_format:Y-m-d H:i:s',
-            'supporting_file' => 'sometimes|file',
+            'task_id' => 'nullable|exists:tasks,id',
+            'name' => 'nullable|string',
+            'assignment_code' => 'nullable|string',
+            'start_period' => 'nullable|date_format:Y-m-d H:i:s',
+            'end_period' => 'nullable|date_format:Y-m-d H:i:s',
+            'supporting_file' => 'nullable|file',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,9 +35,9 @@ class Assignment extends Model
     }
 
     // Many To Many
-    // public function groups(): BelongsToMany {
-    //     return $this->belongsToMany(Group::class, 'group_assignments');
-    // }
+    public function assignmentUsers(): HasMany {
+        return $this->hasMany(AssignmentUser::class);
+    }
 
     // 1 Praktikum 1 Kelas
     public function group(): BelongsTo {

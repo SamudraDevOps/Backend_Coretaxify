@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('task_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('assignment_code')->unique();
-            $table->dateTime('start_period');
-            $table->dateTime('end_period');
+            $table->string('assignment_code')->nullable()->unique();
+            $table->dateTime('start_period')->nullable();
+            $table->dateTime('end_period')->nullable();
             $table->string('supporting_file')->nullable();
             $table->timestamps();
         });
