@@ -691,5 +691,172 @@ class BupotSeeder extends Seeder
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411122-100',
             ]);
+
+            // Seeder Baru
+            
+               Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => 200000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-100',
+            ]);
+
+                    Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => 100000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-100',
+            ]);
+
+            Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 22',
+            'pajak_penghasilan' => 100000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411122-100',
+            ]);
+
+             Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 20000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-600',
+            
+            ]);
+            Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 20000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-600',
+            
+            ]);
+              Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 40000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-600',
+            
+            ]);
+
+               Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 40000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-600',
+            
+            ]);
+
+                 Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 40000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-600',
+            
+            ]);
+
+                     Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Fasilitas Lainnya',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 600000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411122-900',
+            
+            ]);
+
+                             Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Fasilitas Lainnya',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 300000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-403',
+            
+            ]);
+
+                                   Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'jenis_pajak' => 'Pasal 15',
+            'pajak_penghasilan' => 300000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-600',
+            
+            ]);
+
+                                    Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[2],
+            'fasilitas_pajak' => 'Pph Ditanggung Pemerintah (DTP)',
+            'jenis_pajak' => 'Pasal 4 Ayat 2',
+            'pajak_penghasilan' => 430000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411128-403',
+            
+            ]);
+
+                                           Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[8],
+            'fasilitas_pajak' => 'Tanpa Fasilitas',
+            'jenis_pajak' => 'Pasal 21',
+            'pajak_penghasilan' => 130000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411121-100',
+            
+            ]);
+
+                                               Bupot::create([
+            'masa_awal' => '2024-01-01',
+                'pembuat_id' => 2,
+            'tipe_bupot' => BupotTypeEnum::toArray()[8],
+            'fasilitas_pajak' => 'Penghasilan yang Diterima atau Diperoleh Pegawai Tetap',
+            'jenis_pajak' => 'Pasal 21',
+            'pajak_penghasilan' => 20000,
+            'pph_pasal_21_ditanggung_pemerintah' => 1111,
+            'kap' => '411121-100',
+            
+            ]);
+
+
 }
 }
