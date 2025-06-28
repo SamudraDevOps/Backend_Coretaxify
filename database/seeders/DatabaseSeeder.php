@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             SistemSeeder::class,
             BupotSeeder::class,
             PicSeeder::class,
-            // FakturSeeder::class,
+            FakturSeeder::class,
         ]);
     }
 }

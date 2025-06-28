@@ -22,7 +22,7 @@ class SptRepository extends BaseRepository implements SptRepositoryInterface {
 
         $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'status']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 

@@ -154,9 +154,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $pembayaranData = [];
 
                 // cl_bp1_4 - PPh 21
-                if ($spt_pph->cl_bp1_4 > 0) {
+                if (!$spt_pph->cl_bp1_5) {
                     $pembayaranData[] = [
-                        'nilai' => $spt_pph->cl_bp1_4,
+                        'nilai' => $spt_pph->cl_bp1_5 + $spt_pph->cl_bp1_6,
                         'kap_kjs_id' => 50, // PPh 21
                         'jenis_pembayaran' => 'cl_bp1_4',
                     ];
@@ -489,7 +489,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->load('spt_pph');
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
-                // $spt->load('sptPph23');
+                $spt->load('spt_unifikasi');
                 break;
             case JenisPajakEnum::PPH_BADAN->value:
                 // $spt->load('sptTahunan');
@@ -606,7 +606,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $a = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
                 $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp2_1'] = $a + $b;
+                $data_spt_pph['cl_bp1_1'] = $a + $b;
 
                 $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
                 $d = $total_bp21->sum('pajak_penghasilan') ?? 0;
@@ -630,7 +630,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_pph['spt_id'] = $spt->id;
 
-                // SptPph::create($data_spt_pph);
+                SptPph::create($data_spt_pph);
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
                 $monthNumber = MonthHelper::getMonthNumber($month);
@@ -815,6 +815,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_uni['cl_d_pasal26'] = $data_spt_uni['cl_d_10'];
 
                 $data_spt_uni['cl_total_setor'] = $data_spt_uni['cl_a_pasal4'] + $data_spt_uni['cl_a_pasal15'] + $data_spt_uni['cl_a_pasal22'] + $data_spt_uni['cl_a_pasal23'] + $data_spt_uni['cl_a_pasal26'];
+                $data_spt_uni['cl_total_potong'] = $data_spt_uni['cl_b_pasal4'] + $data_spt_uni['cl_b_pasal15'] + $data_spt_uni['cl_b_pasal22'] + $data_spt_uni['cl_b_pasal23'] + $data_spt_uni['cl_b_pasal26'];
+                $data_spt_uni['cl_total_tanggung'] = $data_spt_uni['cl_c_pasal4'] + $data_spt_uni['cl_c_pasal15'] + $data_spt_uni['cl_c_pasal22'] + $data_spt_uni['cl_c_pasal23'] + $data_spt_uni['cl_c_pasal26'];
+                $data_spt_uni['cl_total_bayar'] = $data_spt_uni['cl_d_pasal4'] + $data_spt_uni['cl_d_pasal15'] + $data_spt_uni['cl_d_pasal22'] + $data_spt_uni['cl_d_pasal23'] + $data_spt_uni['cl_d_pasal26'];
 
                 $data_spt_uni['spt_id'] = $spt->id;
 

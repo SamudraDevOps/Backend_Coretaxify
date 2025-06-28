@@ -17,7 +17,6 @@ return new class extends Migration
             $table->decimal('cl_total_potong',18,2)->nullable();
             $table->decimal('cl_total_tanggung',18,2)->nullable();
             $table->decimal('cl_total_bayar',18,2)->nullable();
-            $table->decimal('cl_total_betul',18,2)->nullable();
             $table->decimal('cl_a_pasal26',18,2)->nullable();
             $table->decimal('cl_a_pasal23',18,2)->nullable();
             $table->decimal('cl_a_pasal22',18,2)->nullable();
@@ -78,21 +77,6 @@ return new class extends Migration
             $table->decimal('cl_d_8',18,2)->nullable();
             $table->decimal('cl_d_9',18,2)->nullable();
             $table->decimal('cl_d_10',18,2)->nullable();
-            $table->decimal('cl_e_pasal26',18,2)->nullable();
-            $table->decimal('cl_e_pasal23',18,2)->nullable();
-            $table->decimal('cl_e_pasal22',18,2)->nullable();
-            $table->decimal('cl_e_pasal15',18,2)->nullable();
-            $table->decimal('cl_e_pasal4',18,2)->nullable();
-            $table->decimal('cl_e_1',18,2)->nullable();
-            $table->decimal('cl_e_2',18,2)->nullable();
-            $table->decimal('cl_e_3',18,2)->nullable();
-            $table->decimal('cl_e_4',18,2)->nullable();
-            $table->decimal('cl_e_5',18,2)->nullable();
-            $table->decimal('cl_e_6',18,2)->nullable();
-            $table->decimal('cl_e_7',18,2)->nullable();
-            $table->decimal('cl_e_8',18,2)->nullable();
-            $table->decimal('cl_e_9',18,2)->nullable();
-            $table->decimal('cl_e_10',18,2)->nullable();
             $table->timestamps();
         });
     }
