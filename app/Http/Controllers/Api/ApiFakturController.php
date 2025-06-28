@@ -251,7 +251,7 @@ class ApiFakturController extends ApiController
             $item->is_akun_tambahan = false;
             return $item;
         });
-        $sistemTambahans = SistemTambahan::where('sistem_id', $sistem->id)->get()->map(function ($item) {
+        $sistemTambahans = SistemTambahan::where('assignment_user_id', $sistem->assignment_user->id)->get()->map(function ($item) {
             $item->is_akun_tambahan = true;
             return $item;
         });

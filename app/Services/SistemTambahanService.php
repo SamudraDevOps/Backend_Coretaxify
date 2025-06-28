@@ -18,8 +18,8 @@ class SistemTambahanService extends BaseCrudService implements SistemTambahanSer
     }
 
     public function create(array $data, Sistem $sistem = null): ?Model {
-        $data['sistem_id'] = $sistem->id;
-
+        $data['assignment_user_id'] = $sistem->assignment_user->id;
+        
         return $this->repository->create($data);
     }
 

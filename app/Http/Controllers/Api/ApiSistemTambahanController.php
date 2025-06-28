@@ -20,11 +20,19 @@ class ApiSistemTambahanController extends ApiController {
     /**
      * Display a listing of the resource.
      */
-    public function index(Assignment $assignment,Sistem $sistem ,Request $request) {
+    /**
+ * Display a listing of the resource.
+ */
+    public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $perPage = request()->get('perPage', 20);
 
-        return SistemTambahanResource::collection($this->sistemTambahanService->getAllPaginated($request->query(), $perPage));
+        // Query data berdasarkan assignment_user_id dari sistem
+        $data = SistemTambahan::where('assignment_user_id', $sistem->assignment_user->id)
+            ->paginate($perPage);
+
+        return SistemTambahanResource::collection($data);
     }
+
 
     /**
      * Store a newly created resource in storage.

@@ -8,7 +8,7 @@ class SistemTambahanResource extends JsonResource {
     public function toArray($request): array {
         return [
             'id' => $this->id,
-            'sistem_id' => $this->sistem_id,
+            'assignment_user_id' => $this->assignment_user_id,
             'nama_akun' => $this->nama_akun,
             'npwp_akun' => $this->npwp_akun,
             'tipe_akun' => $this->tipe_akun,
