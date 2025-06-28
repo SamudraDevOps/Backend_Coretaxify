@@ -12,15 +12,18 @@ use App\Http\Requests\Assignment\StoreAssignmentRequest;
 use App\Http\Requests\Assignment\UpdateAssignmentRequest;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
 
-class ApiAssignmentController extends ApiController {
+class ApiAssignmentController extends ApiController
+{
     public function __construct(
         protected AssignmentServiceInterface $assignmentService
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $perPage = request()->get('perPage', 20);
         $intent = request()->get('intent');
         $user = auth()->user();
@@ -42,7 +45,8 @@ class ApiAssignmentController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAssignmentRequest $request) {
+    public function store(StoreAssignmentRequest $request)
+    {
         $intent = $request->get('intent');
         // dd($request->all());
         $user = auth()->user();
@@ -60,7 +64,7 @@ class ApiAssignmentController extends ApiController {
                 if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
                     try {
                         $result = $this->assignmentService->joinAssignment($request->validated());
-                        return response()->json ([
+                        return response()->json([
                             'message' => 'Anda berhasil bergabung dengan tugas / praktikum.',
                             'data' => $result,
                         ], 200);
@@ -81,10 +85,11 @@ class ApiAssignmentController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Request $request ,Assignment $assignment) {
+    public function show(Request $request, Assignment $assignment)
+    {
         $intent = $request->get('intent');
 
-        switch($intent) {
+        switch ($intent) {
             case IntentEnum::API_USER_DOWNLOAD_FILE->value:
                 return $this->assignmentService->downloadFile($assignment);
         }
@@ -94,34 +99,47 @@ class ApiAssignmentController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAssignmentRequest $request, Assignment $assignment) {
+    public function update(UpdateAssignmentRequest $request, Assignment $assignment)
+    {
         return $this->assignmentService->update($assignment, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Assignment $assignment) {
+    public function destroy(Request $request, Assignment $assignment)
+    {
         return $this->assignmentService->delete($assignment);
     }
-    public function getMembers(Request $request, Assignment $assignment) {
+    public function getMembers(Request $request, Assignment $assignment)
+    {
         $perPage = $request->get('perPage', 20);
-        return UserResource::collection($assignment->users()->paginate($perPage));
+
+        $users = $assignment->users()
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
+            })
+            ->paginate($perPage);
+
+        return UserResource::collection($users);
     }
 
-    public function removeMember(Assignment $assignment, User $user) {
+    public function removeMember(Assignment $assignment, User $user)
+    {
         $assignment->users()->detach($user->id);
         return response()->json(['message' => 'Member removed successfully']);
     }
 
-    public function getMemberDetail(Assignment $assignment, User $user) {
+    public function getMemberDetail(Assignment $assignment, User $user)
+    {
         return $assignment->users()->findOrFail($user->id);
     }
 
     /**
      * Public download endpoint that uses signed URLs for security
      */
-    public function downloadPublic(Request $request, Assignment $assignment) {
+    public function downloadPublic(Request $request, Assignment $assignment)
+    {
         // The 'signed' middleware has already verified the URL signature
         return $this->assignmentService->downloadFile($assignment);
     }
