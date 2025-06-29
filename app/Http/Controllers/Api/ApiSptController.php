@@ -25,7 +25,9 @@ class ApiSptController extends ApiController {
 
         $perPage = request()->get('perPage', 20);
 
-        $spts = $this->sptService->getAllForSpt($sistem, $perPage);
+        $filters = $request->query();
+
+        $spts = $this->sptService->getAllForSpt($sistem, $perPage, $filters);
 
         return SptResource::collection($spts);
     }

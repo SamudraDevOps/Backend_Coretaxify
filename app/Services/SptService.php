@@ -476,8 +476,14 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return $sptPpn;
     }
 
-    public function getAllForSpt(Sistem $sistem, int $perPage) {
-        $spts = Spt::where('badan_id', $sistem->id)->paginate($perPage);
+    public function getAllForSpt(Sistem $sistem, int $perPage, array $filters = []) {
+        $query = Spt::where('badan_id', $sistem->id);
+
+        if (isset($filters['status']) && !empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        $spts = $query->paginate($perPage);
 
         return $spts;
     }
