@@ -40,7 +40,7 @@ class PembayaranResource extends JsonResource {
             'nama' => $this->sistem->nama_akun,
             'alamat' => $this->sistem->alamat_utama_akun,
             'kode_billing' => $this->kode_billing,
-            'kap_kjs_id' => $this->kap_kjs_id,
+            'kap_kjs_id' => $this->kap_kjs->kode,
             'masa_bulan' => $masa_bulan,
             'masa_tahun' => $masa_tahun,
             'masa_pajak' => $masa_pajak,

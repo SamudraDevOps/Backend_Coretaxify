@@ -17,4 +17,5 @@ enum SptStatusEnum: string {
 
     case DITOLAK = 'DITOLAK';
 
+    case MENUNGGU_PEMBAYARAN = 'MENUNGGU_PEMBAYARAN';
 }

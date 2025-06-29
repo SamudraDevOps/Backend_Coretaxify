@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\KapKjs;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
+use App\Support\Enums\SptStatusEnum;
 use App\Http\Resources\PembayaranResource;
 use App\Http\Requests\Pembayaran\StorePembayaranRequest;
 use App\Http\Requests\Pembayaran\UpdatePembayaranRequest;
@@ -92,25 +93,6 @@ class ApiPembayaranController extends ApiController {
         $request['masa_pajak'] = $masa_pajak;
         $request['masa_aktif'] = Carbon::now() -> addWeek();
 
-        // if ($request['kap_kjs_id'] !== 42){
-        //     return response()->json(
-        //         [
-        //         'pic_id' => $request['pic_id'],
-        //         'npwp' => $sistem->npwp_akun,
-        //         'nama' => $sistem->nama_akun,
-        //         'alamat' => $sistem->alamat_utama_akun,
-        //         'kode_billing' => $request['kode_billing'],
-        //         'kapKjs' => $kapKjs->kode,
-        //         'masa_bulan' =>  $request['masa_bulan'],
-        //         'masa_tahun' => $request['masa_tahun'],
-        //         'masa_pajak' => $masa_pajak,
-        //         'keterangan' => $request['keterangan'],
-        //         'ntpn' => null,
-        //         'is_paid' => false,
-        //         'nilai' => $request['nilai'],
-        //     ]);
-        // }
-
         return $this->pembayaranService->create($request->all());
     }
 
@@ -132,17 +114,12 @@ class ApiPembayaranController extends ApiController {
 
         if ($pembayaran->kap_kjs_id == 42) {
             $sistem->saldo = ($sistem->saldo ?? 0) + ($pembayaran->nilai ?? 0);
+            $pembayaran->spt->status = SptStatusEnum::DILAPORKAN->value;
+            $pembayaran->spt->save();
             $sistem->save();
-        }else if($pembayaran->kap_kjs_id == 49){
-            if ($pembayaran->nilai > $sistem->saldo) {
-                return response()->json([
-                    'message' => 'Saldo tidak mencukupi',
-                    'code' => 400
-                ], 400);
-            }
-            $saldo = ($sistem->saldo ?? 0) - ($pembayaran->nilai ?? 0);
-            $sistem->saldo = $saldo;
-            $sistem->save();
+        }else{
+            $pembayaran->spt->status = SptStatusEnum::DILAPORKAN->value;
+            $pembayaran->spt->save();
         }
         return $this->pembayaranService->update($pembayaran, $request->all());
     }

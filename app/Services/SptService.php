@@ -87,7 +87,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
         switch ($intent) {
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_KODE_BILLING->value:
-                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
 
@@ -107,13 +107,14 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $dataPembayaran['kap_kjs_id'] = 49;
                 $dataPembayaran['ntpn'] = $ntpn;
                 $dataPembayaran['masa_aktif'] = $masaAktif;
+                $dataPembayaran['spt_id'] = $spt->id;
 
                 Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
 
-                $spt->status = SptStatusEnum::DIBUAT->value;
+                $spt->status = SptStatusEnum::DILAPORKAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
 
@@ -138,6 +139,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['kap_kjs_id'] = 49;
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
+                    $dataPembayaran['spt_id'] = $spt->id;
 
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
