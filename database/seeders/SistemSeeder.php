@@ -47,7 +47,7 @@ class SistemSeeder extends Seeder
                 'tipe_akun' => $account->account_type->name,
                 'alamat_utama_akun' => $account->alamat_utama,
                 'email_akun' => $account->email,
-                'saldo' => 10
+                'saldo' => 0
             ]);
         }
 
