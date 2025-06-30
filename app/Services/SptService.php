@@ -123,9 +123,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
                 if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn;
+                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn ?? 0;
                 }else {
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn;
+                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn ?? 0;
                 }
 
                 $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
@@ -144,9 +144,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $sistem = Sistem::find($sistem_id);
 
                 if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $bayar = $spt_ppn->cl_3f_ppn;
+                    $bayar = $spt_ppn->cl_3f_ppn ?? 0;
                 }else {
-                    $bayar = $spt_ppn->cl_3g_ppn;
+                    $bayar = $spt_ppn->cl_3g_ppn ?? 0;
                 }
 
                 $hasil = $sistem->saldo - $bayar;
@@ -181,18 +181,18 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
                 if($spt_pph->cl_bp1_5 !== null || $spt_pph->cl_bp1_5 != 0){
-                    $bayar21 = $spt_pph->cl_bp1_6;
+                    $bayar21 = $spt_pph->cl_bp1_6 ?? 0;
                 } else {
-                    $bayar21 = $spt_pph->cl_bp1_5;
+                    $bayar21 = $spt_pph->cl_bp1_5 ?? 0;
                 }
 
                 if($spt_pph->cl_bp2_5 !== null || $spt_pph->cl_bp2_5 != 0){
-                    $bayar26 = $spt_pph->cl_bp2_6;
+                    $bayar26 = $spt_pph->cl_bp2_6 ?? 0;
                 } else {
-                    $bayar26= $spt_pph->cl_bp2_5;
+                    $bayar26= $spt_pph->cl_bp2_5 ?? 0;
                 }
 
-                $bayar = $bayar21 + $bayar26;
+                $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
@@ -215,18 +215,18 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $sistem = Sistem::find($sistem_id);
 
                 if($spt_pph->cl_bp1_5 !== null || $spt_pph->cl_bp1_5 != 0){
-                    $bayar21 = $spt_pph->cl_bp1_6;
+                    $bayar21 = $spt_pph->cl_bp1_6 ?? 0;
                 } else {
-                    $bayar21 = $spt_pph->cl_bp1_5;
+                    $bayar21 = $spt_pph->cl_bp1_5 ?? 0;
                 }
 
                 if($spt_pph->cl_bp2_5 !== null || $spt_pph->cl_bp2_5 != 0){
-                    $bayar26 = $spt_pph->cl_bp2_6;
+                    $bayar26 = $spt_pph->cl_bp2_6 ?? 0;
                 } else {
-                    $bayar26= $spt_pph->cl_bp2_5;
+                    $bayar26= $spt_pph->cl_bp2_5 ?? 0;
                 }
 
-                $bayar = $bayar21 + $bayar26;
+                $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
                 $hasil = $sistem->saldo - $bayar;
 
