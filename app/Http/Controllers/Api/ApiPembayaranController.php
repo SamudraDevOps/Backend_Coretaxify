@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Support\Enums\JenisPajakEnum;
 use Carbon\Carbon;
 use App\Models\KapKjs;
 use App\Models\Sistem;
@@ -99,9 +100,16 @@ class ApiPembayaranController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem,Pembayaran $pembayaran) {
+    public function show(Assignment $assignment, Sistem $sistem, Pembayaran $pembayaran, Request $request) {
         $this->pembayaranService->authorizeAccess($assignment, $sistem);
-        return new PembayaranResource($pembayaran);
+
+        $additionalData = [];
+
+        if($pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH->value){
+            $additionalData['show'] = true;
+        }
+
+        return (new PembayaranResource($pembayaran))->additional($additionalData);
     }
 
     /**
