@@ -233,7 +233,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 if ($hasil < 0) {
                     throw new \Exception('Saldo tidak mencukupi', 101);
                 } else {
-                    $dataPembayaran['nilai'] = $total_bayar;
+                    $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                     $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
