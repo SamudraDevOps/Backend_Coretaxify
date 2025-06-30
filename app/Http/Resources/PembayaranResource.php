@@ -34,8 +34,9 @@ class PembayaranResource extends JsonResource {
             $masa_pajak = '0112'. $masa_tahun;
         }
 
+        $showSpecialFormat = $this->additional['show'] ?? false;
 
-        if($this->spt->jenis_pajak == JenisPajakEnum::PPH->value){
+        if ($showSpecialFormat && $this->spt->jenis_pajak == JenisPajakEnum::PPH->value){
             if($this->spt->spt_pph->cl_bp1_5 !== null || $this->spt->spt_pph->cl_bp1_5 != 0){
                 $bayar21 = ($this->spt->spt_pph->cl_bp1_6 ?? 0) + ($this->spt->spt_pph->cl_bp1_7 ?? 0);
             } else {
@@ -80,6 +81,7 @@ class PembayaranResource extends JsonResource {
                 $data,
                 $data2
             ];
+
         }
 
         return [
@@ -89,7 +91,7 @@ class PembayaranResource extends JsonResource {
             'nama' => $this->sistem->nama_akun,
             'alamat' => $this->sistem->alamat_utama_akun,
             'kode_billing' => $this->kode_billing,
-            'kap_kjs_id' => $this->kap_kjs->kode,
+            'kap_kjs_id' => $this->kap_kjs->kode ?? null,
             'masa_bulan' => $masa_bulan,
             'masa_tahun' => $masa_tahun,
             'masa_pajak' => $masa_pajak,
