@@ -34,19 +34,20 @@ class PembayaranResource extends JsonResource {
             $masa_pajak = '0112'. $masa_tahun;
         }
 
-        if($this->spt->spt_pph->cl_bp1_5 !== null || $this->spt->spt_pph->cl_bp1_5 != 0){
-            $bayar21 = $this->spt->spt_pph->cl_bp1_6;
-        } else {
-            $bayar21 = $this->spt->spt_pph->spt_pph->cl_bp1_5;
-        }
-
-        if($this->spt->spt_pph->cl_bp2_5 !== null || $this->spt->spt_pph->cl_bp2_5 != 0){
-            $bayar26 = $this->spt->spt_pph->cl_bp2_6;
-        } else {
-            $bayar26= $this->spt->spt_pph->cl_bp2_5;
-        }
 
         if($this->spt->jenis_pajak == JenisPajakEnum::PPH->value){
+            if($this->spt->spt_pph->cl_bp1_5 !== null || $this->spt->spt_pph->cl_bp1_5 != 0){
+                $bayar21 = $this->spt->spt_pph->cl_bp1_6;
+            } else {
+                $bayar21 = $this->spt->spt_pph->cl_bp1_5;
+            }
+
+            if($this->spt->spt_pph->cl_bp2_5 !== null || $this->spt->spt_pph->cl_bp2_5 != 0){
+                $bayar26 = $this->spt->spt_pph->cl_bp2_6;
+            } else {
+                $bayar26= $this->spt->spt_pph->cl_bp2_5;
+            }
+
             $data = [
                 'id' => $this->id,
                 'pic_id' => $this->pic_id,

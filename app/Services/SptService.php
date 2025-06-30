@@ -62,30 +62,30 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         if ($spt->jenis_pajak == JenisPajakEnum::PPN->value) {
             $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
-        if (!$spt_ppn) {
-            throw new \Exception('SPT PPN tidak ditemukan untuk SPT ID: ' . $spt->id, 404);
-        }
-
-        foreach ($fields_spt_ppn as $field) {
-            if (array_key_exists($field, $requestData)) {
-                // Handle null values - set to 0 if null
-                $spt_ppn->$field = $requestData[$field] ?? 0;
+            if (!$spt_ppn) {
+                throw new \Exception('SPT PPN tidak ditemukan untuk SPT ID: ' . $spt->id, 404);
             }
-        }
 
-        // Fill remaining data, ensuring null values become 0 for numeric fields
-        $filteredData = [];
-        foreach ($requestData as $key => $value) {
-            // Set null values to 0 for numeric fields, keep original for text fields
-            if (in_array($key, ['cl_3h_nomor_rekening', 'cl_3h_nama_bank', 'cl_3h_nama_pemilik_rekening'])) {
-                $filteredData[$key] = $value; // Keep original for text fields
-            } else {
-                $filteredData[$key] = $value ?? 0; // Set to 0 for numeric fields
+            foreach ($fields_spt_ppn as $field) {
+                if (array_key_exists($field, $requestData)) {
+                    // Handle null values - set to 0 if null
+                    $spt_ppn->$field = $requestData[$field] ?? 0;
+                }
             }
-        }
 
-        $spt_ppn->fill($filteredData);
-        $spt_ppn->save();
+            // Fill remaining data, ensuring null values become 0 for numeric fields
+            $filteredData = [];
+            foreach ($requestData as $key => $value) {
+                // Set null values to 0 for numeric fields, keep original for text fields
+                if (in_array($key, ['cl_3h_nomor_rekening', 'cl_3h_nama_bank', 'cl_3h_nama_pemilik_rekening'])) {
+                    $filteredData[$key] = $value; // Keep original for text fields
+                } else {
+                    $filteredData[$key] = $value ?? 0; // Set to 0 for numeric fields
+                }
+            }
+
+            $spt_ppn->fill($filteredData);
+            $spt_ppn->save();
 
         } elseif ($spt->jenis_pajak == JenisPajakEnum::PPH->value) {
             // Fix: Use SptPph instead of SptPpn
@@ -117,6 +117,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
+
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
