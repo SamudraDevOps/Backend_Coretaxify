@@ -18,11 +18,13 @@ interface SptServiceInterface extends BaseCrudServiceInterface {
 
     public function update($spt, $request): Model;
 
-    public function getAllForSpt(Sistem $sistem, int $perPage);
+    public function getAllForSpt(Sistem $sistem, int $perPage, array $filters = []);
 
     public function showDetailSpt(Spt $spt);
 
     public function calculateSpt(Spt $spt, Request $request);
 
     public function showFakturSptPpn($spt, Request $request);
+
+    public function showBupotSptPph($spt, Request $request);
 }

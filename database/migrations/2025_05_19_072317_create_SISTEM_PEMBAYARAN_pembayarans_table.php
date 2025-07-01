@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('badan_id')->nullable()->references('id')->on('sistems');
             $table->foreignId('pic_id')->nullable()->references('id')->on('sistems');
+            $table->foreignId('spt_id')->nullable()->constrained();
             $table->foreignId('kap_kjs_id')->nullable()->constrained();
             $table->string('kode_billing')->nullable();
             $table->string('masa_bulan')->nullable();
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

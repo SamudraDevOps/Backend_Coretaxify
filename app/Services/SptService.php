@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\SptUnifikasi;
 use Carbon\Carbon;
 use App\Models\Pic;
 use App\Models\Spt;
+use App\Models\Bupot;
 use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\SptPph;
@@ -17,10 +19,14 @@ use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
 use App\Http\Resources\SptResource;
 use App\Support\Enums\SptModelEnum;
+use App\Support\Enums\BupotTypeEnum;
 use App\Support\Enums\SptStatusEnum;
+use App\Support\Helpers\MonthHelper;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BupotResource;
 use App\Support\Enums\JenisPajakEnum;
 use App\Http\Resources\FakturResource;
+use App\Support\Enums\JenisSptPphEnum;
 use App\Support\Enums\JenisSptPpnEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -42,41 +48,84 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         // ];
 
         $fields_spt_ppn = [
-            'cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening',
+            'cl_1a9_dpp','cl_1a9_dpp_lain','cl_1a9_ppn','cl_1a9_ppnbm','cl_2e_ppn','cl_2f_ppn','cl_2i_dpp','cl_3b_ppn','cl_3d_ppn','cl_3f_ppn','cl_2i_dpp','cl_8d_diminta_pengembalian', 'cl_3h_diminta','cl_3h_nomor_rekening','cl_3h_nama_bank','cl_3h_nama_pemilik_rekening','cl_4_ppn_terutang_dpp','cl_5_ppn_wajib'
         ];
 
         $fields_spt_pph = [
-            'cl_bp1_2', 'cl_bp1_3', 'cl_bp2_2', 'cl_bp2_3'
+            'cl_bp1_2', 'cl_bp1_3', 'cl_bp1_4', 'cl_bp1_6','cl_bp2_2', 'cl_bp2_3', 'cl_bp2_4', 'cl_bp2_6'
         ];
 
         $requestData = is_array($request) ? $request : $request->all();
 
         $masaAktif = Carbon::now()->addWeek();
 
+        if ($spt->jenis_pajak == JenisPajakEnum::PPN->value) {
+            $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+            if (!$spt_ppn) {
+                throw new \Exception('SPT PPN tidak ditemukan untuk SPT ID: ' . $spt->id, 404);
+            }
+
+            foreach ($fields_spt_ppn as $field) {
+                if (array_key_exists($field, $requestData)) {
+                    // Handle null values - set to 0 if null
+                    $spt_ppn->$field = $requestData[$field] ?? 0;
+                }
+            }
+
+            // Fill remaining data, ensuring null values become 0 for numeric fields
+            $filteredData = [];
+            foreach ($requestData as $key => $value) {
+                // Set null values to 0 for numeric fields, keep original for text fields
+                if (in_array($key, ['cl_3h_nomor_rekening', 'cl_3h_nama_bank', 'cl_3h_nama_pemilik_rekening'])) {
+                    $filteredData[$key] = $value; // Keep original for text fields
+                } else {
+                    $filteredData[$key] = $value ?? 0; // Set to 0 for numeric fields
+                }
+            }
+
+            $spt_ppn->fill($filteredData);
+            $spt_ppn->save();
+
+        } elseif ($spt->jenis_pajak == JenisPajakEnum::PPH->value) {
+            // Fix: Use SptPph instead of SptPpn
+            $spt_pph = SptPph::where('spt_id', $spt->id)->first();
+
+            if (!$spt_pph) {
+                throw new \Exception('SPT PPH tidak ditemukan untuk SPT ID: ' . $spt->id, 404);
+            }
+
+            foreach ($fields_spt_pph as $field) {
+                if (array_key_exists($field, $requestData)) {
+                    // Handle null values - set to 0 if null
+                    $spt_pph->$field = $requestData[$field] ?? 0;
+                }
+            }
+
+            // Fill remaining data, ensuring null values become 0
+            $filteredData = [];
+            foreach ($requestData as $key => $value) {
+                $filteredData[$key] = $value ?? 0;
+            }
+
+            $spt_pph->fill($filteredData);
+            $spt_pph->save();
+        }
+
         switch ($intent) {
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_KODE_BILLING->value:
-                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
-
-
-                foreach ($fields_spt_ppn as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_ppn->$field = $requestData[$field];
-                    }
-                }
-
-                $spt_ppn->fill($requestData);
-                $spt_ppn->save();
-
-                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
+
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
 
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
                 if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn;
+                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn ?? 0;
                 }else {
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn;
+                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn ?? 0;
                 }
 
                 $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
@@ -87,39 +136,25 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $dataPembayaran['kap_kjs_id'] = 49;
                 $dataPembayaran['ntpn'] = $ntpn;
                 $dataPembayaran['masa_aktif'] = $masaAktif;
+                $dataPembayaran['spt_id'] = $spt->id;
 
                 Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
-
-                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
-
                 $sistem = Sistem::find($sistem_id);
 
-                foreach ($fields_spt_ppn as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_ppn->$field = $requestData[$field];
-                    }
-                }
-
-                $spt_ppn->fill($requestData);
-                $spt_ppn->save();
-
-                $spt->status = SptStatusEnum::DIBUAT->value;
-                $spt->is_can_pembetulan = true;
-                $spt->save();
-
                 if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $bayar = $spt_ppn->cl_3f_ppn;
+                    $bayar = $spt_ppn->cl_3f_ppn ?? 0;
                 }else {
-                    $bayar = $spt_ppn->cl_3g_ppn;
+                    $bayar = $spt_ppn->cl_3g_ppn ?? 0;
                 }
 
                 $hasil = $sistem->saldo - $bayar;
 
                 if ($hasil < 0) {
-                    throw new \Exception('Saldo Tidak Mencukupi', 101);
+                    throw new \Exception('Saldo tidak mencukupi', 101);
                 } else {
+                    $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                     $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
@@ -129,26 +164,93 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['kap_kjs_id'] = 49;
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
+                    $dataPembayaran['spt_id'] = $spt->id;
+
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->is_can_pembetulan = true;
+                    $spt->save();
 
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
                 }
-            default:
-                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+            case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_KODE_BILLING->value:
+                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->is_can_pembetulan = true;
+                $spt->save();
 
-                $sistem = Sistem::find($sistem_id);
+                $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
-                foreach ($fields_spt_ppn as $field) {
-                    if (array_key_exists($field, $requestData)) {
-                        $spt_ppn->$field = $requestData[$field];
-                    }
+                if($spt_pph->cl_bp1_5 !== null || $spt_pph->cl_bp1_5 != 0){
+                    $bayar21 = $spt_pph->cl_bp1_6 ?? 0;
+                } else {
+                    $bayar21 = $spt_pph->cl_bp1_5 ?? 0;
                 }
 
-                $spt_ppn->fill($requestData);
-                $spt_ppn->save();
+                if($spt_pph->cl_bp2_5 !== null || $spt_pph->cl_bp2_5 != 0){
+                    $bayar26 = $spt_pph->cl_bp2_6 ?? 0;
+                } else {
+                    $bayar26= $spt_pph->cl_bp2_5 ?? 0;
+                }
 
-                $spt->status = SptStatusEnum::DIBUAT->value;
-                $spt->save();
+                $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
+
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
+
+                $dataPembayaran = [
+                    'nilai' => $bayar,
+                    'masa_bulan' => $spt->masa_bulan,
+                    'masa_tahun' => $spt->masa_tahun,
+                    'badan_id' => $request['badan_id'],
+                    'pic_id' => $request['pic_id'],
+                    'kode_billing' => $randomNumber,
+                    // 'kap_kjs_id' => $data['kap_kjs_id'],
+                    'ntpn' => $ntpn,
+                    'masa_aktif' => $masaAktif,
+                    'spt_id' => $spt->id,
+                ];
+
+                Pembayaran::create($dataPembayaran);
+                break;
+            case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_DEPOSIT->value:
+                $sistem = Sistem::find($sistem_id);
+
+                if($spt_pph->cl_bp1_5 !== null || $spt_pph->cl_bp1_5 != 0){
+                    $bayar21 = $spt_pph->cl_bp1_6 ?? 0;
+                } else {
+                    $bayar21 = $spt_pph->cl_bp1_5 ?? 0;
+                }
+
+                if($spt_pph->cl_bp2_5 !== null || $spt_pph->cl_bp2_5 != 0){
+                    $bayar26 = $spt_pph->cl_bp2_6 ?? 0;
+                } else {
+                    $bayar26= $spt_pph->cl_bp2_5 ?? 0;
+                }
+
+                $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
+
+                $hasil = $sistem->saldo - $bayar;
+
+                if ($hasil < 0) {
+                    throw new \Exception('Saldo tidak mencukupi', 101);
+                } else {
+                    $dataPembayaran['nilai'] = $bayar;
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    // $dataPembayaran['kap_kjs_id'] = 50;
+                    $dataPembayaran['is_paid'] = true;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->is_can_pembetulan = true;
+                    $spt->save();
+
+                    $pembayaran = Pembayaran::create($dataPembayaran);
+                    return $pembayaran;
+                }
         }
 
         return $spt;
@@ -192,6 +294,13 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_8b_ppnbm'] = $request['cl_8b_ppnbm'];
         $data['cl_8a_dpp_lain'] = $request['cl_8a_dpp_lain'];
         $data['cl_8b_dpp_lain'] = $request['cl_8b_dpp_lain'];
+        $data['cl_5_ppn_wajib'] = $request['cl_5_ppn_wajib'];
+
+        $data['cl_4_ppn_terutang_dpp'] = $request['cl_4_ppn_terutang_dpp'];
+        $data['cl_1a9_dpp_lain'] = $request['cl_1a9_dpp_lain'];
+        $data['cl_1a9_dpp_lain'] = $request['cl_1a9_dpp_lain'];
+        $data['cl_2f_ppn'] = $request['cl_2f_ppn'];
+        $data['cl_2e_ppn'] = $request['cl_2e_ppn'];
 
         $fakturs = Faktur::where('badan_id', $request['badan_id'])
             ->where('masa_pajak', $month)
@@ -315,7 +424,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             $data['cl_3h_diminta'] = '0';
          }
 
-         $cl_4_ppn_terutang_dpp = ($data['cl_4_ppn_terutang_dpp'] ?? 0);
+         $cl_4_ppn_terutang_dpp = ($request['cl_4_ppn_terutang_dpp'] ?? 0);
          $data['cl_4_ppn_terutang'] = $cl_4_ppn_terutang_dpp * 0.12;
 
          $data['cl_6a_ppnbm'] = ($data['cl_1a2_ppnbm'] ?? 0) + ($data['cl_1a3_ppnbm'] ?? 0) + ($data['cl_1a4_ppnbm'] ?? 0) + ($data['cl_1a5_ppnbm'] ?? 0);
@@ -334,7 +443,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
          $data['cl_8c_dpp_lain'] = ($data['cl_8a_dpp_lain'] ?? 0) - ($data['cl_8b_dpp_lain'] ?? 0);
 
         $sptPpn = SptPpn::where('spt_id', $spt->id)->first();
-
         $skipKeys = ['badan_id'];
         foreach ($data as $key => $value) {
             if (in_array($key, $skipKeys)) continue;
@@ -347,8 +455,14 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return $sptPpn;
     }
 
-    public function getAllForSpt(Sistem $sistem, int $perPage) {
-        $spts = Spt::where('badan_id', $sistem->id)->paginate($perPage);
+    public function getAllForSpt(Sistem $sistem, int $perPage, array $filters = []) {
+        $query = Spt::where('badan_id', $sistem->id);
+
+        if (isset($filters['status']) && !empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        $spts = $query->paginate($perPage);
 
         return $spts;
     }
@@ -362,7 +476,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->load('spt_pph');
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
-                // $spt->load('sptPph23');
+                $spt->load('spt_unifikasi');
                 break;
             case JenisPajakEnum::PPH_BADAN->value:
                 // $spt->load('sptTahunan');
@@ -457,57 +571,244 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') - $fakturs2d->sum('ppn_retur');
                 $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') - $fakturs2d->sum('ppnbm_retur');
 
-                //    ($data_spt_ppn['cl_2a_dpp'] ?? 0)
-                //  + ($data_spt_ppn['cl_2b_dpp'] ?? 0)
-                //  + ($data_spt_ppn['cl_2c_dpp'] ?? 0)
-                //  + ($data_spt_ppn['cl_2d_dpp'] ?? 0);
-
-                //  $data_spt_ppn['cl_2g_ppn'] =
-                //     ($data_spt_ppn['cl_2a_ppn'] ?? 0)
-                //  + ($data_spt_ppn['cl_2b_ppn'] ?? 0)
-                //  + ($data_spt_ppn['cl_2c_ppn'] ?? 0)
-                //  + ($data_spt_ppn['cl_2d_ppn'] ?? 0);
-                //  + ($data_spt_ppn['cl_2e_ppn'] ?? 0);
-
-                //  $data_spt_ppn['cl_2j_dpp'] = ($data_spt_ppn['cl_2g_dpp'] ?? 0 ) + ($data_spt_ppn['cl_2h_dpp'] ?? 0 ) + ($data_spt_ppn['cl_2i_dpp'] ?? 0 );
-
-                //  $data_spt_ppn['cl_3a_ppn'] = ($data_spt_ppn['cl_1a2_ppn'] ?? 0) + ($data_spt_ppn['cl_1a3_ppn'] ?? 0) + ($data_spt_ppn['cl_1a4_ppn'] ?? 0) + ($data_spt_ppn['cl_1a5_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_3c_ppn'] = ($data_spt_ppn['cl_2g_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_3e_ppn'] = ($data_spt_ppn['cl_3a_ppn'] ?? 0) - ($data_spt_ppn['cl_3b_ppn'] ?? 0) - ($data_spt_ppn['cl_3c_ppn'] ?? 0) - ($data_spt_ppn['cl_3c_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_3g_ppn'] = ($data_spt_ppn['cl_3e_ppn'] ?? 0) - ($data_spt_ppn['cl_3f_ppn'] ?? 0);
-
-                //  $cl_4_ppn_terutang_dpp = ($data_spt_ppn['cl_4_ppn_terutang_dpp'] ?? 0);
-                //  $data_spt_ppn['cl_4_ppn_terutang'] = $cl_4_ppn_terutang_dpp * 0.12;
-
-                //  $data_spt_ppn['cl_6a_ppnbm'] = ($data_spt_ppn['cl_1a2_ppnbm'] ?? 0) + ($data_spt_ppn['cl_1a3_ppnbm'] ?? 0) + ($data_spt_ppn['cl_1a4_ppnbm'] ?? 0) + ($data_spt_ppn['cl_1a5_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_6c_ppnbm'] = ($data_spt_ppn['cl_6a_ppnbm'] ?? 0) - ($data_spt_ppn['cl_6b_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_6e_ppnbm'] = ($data_spt_ppn['cl_6c_ppnbm'] ?? 0) - ($data_spt_ppn['cl_6d_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_6f_diminta_pengembalian'] = $data_spt_ppn['cl_6e_ppnbm'] < 0;
-
-                //  $data_spt_ppn['cl_7c_dpp'] = ($data_spt_ppn['cl_7a_dpp'] ?? 0) - ($data_spt_ppn['cl_7b_dpp'] ?? 0);
-                //  $data_spt_ppn['cl_7c_ppn'] = ($data_spt_ppn['cl_7a_ppn'] ?? 0) - ($data_spt_ppn['cl_7b_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_7c_ppnbm'] = ($data_spt_ppn['cl_7a_ppnbm'] ?? 0) - ($data_spt_ppn['cl_7b_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_7c_dpp_lain'] = ($data_spt_ppn['cl_7a_dpp_lain'] ?? 0) - ($data_spt_ppn['cl_7b_dpp_lain'] ?? 0);
-
-                //  $data_spt_ppn['cl_8c_dpp'] = ($data_spt_ppn['cl_8a_dpp'] ?? 0) - ($data_spt_ppn['cl_8b_dpp'] ?? 0);
-                //  $data_spt_ppn['cl_8c_ppn'] = ($data_spt_ppn['cl_8a_ppn'] ?? 0) - ($data_spt_ppn['cl_8b_ppn'] ?? 0);
-                //  $data_spt_ppn['cl_8c_ppnbm'] = ($data_spt_ppn['cl_8a_ppnbm'] ?? 0) - ($data_spt_ppn['cl_8b_ppnbm'] ?? 0);
-                //  $data_spt_ppn['cl_8c_dpp_lain'] = ($data_spt_ppn['cl_8a_dpp_lain'] ?? 0) - ($data_spt_ppn['cl_8b_dpp_lain'] ?? 0);
-                // dd($data_spt_ppn);
-
                 $data_spt_ppn['spt_id'] = $spt->id;
                 SptPpn::create($data_spt_ppn);
                 break;
             case JenisPajakEnum::PPH->value:
-                $fakturs = Faktur::where('badan_id', $data['badan_id'])
-                ->where('masa_pajak', $month)
-                ->where('tahun', $year)
-                ->where('status', FakturStatusEnum::APPROVED->value)
+                $monthNumber = MonthHelper::getMonthNumber($month);
+
+                $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $year)
                 ->get();
 
-                $data_spt_ppn['spt_id'] = $spt->id;
+                $data_spt_pph = [];
 
-                // SptPph::create($data_spt_pph);
+                $total_pemotongan_lain = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
+                    ->where('fasilitas_pajak', 'Pph Ditanggung Pemerintah (DTP)');
+                $total_pemotongan_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
+                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
+                $total_bp21 = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value);
+                $total_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value);
+
+                $a = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
+                $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_1'] = $a + $b;
+
+                $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
+                $d = $total_bp21->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_7'] = $c + $d;
+
+                $e = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f = $total_bp21->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_5'] = $e + $f;
+
+                $a2 = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
+                $b2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_1'] = $a2 + $b2;
+
+                $c2 = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
+                $d2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_7'] = $c2 + $d2;
+
+                $e2 = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f2 = $total_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_5'] = $e2 + $f2;
+
+                $data_spt_pph['spt_id'] = $spt->id;
+
+                SptPph::create($data_spt_pph);
+                break;
+            case JenisPajakEnum::PPH_UNIFIKASI->value:
+                $monthNumber = MonthHelper::getMonthNumber($month);
+
+                $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $year)
+                ->get();
+
+                $data_spt_uni = [];
+
+                $bupot_tanggung = $bupots->where('tipe_bupot',[BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value, BupotTypeEnum::PS->value])
+                    ->where('fasilitas_pajak', 'Pph Ditanggung Pemerintah (DTP)');
+                $bupot_lain_sendiri = $bupots->where('tipe_bupot', BupotTypeEnum::PS->value)
+                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
+                $bupot_lain = $bupots->whereIn('tipe_bupot', [BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value])
+                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
+
+                $data_spt_uni['cl_a_1'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_1'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_1'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_1'] = $data_spt_uni['cl_a_1'] + $data_spt_uni['cl_b_1'] + $data_spt_uni['cl_c_1'];
+
+                $data_spt_uni['cl_a_2'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-402')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_2'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-402')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_2'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-402')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_2'] = $data_spt_uni['cl_a_2'] + $data_spt_uni['cl_b_2'] + $data_spt_uni['cl_c_2'];
+
+                $data_spt_uni['cl_a_3'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-403')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_3'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-403')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_3'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                                                            ->where('kap', '411128-403')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_3'] = $data_spt_uni['cl_a_3'] + $data_spt_uni['cl_b_3'] + $data_spt_uni['cl_c_3'];
+
+                $data_spt_uni['cl_a_pasal4'] = $data_spt_uni['cl_a_1'] + $data_spt_uni['cl_a_2'] + $data_spt_uni['cl_a_3'];
+                $data_spt_uni['cl_b_pasal4'] = $data_spt_uni['cl_b_1'] + $data_spt_uni['cl_b_2'] + $data_spt_uni['cl_b_3'];
+                $data_spt_uni['cl_c_pasal4'] = $data_spt_uni['cl_c_1'] + $data_spt_uni['cl_c_2'] + $data_spt_uni['cl_c_3'];
+                $data_spt_uni['cl_d_pasal4'] = $data_spt_uni['cl_d_1'] + $data_spt_uni['cl_d_2'] + $data_spt_uni['cl_d_3'];
+
+                $data_spt_uni['cl_a_4'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 15')
+                                                            ->where('kap', '411128-600')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_4'] = $bupot_lain->where('jenis_pajak', 'Pasal 15')
+                                                            ->where('kap', '411128-600')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_4'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 15')
+                                                            ->where('kap', '411128-600')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_4'] = $data_spt_uni['cl_a_4'] + $data_spt_uni['cl_b_4'] + $data_spt_uni['cl_c_4'];
+
+                $data_spt_uni['cl_a_5'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 15')
+                                                            ->where('kap', '411129-600')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_5'] = $bupot_lain->where('jenis_pajak', 'Pasal 15')
+                                                            ->where('kap', '411129-600')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_5'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 15')
+                                                            ->where('kap', '411129-600')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_5'] = $data_spt_uni['cl_a_5'] + $data_spt_uni['cl_b_5'] + $data_spt_uni['cl_c_5'];
+
+                $data_spt_uni['cl_a_pasal15'] = $data_spt_uni['cl_a_4'] + $data_spt_uni['cl_a_5'];
+                $data_spt_uni['cl_b_pasal15'] = $data_spt_uni['cl_b_4'] + $data_spt_uni['cl_b_5'];
+                $data_spt_uni['cl_c_pasal15'] = $data_spt_uni['cl_c_4'] + $data_spt_uni['cl_c_5'];
+                $data_spt_uni['cl_d_pasal15'] = $data_spt_uni['cl_d_4'] + $data_spt_uni['cl_d_5'];
+
+                $data_spt_uni['cl_a_6'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411122-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_6'] = $bupot_lain->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411122-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_6'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411122-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_6'] = $data_spt_uni['cl_a_6'] + $data_spt_uni['cl_b_6'] + $data_spt_uni['cl_c_6'];
+
+                $data_spt_uni['cl_a_7'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411122-900')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_7'] = $bupot_lain->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411122-900')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_7'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411122-900')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_7'] = $data_spt_uni['cl_a_7'] + $data_spt_uni['cl_b_7'] + $data_spt_uni['cl_c_7'];
+
+                $data_spt_uni['cl_a_8'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411128-403')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_8'] = $bupot_lain->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411128-403')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_8'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 22')
+                                                            ->where('kap', '411128-403')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_8'] = $data_spt_uni['cl_a_8'] + $data_spt_uni['cl_b_8'] + $data_spt_uni['cl_c_8'];
+
+                $data_spt_uni['cl_a_pasal22'] = $data_spt_uni['cl_a_6'] + $data_spt_uni['cl_a_7'] + $data_spt_uni['cl_a_8'];
+                $data_spt_uni['cl_b_pasal22'] = $data_spt_uni['cl_b_6'] + $data_spt_uni['cl_b_7'] + $data_spt_uni['cl_b_8'];
+                $data_spt_uni['cl_c_pasal22'] = $data_spt_uni['cl_c_6'] + $data_spt_uni['cl_c_7'] + $data_spt_uni['cl_c_8'];
+                $data_spt_uni['cl_d_pasal22'] = $data_spt_uni['cl_d_6'] + $data_spt_uni['cl_d_7'] + $data_spt_uni['cl_d_8'];
+
+                $data_spt_uni['cl_a_9'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 23')
+                                                            ->where('kap', '411124-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_9'] = $bupot_lain->where('jenis_pajak', 'Pasal 23')
+                                                            ->where('kap', '411124-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_9'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 23')
+                                                            ->where('kap', '411124-100')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_9'] = $data_spt_uni['cl_a_9'] + $data_spt_uni['cl_b_9'] + $data_spt_uni['cl_c_9'];
+
+                $data_spt_uni['cl_a_pasal23'] = $data_spt_uni['cl_a_6'];
+                $data_spt_uni['cl_b_pasal23'] = $data_spt_uni['cl_b_6'];
+                $data_spt_uni['cl_c_pasal23'] = $data_spt_uni['cl_c_6'];
+                $data_spt_uni['cl_d_pasal23'] = $data_spt_uni['cl_d_6'];
+
+                $data_spt_uni['cl_a_10'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 26')
+                                                            ->where('kap', '411127-110')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_b_10'] = $bupot_lain->where('jenis_pajak', 'Pasal 26')
+                                                            ->where('kap', '411127-110')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_c_10'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 26')
+                                                            ->where('kap', '411127-110')
+                                                            ->sum('pajak_penghasilan');
+
+                $data_spt_uni['cl_d_10'] = $data_spt_uni['cl_a_10'] + $data_spt_uni['cl_b_10'] + $data_spt_uni['cl_c_10'];
+
+                $data_spt_uni['cl_a_pasal26'] = $data_spt_uni['cl_a_10'];
+                $data_spt_uni['cl_b_pasal26'] = $data_spt_uni['cl_b_10'];
+                $data_spt_uni['cl_c_pasal26'] = $data_spt_uni['cl_c_10'];
+                $data_spt_uni['cl_d_pasal26'] = $data_spt_uni['cl_d_10'];
+
+                $data_spt_uni['cl_total_setor'] = $data_spt_uni['cl_a_pasal4'] + $data_spt_uni['cl_a_pasal15'] + $data_spt_uni['cl_a_pasal22'] + $data_spt_uni['cl_a_pasal23'] + $data_spt_uni['cl_a_pasal26'];
+                $data_spt_uni['cl_total_potong'] = $data_spt_uni['cl_b_pasal4'] + $data_spt_uni['cl_b_pasal15'] + $data_spt_uni['cl_b_pasal22'] + $data_spt_uni['cl_b_pasal23'] + $data_spt_uni['cl_b_pasal26'];
+                $data_spt_uni['cl_total_tanggung'] = $data_spt_uni['cl_c_pasal4'] + $data_spt_uni['cl_c_pasal15'] + $data_spt_uni['cl_c_pasal22'] + $data_spt_uni['cl_c_pasal23'] + $data_spt_uni['cl_c_pasal26'];
+                $data_spt_uni['cl_total_bayar'] = $data_spt_uni['cl_d_pasal4'] + $data_spt_uni['cl_d_pasal15'] + $data_spt_uni['cl_d_pasal22'] + $data_spt_uni['cl_d_pasal23'] + $data_spt_uni['cl_d_pasal26'];
+
+                $data_spt_uni['spt_id'] = $spt->id;
+
+                SptUnifikasi::create($data_spt_uni);
                 break;
         }
         return $spt;
@@ -606,6 +907,35 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             case JenisSptPpnEnum::C->value:
                 $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm === null || $f->ppnbm = 0);
                 return FakturResource::collection($fakturMasukanC);
+            default:
+                return response()->json([
+                    'message' => 'Intent tidak valid',
+                ], 400);
+        }
+    }
+
+    public function showBupotSptPph($spt, Request $request) {
+        $month = $spt->masa_bulan;
+        $monthNumber = MonthHelper::getMonthNumber($month);
+
+        $bupots = Bupot::where('pembuat_id', $spt->badan_id)
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $spt->masa_tahun)
+                ->get();
+
+        $jenisSptPph = $request['jenis_spt_pph'];
+        // dd($jenisSptPph);
+
+        switch ($jenisSptPph) {
+            case JenisSptPphEnum::L1->value:
+                $bpbpt = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value);
+                return BupotResource::collection($bpbpt);
+            case JenisSptPphEnum::L3->value:
+               $combinedBupots = $bupots->whereIn('tipe_bupot', [
+                BupotTypeEnum::BP21->value,
+                BupotTypeEnum::BP26->value
+            ]);
+                return BupotResource::collection($combinedBupots);
             default:
                 return response()->json([
                     'message' => 'Intent tidak valid',

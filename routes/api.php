@@ -228,8 +228,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                     Route::get('{assignment}/sistem/{sistem}/getAkun', [ApiFakturController::class, 'getCombinedAkunData']);
-                    Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
-                    Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
+
+                    // Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
+                    // Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 
                     Route::post('{assignment}/sistem/{sistem}/faktur/approve-multiple', [ApiFakturController::class, 'multipleDraftFakturToFix']);
 
@@ -240,7 +241,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::get('{assignment}/sistem/{sistem}/check-periode', [ApiSptController::class, 'checkPeriode']);
                     Route::put('{assignment}/sistem/{sistem}/spt/{spt}/calculate-spt', [ApiSptController::class, 'calculateSpt']);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
-                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFaktuSptPpn']);
+                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFakturSptPpn']);
+                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-bupot-pph', [ApiSptController::class, 'showBupotSptPph']);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/pembayaran', ApiPembayaranController::class);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);

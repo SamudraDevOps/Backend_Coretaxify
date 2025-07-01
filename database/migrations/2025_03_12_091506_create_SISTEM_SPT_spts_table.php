@@ -36,6 +36,10 @@ return new class extends Migration
         Schema::table('spt_pphs', function (Blueprint $table) {
             $table->foreignId('spt_id')->nullable()->constrained()->onDelete('cascade');
         });
+
+        Schema::table('spt_unifikasis', function (Blueprint $table) {
+            $table->foreignId('spt_id')->nullable()->constrained()->onDelete('cascade');
+        });
     }
 
     /**

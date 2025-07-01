@@ -8,7 +8,7 @@ class SistemTambahan extends Model
 {
     protected $guarded = ['id'];
 
-    public function sistem(){
-        return $this->belongsTo(Sistem::class);
+    public function assignment_user(){
+        return $this->belongsTo(AssignmentUser::class);
     }
 }

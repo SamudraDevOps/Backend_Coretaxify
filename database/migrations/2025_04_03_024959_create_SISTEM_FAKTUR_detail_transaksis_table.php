@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('detail_transaksis', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_tambahan')->default(false);
+            $table->boolean('is_lama')->default(false);
+
             $table->string('tipe')->nullable();
             $table->string('nama')->nullable();
             $table->string('kode')->nullable();
@@ -29,7 +32,25 @@ return new class extends Migration
             $table->decimal('dpp_lain_retur',18,2)->nullable();
             $table->decimal('ppnbm_retur',18,2)->nullable();
             $table->decimal('tarif_ppnbm',18,2)->nullable();
+
+            $table->string('tipe_lama')->nullable();
+            $table->string('nama_lama')->nullable();
+            $table->string('kode_lama')->nullable();
+            $table->string('kuantitas_lama')->nullable();
+            $table->string('satuan_lama')->nullable();
+            $table->decimal('harga_satuan_lama',18,2)->nullable();
+            $table->decimal('total_harga_lama',18,2)->nullable();
+            $table->decimal('pemotongan_harga_lama',18,2)->nullable();
+            $table->decimal('dpp_lama',18,2)->nullable();
+            $table->decimal('ppn_lama',18,2)->nullable();
+            $table->decimal('dpp_lain_lama',18,2)->nullable();
+            $table->decimal('ppnbm_lama',18,2)->nullable();
+            $table->decimal('ppn_retur_lama',18,2)->nullable();
+            $table->decimal('dpp_lain_retur_lama',18,2)->nullable();
+            $table->decimal('ppnbm_retur_lama',18,2)->nullable();
+            $table->decimal('tarif_ppnbm_lama',18,2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

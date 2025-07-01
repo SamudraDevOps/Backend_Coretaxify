@@ -56,7 +56,7 @@ class SptResource extends JsonResource {
                 $data['detail_spt'] = new SptPphResource($this->whenLoaded('spt_pph'));
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
-                // $data['detail'] = new SptPph23Resource($this->whenLoaded('sptPph23'));
+                $data['detail_spt'] = new SptUnifikasiResource($this->whenLoaded('spt_unifikasi'));
                 break;
             case JenisPajakEnum::PPH_BADAN->value:
                 // $data['detail'] = new SptTahunanResource($this->whenLoaded('sptTahunan'));

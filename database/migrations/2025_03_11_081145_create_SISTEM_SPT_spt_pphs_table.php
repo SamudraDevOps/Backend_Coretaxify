@@ -20,7 +20,6 @@ return new class extends Migration
             $table->decimal('cl_bp1_5',18,2)->nullable();
             $table->decimal('cl_bp1_6',18,2)->nullable();
             $table->decimal('cl_bp1_7',18,2)->nullable();
-            $table->decimal('cl_bp1_8',18,2)->nullable();
             $table->decimal('cl_bp2_1',18,2)->nullable();
             $table->decimal('cl_bp2_2',18,2)->nullable();
             $table->decimal('cl_bp2_3',18,2)->nullable();
@@ -28,7 +27,6 @@ return new class extends Migration
             $table->decimal('cl_bp2_5',18,2)->nullable();
             $table->decimal('cl_bp2_6',18,2)->nullable();
             $table->decimal('cl_bp2_7',18,2)->nullable();
-            $table->decimal('cl_bp2_8',18,2)->nullable();
             $table->timestamps();
         });
     }

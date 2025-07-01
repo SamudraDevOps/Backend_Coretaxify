@@ -63,6 +63,7 @@
              'alamat_utama_akun' => $this->alamat_utama_akun,
              'negara_asal' => optional($this->profil_saya?->informasi_umum)->negara_asal,
              'email_akun' => $this->email_akun,
+             'saldo' => $this->saldo,
              'created_at' => $this->created_at->toDateTimeString(),
              'updated_at' => $this->updated_at->toDateTimeString(),
          ];

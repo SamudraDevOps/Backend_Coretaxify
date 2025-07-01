@@ -20,6 +20,11 @@ class Pembayaran extends Model
         return $this->belongsTo(KapKjs::class);
     }
 
+    public function spt(): BelongsTo
+    {
+        return $this->belongsTo(Spt::class);
+    }
+
     public function pic(): BelongsTo
     {
         return $this->belongsTo(Sistem::class, 'pic_id');
