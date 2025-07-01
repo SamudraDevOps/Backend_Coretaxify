@@ -112,7 +112,7 @@ enum IntentEnum: string {
 
     case API_UPDATE_SPT_PPH_BAYAR_LANGSUNG = 'api.update.spt.pph.bayar.langsung';
 
-    case API_UPDATE_SPT_PPN_UNIFIKASI_DEPOSIT = 'api.update.spt.ppn.unifikasi.deposit';
+    case API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_DEPOSIT = 'api.update.spt.pph.unifikasi.bayar.deposit';
 
     case API_UPDATE_SPT_PPH_UNIFIKASI_KODE_BILLING = 'api.update.spt.pph.unifikasi.kode.billing';
 

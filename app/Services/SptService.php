@@ -276,8 +276,38 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 ];
 
                 Pembayaran::create($dataPembayaran);
-        }
+                break;
+            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_DEPOSIT->value:
+                $sistem = Sistem::find($sistem_id);
 
+                $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
+
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+
+                $hasil = $sistem->saldo - $bayar;
+
+                if ($hasil < 0) {
+                    throw new \Exception('Saldo tidak mencukupi', 101);
+                } else {
+                    $dataPembayaran['nilai'] = $bayar;
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    // $dataPembayaran['kap_kjs_id'] = 50;
+                    $dataPembayaran['is_paid'] = true;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->is_can_pembetulan = true;
+                    $spt->save();
+
+                    $pembayaran = Pembayaran::create($dataPembayaran);
+                    return $pembayaran;
+                }
+        }
         return $spt;
     }
 

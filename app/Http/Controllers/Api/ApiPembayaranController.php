@@ -105,7 +105,7 @@ class ApiPembayaranController extends ApiController {
 
         $additionalData = [];
 
-        if($pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH->value){
+        if($pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH->value || $pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH_UNIFIKASI->value){
             $additionalData['show'] = true;
         }
 
