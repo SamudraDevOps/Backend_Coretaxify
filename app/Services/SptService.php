@@ -174,7 +174,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     return $pembayaran;
                 }
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_KODE_BILLING->value:
-                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
 
@@ -251,8 +251,63 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
                 }
-        }
+            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_KODE_BILLING->value:
+                $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
 
+                $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
+                $spt->is_can_pembetulan = true;
+                $spt->save();
+
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
+
+                $dataPembayaran = [
+                    'nilai' => $bayar,
+                    'masa_bulan' => $spt->masa_bulan,
+                    'masa_tahun' => $spt->masa_tahun,
+                    'badan_id' => $request['badan_id'],
+                    'pic_id' => $request['pic_id'],
+                    'kode_billing' => $randomNumber,
+                    // 'kap_kjs_id' => $data['kap_kjs_id'],
+                    'ntpn' => $ntpn,
+                    'masa_aktif' => $masaAktif,
+                    'spt_id' => $spt->id,
+                ];
+
+                Pembayaran::create($dataPembayaran);
+                break;
+            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_DEPOSIT->value:
+                $sistem = Sistem::find($sistem_id);
+
+                $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
+
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+
+                $hasil = $sistem->saldo - $bayar;
+
+                if ($hasil < 0) {
+                    throw new \Exception('Saldo tidak mencukupi', 101);
+                } else {
+                    $dataPembayaran['nilai'] = $bayar;
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    // $dataPembayaran['kap_kjs_id'] = 50;
+                    $dataPembayaran['is_paid'] = true;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->is_can_pembetulan = true;
+                    $spt->save();
+
+                    $pembayaran = Pembayaran::create($dataPembayaran);
+                    return $pembayaran;
+                }
+        }
         return $spt;
     }
 

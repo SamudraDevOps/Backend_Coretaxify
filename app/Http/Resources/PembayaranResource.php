@@ -77,11 +77,109 @@ class PembayaranResource extends JsonResource {
                 'updated_at' => $this->updated_at->toDateTimeString(),
             ];
 
-            return [
-                $data,
-                $data2
+            return [$data,$data2];
+        }elseif ($showSpecialFormat && $this->spt->jenis_pajak == JenisPajakEnum::PPH_UNIFIKASI->value){
+            $data = [
+                'id' => $this->id,
+                'pic_id' => $this->pic_id,
+                'npwp' => $this->sistem->npwp_akun,
+                'nama' => $this->sistem->nama_akun,
+                'alamat' => $this->sistem->alamat_utama_akun,
+                'kode_billing' => $this->kode_billing,
+                'kap_kjs_id' => '411128-100',
+                'masa_bulan' => $masa_bulan,
+                'masa_tahun' => $masa_tahun,
+                'masa_pajak' => $masa_pajak,
+                'keterangan' => $this->keterangan,
+                'ntpn' => $this->ntpn,
+                'is_paid' => $this->is_paid,
+                'nilai' => $this->spt->spt_unifikasi->cl_d_1,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
             ];
 
+            $data2 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411128-402',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_2,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data3 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411128-403',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_3,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data4 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411128-600',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_4,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data5 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411129-600',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_5,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data6 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411122-100',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_6,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data7 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411122-900',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_7,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data8 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411122-910',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_8,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data9 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411124-100',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_9,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            $data10 = [
+                'id' => $this->id,
+                'masa_pajak' => $masa_pajak,
+                'kap_kjs_id' => '411127-110',
+                'nilai' => $this->spt->spt_unifikasi->cl_d_10,
+                'created_at' => $this->created_at->toDateTimeString(),
+                'updated_at' => $this->updated_at->toDateTimeString(),
+            ];
+
+            return [$data, $data2, $data3, $data4, $data5, $data6, $data7, $data8, $data9, $data10];
         }
 
         return [
