@@ -251,7 +251,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
                 }
-            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_KODE_BILLING->value:
+            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_KODE_BILLING->value:
                 $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
 
                 $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
