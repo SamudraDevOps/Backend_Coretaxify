@@ -107,7 +107,7 @@ class StudentMonitoringService
 
     public function getSistemForMonitoring(Sistem $sistem, User $supervisor): array
     {
-        // Verify supervisor can monitor this sistem
+        // Get the assignment user and verify supervisor can monitor this sistem
         $assignmentUser = $sistem->assignment_user;
         if (!$this->canMonitorStudent($assignmentUser, $supervisor)) {
             throw new \Exception('Unauthorized to monitor this sistem');
@@ -123,7 +123,7 @@ class StudentMonitoringService
             'detail_banks',
             'unit_pajak_keluargas',
             'pihak_terkaits',
-            'sistem_tambahans',
+            // 'sistem_tambahans',
             'spts.spt_ppn',
             'spts.spt_pph',
             'fakturs.detail_transaksis',
@@ -142,17 +142,20 @@ class StudentMonitoringService
 
     private function canMonitorStudent(AssignmentUser $assignmentUser, User $supervisor): bool
     {
+        // Load the assignment relationship to get the actual Assignment model
+        $assignment = $assignmentUser->assignment;
+
         if ($supervisor->hasRole('dosen')) {
             // Dosen can monitor mahasiswa in their groups
-            return $assignmentUser->assignment->group &&
-                $assignmentUser->assignment->group->user_id === $supervisor->id &&
+            return $assignment->group &&
+                $assignment->group->user_id === $supervisor->id &&
                 $assignmentUser->user->hasRole('mahasiswa');
         }
 
         if ($supervisor->hasRole('psc')) {
             // PSC can monitor mahasiswa-psc in their groups
-            return $assignmentUser->assignment->group &&
-                $assignmentUser->assignment->group->user_id === $supervisor->id &&
+            return $assignment->group &&
+                $assignment->group->user_id === $supervisor->id &&
                 $assignmentUser->user->hasRole('mahasiswa-psc');
         }
 

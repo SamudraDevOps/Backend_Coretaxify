@@ -40,7 +40,8 @@ class ActivityTrackingService
 
     public function getActivitySummary(AssignmentUser $assignmentUser): array
     {
-        $activities = $assignmentUser->activities;
+        // Load activities as collection first
+        $activities = $assignmentUser->activities()->orderBy('created_at', 'desc')->get();
 
         $summary = [
             'total_activities' => $activities->count(),
@@ -56,21 +57,10 @@ class ActivityTrackingService
             $summary['activity_types'][$type] = $typeActivities->count();
         }
 
-        // Find most active day
-        // V1
+        // Find most active day - use collection groupBy with closure
         $dayGroups = $activities->groupBy(function ($activity) {
             return $activity->created_at->format('Y-m-d');
         });
-
-        // V2
-        // $dayGroups = collect($activities)->groupBy(function ($activity) {
-        //     return $activity->created_at->format('Y-m-d');
-        // });
-
-        // V3
-        // $dayGroups = collect($activities->all())->groupBy(function ($activity) {
-        //     return $activity->created_at->format('Y-m-d');
-        // });
 
         if ($dayGroups->count() > 0) {
             $mostActiveDay = $dayGroups->sortByDesc(function ($dayActivities) {

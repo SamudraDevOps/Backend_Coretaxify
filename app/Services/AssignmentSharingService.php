@@ -31,8 +31,11 @@ class AssignmentSharingService
 
     private function duplicateAssignmentUser(AssignmentUser $original, int $targetUserId, string $shareType): array
     {
+        // Load the assignment relationship and get the actual Assignment model
+        $originalAssignment = $original->assignment;
+
         // Create new assignment for the target user
-        $newAssignment = $this->duplicateAssignment($original->assignment, $targetUserId);
+        $newAssignment = $this->duplicateAssignment($originalAssignment, $targetUserId);
 
         // Create new assignment user
         $newAssignmentUser = new AssignmentUser([
@@ -46,7 +49,7 @@ class AssignmentSharingService
                 'shared_from_user' => auth()->id(),
                 'shared_at' => now(),
                 'share_type' => $shareType,
-                'original_assignment_name' => $original->assignment->name
+                'original_assignment_name' => $originalAssignment->name
             ]
         ]);
         $newAssignmentUser->save();
@@ -63,7 +66,7 @@ class AssignmentSharingService
             'share_type' => $shareType,
             'shared_at' => now(),
             'metadata' => [
-                'original_assignment_name' => $original->assignment->name,
+                'original_assignment_name' => $originalAssignment->name,
                 'sistems_count' => $original->sistems->count()
             ]
         ]);

@@ -14,6 +14,11 @@ class Faktur extends Model
         return $this->hasMany(DetailTransaksi::class);
     }
 
+    public function badan(): BelongsTo
+    {
+        return $this->belongsTo(Sistem::class, 'badan_id');
+    }
+
     public function pic() {
         return $this->belongsTo(Sistem::class, 'pic_id');
     }

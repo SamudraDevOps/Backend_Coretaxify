@@ -29,4 +29,9 @@ class Pembayaran extends Model
     {
         return $this->belongsTo(Sistem::class, 'pic_id');
     }
+
+    public function badan(): BelongsTo
+    {
+        return $this->belongsTo(Sistem::class, 'badan_id');
+    }
 }

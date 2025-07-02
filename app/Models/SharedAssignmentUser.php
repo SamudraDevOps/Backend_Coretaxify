@@ -13,13 +13,13 @@ class SharedAssignmentUser extends Model
         'shared_by_user_id',
         'shared_to_user_id',
         'share_type',
-        'metadata',
-        'shared_at'
+        'shared_at',
+        'metadata'
     ];
 
     protected $casts = [
-        'metadata' => 'array',
-        'shared_at' => 'datetime'
+        'shared_at' => 'datetime',
+        'metadata' => 'array'
     ];
 
     public function originalAssignmentUser(): BelongsTo
