@@ -3,12 +3,23 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class CheckRole {
-    public function handle($request, Closure $next, $role) {
-        if (!$request->user()->hasRole($role)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+    public function handle(Request $request, Closure $next, ...$roles)
+    {
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
         }
-        return $next($request);
+
+        $user = auth()->user();
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role)) {
+                return $next($request);
+            }
+        }
+
+        return response()->json(['error' => 'Unauthorized'], 403);
     }
 }

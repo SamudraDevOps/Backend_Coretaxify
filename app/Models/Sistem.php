@@ -18,6 +18,7 @@ class Sistem extends Model
         return $this->belongsTo(AssignmentUser::class);
     }
 
+    // PIC relationships
     public function akun_ops() {
         return $this->hasMany(PihakTerkait::class, 'akun_op');
     }
@@ -29,6 +30,7 @@ class Sistem extends Model
         return $this->hasMany(Pic::class, 'akun_badan_id');
     }
 
+    // Profile related relationships
     public function detail_kontaks() {
         return $this->hasMany(DetailKontak::class);
     }
@@ -51,5 +53,22 @@ class Sistem extends Model
 
     public function sistem_tambahans() {
         return $this->hasMany(SistemTambahan::class, );
+    }
+
+    // Tax related relationships
+    public function spts(): HasMany {
+        return $this->hasMany(Spt::class, 'badan_id');
+    }
+
+    public function fakturs(): HasMany {
+        return $this->hasMany(Faktur::class, 'badan_id');
+    }
+
+    public function bupots(): HasMany {
+        return $this->hasMany(Bupot::class, 'pembuat_id');
+    }
+
+    public function pembayarans(): HasMany {
+        return $this->hasMany(Pembayaran::class, 'badan_id');
     }
 }

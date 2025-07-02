@@ -47,6 +47,8 @@ use App\Http\Controllers\Api\ApiTempatKegiatanUsahaController;
 use App\Http\Controllers\Api\ApiObjekPajakBumiDanBangunanController;
 use App\Http\Controllers\Api\ApiPenunjukkanWajibPajakSayaController;
 use App\Http\Controllers\Api\ApiNomorIdentifikasiEksternalController;
+use App\Http\Controllers\Api\ApiSharingController;
+use App\Http\Controllers\Api\ApiMonitoringController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -111,6 +113,46 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::apiResource('bupot-objek-pajaks', ApiBupotObjekPajakController::class);
 
         Route::middleware('verified')->group(function () {
+
+            // Sharing routes
+            Route::prefix('sharing')->group(function () {
+                Route::post('assignment-users/{assignmentUser}', [ApiSharingController::class, 'shareAssignment'])
+                    ->middleware('role:admin,psc');
+
+                Route::get('shared-assignments', [ApiSharingController::class, 'getSharedAssignments'])
+                    ->middleware('role:dosen,instruktur');
+
+                Route::get('available-users', [ApiSharingController::class, 'getAvailableUsers'])
+                    ->middleware('role:admin,psc');
+
+                Route::get('my-assignments', [ApiSharingController::class, 'getMyAssignments'])
+                    ->middleware('role:admin,psc');
+            });
+
+            // Monitoring routes
+            Route::prefix('monitoring')->group(function () {
+                Route::get('students', [ApiMonitoringController::class, 'getStudentsForMonitoring'])
+                    ->middleware('role:dosen,psc');
+
+                Route::get('student-detail/{assignmentUser}', [ApiMonitoringController::class, 'getStudentSimulationDetail'])
+                    ->middleware('role:dosen,psc');
+
+                Route::get('sistem/{sistem}', [ApiMonitoringController::class, 'getSistemForMonitoring'])
+                    ->middleware('role:dosen,psc');
+
+                Route::get('group-overview', [ApiMonitoringController::class, 'getGroupOverview'])
+                    ->middleware('role:dosen,psc');
+
+                // Detailed monitoring routes that mirror student simulation routes
+                Route::prefix('assignment-user/{assignmentUser}/sistem/{sistem}')->group(function () {
+                    Route::get('detail', [ApiMonitoringController::class, 'monitorSistemDetail']);
+                    Route::get('fakturs', [ApiMonitoringController::class, 'monitorFakturs']);
+                    Route::get('bupots', [ApiMonitoringController::class, 'monitorBupots']);
+                    Route::get('spts', [ApiMonitoringController::class, 'monitorSpts']);
+                    Route::get('pembayarans', [ApiMonitoringController::class, 'monitorPembayarans']);
+                })->middleware('role:dosen,psc');
+            });
+
             Route::prefix('admin')->group(function () {
                 // Admin only routes
                 Route::apiResource('users', ApiUserController::class);
@@ -127,6 +169,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('contract', ApiContractController::class);
                 Route::apiResource('account-types', ApiAccountTypeController::class);
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
+                Route::get('my-assignments', [ApiAssignmentController::class, 'getMyAssignments']);
             });
 
             Route::prefix('lecturer')->group(function () {
@@ -164,6 +207,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 });
                 Route::apiResource('group-users', ApiGroupUserController::class);
                 Route::get('contract-tasks', [ApiTaskController::class, 'getContractTasks']);
+                Route::get('my-assignments', [ApiAssignmentController::class, 'getMyAssignments']);
             });
 
             Route::prefix('student')->group(function () {
@@ -275,6 +319,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
             Route::prefix('psc')->group(function () {
                 // PSC only routes
+                Route::get('my-assignments', [ApiAssignmentController::class, 'getMyAssignments']);
                 Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
                 Route::apiResource('groups', ApiGroupController::class);
                 Route::prefix('groups')->group(function () {
@@ -316,6 +361,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
             Route::prefix('instructor')->group(function () {
                 // Instruktor only routes
+                Route::get('my-assignments', [ApiAssignmentController::class, 'getMyAssignments']);
                 Route::apiResource('tasks', ApiTaskController::class, ['only' => ['index', 'show']]);
                 Route::apiResource('assignments', ApiAssignmentController::class);
                 // Route::apiResource('users', ApiUserController::class);
