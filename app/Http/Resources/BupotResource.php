@@ -12,10 +12,15 @@ class BupotResource extends JsonResource
         $intent = $request->get('intent');
 
         if ($request['jenis_spt_pph'] == 'L1') {
-            $intent = IntentEnum::API_BUPOT_BPPU->value;
+            $intent = IntentEnum::API_BUPOT_BPBPT->value;
         }else if ($request['jenis_spt_pph'] == 'L3') {
             $intent = IntentEnum::API_BUPOT_BP21->value;
             $intent = IntentEnum::API_BUPOT_BP26->value;
+        }else if ($request['jenis_spt_pph'] == 'DAFTAR-1') {
+            $intent = IntentEnum::API_BUPOT_BPPU->value;
+            $intent = IntentEnum::API_BUPOT_BPNR->value;
+        }else if ($request['jenis_spt_pph'] == 'DAFTAR-2') {
+            $intent = IntentEnum::API_BUPOT_PS->value;
         }
 
         switch ($intent) {

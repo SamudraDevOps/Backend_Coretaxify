@@ -130,8 +130,8 @@ class BupotSeeder extends Seeder
     private function createBupotPS(array $sistemIds): void
     {
         Bupot::create([
-            'pembuat_id' => $sistemIds[array_rand($sistemIds)],
-            'representatif_id' => $sistemIds[array_rand($sistemIds)],
+            'pembuat_id' => 2,
+            'representatif_id' => 1,
             'tipe_bupot' => BupotTypeEnum::toArray()[2],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
@@ -378,7 +378,7 @@ class BupotSeeder extends Seeder
         ]);
     }
 
-        private function createKolom3Tanggung():void
+    private function createKolom3Tanggung():void
     {
         Bupot::create([
             'masa_awal' => '2024-01-01',
@@ -693,7 +693,7 @@ class BupotSeeder extends Seeder
             ]);
 
             // Seeder Baru
-            
+
                Bupot::create([
             'masa_awal' => '2024-01-01',
                 'pembuat_id' => 2,
@@ -736,7 +736,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 20000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
-            
+
             ]);
             Bupot::create([
             'masa_awal' => '2024-01-01',
@@ -747,7 +747,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 20000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
-            
+
             ]);
               Bupot::create([
             'masa_awal' => '2024-01-01',
@@ -758,7 +758,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 40000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
-            
+
             ]);
 
                Bupot::create([
@@ -770,7 +770,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 40000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
-            
+
             ]);
 
                  Bupot::create([
@@ -782,7 +782,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 40000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
-            
+
             ]);
 
                      Bupot::create([
@@ -794,7 +794,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 600000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411122-900',
-            
+
             ]);
 
                              Bupot::create([
@@ -806,7 +806,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 300000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-403',
-            
+
             ]);
 
                                    Bupot::create([
@@ -818,7 +818,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 300000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-600',
-            
+
             ]);
 
                                     Bupot::create([
@@ -830,7 +830,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 430000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411128-403',
-            
+
             ]);
 
                                            Bupot::create([
@@ -842,7 +842,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 130000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411121-100',
-            
+
             ]);
 
                                                Bupot::create([
@@ -854,7 +854,7 @@ class BupotSeeder extends Seeder
             'pajak_penghasilan' => 20000,
             'pph_pasal_21_ditanggung_pemerintah' => 1111,
             'kap' => '411121-100',
-            
+
             ]);
 
 
