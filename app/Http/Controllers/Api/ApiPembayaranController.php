@@ -120,12 +120,17 @@ class ApiPembayaranController extends ApiController {
         $pembayaran->is_paid = true;
         $pembayaran->save();
 
+        $ntpn = Str::random(16);
+
         if ($pembayaran->kap_kjs_id == 42) {
             $sistem->saldo = ($sistem->saldo) + ($pembayaran->nilai);
             $sistem->save();
-        }else{
+        }else if ($pembayaran->spt) {
             $pembayaran->spt->status = SptStatusEnum::DILAPORKAN->value;
             $pembayaran->spt->save();
+        }else{
+            $pembayaran->ntpn = $ntpn;
+            $pembayaran->save();
         }
         return $this->pembayaranService->update($pembayaran, $request->all());
     }
