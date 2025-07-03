@@ -123,12 +123,13 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
-                if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn ?? 0;
+                if ($spt_ppn->cl_3f_ppn || $spt_ppn->cl_3f_ppn == 0){
+                    $bayar = $spt_ppn->cl_3g_ppn;
                 }else {
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn ?? 0;
+                    $bayar = $spt_ppn->cl_3e_ppn;
                 }
 
+                $dataPembayaran['nilai'] = $bayar;
                 $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                 $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
                 $dataPembayaran['badan_id'] = $request['badan_id'];
@@ -144,10 +145,12 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
 
-                if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $bayar = $spt_ppn->cl_3f_ppn ?? 0;
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                if ($spt_ppn->cl_3f_ppn){
+                    $bayar = $spt_ppn->cl_3g_ppn;
                 }else {
-                    $bayar = $spt_ppn->cl_3g_ppn ?? 0;
+                    $bayar = $spt_ppn->cl_3e_ppn;
                 }
 
                 $hasil = $sistem->saldo - $bayar;
