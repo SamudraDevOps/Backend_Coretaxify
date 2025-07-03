@@ -237,6 +237,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
                     Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFakturSptPpn']);
                     Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-bupot-pph', [ApiSptController::class, 'showBupotSptPph']);
+                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-bupot-pph-unifikasi', [ApiSptController::class, 'showBupotSptPphUnifikasi']);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/pembayaran', ApiPembayaranController::class);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);

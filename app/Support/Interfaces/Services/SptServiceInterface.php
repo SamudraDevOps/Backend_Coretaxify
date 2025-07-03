@@ -27,4 +27,6 @@ interface SptServiceInterface extends BaseCrudServiceInterface {
     public function showFakturSptPpn($spt, Request $request);
 
     public function showBupotSptPph($spt, Request $request);
+
+    public function showBupotSptPphUnifikasi($spt, Request $request);
 }
