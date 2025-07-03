@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\SptUnifikasi;
 use Carbon\Carbon;
 use App\Models\Pic;
 use App\Models\Spt;
@@ -14,6 +13,7 @@ use App\Models\SptPpn;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
 use Illuminate\Support\Str;
+use App\Models\SptUnifikasi;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
@@ -30,6 +30,7 @@ use App\Support\Enums\JenisSptPphEnum;
 use App\Support\Enums\JenisSptPpnEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\Enums\JenisSptPphUnifikasiEnum;
 use App\Support\Interfaces\Services\SptServiceInterface;
 use App\Support\Interfaces\Repositories\SptRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
@@ -832,10 +833,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_uni['cl_d_9'] = $data_spt_uni['cl_a_9'] + $data_spt_uni['cl_b_9'] + $data_spt_uni['cl_c_9'];
 
-                $data_spt_uni['cl_a_pasal23'] = $data_spt_uni['cl_a_6'];
-                $data_spt_uni['cl_b_pasal23'] = $data_spt_uni['cl_b_6'];
-                $data_spt_uni['cl_c_pasal23'] = $data_spt_uni['cl_c_6'];
-                $data_spt_uni['cl_d_pasal23'] = $data_spt_uni['cl_d_6'];
+                $data_spt_uni['cl_a_pasal23'] = $data_spt_uni['cl_a_9'];
+                $data_spt_uni['cl_b_pasal23'] = $data_spt_uni['cl_b_9'];
+                $data_spt_uni['cl_c_pasal23'] = $data_spt_uni['cl_c_9'];
+                $data_spt_uni['cl_d_pasal23'] = $data_spt_uni['cl_d_9'];
 
                 $data_spt_uni['cl_a_10'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 26')
                                                             ->where('kap', '411127-110')
@@ -991,6 +992,34 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 BupotTypeEnum::BP26->value
             ]);
                 return BupotResource::collection($combinedBupots);
+            default:
+                return response()->json([
+                    'message' => 'Intent tidak valid',
+                ], 400);
+        }
+    }
+
+    public function showBupotSptPphUnifikasi($spt, Request $request) {
+        $month = $spt->masa_bulan;
+        $monthNumber = MonthHelper::getMonthNumber($month);
+
+        $bupots = Bupot::where('pembuat_id', $spt->badan_id)
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $spt->masa_tahun)
+                ->get();
+
+        $jenisSptPph = $request['jenis_spt_pph'];
+
+        switch ($jenisSptPph) {
+            case JenisSptPphUnifikasiEnum::DAFTAR_1->value:
+               $combinedBupots = $bupots->whereIn('tipe_bupot', [
+                BupotTypeEnum::BPPU->value,
+                BupotTypeEnum::BPNR->value
+            ]);
+                return BupotResource::collection($combinedBupots);
+            case JenisSptPphUnifikasiEnum::DAFTAR_2->value:
+                $ps  = $bupots->where('tipe_bupot', BupotTypeEnum::PS->value);
+                return BupotResource::collection($ps);
             default:
                 return response()->json([
                     'message' => 'Intent tidak valid',
