@@ -164,7 +164,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
                     $dataPembayaran['badan_id'] = $request['badan_id'];
                     $dataPembayaran['pic_id'] = $request['pic_id'];
-                    $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['kap_kjs_id'] = 49;
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
