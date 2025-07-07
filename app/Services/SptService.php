@@ -123,7 +123,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
-                if ($spt_ppn->cl_3f_ppn || $spt_ppn->cl_3f_ppn == 0){
+                if ($spt_ppn->cl_3f_ppn && $spt_ppn->cl_3f_ppn > 0){
                     $bayar = $spt_ppn->cl_3g_ppn;
                 }else {
                     $bayar = $spt_ppn->cl_3e_ppn;
