@@ -14,5 +14,5 @@ interface SistemServiceInterface extends BaseCrudServiceInterface {
 
     public function getSystemDetail(Assignment $assignment, Sistem $sistem, Request $request, string $intent = null);
 
-    public function getFirstSystemByAssignment(Assignment $assignment);
+    public function getFirstSystemByAssignment(Assignment $assignment, Request $request);
 }
