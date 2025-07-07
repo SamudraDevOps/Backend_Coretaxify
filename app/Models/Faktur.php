@@ -29,4 +29,29 @@ class Faktur extends Model
     public function akun_penerima_tambahan() {
         return $this->belongsTo(SistemTambahan::class, 'akun_penerima_id');
     }
+
+    public function getJumlahDppLainReturAttribute(): float
+    {
+        return $this->detail_transaksis()->sum('dpp_lain_retur') ?? 0;
+    }
+
+    public function getJumlahPpnReturAttribute(): float
+    {
+        return $this->detail_transaksis()->sum('ppn_retur') ?? 0;
+    }
+
+    public function getJumlahPpnbmReturAttribute(): float
+    {
+        return $this->detail_transaksis()->sum('ppnbm_retur') ?? 0;
+    }
+
+    public function getJumlahTotalHargaReturAttribute(): float
+    {
+        return $this->detail_transaksis()->sum('total_harga_diretur') ?? 0;
+    }
+
+    public function getJumlahPemotonganHargaReturAttribute(): float
+    {
+        return $this->detail_transaksis()->sum('pemotongan_harga_diretur') ?? 0;
+    }
 }

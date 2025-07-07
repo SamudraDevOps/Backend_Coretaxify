@@ -20,9 +20,8 @@ class FakturResource extends JsonResource
             ? new SistemTambahanResource($this->akun_penerima_tambahan)
             : new SistemResource($this->akun_penerima);
 
-        $intent = $request->query('jenis_spt_ppn');
-        // dd($intent);
-        switch($intent) {
+        $intent_jenis_spt_ppn = $request->query('jenis_spt_ppn');
+        switch($intent_jenis_spt_ppn) {
             case JenisSptPpnEnum::A1->value:
                 return [
                     'nama_pembeli' => $this->pic->nama_akun,
@@ -89,6 +88,11 @@ class FakturResource extends JsonResource
                     'ppn' => $this->ppn,
                     'ppnbm' => $this->ppnbm,
                 ];
+        }
+
+        $intent = $request->query('intent');
+
+        switch($intent){
             case IntentEnum::API_GET_FAKTUR_RETUR_KELUARAN->value:
                 return [
                     'id' => $this->id,
@@ -161,14 +165,34 @@ class FakturResource extends JsonResource
                     'kode_transaksi' => $this->kode_transaksi,
                     'informasi_tambahan' => $this->informasi_tambahan,
                     'cap_fasilitas' => $this->cap_fasilitas,
-                    'tanggal_faktur_pajak' => $this->tanggal_faktur_pajak,
                     'dilaporkan_oleh_penjual' => $this->dilaporkan_oleh_penjual,
                     'dilaporkan_oleh_pemungut_ppn' => $this->dilaporkan_oleh_pemungut_ppn,
+                    'tanggal_retur' => $this->tanggal_retur,
+                    'jumlah_dpp_lain_retur' => $this->jumlah_dpp_lain_retur,
+                    'jumlah_ppn_retur' => $this->jumlah_ppn_retur,
+                    'jumlah_ppnbm_retur' => $this->jumlah_ppnbm_retur,
+                    'jumlah_total_bayar_retur' => $this->jumlah_total_harga_retur,
+                    'jumlah_pemotongan_harga_retur' => $this->jumlah_pemotongan_harga_retur,
                     'created_at' => $this->created_at,
                     'updated_at' => $this->updated_at,
                     'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                         return $this->detail_transaksis->map(function($transaksi) {
-                            return $this->mapDetailTransaksiWithFallback($transaksi);
+                            return [
+                                'id' => $transaksi->id,
+                                'tipe' => $transaksi->tipe,
+                                'nama' => $transaksi->nama,
+                                'kode' => $transaksi->kode,
+                                'kuantitas' => $transaksi->jumlah_barang_diretur ?? 0,
+                                'satuan' => $transaksi->satuan,
+                                'harga_satuan' => $transaksi->harga_satuan,
+                                'total_harga' => $transaksi->total_harga_diretur ?? 0,
+                                'pemotongan_harga' => $transaksi->pemotongan_harga_diretur ?? 0,
+                                'dpp' => 0,
+                                'dpp_lain_retur' => $transaksi->dpp_lain_retur ?? 0,
+                                'ppn_retur' => $transaksi->ppn_retur ?? 0,
+                                'ppnbm_retur' => $transaksi->ppnbm_retur ?? 0,
+                                'tarif_ppnbm' => 0,
+                            ];
                         });
                     }),
                 ];
@@ -181,6 +205,8 @@ class FakturResource extends JsonResource
             'akun_pengirim_id' => new SistemResource($this->akun_pengirim),
             'akun_penerima_id' => $akunPenerimaResource,
             'is_draft' => $this->is_draft,
+            'is_retur' => $this->is_retur,
+            'is_kredit' => $this->is_kredit,
             'status' => $this->status,
             'dpp' => $this->dpp,
             'dpp_lain' => $this->dpp_lain,

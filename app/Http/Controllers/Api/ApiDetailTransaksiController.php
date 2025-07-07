@@ -7,6 +7,7 @@ use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Models\DetailTransaksi;
+use App\Support\Enums\IntentEnum;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\DetailTransaksiResource;
 use App\Http\Requests\DetailTransaksi\StoreDetailTransaksiRequest;
@@ -58,12 +59,17 @@ class ApiDetailTransaksiController extends ApiController {
         $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
         $request['faktur_id'] = $faktur->id;
 
-        if (!$faktur->is_draft) {
-            if (!$detailTransaksi->is_lama){
-                $this->moveCurrentDataToLamaColumns($detailTransaksi, $request->all());
+        if ($request['intent'] && $request['intent'] == IntentEnum::API_UPDATE_DETAIL_TRANSAKSI_FAKTUR_RETUR_MASUKAN->value) {
+            $request['total_harga_diretur'] = ($request['jumlah_barang_diretur'] ?? 0) * $detailTransaksi->harga_satuan;
+            return $this->detailTransaksiService->update($detailTransaksi, $request->all());
+        }else {
+            if (!$faktur->is_draft) {
+                if (!$detailTransaksi->is_lama){
+                    $this->moveCurrentDataToLamaColumns($detailTransaksi, $request->all());
+                }
             }
-            // return $this->detailTransaksiService->update($detailTransaksi, $request->all());
         }
+
         return $this->detailTransaksiService->update($detailTransaksi, $request->all());
     }
 
