@@ -49,4 +49,9 @@ class Faktur extends Model
     {
         return $this->detail_transaksis()->sum('total_harga_diretur') ?? 0;
     }
+
+    public function getJumlahPemotonganHargaReturAttribute(): float
+    {
+        return $this->detail_transaksis()->sum('pemotongan_harga_diretur') ?? 0;
+    }
 }
