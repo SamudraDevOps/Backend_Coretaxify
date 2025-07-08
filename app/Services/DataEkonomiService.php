@@ -117,7 +117,7 @@ class DataEkonomiService extends BaseCrudService implements DataEkonomiServiceIn
 
         $sistem->profil_saya->data_ekonomi->update($data);
 
-        return $dataEkonomi;
+        return $sistem->profil_saya->data_ekonomi->fresh();
     }
 
     /**

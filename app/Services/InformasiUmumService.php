@@ -117,7 +117,7 @@ class InformasiUmumService extends BaseCrudService implements InformasiUmumServi
 
         $sistem->profil_saya->informasi_umum->update($data);
 
-        return $informasiUmum;
+        return $sistem->profil_saya->informasi_umum->fresh();
     }
 
     /**
