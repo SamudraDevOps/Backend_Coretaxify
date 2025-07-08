@@ -182,11 +182,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::delete('{assignment}/sistem/{sistem}/pihak-terkait/{pihakTerkait}', [ApiPihakTerkaitController::class, 'destroy']);
 
                     Route::get('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'show']);
-                    Route::put('{assignment}/sistem/{sistem}/data-ekonomi', [ApiDataEkonomiController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'update']); //harusegapake wkwk
 
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum', [ApiSistemController::class, 'getSistemDetail']);
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'show']);
-                    Route::put('{assignment}/sistem/{sistem}/informasi-umum', [ApiInformasiUmumController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'update']); //harusegapake wkwk
 
                     Route::get('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'store']);

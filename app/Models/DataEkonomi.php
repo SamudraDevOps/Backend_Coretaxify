@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class DataEkonomi extends Model
 {
@@ -20,8 +21,8 @@ class DataEkonomi extends Model
     //     'jumlah_peredaran_bruto',
     // ];
 
-    public function profil_saya()
+    public function profil_saya():HasOne
     {
-        return $this->hasOne(ProfilSaya::class);
+        return $this->hasOne(ProfilSaya::class, 'data_ekonomi_id');
     }
 }

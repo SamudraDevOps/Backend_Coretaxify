@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class InformasiUmum extends Model
@@ -31,8 +32,7 @@ class InformasiUmum extends Model
     //     'bahasa',
     // ];
 
-    public function profil_saya()
-    {
-        return $this->hasOne(ProfilSaya::class);
+    public function profil_saya(): HasOne {
+        return $this->hasOne(ProfilSaya::class, 'informasi_umum_id');
     }
 }

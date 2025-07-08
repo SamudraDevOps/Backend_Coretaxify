@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProfilSaya extends Model
 {
     protected $guarded = ['id'];
 
-    public function informasi_umum() {
-        return $this->belongsTo(InformasiUmum::class);
+    public function informasi_umum(): BelongsTo {
+        return $this->belongsTo(InformasiUmum::class, 'informasi_umum_id');
     }
 
-    public function data_ekonomi() {
-        return $this->belongsTo(DataEkonomi::class);
+    public function data_ekonomi(): BelongsTo {
+        return $this->belongsTo(DataEkonomi::class, 'data_ekonomi_id');
     }
 
     public function detail_kontaks() {
