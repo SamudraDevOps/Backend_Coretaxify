@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('esign_status')->nullable();
             $table->decimal('dpp',18,2)->nullable();
             $table->decimal('ppn',18,2)->nullable();
-            $table->decimal('dpp_lain',18,2)->nullable();
             $table->decimal('ppnbm',18,2)->nullable();
+            $table->decimal('dpp_lain',18,2)->nullable();
             $table->decimal('ppn_retur',18,2)->nullable();
             $table->decimal('dpp_lain_retur',18,2)->nullable();
             $table->decimal('ppnbm_retur',18,2)->nullable();
@@ -42,6 +42,7 @@ return new class extends Migration
             $table->boolean('dilaporkan_oleh_penjual')->nullable();
             $table->boolean('dilaporkan_oleh_pemungut_ppn')->nullable();
             $table->date('tanggal_faktur_pajak')->nullable();
+            $table->date('tanggal_retur')->nullable();
             $table->timestamps();
         });
 

@@ -105,7 +105,7 @@ class ApiPembayaranController extends ApiController {
 
         $additionalData = [];
 
-        if($pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH->value){
+        if ($pembayaran->spt && ($pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH->value || $pembayaran->spt->jenis_pajak == JenisPajakEnum::PPH_UNIFIKASI->value)) {
             $additionalData['show'] = true;
         }
 
@@ -120,14 +120,17 @@ class ApiPembayaranController extends ApiController {
         $pembayaran->is_paid = true;
         $pembayaran->save();
 
+        $ntpn = Str::random(16);
+
         if ($pembayaran->kap_kjs_id == 42) {
-            $sistem->saldo = ($sistem->saldo ?? 0) + ($pembayaran->nilai ?? 0);
-            $pembayaran->spt->status = SptStatusEnum::DILAPORKAN->value;
-            $pembayaran->spt->save();
+            $sistem->saldo = ($sistem->saldo) + ($pembayaran->nilai);
             $sistem->save();
-        }else{
+        }else if ($pembayaran->spt) {
             $pembayaran->spt->status = SptStatusEnum::DILAPORKAN->value;
             $pembayaran->spt->save();
+        }else{
+            $pembayaran->ntpn = $ntpn;
+            $pembayaran->save();
         }
         return $this->pembayaranService->update($pembayaran, $request->all());
     }

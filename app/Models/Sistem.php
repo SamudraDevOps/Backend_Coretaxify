@@ -11,7 +11,7 @@ class Sistem extends Model
     protected $guarded = ['id'];
 
     public function profil_saya(): BelongsTo {
-        return $this->belongsTo(ProfilSaya::class);
+        return $this->belongsTo(ProfilSaya::class, 'profil_saya_id');
     }
 
     public function assignment_user(): BelongsTo {

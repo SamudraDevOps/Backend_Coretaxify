@@ -114,6 +114,10 @@ enum IntentEnum: string {
 
     case API_UPDATE_SPT_PPH_BAYAR_LANGSUNG = 'api.update.spt.pph.bayar.langsung';
 
+    case API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_DEPOSIT = 'api.update.spt.pph.unifikasi.bayar.deposit';
+
+    case API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_KODE_BILLING = 'api.update.spt.pph.unifikasi.bayar.kode.billing';
+
     case API_BUPOT_BPPU = 'api.bupot.bppu';
 
     case API_BUPOT_BPNR = 'api.bupot.bpnr';
@@ -159,7 +163,9 @@ enum IntentEnum: string {
 
     case API_UPDATE_FAKTUR_TIDAK_KREDITKAN = 'api.update.faktur.tidak.kreditkan';
 
-    case API_UPDATE_FAKTUR_RETUR = 'api.update.faktur.retur';
+    case API_UPDATE_FAKTUR_RETUR_MASUKAN = 'api.update.faktur.retur.masukan';
+
+    case API_UPDATE_DETAIL_TRANSAKSI_FAKTUR_RETUR_MASUKAN = 'api.update.detail.transaksi.faktur.retur.masukan';
 
     case API_GET_FAKTUR_RETUR_KELUARAN = 'api.get.faktur.retur.keluaran';
 

@@ -91,27 +91,14 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 $data['is_kredit'] = false;
                 return parent::update($keyOrModel, $data);
                 // break;
-            case IntentEnum::API_UPDATE_FAKTUR_RETUR->value:
-                return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
-                    unset($data['intent']);
-
+            case IntentEnum::API_UPDATE_FAKTUR_RETUR_MASUKAN->value:
                 $data['is_retur'] = true;
-                $faktur = parent::update($keyOrModel,$data);
 
-                if ($detailTransaksiData && is_array($detailTransaksiData)) {
-                    $existingIds = [];
+                $faktur = parent::update($keyOrModel, $data);
 
-                    foreach ($detailTransaksiData as $transaksi) {
-                        if ($faktur->id) {
-                            $detailTransaksi = DetailTransaksi::find($faktur->id);
-                            if ($detailTransaksi && $detailTransaksi->faktur_id == $faktur->id) {
-                                $detailTransaksi->update($transaksi);
-                                $existingIds[] = $detailTransaksi->id;
-                            }
-                        }
-                    }
-                }
-            });
+                $this->recalculateReturTotals($faktur);
+
+                return $faktur;
         }
 
         return DB::transaction(function () use ($keyOrModel, $data, $detailTransaksiData) {
@@ -163,12 +150,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         });
     }
 
-    public function getAllForSistem(
-        Assignment $assignment,
-        Sistem $sistem,
-        Request $request,
-        int $perPage = 5
-    ) {
+    public function getAllForSistem(Assignment $assignment, Sistem $sistem, Request $request,int $perPage = 5) {
         $this->authorizeAccess($assignment, $sistem, $request);
 
         $intent = $request->query('intent');
@@ -280,5 +262,18 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         ];
 
         parent::update($faktur, $totals);
+    }
+
+    private function recalculateReturTotals($faktur): void
+    {
+        $detailTransaksis = DetailTransaksi::where('faktur_id', $faktur->id)->get();
+
+        $returTotals = [
+            'ppn_retur' => $detailTransaksis->sum('ppn_retur'),
+            'dpp_lain_retur' => $detailTransaksis->sum('dpp_lain_retur'),
+            'ppnbm_retur' => $detailTransaksis->sum('ppnbm_retur'),
+        ];
+
+        parent::update($faktur, $returTotals);
     }
 }

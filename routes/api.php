@@ -182,11 +182,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::delete('{assignment}/sistem/{sistem}/pihak-terkait/{pihakTerkait}', [ApiPihakTerkaitController::class, 'destroy']);
 
                     Route::get('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'show']);
-                    Route::put('{assignment}/sistem/{sistem}/data-ekonomi', [ApiDataEkonomiController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/data-ekonomi/{dataEkonomi}', [ApiDataEkonomiController::class, 'update']); //harusegapake wkwk
 
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum', [ApiSistemController::class, 'getSistemDetail']);
                     Route::get('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'show']);
-                    Route::put('{assignment}/sistem/{sistem}/informasi-umum', [ApiInformasiUmumController::class, 'update']);
+                    Route::put('{assignment}/sistem/{sistem}/informasi-umum/{informasiUmum}', [ApiInformasiUmumController::class, 'update']); //harusegapake wkwk
 
                     Route::get('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'index']);
                     Route::post('{assignment}/sistem/{sistem}/detail-kontak', [ApiDetailKontakController::class, 'store']);
@@ -243,6 +243,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/spt', ApiSptController::class);
                     Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-faktur-ppn', [ApiSptController::class, 'showFakturSptPpn']);
                     Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-bupot-pph', [ApiSptController::class, 'showBupotSptPph']);
+                    Route::get('{assignment}/sistem/{sistem}/spt/{spt}/show-bupot-pph-unifikasi', [ApiSptController::class, 'showBupotSptPphUnifikasi']);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/pembayaran', ApiPembayaranController::class);
                     Route::apiResource('{assignment}/sistem/{sistem}/spt-ppn', ApiSptPpnController::class);

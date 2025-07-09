@@ -76,8 +76,6 @@ class ApiSptController extends ApiController {
      */
     public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
         $this->sptService->authorizeAccess($assignment, $sistem);
-        $fakturs = Faktur::where('spt_id',$spt->id )->get();
-        $fakturs->spt_id = null;
 
         return $this->sptService->delete($spt);
     }
@@ -104,5 +102,12 @@ class ApiSptController extends ApiController {
 
         $request['badan_id'] = $sistem->id;
         return $this->sptService->showBupotSptPph($spt, $request);
+    }
+
+    public function showBupotSptPphUnifikasi(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
+        $this->sptService->authorizeAccess($assignment, $sistem);
+
+        $request['badan_id'] = $sistem->id;
+        return $this->sptService->showBupotSptPphUnifikasi($spt, $request);
     }
 }

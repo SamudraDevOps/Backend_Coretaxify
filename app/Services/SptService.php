@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\SptUnifikasi;
 use Carbon\Carbon;
 use App\Models\Pic;
 use App\Models\Spt;
@@ -14,6 +13,7 @@ use App\Models\SptPpn;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
 use Illuminate\Support\Str;
+use App\Models\SptUnifikasi;
 use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Support\Enums\IntentEnum;
@@ -30,6 +30,7 @@ use App\Support\Enums\JenisSptPphEnum;
 use App\Support\Enums\JenisSptPpnEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\Enums\JenisSptPphUnifikasiEnum;
 use App\Support\Interfaces\Services\SptServiceInterface;
 use App\Support\Interfaces\Repositories\SptRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
@@ -122,12 +123,13 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
-                if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3f_ppn ?? 0;
+                if ($spt_ppn->cl_3f_ppn && $spt_ppn->cl_3f_ppn > 0){
+                    $bayar = $spt_ppn->cl_3g_ppn;
                 }else {
-                    $dataPembayaran['nilai'] = $spt_ppn->cl_3g_ppn ?? 0;
+                    $bayar = $spt_ppn->cl_3e_ppn;
                 }
 
+                $dataPembayaran['nilai'] = $bayar;
                 $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                 $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
                 $dataPembayaran['badan_id'] = $request['badan_id'];
@@ -143,10 +145,12 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
 
-                if ($spt_ppn->cl_3f_ppn !== null || $spt_ppn->cl_3f_ppn != 0){
-                    $bayar = $spt_ppn->cl_3f_ppn ?? 0;
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                if ($spt_ppn->cl_3f_ppn){
+                    $bayar = $spt_ppn->cl_3g_ppn;
                 }else {
-                    $bayar = $spt_ppn->cl_3g_ppn ?? 0;
+                    $bayar = $spt_ppn->cl_3e_ppn;
                 }
 
                 $hasil = $sistem->saldo - $bayar;
@@ -160,7 +164,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
                     $dataPembayaran['badan_id'] = $request['badan_id'];
                     $dataPembayaran['pic_id'] = $request['pic_id'];
-                    $dataPembayaran['ntpn'] = $ntpn;
                     $dataPembayaran['kap_kjs_id'] = 49;
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
@@ -174,7 +177,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     return $pembayaran;
                 }
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_KODE_BILLING->value:
-                $spt->status = SptStatusEnum::DILAPORKAN->value;
+                $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
 
@@ -251,8 +254,63 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $pembayaran = Pembayaran::create($dataPembayaran);
                     return $pembayaran;
                 }
-        }
+            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_KODE_BILLING->value:
+                $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
 
+                $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
+                $spt->is_can_pembetulan = true;
+                $spt->save();
+
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
+
+                $dataPembayaran = [
+                    'nilai' => $bayar,
+                    'masa_bulan' => $spt->masa_bulan,
+                    'masa_tahun' => $spt->masa_tahun,
+                    'badan_id' => $request['badan_id'],
+                    'pic_id' => $request['pic_id'],
+                    'kode_billing' => $randomNumber,
+                    // 'kap_kjs_id' => $data['kap_kjs_id'],
+                    'ntpn' => $ntpn,
+                    'masa_aktif' => $masaAktif,
+                    'spt_id' => $spt->id,
+                ];
+
+                Pembayaran::create($dataPembayaran);
+                break;
+            case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_DEPOSIT->value:
+                $sistem = Sistem::find($sistem_id);
+
+                $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
+
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+
+                $hasil = $sistem->saldo - $bayar;
+
+                if ($hasil < 0) {
+                    throw new \Exception('Saldo tidak mencukupi', 101);
+                } else {
+                    $dataPembayaran['nilai'] = $bayar;
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    // $dataPembayaran['kap_kjs_id'] = 50;
+                    $dataPembayaran['is_paid'] = true;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->is_can_pembetulan = true;
+                    $spt->save();
+
+                    $pembayaran = Pembayaran::create($dataPembayaran);
+                    return $pembayaran;
+                }
+        }
         return $spt;
     }
 
@@ -777,10 +835,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $data_spt_uni['cl_d_9'] = $data_spt_uni['cl_a_9'] + $data_spt_uni['cl_b_9'] + $data_spt_uni['cl_c_9'];
 
-                $data_spt_uni['cl_a_pasal23'] = $data_spt_uni['cl_a_6'];
-                $data_spt_uni['cl_b_pasal23'] = $data_spt_uni['cl_b_6'];
-                $data_spt_uni['cl_c_pasal23'] = $data_spt_uni['cl_c_6'];
-                $data_spt_uni['cl_d_pasal23'] = $data_spt_uni['cl_d_6'];
+                $data_spt_uni['cl_a_pasal23'] = $data_spt_uni['cl_a_9'];
+                $data_spt_uni['cl_b_pasal23'] = $data_spt_uni['cl_b_9'];
+                $data_spt_uni['cl_c_pasal23'] = $data_spt_uni['cl_c_9'];
+                $data_spt_uni['cl_d_pasal23'] = $data_spt_uni['cl_d_9'];
 
                 $data_spt_uni['cl_a_10'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 26')
                                                             ->where('kap', '411127-110')
@@ -936,6 +994,34 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 BupotTypeEnum::BP26->value
             ]);
                 return BupotResource::collection($combinedBupots);
+            default:
+                return response()->json([
+                    'message' => 'Intent tidak valid',
+                ], 400);
+        }
+    }
+
+    public function showBupotSptPphUnifikasi($spt, Request $request) {
+        $month = $spt->masa_bulan;
+        $monthNumber = MonthHelper::getMonthNumber($month);
+
+        $bupots = Bupot::where('pembuat_id', $spt->badan_id)
+                ->whereMonth('masa_awal', $monthNumber)
+                ->whereYear('masa_awal', $spt->masa_tahun)
+                ->get();
+
+        $jenisSptPph = $request['jenis_spt_pph'];
+
+        switch ($jenisSptPph) {
+            case JenisSptPphUnifikasiEnum::DAFTAR_1->value:
+               $combinedBupots = $bupots->whereIn('tipe_bupot', [
+                BupotTypeEnum::BPPU->value,
+                BupotTypeEnum::BPNR->value
+            ]);
+                return BupotResource::collection($combinedBupots);
+            case JenisSptPphUnifikasiEnum::DAFTAR_2->value:
+                $ps  = $bupots->where('tipe_bupot', BupotTypeEnum::PS->value);
+                return BupotResource::collection($ps);
             default:
                 return response()->json([
                     'message' => 'Intent tidak valid',
