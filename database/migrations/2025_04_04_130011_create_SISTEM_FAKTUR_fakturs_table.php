@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('masa_pajak')->nullable();
             $table->string('tahun')->nullable();
             $table->string('esign_status')->nullable();
+            $table->string('nomor_retur')->nullable();
             $table->decimal('dpp',18,2)->nullable();
             $table->decimal('ppn',18,2)->nullable();
             $table->decimal('ppnbm',18,2)->nullable();
