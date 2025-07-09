@@ -34,6 +34,7 @@ class InformasiUmumResource extends JsonResource {
             case IntentEnum::API_GET_SISTEM_INFORMASI_UMUM_BADAN->value:
                 return [
                     'id' => $this->id,
+                    'alamat_wajib_pajak' => $this->profil_saya->sistem->alamat_utama_akun,
                     'npwp' => $this->npwp,
                     'jenis_wajib_pajak' => $this->jenis_wajib_pajak,
                     'nama' => $this->nama,
