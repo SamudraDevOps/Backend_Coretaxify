@@ -197,7 +197,7 @@ class ApiFakturController extends ApiController
 
     public function deleteMultipleFakturs(Assignment $assignment, Sistem $sistem,Request $request)
     {
-        $this->fakturService->authorizeAccess($assignment, $sistem);
+        $this->fakturService->authorizeAccess($assignment, $sistem, $request);
 
         $fakturIds = $request->input('faktur_ids', []);
 
@@ -217,7 +217,7 @@ class ApiFakturController extends ApiController
 
     public function multipleDraftFakturToFix(Assignment $assignment, Sistem $sistem, Request $request)
     {
-        $this->fakturService->authorizeAccess($assignment, $sistem);
+        $this->fakturService->authorizeAccess($assignment, $sistem, $request);
 
         $fakturIds = $request->input('faktur_ids', []);
 
