@@ -135,7 +135,7 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
         $user = auth()->user();
         $monitoringRole = $user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc');
 
-        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$monitoringRole) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403);
         }
 
