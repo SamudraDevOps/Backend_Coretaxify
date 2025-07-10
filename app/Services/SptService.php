@@ -393,7 +393,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_1a6_ppn']      = $fakturs1a6->sum('ppn');
         $data['cl_1a6_ppnbm']    = $fakturs1a6->sum('ppnbm');
 
-        $fakturs1a7 = $fakturs->where('kode_transaksi', 6);
+        $fakturs1a7 = $fakturs->where('kode_transaksi', 7);
         $data['cl_1a7_dpp']      = $fakturs1a7->sum('dpp');
         $data['cl_1a7_dpp_lain'] = $fakturs1a7->sum('dpp_lain');
         $data['cl_1a7_ppn']      = $fakturs1a7->sum('ppn');
