@@ -239,10 +239,11 @@ class ApiFakturController extends ApiController
         return response()->json(['message' => 'Fakturs berhasil dikirim ke SPT']);
     }
 
-    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
+    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem, Request $request)
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
             ])->firstOrFail();
 

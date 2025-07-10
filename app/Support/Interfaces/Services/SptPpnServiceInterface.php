@@ -12,5 +12,5 @@ interface SptPpnServiceInterface extends BaseCrudServiceInterface {
 
     public function create(array $data): Model;
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem);
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request);
 }

@@ -167,7 +167,7 @@ class UnitPajakKeluargaService extends BaseCrudService implements UnitPajakKelua
         Request $request,
         int $perPage = 5
     ) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
 
@@ -185,9 +185,10 @@ class UnitPajakKeluargaService extends BaseCrudService implements UnitPajakKelua
     public function getUnitPajakKeluargaDetail(
         Assignment $assignment,
         Sistem $sistem,
-        UnitPajakKeluarga $unitPajakKeluarga
+        UnitPajakKeluarga $unitPajakKeluarga,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToUnitPajakKeluarga($assignment, $sistem, $unitPajakKeluarga);
+        $this->authorizeAccessToUnitPajakKeluarga($assignment, $sistem, $unitPajakKeluarga, $request);
 
         return $unitPajakKeluarga;
     }
@@ -205,9 +206,10 @@ class UnitPajakKeluargaService extends BaseCrudService implements UnitPajakKelua
         Assignment $assignment,
         Sistem $sistem,
         UnitPajakKeluarga $unitPajakKeluarga,
-        array $data
+        array $data,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToUnitPajakKeluarga($assignment, $sistem, $unitPajakKeluarga);
+        $this->authorizeAccessToUnitPajakKeluarga($assignment, $sistem, $unitPajakKeluarga, $request);
 
         return $this->update($unitPajakKeluarga, $data);
     }
@@ -223,9 +225,10 @@ class UnitPajakKeluargaService extends BaseCrudService implements UnitPajakKelua
     public function deleteUnitPajakKeluarga(
         Assignment $assignment,
         Sistem $sistem,
-        UnitPajakKeluarga $unitPajakKeluarga
+        UnitPajakKeluarga $unitPajakKeluarga,
+        Request $request
     ): bool {
-        $this->authorizeAccessToUnitPajakKeluarga($assignment, $sistem, $unitPajakKeluarga);
+        $this->authorizeAccessToUnitPajakKeluarga($assignment, $sistem, $unitPajakKeluarga, $request);
 
         return $this->delete($unitPajakKeluarga);
     }
@@ -237,14 +240,15 @@ class UnitPajakKeluargaService extends BaseCrudService implements UnitPajakKelua
      * @param Sistem $sistem
      * @return void
      */
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    private function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
 
@@ -265,12 +269,13 @@ class UnitPajakKeluargaService extends BaseCrudService implements UnitPajakKelua
     private function authorizeAccessToUnitPajakKeluarga(
         Assignment $assignment,
         Sistem $sistem,
-        UnitPajakKeluarga $unitPajakKeluarga
+        UnitPajakKeluarga $unitPajakKeluarga,
+        Request $request
     ): void {
-        $this->authorizeAccess($assignment, $sistem);
-
+        $this->authorizeAccess($assignment, $sistem, $request);
+        $user_id = $request->get('user_id');
         // Ensure the unit pajak keluarga belongs to the specified sistem
-        if ($unitPajakKeluarga->sistem_id !== $sistem->id) {
+        if (($unitPajakKeluarga->sistem_id !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this unit pajak keluarga');
         }
     }

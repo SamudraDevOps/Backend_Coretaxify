@@ -37,8 +37,9 @@ class ApiSistemTambahanController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Assignment $assignment,Sistem $sistem ,StoreSistemTambahanRequest $request) {
-        $this->sistemTambahanService->authorizeAccess($assignment, $sistem);
+    public function store(Assignment $assignment,Sistem $sistem ,StoreSistemTambahanRequest $request, Request $request2) {
+        $this->sistemTambahanService->authorizeAccess($assignment, $sistem, $request2
+    );
 
         return $this->sistemTambahanService->create($request->validated(), $sistem);
     }

@@ -872,14 +872,15 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return $spt;
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(), auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user
@@ -889,7 +890,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     }
 
     public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $picId = $request->query('pic_id');
         $bulan = $request->query('masa_bulan');

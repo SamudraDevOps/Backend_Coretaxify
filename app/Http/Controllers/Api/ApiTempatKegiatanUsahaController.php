@@ -49,11 +49,12 @@ class ApiTempatKegiatanUsahaController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem, TempatKegiatanUsaha $tempatKegiatanUsaha) {
+    public function show(Assignment $assignment, Sistem $sistem, TempatKegiatanUsaha $tempatKegiatanUsaha, Request $request) {
         $tempatKegiatanUsaha = $this->tempatKegiatanUsahaService->getTempatKegiatanUsahaDetail(
             $assignment,
             $sistem,
-            $tempatKegiatanUsaha
+            $tempatKegiatanUsaha,
+            $request
         );
 
         return new TempatKegiatanUsahaResource($tempatKegiatanUsaha);
@@ -66,13 +67,15 @@ class ApiTempatKegiatanUsahaController extends ApiController {
         Assignment $assignment,
         Sistem $sistem,
         UpdateTempatKegiatanUsahaRequest $request,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request2
     ): TempatKegiatanUsahaResource {
         $tempatKegiatanUsaha = $this->tempatKegiatanUsahaService->updateTempatKegiatanUsaha(
             $assignment,
             $sistem,
             $tempatKegiatanUsaha,
-            $request->validated()
+            $request->validated(),
+            $request2
         );
 
         return new TempatKegiatanUsahaResource($tempatKegiatanUsaha);
@@ -84,12 +87,14 @@ class ApiTempatKegiatanUsahaController extends ApiController {
     public function destroy(
         Assignment $assignment,
         Sistem $sistem,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request
     ): JsonResponse {
         $result = $this->tempatKegiatanUsahaService->deleteTempatKegiatanUsaha(
             $assignment,
             $sistem,
-            $tempatKegiatanUsaha
+            $tempatKegiatanUsaha,
+            $request
         );
 
         return response()->json([

@@ -31,7 +31,7 @@ class ApiSptPpnController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->sptPpnService->authorizeAccess($assignment, $sistem);
+        $this->sptPpnService->authorizeAccess($assignment, $sistem, $request);
 
         $data = $request->all();
         $data['intent'] = $request->intent;
@@ -44,7 +44,7 @@ class ApiSptPpnController extends ApiController {
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, SptPpn $sptPpn, Request $request) {
-        $this->sptPpnService->authorizeAccess($assignment, $sistem);
+        $this->sptPpnService->authorizeAccess($assignment, $sistem, $request);
 
         return new SptPpnResource($sptPpn, $request);
     }

@@ -141,7 +141,7 @@ class TempatKegiatanUsahaService extends BaseCrudService implements TempatKegiat
         Request $request,
         int $perPage = 5
     ) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
 
@@ -159,9 +159,10 @@ class TempatKegiatanUsahaService extends BaseCrudService implements TempatKegiat
     public function getTempatKegiatanUsahaDetail(
         Assignment $assignment,
         Sistem $sistem,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToTempatKegiatanUsaha($assignment, $sistem, $tempatKegiatanUsaha);
+        $this->authorizeAccessToTempatKegiatanUsaha($assignment, $sistem, $tempatKegiatanUsaha, $request);
 
         return $tempatKegiatanUsaha;
     }
@@ -179,9 +180,10 @@ class TempatKegiatanUsahaService extends BaseCrudService implements TempatKegiat
         Assignment $assignment,
         Sistem $sistem,
         TempatKegiatanUsaha $tempatKegiatanUsaha,
-        array $data
+        array $data,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToTempatKegiatanUsaha($assignment, $sistem, $tempatKegiatanUsaha);
+        $this->authorizeAccessToTempatKegiatanUsaha($assignment, $sistem, $tempatKegiatanUsaha, $request);
 
         return $this->update($tempatKegiatanUsaha, $data);
     }
@@ -197,9 +199,10 @@ class TempatKegiatanUsahaService extends BaseCrudService implements TempatKegiat
     public function deleteTempatKegiatanUsaha(
         Assignment $assignment,
         Sistem $sistem,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request
     ): bool {
-        $this->authorizeAccessToTempatKegiatanUsaha($assignment, $sistem, $tempatKegiatanUsaha);
+        $this->authorizeAccessToTempatKegiatanUsaha($assignment, $sistem, $tempatKegiatanUsaha, $request);
 
         return $this->delete($tempatKegiatanUsaha);
     }
@@ -211,14 +214,15 @@ class TempatKegiatanUsahaService extends BaseCrudService implements TempatKegiat
      * @param Sistem $sistem
      * @return void
      */
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    private function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
 
@@ -234,17 +238,19 @@ class TempatKegiatanUsahaService extends BaseCrudService implements TempatKegiat
      * @param Assignment $assignment
      * @param Sistem $sistem
      * @param TempatKegiatanUsaha $tempatKegiatanUsaha
-     * @return void
+     * @return void,
+     * Request $request
      */
     private function authorizeAccessToTempatKegiatanUsaha(
         Assignment $assignment,
         Sistem $sistem,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request
     ): void {
-        $this->authorizeAccess($assignment, $sistem);
-
+        $this->authorizeAccess($assignment, $sistem, $request);
+        $user_id = $request->get('user_id');
         // Ensure the tempat kegiatan usaha belongs to the specified sistem
-        if ($tempatKegiatanUsaha->sistem_id !== $sistem->id) {
+        if (($tempatKegiatanUsaha->sistem_id !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this tempat kegiatan usaha');
         }
     }

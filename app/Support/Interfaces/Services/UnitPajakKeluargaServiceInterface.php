@@ -100,7 +100,8 @@ interface UnitPajakKeluargaServiceInterface extends BaseCrudServiceInterface
     public function getUnitPajakKeluargaDetail(
         Assignment $assignment,
         Sistem $sistem,
-        UnitPajakKeluarga $unitPajakKeluarga
+        UnitPajakKeluarga $unitPajakKeluarga,
+        Request $request
     ): ?Model;
 
     /**
@@ -116,7 +117,8 @@ interface UnitPajakKeluargaServiceInterface extends BaseCrudServiceInterface
         Assignment $assignment,
         Sistem $sistem,
         UnitPajakKeluarga $unitPajakKeluarga,
-        array $data
+        array $data,
+        Request $request
     ): ?Model;
 
     /**
@@ -130,6 +132,7 @@ interface UnitPajakKeluargaServiceInterface extends BaseCrudServiceInterface
     public function deleteUnitPajakKeluarga(
         Assignment $assignment,
         Sistem $sistem,
-        UnitPajakKeluarga $unitPajakKeluarga
+        UnitPajakKeluarga $unitPajakKeluarga,
+        Request $request
     ): bool;
 }

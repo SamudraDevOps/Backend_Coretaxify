@@ -44,9 +44,9 @@ class ApiDetailTransaksiController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi) {
+    public function show(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi, Request $request) {
         // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
-        $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
+        $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi, $request);
 
         return new DetailTransaksiResource($detailTransaksi);
     }
@@ -56,7 +56,7 @@ class ApiDetailTransaksiController extends ApiController {
      */
     public function update(Assignment $assignment, Sistem $sistem, Faktur $faktur, Request $request, DetailTransaksi $detailTransaksi) {
         // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
-        $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
+        $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi, $request);
         $request['faktur_id'] = $faktur->id;
 
         if ($request['intent'] && $request['intent'] == IntentEnum::API_UPDATE_DETAIL_TRANSAKSI_FAKTUR_RETUR_MASUKAN->value) {
@@ -76,9 +76,9 @@ class ApiDetailTransaksiController extends ApiController {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi) {
+    public function destroy(Assignment $assignment, Sistem $sistem, Faktur $faktur, DetailTransaksi $detailTransaksi, Request $request) {
         // $this->detailTransaksiService->authorizeAccess($assignment, $sistem, $faktur);
-        $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi);
+        $this->detailTransaksiService->authorizeDetailTraBelongsToFaktur($faktur, $detailTransaksi, $request);
 
         if ($faktur->is_draft || $detailTransaksi->is_tambahan) {
             return DetailTransaksi::where('id', $detailTransaksi->id)->forceDelete();

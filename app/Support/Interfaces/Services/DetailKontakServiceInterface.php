@@ -90,7 +90,8 @@ interface DetailKontakServiceInterface extends BaseCrudServiceInterface {
     public function getDetailKontakDetail(
         Assignment $assignment,
         Sistem $sistem,
-        DetailKontak $detailKontak
+        DetailKontak $detailKontak,
+        Request $request
     ): ?Model;
 
     /**
@@ -106,7 +107,8 @@ interface DetailKontakServiceInterface extends BaseCrudServiceInterface {
         Assignment $assignment,
         Sistem $sistem,
         DetailKontak $detailKontak,
-        array $data
+        array $data,
+        Request $request
     ): ?Model;
 
     /**
@@ -120,6 +122,7 @@ interface DetailKontakServiceInterface extends BaseCrudServiceInterface {
     public function deleteDetailKontak(
         Assignment $assignment,
         Sistem $sistem,
-        DetailKontak $detailKontak
+        DetailKontak $detailKontak,
+        Request $request
     ): bool;
 }

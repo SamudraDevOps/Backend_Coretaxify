@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
+use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -19,18 +20,19 @@ class SistemTambahanService extends BaseCrudService implements SistemTambahanSer
 
     public function create(array $data, Sistem $sistem = null): ?Model {
         $data['assignment_user_id'] = $sistem->assignment_user->id;
-        
+
         return $this->repository->create($data);
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user
@@ -39,9 +41,10 @@ class SistemTambahanService extends BaseCrudService implements SistemTambahanSer
         ->firstOrFail();
     }
 
-    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem): void
+    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem, Request $request): void
     {
-        if ($faktur->akun_pengirim !== $sistem->id) {
+        $user_id = $request->get('user_id');
+        if (($faktur->akun_pengirim !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this faktur');
         }
     }
