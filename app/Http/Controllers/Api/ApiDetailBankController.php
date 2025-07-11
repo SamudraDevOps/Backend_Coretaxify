@@ -99,14 +99,13 @@ class ApiDetailBankController extends ApiController
         Sistem $sistem,
         UpdateDetailBankRequest $request,
         DetailBank $detailBank,
-        Request $request2
     ): DetailBankResource {
         $detailBank = $this->detailBankService->updateDetailBank(
             $assignment,
             $sistem,
             $detailBank,
             $request->validated(),
-            $request2
+            $request
         );
 
         return new DetailBankResource($detailBank);

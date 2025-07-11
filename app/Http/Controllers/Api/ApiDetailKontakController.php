@@ -98,15 +98,14 @@ class ApiDetailKontakController extends ApiController
         Assignment $assignment,
         Sistem $sistem,
         UpdateDetailKontakRequest $request,
-        DetailKontak $detailKontak,
-        Request $request2
+        DetailKontak $detailKontak
     ): DetailKontakResource {
         $detailKontak = $this->detailKontakService->updateDetailKontak(
             $assignment,
             $sistem,
             $detailKontak,
             $request->validated(),
-            $request2
+            $request
         );
 
         return new DetailKontakResource($detailKontak);

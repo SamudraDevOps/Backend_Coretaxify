@@ -67,15 +67,14 @@ class ApiUnitPajakKeluargaController extends ApiController {
         Assignment $assignment,
         Sistem $sistem,
         UpdateUnitPajakKeluargaRequest $request,
-        UnitPajakKeluarga $unitPajakKeluarga,
-        Request $request2
+        UnitPajakKeluarga $unitPajakKeluarga
     ): UnitPajakKeluargaResource {
         $unitPajakKeluarga = $this->unitPajakKeluargaService->updateUnitPajakKeluarga(
             $assignment,
             $sistem,
             $unitPajakKeluarga,
             $request->validated(),
-            $request2
+            $request
         );
 
         return new UnitPajakKeluargaResource($unitPajakKeluarga);

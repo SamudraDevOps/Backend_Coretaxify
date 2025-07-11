@@ -67,15 +67,14 @@ class ApiTempatKegiatanUsahaController extends ApiController {
         Assignment $assignment,
         Sistem $sistem,
         UpdateTempatKegiatanUsahaRequest $request,
-        TempatKegiatanUsaha $tempatKegiatanUsaha,
-        Request $request2
+        TempatKegiatanUsaha $tempatKegiatanUsaha
     ): TempatKegiatanUsahaResource {
         $tempatKegiatanUsaha = $this->tempatKegiatanUsahaService->updateTempatKegiatanUsaha(
             $assignment,
             $sistem,
             $tempatKegiatanUsaha,
             $request->validated(),
-            $request2
+            $request
         );
 
         return new TempatKegiatanUsahaResource($tempatKegiatanUsaha);
