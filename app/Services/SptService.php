@@ -170,6 +170,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['masa_aktif'] = $masaAktif;
                     $dataPembayaran['spt_id'] = $spt->id;
 
+                    $sistem->saldo = $hasil;
+                    $sistem->save();
+
                     $spt->status = SptStatusEnum::DILAPORKAN->value;
                     $spt->is_can_pembetulan = true;
                     $spt->save();
@@ -249,6 +252,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
 
+                    $sistem->saldo = $hasil;
+                    $sistem->save();
+
                     $spt->status = SptStatusEnum::DILAPORKAN->value;
                     $spt->is_can_pembetulan = true;
                     $spt->save();
@@ -304,6 +310,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     // $dataPembayaran['kap_kjs_id'] = 50;
                     $dataPembayaran['is_paid'] = true;
                     $dataPembayaran['masa_aktif'] = $masaAktif;
+
+                    $sistem->saldo = $hasil;
+                    $sistem->save();
 
                     $spt->status = SptStatusEnum::DILAPORKAN->value;
                     $spt->is_can_pembetulan = true;
