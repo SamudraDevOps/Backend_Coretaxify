@@ -56,27 +56,89 @@ class FakturResource extends JsonResource
                     'ppnbm' => $this->ppnbm,
                 ];
             case JenisSptPpnEnum::B2->value:
+            if ($this->is_retur) {
+                // Return array dengan 2 data: original dan retur
+                return [
+                    // Data original (sebelum retur)
+                    [
+                        'nama_pembeli' => $this->pic->nama_akun,
+                        'npwp' => $this->pic->npwp_akun,
+                        'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                        'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                        'dpp' => $this->dpp,
+                        'dpp_lain' => ($this->dpp_lain ?? 0),
+                        'ppn' => ($this->ppn ?? 0),
+                        'ppnbm' => ($this->ppnbm ?? 0),
+                        'type' => 'original'
+                    ],
+                    // Data retur (nilai negatif)
+                    [
+                        'nama_pembeli' => $this->pic->nama_akun,
+                        'npwp' => $this->pic->npwp_akun,
+                        'faktur_pajak_nomor' => $this->nomor_retur ?? $this->nomor_faktur_pajak,
+                        'faktur_pajak_tanggal' => $this->tanggal_retur ?? $this->tanggal_faktur_pajak,
+                        'dpp' => 0, // atau bisa pakai dpp original jika diperlukan
+                        'dpp_lain' => ($this->dpp_lain_retur ?? 0),
+                        'ppn' => ($this->ppn_retur ?? 0),
+                        'ppnbm' => ($this->ppnbm_retur ?? 0),
+                        'type' => 'retur'
+                    ]
+                ];
+            } else {
+                // Data normal (tidak retur)
                 return [
                     'nama_pembeli' => $this->pic->nama_akun,
                     'npwp' => $this->pic->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
-                    'dpp_lain' => ($this->dpp_lain ?? 0) - ($this->dpp_lain_retur ?? 0),
-                    'ppn' => ($this->ppn ?? 0) - ($this->ppn_retur ?? 0),
-                    'ppnbm' => ($this->ppnbm ?? 0) - ($this->ppnbm_retur ?? 0),
+                    'dpp_lain' => ($this->dpp_lain ?? 0),
+                    'ppn' => ($this->ppn ?? 0),
+                    'ppnbm' => ($this->ppnbm ?? 0),
                 ];
+            }
             case JenisSptPpnEnum::B3->value:
-                return [
-                    'nama_pembeli' => $this->pic->nama_akun,
-                    'npwp' => $this->pic->npwp_akun,
-                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
-                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
-                    'dpp' => $this->dpp,
-                    'dpp_lain' => $this->dpp_lain,
-                    'ppn' => $this->ppn,
-                    'ppnbm' => $this->ppnbm,
-                ];
+                if ($this->is_retur) {
+                    // Return array dengan 2 data: original dan retur
+                    return [
+                        // Data original (sebelum retur)
+                        [
+                            'nama_pembeli' => $this->pic->nama_akun,
+                            'npwp' => $this->pic->npwp_akun,
+                            'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                            'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                            'dpp' => $this->dpp,
+                            'dpp_lain' => $this->dpp_lain,
+                            'ppn' => $this->ppn,
+                            'ppnbm' => $this->ppnbm,
+                            'type' => 'original'
+                        ],
+                        // Data retur (nilai negatif)
+                        [
+                            'nama_pembeli' => $this->pic->nama_akun,
+                            'npwp' => $this->pic->npwp_akun,
+                            'faktur_pajak_nomor' => $this->nomor_retur ?? $this->nomor_faktur_pajak,
+                            'faktur_pajak_tanggal' => $this->tanggal_retur ?? $this->tanggal_faktur_pajak,
+                            'dpp' => 0, // atau bisa pakai dpp original jika diperlukan
+                            'dpp_lain' => $this->dpp_lain_retur,
+                            'ppn' => $this->ppn_retur,
+                            'ppnbm' => $this->ppnbm_retur,
+                            'type' => 'retur'
+                        ]
+                    ];
+                } else {
+                    // Data normal (tidak retur)
+                    return [
+                        'nama_pembeli' => $this->pic->nama_akun,
+                        'npwp' => $this->pic->npwp_akun,
+                        'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
+                        'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
+                        'dpp' => $this->dpp,
+                        'dpp_lain' => $this->dpp_lain,
+                        'ppn' => $this->ppn,
+                        'ppnbm' => $this->ppnbm,
+                    ];
+                }
             case JenisSptPpnEnum::C->value:
                 return [
                     'nama_pembeli' => $this->pic->nama_akun,

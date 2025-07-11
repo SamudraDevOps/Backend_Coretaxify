@@ -173,7 +173,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             case IntentEnum::API_GET_FAKTUR_RETUR_KELUARAN->value:
                 $filters = array_merge([
                     'akun_pengirim_id' => $sistem->id,
-                    'is_retur' => 1
+                    'is_retur' => true
                 ], $request->query());
                 break;
             case IntentEnum::API_GET_FAKTUR_RETUR_MASUKAN->value:
@@ -270,9 +270,9 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $detailTransaksis = DetailTransaksi::where('faktur_id', $faktur->id)->get();
 
         $returTotals = [
-            'ppn_retur' => $detailTransaksis->sum('ppn_retur'),
-            'dpp_lain_retur' => $detailTransaksis->sum('dpp_lain_retur'),
-            'ppnbm_retur' => $detailTransaksis->sum('ppnbm_retur'),
+            'ppn_retur' => $detailTransaksis->sum('ppn_retur') * -1,
+            'dpp_lain_retur' => $detailTransaksis->sum('dpp_lain_retur') * -1,
+            'ppnbm_retur' => $detailTransaksis->sum('ppnbm_retur') * -1,
         ];
 
         parent::update($faktur, $returTotals);
