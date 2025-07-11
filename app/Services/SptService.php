@@ -419,6 +419,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_1a_jumlah_ppn'] =
            ($data['cl_1a2_ppn'] ?? 0)
          + ($data['cl_1a3_ppn'] ?? 0)
+         + ($data['cl_1a4_ppn'] ?? 0)
          + ($data['cl_1a5_ppn'] ?? 0)
          + ($data['cl_1a6_ppn'] ?? 0)
          + ($data['cl_1a7_ppn'] ?? 0)
@@ -444,21 +445,21 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             ->get();
 
         $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
-        $data['cl_2b_dpp']      = $fakturs2b->sum('dpp');
-        $data['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain');
-        $data['cl_2b_ppn']      = $fakturs2b->sum('ppn');
-        $data['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm');
+        $data_spt_ppn['cl_2b_dpp']      = $fakturs2b->sum('dpp');
+        $data_spt_ppn['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain') + $fakturs2b->sum('dpp_lain_retur');
+        $data_spt_ppn['cl_2b_ppn']      = $fakturs2b->sum('ppn') + $fakturs2b->sum('ppn_retur');
+        $data_spt_ppn['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm') + $fakturs2b->sum('ppnbm_retur');
 
         $fakturs2c = $faktursMasukan->whereIn('kode_transaksi', [1, 9, 10]);
-        $data['cl_2c_dpp']      = $fakturs2c->sum('dpp');
-        $data['cl_2c_ppn']      = $fakturs2c->sum('ppn');
-        $data['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm');
+        $data_spt_ppn['cl_2c_dpp']      = $fakturs2c->sum('dpp');
+        $data_spt_ppn['cl_2c_ppn']      = $fakturs2c->sum('ppn') + $fakturs2c->sum('ppn_retur');
+        $data_spt_ppn['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm') + $fakturs2c->sum('ppnbm_retur');
 
         $fakturs2d = $faktursMasukan->whereIn('kode_transaksi', [2, 3]);
-        $data['cl_2d_dpp']      = $fakturs2d->sum('dpp');
-        $data['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain');
-        $data['cl_2d_ppn']      = $fakturs2d->sum('ppn');
-        $data['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm');
+        $data_spt_ppn['cl_2d_dpp']      = $fakturs2d->sum('dpp');
+        $data_spt_ppn['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') + $fakturs2d->sum('dpp_lain_retur');
+        $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2d->sum('ppn_retur');
+        $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2d->sum('ppnbm_retur');
 
          $data['cl_2g_dpp'] =
            ($data['cl_2a_dpp'] ?? 0)
@@ -616,32 +617,24 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
                 $data_spt_ppn['cl_2b_dpp']      = $fakturs2b->sum('dpp');
-                $data_spt_ppn['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain') - $fakturs2b->sum('dpp_lain_retur');
-                $data_spt_ppn['cl_2b_ppn']      = $fakturs2b->sum('ppn') - $fakturs2b->sum('ppn_retur');
-                $data_spt_ppn['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm') - $fakturs2b->sum('ppnbm_retur');
+                $data_spt_ppn['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain') + $fakturs2b->sum('dpp_lain_retur');
+                $data_spt_ppn['cl_2b_ppn']      = $fakturs2b->sum('ppn') + $fakturs2b->sum('ppn_retur');
+                $data_spt_ppn['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm') + $fakturs2b->sum('ppnbm_retur');
 
                 $fakturs2c = $faktursMasukan->whereIn('kode_transaksi', [1, 9, 10]);
                 $data_spt_ppn['cl_2c_dpp']      = $fakturs2c->sum('dpp');
-                $data_spt_ppn['cl_2c_ppn']      = $fakturs2c->sum('ppn') - $fakturs2c->sum('ppn_retur');
-                $data_spt_ppn['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm') - $fakturs2c->sum('ppnbm_retur');
+                $data_spt_ppn['cl_2c_ppn']      = $fakturs2c->sum('ppn') + $fakturs2c->sum('ppn_retur');
+                $data_spt_ppn['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm') + $fakturs2c->sum('ppnbm_retur');
 
                 $fakturs2d = $faktursMasukan->whereIn('kode_transaksi', [2, 3]);
                 $data_spt_ppn['cl_2d_dpp']      = $fakturs2d->sum('dpp');
-                $data_spt_ppn['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') - $fakturs2d->sum('dpp_lain_retur');
-                $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') - $fakturs2d->sum('ppn_retur');
-                $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') - $fakturs2d->sum('ppnbm_retur');
+                $data_spt_ppn['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') + $fakturs2d->sum('dpp_lain_retur');
+                $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2d->sum('ppn_retur');
+                $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2d->sum('ppnbm_retur');
 
                 $data_spt_ppn['spt_id'] = $spt->id;
 
                 //for pajak masukan retur
-                $faktursMasukanRetur = Faktur::where('akun_penerima_id', $data['badan_id'])
-                    ->where('masa_pajak', $month)
-                    ->where('tahun', $year)
-                    ->where('status', FakturStatusEnum::APPROVED->value)
-                    ->where('is_kredit', true)
-                    ->where('is_retur', true)
-                    ->get();
-
                 SptPpn::create($data_spt_ppn);
                 break;
             case JenisPajakEnum::PPH->value:
@@ -973,7 +966,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             case JenisSptPpnEnum::B1->value:
                 // return FakturResource::collection($fakturKeluaran);
             case JenisSptPpnEnum::B2->value:
-                $fakturMasukanB2 = $fakturMasukan->where('is_kredit', true);
+                $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [1, 2, 3, 4, 5, 6, 9, 10])->where('is_kredit', true);
+                return FakturResource::collection($fakturMasukanB2);
+            case JenisSptPpnEnum::B3->value:
+                $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [7, 8])->where('is_kredit', true);
                 return FakturResource::collection($fakturMasukanB2);
             case JenisSptPpnEnum::C->value:
                 $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm === null || $f->ppnbm = 0);
