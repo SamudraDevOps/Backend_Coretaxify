@@ -41,7 +41,9 @@ class ApiSistemTambahanController extends ApiController {
         $this->sistemTambahanService->authorizeAccess($assignment, $sistem, $request
     );
 
-        return $this->sistemTambahanService->create($request->validated(), $sistem);
+        $request['assignment_user_id'] = $sistem->assignment_user->id;
+
+        return $this->sistemTambahanService->create($request->all());
     }
 
     /**
