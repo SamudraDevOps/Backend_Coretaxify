@@ -18,11 +18,11 @@ class SistemTambahanService extends BaseCrudService implements SistemTambahanSer
         return SistemTambahanRepositoryInterface::class;
     }
 
-    public function create(array $data, Sistem $sistem = null): ?Model {
-        $data['assignment_user_id'] = $sistem->assignment_user->id;
+    // public function create(array $data, Sistem $sistem = null): ?Model {
+    //     $data['assignment_user_id'] = $sistem->assignment_user->id;
 
-        return $this->repository->create($data);
-    }
+    //     return $this->repository->create($data);
+    // }
 
     public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
