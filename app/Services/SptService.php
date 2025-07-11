@@ -445,21 +445,21 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             ->get();
 
         $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
-        $data_spt_ppn['cl_2b_dpp']      = $fakturs2b->sum('dpp');
-        $data_spt_ppn['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain') + $fakturs2b->sum('dpp_lain_retur');
-        $data_spt_ppn['cl_2b_ppn']      = $fakturs2b->sum('ppn') + $fakturs2b->sum('ppn_retur');
-        $data_spt_ppn['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm') + $fakturs2b->sum('ppnbm_retur');
+        $data['cl_2b_dpp']      = $fakturs2b->sum('dpp');
+        $data['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain') + $fakturs2b->sum('dpp_lain_retur');
+        $data['cl_2b_ppn']      = $fakturs2b->sum('ppn') + $fakturs2b->sum('ppn_retur');
+        $data['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm') + $fakturs2b->sum('ppnbm_retur');
 
         $fakturs2c = $faktursMasukan->whereIn('kode_transaksi', [1, 9, 10]);
-        $data_spt_ppn['cl_2c_dpp']      = $fakturs2c->sum('dpp');
-        $data_spt_ppn['cl_2c_ppn']      = $fakturs2c->sum('ppn') + $fakturs2c->sum('ppn_retur');
-        $data_spt_ppn['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm') + $fakturs2c->sum('ppnbm_retur');
+        $data['cl_2c_dpp']      = $fakturs2c->sum('dpp');
+        $data['cl_2c_ppn']      = $fakturs2c->sum('ppn') + $fakturs2c->sum('ppn_retur');
+        $data['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm') + $fakturs2c->sum('ppnbm_retur');
 
         $fakturs2d = $faktursMasukan->whereIn('kode_transaksi', [2, 3]);
-        $data_spt_ppn['cl_2d_dpp']      = $fakturs2d->sum('dpp');
-        $data_spt_ppn['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') + $fakturs2d->sum('dpp_lain_retur');
-        $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2d->sum('ppn_retur');
-        $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2d->sum('ppnbm_retur');
+        $data['cl_2d_dpp']      = $fakturs2d->sum('dpp');
+        $data['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') + $fakturs2d->sum('dpp_lain_retur');
+        $data['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2d->sum('ppn_retur');
+        $data['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2d->sum('ppnbm_retur');
 
          $data['cl_2g_dpp'] =
            ($data['cl_2a_dpp'] ?? 0)
