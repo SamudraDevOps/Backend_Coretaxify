@@ -84,14 +84,14 @@ class ApiPembayaranController extends ApiController {
             $masa_tahun = $request['masa_tahun'];
             $masa_pajak = '0112'. $masa_tahun;
         }
-
         $sistem = Sistem::where('id', $sistem->id)->first();
         // $kapKjs = KapKjs::where('id', $request['kap_kjs_id'])->first();
-
         $request['ntpn'] = $ntpn;
         $request['kode_billing'] = $randomNumber;
         $request['badan_id'] = $sistem->id;
         $request['masa_pajak'] = $masa_pajak;
+        $request['masa_bulan'] = $masa_bulan;
+        $request['masa_tahun'] = $masa_tahun;
         $request['masa_aktif'] = Carbon::now() -> addWeek();
 
         return $this->pembayaranService->create($request->all());

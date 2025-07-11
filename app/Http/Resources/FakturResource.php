@@ -168,6 +168,8 @@ class FakturResource extends JsonResource
                     'dilaporkan_oleh_penjual' => $this->dilaporkan_oleh_penjual,
                     'dilaporkan_oleh_pemungut_ppn' => $this->dilaporkan_oleh_pemungut_ppn,
                     'tanggal_retur' => $this->tanggal_retur,
+                    'nomor_retur' => $this->nomor_retur,
+                    'jumlah_dpp_retur' => '0',
                     'jumlah_dpp_lain_retur' => $this->jumlah_dpp_lain_retur,
                     'jumlah_ppn_retur' => $this->jumlah_ppn_retur,
                     'jumlah_ppnbm_retur' => $this->jumlah_ppnbm_retur,

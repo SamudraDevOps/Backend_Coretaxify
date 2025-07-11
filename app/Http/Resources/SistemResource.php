@@ -27,6 +27,7 @@
                      'nama_akun' => $this->nama_akun,
                      'npwp_akun' => $this->npwp_akun,
                      'tipe_akun' => $this->tipe_akun,
+                     'alamat_utama_akun' => $this->alamat_utama_akun,
                  ];
              case IntentEnum::API_GET_SISTEM_IKHTISAR_PROFIL->value:
                  return  [

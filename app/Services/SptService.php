@@ -153,7 +153,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $bayar = $spt_ppn->cl_3e_ppn;
                 }
 
-                $hasil = $sistem->saldo - $bayar;
+                $saldo = (int) $sistem->saldo;
+                $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
                     throw new \Exception('Saldo tidak mencukupi', 101);
@@ -180,6 +181,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
                 $spt->is_can_pembetulan = true;
                 $spt->save();
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
 
                 $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
@@ -197,7 +199,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
-                $randomNumber = mt_rand(100000000000000, 999999999999999);
 
                 $dataPembayaran = [
                     'nilai' => $bayar,
@@ -231,7 +232,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
-                $hasil = $sistem->saldo - $bayar;
+                $saldo = (int) $sistem->saldo;
+                $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
                     throw new \Exception('Saldo tidak mencukupi', 101);
@@ -391,7 +393,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_1a6_ppn']      = $fakturs1a6->sum('ppn');
         $data['cl_1a6_ppnbm']    = $fakturs1a6->sum('ppnbm');
 
-        $fakturs1a7 = $fakturs->where('kode_transaksi', 6);
+        $fakturs1a7 = $fakturs->where('kode_transaksi', 7);
         $data['cl_1a7_dpp']      = $fakturs1a7->sum('dpp');
         $data['cl_1a7_dpp_lain'] = $fakturs1a7->sum('dpp_lain');
         $data['cl_1a7_ppn']      = $fakturs1a7->sum('ppn');
@@ -593,7 +595,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['cl_1a6_ppn']      = $fakturs1a6->sum('ppn');
                 $data_spt_ppn['cl_1a6_ppnbm']    = $fakturs1a6->sum('ppnbm');
 
-                $fakturs1a7 = $fakturs->where('kode_transaksi', 6);
+                $fakturs1a7 = $fakturs->where('kode_transaksi', 7);
                 $data_spt_ppn['cl_1a7_dpp']      = $fakturs1a7->sum('dpp');
                 $data_spt_ppn['cl_1a7_dpp_lain'] = $fakturs1a7->sum('dpp_lain');
                 $data_spt_ppn['cl_1a7_ppn']      = $fakturs1a7->sum('ppn');
