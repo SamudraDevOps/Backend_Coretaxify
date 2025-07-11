@@ -60,6 +60,7 @@ class ApiDetailTransaksiController extends ApiController {
         $request['faktur_id'] = $faktur->id;
 
         if ($request['intent'] && $request['intent'] == IntentEnum::API_UPDATE_DETAIL_TRANSAKSI_FAKTUR_RETUR_MASUKAN->value) {
+            $request['is_retur'] = true;
             $request['total_harga_diretur'] = ($request['jumlah_barang_diretur'] ?? 0) * $detailTransaksi->harga_satuan;
             return $this->detailTransaksiService->update($detailTransaksi, $request->all());
         }else {
