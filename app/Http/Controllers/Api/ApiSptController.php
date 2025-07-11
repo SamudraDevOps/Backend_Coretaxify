@@ -45,7 +45,7 @@ class ApiSptController extends ApiController {
         $data['pic_id'] = $request->pic_id;
         $data['jenis_pajak'] = $request->jenis_pajak;
         $data['model'] = $request->model;
-
+        
         return $this->sptService->create($data);
     }
 

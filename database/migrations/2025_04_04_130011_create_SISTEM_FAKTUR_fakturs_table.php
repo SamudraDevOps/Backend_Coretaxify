@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('akun_pengirim_id')->nullable()->references('id')->on('sistems');
             $table->foreignId('akun_penerima_id')->nullable()->references('id')->on('sistems');
             $table->boolean('is_draft')->nullable();
-            $table->boolean('is_kredit')->default(false);
+            $table->boolean('is_kredit')->default(true);
             $table->boolean('is_akun_tambahan')->nullable();
             $table->boolean('is_retur')->default(false);
             $table->enum('status', FakturStatusEnum::toArray())->nullable();
