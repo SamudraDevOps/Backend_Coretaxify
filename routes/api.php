@@ -287,6 +287,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('assignments', ApiAssignmentController::class);
                 Route::prefix('assignments')->group(function () {
                     Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                    Route::put('{assignment}/members/{user}/score', [ApiAssignmentController::class, 'scoreMember']);
                     Route::delete('{assignment}/members/{user}', [ApiAssignmentController::class, 'removeMember']);
                     Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
                 });

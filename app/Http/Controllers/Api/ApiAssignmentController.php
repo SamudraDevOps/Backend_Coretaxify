@@ -119,6 +119,7 @@ class ApiAssignmentController extends ApiController
             ->whereHas('roles', function ($query) {
                 $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
             })
+            ->withPivot('score') // Add this to include pivot data
             ->paginate($perPage);
 
         return UserResource::collection($users);
@@ -133,6 +134,29 @@ class ApiAssignmentController extends ApiController
     public function getMemberDetail(Assignment $assignment, User $user)
     {
         return $assignment->users()->findOrFail($user->id);
+    }
+
+    public function scoreMember(Request $request, Assignment $assignment, User $user)
+    {
+        $request->validate([
+            'score' => 'required|numeric|min:0|max:100'
+        ]);
+
+        $assignmentUser = $assignment->users()->wherePivot('user_id', $user->id)->first();
+
+        if (!$assignmentUser) {
+            return response()->json(['message' => 'User is not a member of this assignment'], 404);
+        }
+
+        // Update the score in the pivot table
+        $assignment->users()->updateExistingPivot($user->id, [
+            'score' => $request->score
+        ]);
+
+        return response()->json([
+            'message' => 'Score updated successfully',
+            'score' => $request->score
+        ]);
     }
 
     /**
