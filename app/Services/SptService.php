@@ -30,6 +30,7 @@ use App\Support\Enums\JenisSptPphEnum;
 use App\Support\Enums\JenisSptPpnEnum;
 use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\FakturCollection;
 use App\Support\Enums\JenisSptPphUnifikasiEnum;
 use App\Support\Interfaces\Services\SptServiceInterface;
 use App\Support\Interfaces\Repositories\SptRepositoryInterface;
@@ -977,13 +978,13 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 // return FakturResource::collection($fakturKeluaran);
             case JenisSptPpnEnum::B2->value:
                 $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [1, 2, 3, 4, 5, 6, 9, 10])->where('is_kredit', true);
-                return FakturResource::collection($fakturMasukanB2);
+                return new FakturCollection($fakturMasukanB2);
             case JenisSptPpnEnum::B3->value:
-                $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [7, 8])->where('is_kredit', true);
-                return FakturResource::collection($fakturMasukanB2);
+                $fakturMasukanB3 = $fakturMasukan->whereIn('kode_transaksi', [7, 8])->where('is_kredit', true);
+                return new FakturCollection($fakturMasukanB3);
             case JenisSptPpnEnum::C->value:
                 $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm !== null || $f->ppnbm > 0);
-                return FakturResource::collection($fakturMasukanC);
+                return new FakturCollection($fakturMasukanC);
             default:
                 return response()->json([
                     'message' => 'Intent tidak valid',
