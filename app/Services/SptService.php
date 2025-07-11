@@ -969,6 +969,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         switch ($jenisSptPpn) {
             case JenisSptPpnEnum::A1->value:
                 // return FakturResource::collection($fakturKeluaran);
+                break;
             case JenisSptPpnEnum::A2->value:
                 return FakturResource::collection($fakturKeluaran);
             case JenisSptPpnEnum::B1->value:
@@ -980,7 +981,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [7, 8])->where('is_kredit', true);
                 return FakturResource::collection($fakturMasukanB2);
             case JenisSptPpnEnum::C->value:
-                $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm === null || $f->ppnbm = 0);
+                $fakturMasukanC = $fakturMasukan->filter(fn($f) => $f->ppnbm !== null || $f->ppnbm > 0);
                 return FakturResource::collection($fakturMasukanC);
             default:
                 return response()->json([

@@ -29,7 +29,7 @@ class FakturSeeder extends Seeder
                 $akunPengirimId = 2;
                 $akunPenerimaId = 1;
                 $kodeTransaksi = (string) $i;
-                $is_kredit = false;
+                $is_kredit = true;
             }
 
             $faktur = Faktur::create([
