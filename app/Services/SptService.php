@@ -632,6 +632,16 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') - $fakturs2d->sum('ppnbm_retur');
 
                 $data_spt_ppn['spt_id'] = $spt->id;
+
+                //for pajak masukan retur
+                $faktursMasukanRetur = Faktur::where('akun_penerima_id', $data['badan_id'])
+                    ->where('masa_pajak', $month)
+                    ->where('tahun', $year)
+                    ->where('status', FakturStatusEnum::APPROVED->value)
+                    ->where('is_kredit', true)
+                    ->where('is_retur', true)
+                    ->get();
+
                 SptPpn::create($data_spt_ppn);
                 break;
             case JenisPajakEnum::PPH->value:
