@@ -92,7 +92,11 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 return parent::update($keyOrModel, $data);
                 // break;
             case IntentEnum::API_UPDATE_FAKTUR_RETUR_MASUKAN->value:
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
+                $noRetur = 'RET'. $randomNumber;
+
                 $data['is_retur'] = true;
+                $data['nomor_retur'] = $noRetur;
 
                 $faktur = parent::update($keyOrModel, $data);
 
