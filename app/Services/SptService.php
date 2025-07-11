@@ -878,7 +878,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     {
         $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => $user_id ?? auth()->id(), auth()->id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
