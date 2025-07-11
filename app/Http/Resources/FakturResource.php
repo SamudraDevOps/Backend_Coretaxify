@@ -56,47 +56,7 @@ class FakturResource extends JsonResource
                     'ppnbm' => $this->ppnbm,
                 ];
             case JenisSptPpnEnum::B2->value:
-            if ($this->is_retur) {
-                // Return array dengan 2 data: original dan retur
-                return [
-                    // Data original (sebelum retur)
-                    [
-                        'nama_pembeli' => $this->pic->nama_akun,
-                        'npwp' => $this->pic->npwp_akun,
-                        'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
-                        'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
-                        'dpp' => $this->dpp,
-                        'dpp_lain' => ($this->dpp_lain ?? 0),
-                        'ppn' => ($this->ppn ?? 0),
-                        'ppnbm' => ($this->ppnbm ?? 0),
-                        'type' => 'original'
-                    ],
-                    // Data retur (nilai negatif)
-                    [
-                        'nama_pembeli' => $this->pic->nama_akun,
-                        'npwp' => $this->pic->npwp_akun,
-                        'faktur_pajak_nomor' => $this->nomor_retur ?? $this->nomor_faktur_pajak,
-                        'faktur_pajak_tanggal' => $this->tanggal_retur ?? $this->tanggal_faktur_pajak,
-                        'dpp' => 0, // atau bisa pakai dpp original jika diperlukan
-                        'dpp_lain' => ($this->dpp_lain_retur ?? 0),
-                        'ppn' => ($this->ppn_retur ?? 0),
-                        'ppnbm' => ($this->ppnbm_retur ?? 0),
-                        'type' => 'retur'
-                    ]
-                ];
-            } else {
-                // Data normal (tidak retur)
-                return [
-                    'nama_pembeli' => $this->pic->nama_akun,
-                    'npwp' => $this->pic->npwp_akun,
-                    'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
-                    'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
-                    'dpp' => $this->dpp,
-                    'dpp_lain' => ($this->dpp_lain ?? 0),
-                    'ppn' => ($this->ppn ?? 0),
-                    'ppnbm' => ($this->ppnbm ?? 0),
-                ];
-            }
+                return $this->handleB2Format();
             case JenisSptPpnEnum::B3->value:
                 if ($this->is_retur) {
                     // Return array dengan 2 data: original dan retur
@@ -301,6 +261,51 @@ class FakturResource extends JsonResource
         ];
     }
 
+    private function handleB2Format()
+    {
+        $data = [];
+        $dataRetur = [];
+
+        foreach ($this->collection as $faktur) {
+            // Data normal selalu masuk ke array 'data'
+            $normalData = [
+                'nama_pembeli' => $faktur->pic->nama_akun,
+                'npwp' => $faktur->pic->npwp_akun,
+                'faktur_pajak_nomor' => $faktur->nomor_faktur_pajak,
+                'faktur_pajak_tanggal' => $faktur->tanggal_faktur_pajak,
+                'dpp' => $faktur->dpp,
+                'dpp_lain' => ($faktur->dpp_lain ?? 0),
+                'ppn' => ($faktur->ppn ?? 0),
+                'ppnbm' => ($faktur->ppnbm ?? 0),
+            ];
+
+            $data[] = $normalData;
+
+            // Kalau ada retur, tambahkan ke array 'data_retur'
+            if ($faktur->is_retur) {
+                $returData = [
+                    'nama_pembeli' => $faktur->pic->nama_akun,
+                    'npwp' => $faktur->pic->npwp_akun,
+                    'faktur_pajak_nomor' => $faktur->nomor_retur ?? $faktur->nomor_faktur_pajak,
+                    'faktur_pajak_tanggal' => $faktur->tanggal_retur ?? $faktur->tanggal_faktur_pajak,
+                    'dpp' => 0,
+                    'dpp_lain' => ($faktur->dpp_lain_retur ?? 0),
+                    'ppn' => ($faktur->ppn_retur ?? 0),
+                    'ppnbm' => ($faktur->ppnbm_retur ?? 0),
+                ];
+
+                $dataRetur[] = $returData;
+            }
+        }
+
+        $result = ['data' => $data];
+
+        if (!empty($dataRetur)) {
+            $result['data_retur'] = $dataRetur;
+        }
+
+        return $result;
+    }
     private function mapDetailTransaksiWithFallback($transaksi): array
     {
         return [
