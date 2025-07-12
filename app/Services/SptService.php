@@ -471,6 +471,14 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $data['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2d->sum('ppn_retur');
         $data['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2d->sum('ppnbm_retur');
 
+        $fakturs2h = $faktursMasukan->whereIn('kode_transaksi', [7, 8])->where(function($faktur) {
+            return $faktur->ppnbm !== null && $faktur->ppnbm > 0;
+        });
+        $data['cl_2h_dpp']      = $fakturs2h->sum('dpp');
+        $data['cl_2h_dpp_lain'] = $fakturs2h->sum('dpp_lain') + $fakturs2h->sum('dpp_lain_retur');
+        $data['cl_2h_ppn']      = $fakturs2h->sum('ppn') + $fakturs2h->sum('ppn_retur');
+        $data['cl_2h_ppnbm']    = $fakturs2h->sum('ppnbm') + $fakturs2h->sum('ppnbm_retur');
+
          $data['cl_2g_dpp'] =
            ($data['cl_2a_dpp'] ?? 0)
          + ($data['cl_2b_dpp'] ?? 0)
@@ -641,6 +649,14 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_ppn['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') + $fakturs2d->sum('dpp_lain_retur');
                 $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2d->sum('ppn_retur');
                 $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2d->sum('ppnbm_retur');
+
+                $fakturs2h = $faktursMasukan->whereIn('kode_transaksi', [7, 8])->where(function($faktur) {
+                    return $faktur->ppnbm !== null && $faktur->ppnbm > 0;
+                });
+                $data_spt_ppn['cl_2h_dpp']      = $fakturs2h->sum('dpp');
+                $data_spt_ppn['cl_2h_dpp_lain'] = $fakturs2h->sum('dpp_lain') + $fakturs2h->sum('dpp_lain_retur');
+                $data_spt_ppn['cl_2h_ppn']      = $fakturs2h->sum('ppn') + $fakturs2h->sum('ppn_retur');
+                $data_spt_ppn['cl_2h_ppnbm']    = $fakturs2h->sum('ppnbm') + $fakturs2h->sum('ppnbm_retur');
 
                 $data_spt_ppn['spt_id'] = $spt->id;
 
