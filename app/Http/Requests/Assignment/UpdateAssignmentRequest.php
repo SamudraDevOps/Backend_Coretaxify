@@ -14,7 +14,7 @@ class UpdateAssignmentRequest extends FormRequest {
             'assignment_code' => 'nullable|string',
             'start_period' => 'nullable|date_format:Y-m-d H:i:s',
             'end_period' => 'nullable|date_format:Y-m-d H:i:s',
-            'duration' => 'nullablea|integer',
+            'duration' => 'nullable|integer',
             'supporting_file' => 'nullable|file',
         ];
     }

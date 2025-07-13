@@ -22,11 +22,17 @@ class AssignmentUserRepository extends BaseRepository implements AssignmentUserR
 
         $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'user_id']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 
         $query = $this->applySorting($query, $searchParams);
+
+        $relationFilterableColumns = [
+            'assignment' => ['tipe']
+        ];
+
+        $query = $this->applyRelationColumnFilters($query, $searchParams, $relationFilterableColumns);
 
         return $query;
     }

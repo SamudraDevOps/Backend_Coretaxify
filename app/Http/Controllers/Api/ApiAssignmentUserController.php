@@ -22,9 +22,9 @@ class ApiAssignmentUserController extends ApiController {
     public function index(Request $request) {
         $perPage = request()->get('perPage', 20);
         $user = auth()->user();
-        $assignmentUser = $this->assignmentUserService->getAssignmentUserByUserId($user->id, $perPage);
-
-        return AssignmentUserResource::collection($assignmentUser);
+        // $assignmentUser = $this->assignmentUserService->getAssignmentUserByUserId($user->id, $perPage);
+        // return AssignmentUserResource::collection($assignmentUser);
+        return AssignmentUserResource::collection($this->assignmentUserService->getAllPaginated($request->query(), $perPage));
     }
 
     /**

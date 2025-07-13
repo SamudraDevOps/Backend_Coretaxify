@@ -39,6 +39,10 @@ class AssignmentResource extends JsonResource {
             $data['supporting_file_url'] = null;
         }
 
+        if(!empty($this->duration)) {
+            $data['duration'] = $this->duration;
+        }
+        
         return $data;
     }
 
