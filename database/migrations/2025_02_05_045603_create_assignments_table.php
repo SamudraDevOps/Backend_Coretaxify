@@ -6,8 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Support\Enums\AssignmentTypeEnum;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,10 +17,12 @@ return new class extends Migration
             $table->foreignId('group_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('task_id')->nullable()->constrained()->onDelete('cascade');
+            $table->enum('tipe', AssignmentTypeEnum::toArray());
             $table->string('name');
             $table->string('assignment_code')->nullable()->unique();
             $table->dateTime('start_period')->nullable();
             $table->dateTime('end_period')->nullable();
+            $table->integer('duration')->nullable();
             $table->string('supporting_file')->nullable();
             $table->timestamps();
         });

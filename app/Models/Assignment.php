@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Assignment extends Model
 {
+    private const TYPE_ASSIGNMENT = 'assignment';
+    private const TYPE_EXAM = 'exam';
+
     protected $guarded = ['id'];
 
     protected $fillable = [
@@ -19,10 +22,17 @@ class Assignment extends Model
         'task_id',
         'name',
         'assignment_code',
+        'tipe',
         'start_period',
         'end_period',
+        'duration',
         'supporting_file',
     ];
+
+    public function isExam()
+    {
+        return $this->tipe === self::TYPE_EXAM;
+    }
 
     public function users(): BelongsToMany
     {
@@ -35,17 +45,20 @@ class Assignment extends Model
     }
 
     // Many To Many
-    public function assignmentUsers(): HasMany {
+    public function assignmentUsers(): HasMany
+    {
         return $this->hasMany(AssignmentUser::class);
     }
 
     // 1 Praktikum 1 Kelas
-    public function group(): BelongsTo {
+    public function group(): BelongsTo
+    {
         return $this->belongsTo(Group::class);
     }
 
 
-    public function task(): BelongsTo {
+    public function task(): BelongsTo
+    {
         return $this->belongsTo(Task::class);
     }
 
@@ -53,7 +66,8 @@ class Assignment extends Model
     //     return $this->belongsTo(Task::class);
     // }
 
-    public static function generateTaskCode($existingNumber = null) {
+    public static function generateTaskCode($existingNumber = null)
+    {
         // $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
         // if($existingNumber) {
