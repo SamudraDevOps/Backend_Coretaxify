@@ -9,7 +9,11 @@ use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudSe
 interface AssignmentServiceInterface extends BaseCrudServiceInterface {
     public function create(array $data, ?Group $group = null): ?Model;
 
+    public function createExam(array $data): ?Model;
+
     public function joinAssignment(array $data): ?Model;
+
+    public function joinExam(array $data): ?Model;
 
     public function getAssignmentsByUserId($userId, $perPage);
 

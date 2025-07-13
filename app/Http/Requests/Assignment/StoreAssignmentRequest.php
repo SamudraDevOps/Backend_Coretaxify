@@ -26,6 +26,21 @@ class StoreAssignmentRequest extends FormRequest {
                 return [
                     'assignment_code' => 'required|string',
                 ];
+            case IntentEnum::API_USER_CREATE_EXAM->value:
+                return [
+                    'name' => 'required|string|max:255',
+                    'task_id' => 'required|exists:tasks,id',
+                    'assignment_code' => 'required|string|max:255',
+                    'start_period' => 'required|date_format:Y-m-d H:i:s',
+                    'end_period' => 'required|date_format:Y-m-d H:i:s',
+                    'duration' => 'required|integer',
+                    // 'import_file' => 'sometimes|mimes:xlsx,xls,csv',
+                    'supporting_file' => 'sometimes|file',
+                ];
+            case IntentEnum::API_USER_JOIN_EXAM->value:
+                return [
+                    'assignment_code' => 'required|string',
+                ];
             default:
                 return [
                     'groups' => 'sometimes|array',

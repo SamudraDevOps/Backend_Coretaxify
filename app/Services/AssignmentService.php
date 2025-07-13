@@ -11,13 +11,16 @@ use App\Models\AssignmentUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\Support\Enums\AssignmentTypeEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
 use App\Support\Interfaces\Repositories\AssignmentRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
-class AssignmentService extends BaseCrudService implements AssignmentServiceInterface {
-    protected function getRepositoryClass(): string {
+class AssignmentService extends BaseCrudService implements AssignmentServiceInterface
+{
+    protected function getRepositoryClass(): string
+    {
         return AssignmentRepositoryInterface::class;
     }
 
@@ -29,9 +32,10 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     //     return $Assignment;
     // }
 
-    public function create(array $data, ?Group $group = null): ?Model {
+    public function create(array $data, ?Group $group = null): ?Model
+    {
         $filename = null;
-        if(isset($data['supporting_file'])) {
+        if (isset($data['supporting_file'])) {
             $filename = $this->importData($data['supporting_file']);
         }
 
@@ -40,25 +44,6 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         if ($group) {
             $data['groups'] = [$group->id];
         }
-        // $assignment = Assignment::create([
-        //     'user_id' => $data['user_id'],
-        //     'task_id' => $data['task_id'],
-        //     'name' => $data['name'],
-        //     'assignment_code' => $data['assignment_code'],
-        //     'start_period' => $data['start_period'],
-        //     'end_period' => $data['end_period'],
-        //     'supporting_file' => $filename,
-        // ]);
-
-        // AssignmentUser::create([
-        //     'user_id' => auth()->id(),
-        //     'assignment_id' => $assignment->id,
-        // ]);
-
-        // Many to Many
-        // if(isset($data['groups'])){
-        //     $assignment->groups()->attach($data['groups']);
-        // }
 
         // 1 Praktikum 1 Kelas
         if (isset($data['groups'])) {
@@ -68,6 +53,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
                     'group_id' => $group,
                     'user_id' => $data['user_id'],
                     'task_id' => $data['task_id'],
+                    'tipe' => AssignmentTypeEnum::ASSIGNMENT->value,
                     'name' => $data['name'],
                     'assignment_code' => $data['assignment_code'],
                     'start_period' => $data['start_period'],
@@ -77,7 +63,17 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             }
         } else {
             $data['assignment_code'] = Assignment::generateTaskCode();
-            $assignment = parent::create($data);
+            $assignment = parent::create([
+                'group_id' => $group,
+                'user_id' => $data['user_id'],
+                'task_id' => $data['task_id'],
+                'tipe' => AssignmentTypeEnum::ASSIGNMENT->value,
+                'name' => $data['name'],
+                'assignment_code' => $data['assignment_code'],
+                'start_period' => $data['start_period'],
+                'end_period' => $data['end_period'],
+                'supporting_file' => $filename,
+            ]);
         }
 
         $user = auth()->user();
@@ -88,7 +84,37 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignment;
     }
 
-    public function update($keyOrModel, array $data): ?Model {
+    public function createExam(array $data): ?Model {
+        $filename = null;
+        if(isset($data['supporting_file'])) {
+            $filename = $this->importData($data['supporting_file']);
+        }
+
+        $data['user_id'] = auth()->id();
+        $exam = Assignment::create([
+            'user_id' => $data['user_id'],
+            'task_id' => $data['task_id'],
+            'tipe' => AssignmentTypeEnum::EXAM->value,
+            'name' => $data['name'],
+            'assignment_code' => $data['assignment_code'],
+            'start_period' => $data['start_period'],
+            'end_period' => $data['end_period'],
+            'duration' => $data['duration'],
+            'supporting_file' => $filename,
+        ]);
+
+        // if (!empty($data['import_file'])) {
+        //     $this->importData($data['import_file']);
+        // }
+
+        // Attach logged in user to the newly created group
+        // $exam->users()->attach(auth()->id());
+
+        return $exam;
+    }
+
+    public function update($keyOrModel, array $data): ?Model
+    {
         $assignment = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
 
 
@@ -96,7 +122,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         // return parent::update($keyOrModel, $data);
         $assignment = parent::update($keyOrModel, $data);
 
-        if(isset($data['supporting_file'])) {
+        if (isset($data['supporting_file'])) {
             Storage::disk('public')->delete('support-file.' . $assignment->file_path);
             $filename = $this->importData($data['supporting_file']);
             $assignment->update([
@@ -113,7 +139,8 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignment;
     }
 
-    public function delete($keyOrModel): bool {
+    public function delete($keyOrModel): bool
+    {
         $model = $keyOrModel instanceof Model ? $keyOrModel : $this->find($keyOrModel);
 
         $model->users()->detach();
@@ -125,14 +152,16 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
     }
 
 
-    private function importData(UploadedFile $file) {
+    private function importData(UploadedFile $file)
+    {
         $filename = time() . '.' . $file->getClientOriginalName();
         $file->storeAs('support-file', $filename, 'public');
 
         return $filename;
     }
 
-    public function joinAssignment(array $data): ?Model {
+    public function joinAssignment(array $data): ?Model
+    {
         $assignment = Assignment::where('assignment_code', $data['assignment_code'])->first();
 
         if (!$assignment) {
@@ -174,11 +203,28 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignmentUser;
     }
 
-    public function getAssignmentsByUserId($userId, $perPage = 15) {
+    public function joinExam(array $data): ?Model
+    {
+        $exam = Assignment::where('assignment_code', $data['assignment_code'])->first();
+
+        if (!$exam) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException("Ujian dengan kode {$data['assignment_code']} tidak ditemukan");
+        }
+
+        $examUser = AssignmentUser::create([
+            'user_id' => auth()->id(),
+            'assignment_id' => $exam->id,
+        ]);
+
+        return $examUser;
+    }
+
+    public function getAssignmentsByUserId($userId, $perPage = 15)
+    {
         $repository = app($this->getRepositoryClass());
         $user = auth()->user();
 
-        if($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+        if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
             return $repository->query()->whereHas('users', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })->paginate($perPage);
@@ -189,7 +235,8 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         }
     }
 
-    public function downloadFile(Assignment $assignment) {
+    public function downloadFile(Assignment $assignment)
+    {
         $filename = $assignment->supporting_file;
         $path = storage_path('app/public/support-file/' . $filename);
         return response()->download($path);

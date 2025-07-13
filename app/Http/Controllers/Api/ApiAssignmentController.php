@@ -79,6 +79,32 @@ class ApiAssignmentController extends ApiController
                         'message' => 'Anda tidak memiliki izin untuk bergabung dengan tugas / praktikum.',
                     ], 403);
                 }
+            case IntentEnum::API_USER_CREATE_EXAM->value:
+                if ($user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('admin')) {
+                    return $this->assignmentService->createExam($request->validated());
+                } else {
+                    return response()->json([
+                        'message' => 'Anda tidak memiliki izin untuk membuat ujian',
+                    ], 403);
+                }
+            case IntentEnum::API_USER_JOIN_EXAM->value:
+                if ($user->hasRole('mahasiswa') || $user->hasRole('mahasiswa-psc')) {
+                    try {
+                        $result = $this->assignmentService->joinExam($request->validated());
+                        return response()->json([
+                            'message' => 'Anda berhasil bergabung dengan ujian.',
+                            'data' => $result,
+                        ], 200);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => $e->getMessage(),
+                        ], 403);
+                    }
+                } else {
+                    return response()->json([
+                        'message' => 'Anda tidak memiliki izin untuk bergabung dengan ujian.',
+                    ], 403);
+                }
         }
     }
 

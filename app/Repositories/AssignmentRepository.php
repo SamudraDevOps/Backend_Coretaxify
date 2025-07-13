@@ -22,7 +22,7 @@ class AssignmentRepository extends BaseRepository implements AssignmentRepositor
 
         $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'tipe']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 
