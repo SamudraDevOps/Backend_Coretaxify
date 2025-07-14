@@ -118,7 +118,7 @@ class FakturResource extends JsonResource
             case IntentEnum::API_GET_FAKTUR_MASUKAN_BY_NOMOR_FAKTUR->value:
                 return [
                     'id' => $this->id,
-                    'nomor_faktur_pajak' => $this->nomor_faktur_pajak . ' - ' . $akunPenerimaResource->nama_akun,
+                    'nomor_faktur_pajak' => $this->nomor_faktur_pajak . ' - ' . $this->akun_pengirim->nama_akun,
                 ];
             case IntentEnum::API_GET_FAKTUR_RETUR_KELUARAN->value:
                 return [

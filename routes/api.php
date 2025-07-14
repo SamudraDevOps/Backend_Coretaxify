@@ -223,10 +223,13 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                     Route::get('{assignment}/sistem/{sistem}/getAkun', [ApiFakturController::class, 'getCombinedAkunData']);
 
+                    Route::post('{assignment}/sistem/{sistem}/faktur/delete-multiple', [ApiFakturController::class, 'deleteMultipleFakturs']);
+                    Route::post('{assignment}/sistem/{sistem}/faktur/approve-multiple', [ApiFakturController::class, 'multipleDraftFakturToFix']);
+                    Route::post('{assignment}/sistem/{sistem}/faktur/kreditkan-multiple', [ApiFakturController::class, 'multipleKreditkanFakturs']);
+                    Route::post('{assignment}/sistem/{sistem}/faktur/unkreditkan-multiple', [ApiFakturController::class, 'multipleUnkreditkanFakturs']);
+
                     // Route::post('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', [ApiFakturController::class, 'addDetailTransaksi']);
                     // Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
-
-                    Route::post('{assignment}/sistem/{sistem}/faktur/approve-multiple', [ApiFakturController::class, 'multipleDraftFakturToFix']);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/sistem-tambahan', ApiSistemTambahanController::class);
 
