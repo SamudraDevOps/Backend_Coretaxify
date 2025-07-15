@@ -29,7 +29,9 @@ class FakturCollection extends ResourceCollection
     private function handleB2Format()
     {
         $data = [];
-        $dataRetur = [];
+
+        // Get faktur retur data from additional - pastikan menggunakan cara yang benar
+        $fakturReturCollection = collect($this->additional['faktur_retur'] ?? []);
 
         foreach ($this->collection as $faktur) {
             // Data normal selalu masuk ke array 'data'
@@ -45,31 +47,25 @@ class FakturCollection extends ResourceCollection
             ];
 
             $data[] = $normalData;
-
-            // Kalau ada retur, tambahkan ke array 'data_retur'
-            if ($faktur->is_retur) {
-                $returData = [
-                    'nama_pembeli' => $faktur->pic->nama_akun,
-                    'npwp' => $faktur->pic->npwp_akun,
-                    'faktur_pajak_nomor' => $faktur->nomor_retur ?? $faktur->nomor_faktur_pajak,
-                    'faktur_pajak_tanggal' => $faktur->tanggal_retur ?? $faktur->tanggal_faktur_pajak,
-                    'dpp' => 0,
-                    'dpp_lain' => ($faktur->dpp_lain_retur ?? 0),
-                    'ppn' => ($faktur->ppn_retur ?? 0),
-                    'ppnbm' => ($faktur->ppnbm_retur ?? 0),
-                ];
-
-                $dataRetur[] = $returData;
-            }
         }
 
-        $result = ['data' => $data];
+        // Process semua faktur retur yang ada
+        foreach ($fakturReturCollection as $fakturRetur) {
+            $returData = [
+                'nama_pembeli' => $fakturRetur['pic']['nama_akun'] ?? $fakturRetur->pic->nama_akun,
+                'npwp' => $fakturRetur['pic']['npwp_akun'] ?? $fakturRetur->pic->npwp_akun,
+                'faktur_pajak_nomor' => $fakturRetur['nomor_retur'] ?? $fakturRetur->nomor_retur ?? ($fakturRetur['nomor_faktur_pajak'] ?? $fakturRetur->nomor_faktur_pajak),
+                'faktur_pajak_tanggal' => $fakturRetur['tanggal_retur'] ?? $fakturRetur->tanggal_retur ?? ($fakturRetur['tanggal_faktur_pajak'] ?? $fakturRetur->tanggal_faktur_pajak),
+                'dpp' => 0,
+                'dpp_lain' => $fakturRetur['dpp_lain_retur'] ?? $fakturRetur->dpp_lain_retur ?? 0,
+                'ppn' => $fakturRetur['ppn_retur'] ?? $fakturRetur->ppn_retur ?? 0,
+                'ppnbm' => $fakturRetur['ppnbm_retur'] ?? $fakturRetur->ppnbm_retur ?? 0,
+            ];
 
-        if (!empty($dataRetur)) {
-            $result['data_retur'] = $dataRetur;
+            $data[] = $returData; 
         }
 
-        return $result;
+        return ['data' => $data];
     }
 
     private function handleB3Format()

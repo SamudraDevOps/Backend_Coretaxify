@@ -98,6 +98,19 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 $data['is_retur'] = true;
                 $data['nomor_retur'] = $noRetur;
 
+                if (isset($data['tanggal_retur']) && !empty($data['tanggal_retur'])) {
+                    $tanggalRetur = \Carbon\Carbon::parse($data['tanggal_retur']);
+
+                    $namaBulan = [
+                        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+                        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+                        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                    ];
+
+                    $data['masa_pajak_retur'] = $namaBulan[$tanggalRetur->month];
+                    $data['tahun_retur'] = $tanggalRetur->year;
+                }
+
                 $faktur = parent::update($keyOrModel, $data);
 
                 $this->recalculateReturTotals($faktur);
