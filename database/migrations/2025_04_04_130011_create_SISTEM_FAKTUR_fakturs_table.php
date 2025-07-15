@@ -23,11 +23,10 @@ return new class extends Migration
             $table->boolean('is_akun_tambahan')->nullable();
             $table->boolean('is_retur')->default(false);
             $table->enum('status', FakturStatusEnum::toArray())->nullable();
-            $table->string('nomor_faktur_pajak')->nullable();
+            $table->string('kode_transaksi')->nullable();
             $table->string('masa_pajak')->nullable();
             $table->string('tahun')->nullable();
-            $table->string('esign_status')->nullable();
-            $table->string('nomor_retur')->nullable();
+            $table->string('nomor_faktur_pajak')->nullable();
             $table->decimal('dpp',18,2)->nullable();
             $table->decimal('ppn',18,2)->nullable();
             $table->decimal('ppnbm',18,2)->nullable();
@@ -35,15 +34,20 @@ return new class extends Migration
             $table->decimal('ppn_retur',18,2)->nullable();
             $table->decimal('dpp_lain_retur',18,2)->nullable();
             $table->decimal('ppnbm_retur',18,2)->nullable();
+            $table->date('tanggal_retur')->nullable();
+            $table->string('masa_pajak_retur')->nullable();
+            $table->string('tahun_retur')->nullable();
+
+            $table->string('esign_status')->nullable();
+            $table->string('nomor_retur')->nullable();
             $table->string('penandatangan')->nullable();
             $table->string('referensi')->nullable();
-            $table->string('kode_transaksi')->nullable();
             $table->string('informasi_tambahan')->nullable();
             $table->string('cap_fasilitas')->nullable();
             $table->boolean('dilaporkan_oleh_penjual')->nullable();
             $table->boolean('dilaporkan_oleh_pemungut_ppn')->nullable();
             $table->date('tanggal_faktur_pajak')->nullable();
-            $table->date('tanggal_retur')->nullable();
+
             $table->timestamps();
         });
 
