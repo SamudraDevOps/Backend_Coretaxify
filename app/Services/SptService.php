@@ -566,6 +566,15 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     }
 
     public function create(array $data): Model{
+        $user = auth()->user();
+
+        if ($user->hasRole('mahasiswa') || $user->hasRole('dosen')) {
+            $limitResponse = $this->checkLimit($user);
+            if ($limitResponse) {
+                return $limitResponse;
+            }
+        }
+
         $month = $data['masa_bulan'];
         $year = $data['masa_tahun'];
         $pic = $data['pic_id'];
@@ -1063,6 +1072,38 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     'message' => 'Intent tidak valid',
                 ], 400);
         }
+    }
+
+    private function getContractSPTLimit($user)
+    {
+        return $user->contract->spt;
+    }
+
+    private function getContractSPTCount($contract)
+    {
+        return Spt::where(function ($query) use ($contract) {
+            $query->whereHas('sistem', function ($subQuery) use ($contract) {
+                $subQuery->whereHas('assignment_user', function ($assignmentQuery) use ($contract) {
+                    $assignmentQuery->whereHas('user', function ($userQuery) use ($contract) {
+                        $userQuery->where('contract_id', $contract->id);
+                    });
+                });
+            });
+        })->count();
+    }
+
+    private function checkLimit($user)
+    {
+        $limit = $this->getContractSPTLimit($user);
+        $contractSPTCount = $this->getContractSPTCount($user->contract);
+
+        if ($contractSPTCount >= $limit) {
+            return response()->json([
+                'message' => "Batas pembuatan SPT sebanyak {$limit} telah tercapai.",
+            ], 422);
+        }
+
+        return null;
     }
 
     public function calculateSptbackup(Spt $spt, Request $request) {

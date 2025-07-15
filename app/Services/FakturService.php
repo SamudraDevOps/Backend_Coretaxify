@@ -26,6 +26,16 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     }
 
     public function create(array $data , ?Sistem $sistem = null  ): ?Model {
+
+        $user = auth()->user();
+
+        if ($user->hasRole('mahasiswa') || $user->hasRole('dosen')) {
+            $limitResponse = $this->checkLimit($user);
+            if ($limitResponse) {
+                return $limitResponse;
+            }
+        }
+
         $kodeTransaksi = KodeTransaksi::where('kode', $data['kode_transaksi'])->first();
 
         $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
@@ -279,5 +289,35 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         ];
 
         parent::update($faktur, $returTotals);
+    }
+
+    private function getContractFakturLimit($user)
+    {
+        return $user->contract->faktur;
+    }
+
+    private function getContractFakturCount($contract)
+    {
+        return Faktur::whereHas('akun_pengirim', function ($query) use ($contract) {
+            $query->whereHas('assignment_user', function ($subQuery) use ($contract) {
+                $subQuery->whereHas('user', function ($userQuery) use ($contract) {
+                    $userQuery->where('contract_id', $contract->id);
+                });
+            });
+        })->count();
+    }
+
+    private function checkLimit($user)
+    {
+        $limit = $this->getContractFakturLimit($user);
+        $contractFakturCount = $this->getContractFakturCount($user->contract);
+
+        if ($contractFakturCount >= $limit) {
+            return response()->json([
+                'message' => "Batas pembuatan E-Faktur sebanyak {$limit} telah tercapai.",
+            ], 422);
+        }
+
+        return null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Bupot;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 use App\Support\Interfaces\Repositories\BupotRepositoryInterface;
 use App\Support\Interfaces\Services\BupotServiceInterface;
@@ -16,6 +17,15 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
 
     public function create(array $data): ?Model
     {
+        $user = auth()->user();
+
+        if ($user->hasRole('mahasiswa') || $user->hasRole('dosen')) {
+            $limitResponse = $this->checkLimit($user);
+            if ($limitResponse) {
+                return $limitResponse;
+            }
+        }
+
         $data['nomor_pemotongan'] = $this->generateNomorPemotongan();
 
         return parent::create($data);
@@ -127,4 +137,33 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
         ], 400);
     }
 
+    private function getContractBupotLimit($user)
+    {
+        return $user->contract->bupot;
+    }
+
+    private function getContractBupotCount($contract)
+    {
+        return Bupot::whereHas('pembuat', function ($query) use ($contract) {
+            $query->whereHas('assignment_user', function ($subQuery) use ($contract) {
+                $subQuery->whereHas('user', function ($userQuery) use ($contract) {
+                    $userQuery->where('contract_id', $contract->id);
+                });
+            });
+        })->count();
+    }
+
+    private function checkLimit($user)
+    {
+        $limit = $this->getContractBupotLimit($user);
+        $contractBupotCount = $this->getContractBupotCount($user->contract);
+
+        if ($contractBupotCount >= $limit) {
+            return response()->json([
+                'message' => "Batas pembuatan Bupot sebanyak {$limit} telah tercapai.",
+            ], 422);
+        }
+
+        return null;
+    }
 }
