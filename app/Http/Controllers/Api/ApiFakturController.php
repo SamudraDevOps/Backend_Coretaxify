@@ -241,8 +241,6 @@ class ApiFakturController extends ApiController
 
     public function multipleKreditkanFakturs(Assignment $assignment, Sistem $sistem,Request $request)
     {
-        $this->fakturService->authorizeAccess($assignment, $sistem);
-
         $fakturIds = $request->input('faktur_ids', []);
 
         if (empty($fakturIds)) {
@@ -256,8 +254,6 @@ class ApiFakturController extends ApiController
 
     public function multipleUnkreditkanFakturs(Assignment $assignment, Sistem $sistem,Request $request)
     {
-        $this->fakturService->authorizeAccess($assignment, $sistem);
-
         $fakturIds = $request->input('faktur_ids', []);
 
         if (empty($fakturIds)) {
