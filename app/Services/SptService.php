@@ -604,8 +604,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 ->get();
 
                 // $data['cl_1a2_dpp'] dokumen lain
-                $data_spt_ppn['cl_1a1_dpp'] = 0;
-
                 $fakturs1a2 = $fakturs->whereIn('kode_transaksi', [4, 5]);
                 $data_spt_ppn['cl_1a2_dpp']      = $fakturs1a2->sum('dpp');
                 $data_spt_ppn['cl_1a2_dpp_lain'] = $fakturs1a2->sum('dpp_lain');
