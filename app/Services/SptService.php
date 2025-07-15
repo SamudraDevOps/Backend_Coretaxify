@@ -439,6 +439,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
          $data['cl_1a_jumlah_ppnbm'] =
            ($data['cl_1a2_ppnbm'] ?? 0)
          + ($data['cl_1a3_ppnbm'] ?? 0)
+         + ($data['cl_1a4_ppnbm'] ?? 0)
          + ($data['cl_1a5_ppnbm'] ?? 0)
          + ($data['cl_1a6_ppnbm'] ?? 0)
          + ($data['cl_1a7_ppnbm'] ?? 0)
@@ -454,7 +455,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             ->where('is_kredit', true)
             ->get();
 
-        $fakturMasukanRetur = Faktur::where('akun_penerima_id', $data['badan_id'])
+        $fakturMasukanRetur = Faktur::where('akun_penerima_id', $request['badan_id'])
                     ->where('masa_pajak_retur', $month)
                     ->where('tahun_retur', $year)
                     ->where('status', FakturStatusEnum::APPROVED->value)
