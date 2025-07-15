@@ -7,6 +7,7 @@ use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\SptResource;
 use App\Http\Requests\Spt\StoreSptRequest;
 use App\Http\Requests\Spt\UpdateSptRequest;
@@ -45,7 +46,7 @@ class ApiSptController extends ApiController {
         $data['pic_id'] = $request->pic_id;
         $data['jenis_pajak'] = $request->jenis_pajak;
         $data['model'] = $request->model;
-        
+
         return $this->sptService->create($data);
     }
 
@@ -75,9 +76,31 @@ class ApiSptController extends ApiController {
      * Remove the specified resource from storage.
      */
     public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        try {
+            DB::beginTransaction();
 
-        return $this->sptService->delete($spt);
+            // Manual cascade delete jika diperlukan
+            $spt->spt_ppn()->delete();
+            $spt->spt_pph()->delete();
+            $spt->spt_unifikasi()->delete();
+
+            $spt->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'SPT berhasil dihapus'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus SPT: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request) {
