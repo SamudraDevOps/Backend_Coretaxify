@@ -60,7 +60,7 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         Request $request,
         int $perPage = 5
     ) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
 
@@ -78,9 +78,10 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
     public function getPihakTerkaitDetail(
         Assignment $assignment,
         Sistem $sistem,
-        PihakTerkait $pihakTerkait
+        PihakTerkait $pihakTerkait,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait);
+        $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait, $request);
 
         return $pihakTerkait;
     }
@@ -98,9 +99,10 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
         Assignment $assignment,
         Sistem $sistem,
         PihakTerkait $pihakTerkait,
-        array $data
+        array $data,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait);
+        $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait, $request);
 
         return $this->update($pihakTerkait, $data);
     }
@@ -116,9 +118,10 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
     public function deletePihakTerkait(
         Assignment $assignment,
         Sistem $sistem,
-        PihakTerkait $pihakTerkait
+        PihakTerkait $pihakTerkait,
+        Request $request
     ): bool {
-        $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait);
+        $this->authorizeAccessToPihakTerkait($assignment, $sistem, $pihakTerkait, $request);
 
         // Also delete related PIC records if needed
         Pic::where('akun_op_id', $pihakTerkait->akun_op)
@@ -135,14 +138,15 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
      * @param Sistem $sistem
      * @return void
      */
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    private function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user
@@ -162,13 +166,14 @@ class PihakTerkaitService extends BaseCrudService implements PihakTerkaitService
     private function authorizeAccessToPihakTerkait(
         Assignment $assignment,
         Sistem $sistem,
-        PihakTerkait $pihakTerkait
+        PihakTerkait $pihakTerkait,
+        Request $request
         ): void {
-            $this->authorizeAccess($assignment, $sistem);
-
+            $this->authorizeAccess($assignment, $sistem, $request);
+            $user_id = $request->get('user_id');
             // return 123;
             // Ensure the pihak terkait belongs to the specified sistem
-        if ($pihakTerkait->sistem_id !== $sistem->id) {
+        if (($pihakTerkait->sistem_id !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this pihak terkait');
         }
     }

@@ -22,7 +22,7 @@ class ApiSptController extends ApiController {
      * Display a listing of the resource.
      */
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
 
         $perPage = request()->get('perPage', 20);
 
@@ -37,7 +37,7 @@ class ApiSptController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
 
         $data = $request->all();
         $data['masa_bulan'] = $request->masa_bulan;
@@ -54,7 +54,7 @@ class ApiSptController extends ApiController {
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
 
         $detail_spt = $this->sptService->showDetailSpt($spt);
 
@@ -65,7 +65,7 @@ class ApiSptController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
         $request['badan_id'] = $sistem->id;
         $request['pic_id'] = $request->pic_id;
 
@@ -76,6 +76,7 @@ class ApiSptController extends ApiController {
      * Remove the specified resource from storage.
      */
     public function destroy(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
         try {
             DB::beginTransaction();
 
@@ -108,27 +109,27 @@ class ApiSptController extends ApiController {
     }
 
     public function calculateSpt(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
         $request['badan_id'] = $sistem->id;
         return $this->sptService->calculateSpt($spt, $request);
     }
 
     public function showFakturSptPpn(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
 
         $request['badan_id'] = $sistem->id;
         return $this->sptService->showFakturSptPpn($spt, $request);
     }
 
     public function showBupotSptPph(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
 
         $request['badan_id'] = $sistem->id;
         return $this->sptService->showBupotSptPph($spt, $request);
     }
 
     public function showBupotSptPphUnifikasi(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
-        $this->sptService->authorizeAccess($assignment, $sistem);
+        $this->sptService->authorizeAccess($assignment, $sistem, $request);
 
         $request['badan_id'] = $sistem->id;
         return $this->sptService->showBupotSptPphUnifikasi($spt, $request);

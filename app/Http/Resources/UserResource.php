@@ -6,12 +6,14 @@ use App\Http\Resources\RoleResource;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource {
-    public function toArray($request): array {
+class UserResource extends JsonResource
+{
+    public function toArray($request): array
+    {
         $intent = $request->get('intent');
         switch ($intent) {
             case IntentEnum::API_USER_CREATE_INSTRUKTUR->value:
-                return[
+                return [
                     'id' => $this->id,
                     'name' => $this->name,
                     'email' => $this->email,
@@ -38,7 +40,7 @@ class UserResource extends JsonResource {
                     'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
             default:
-                return [
+                $baseData = [
                     'id' => $this->id,
                     'name' => $this->name,
                     'email' => $this->email,
@@ -54,6 +56,15 @@ class UserResource extends JsonResource {
                     'created_at' => $this->created_at->toDateTimeString(),
                     'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
+
+                // Include pivot data if it exists (for assignment members with scores)
+                if ($this->pivot) {
+                    $baseData['pivot'] = [
+                        'score' => $this->pivot->score
+                    ];
+                }
+
+                return $baseData;
         }
     }
 }

@@ -83,7 +83,8 @@ interface DetailBankServiceInterface extends BaseCrudServiceInterface {
     public function getDetailBankDetail(
         Assignment $assignment,
         Sistem $sistem,
-        DetailBank $detailBank
+        DetailBank $detailBank,
+        Request $request
     ): ?Model;
 
     /**
@@ -99,7 +100,8 @@ interface DetailBankServiceInterface extends BaseCrudServiceInterface {
         Assignment $assignment,
         Sistem $sistem,
         DetailBank $detailBank,
-        array $data
+        array $data,
+        Request $request
     ): ?Model;
 
     /**
@@ -113,6 +115,7 @@ interface DetailBankServiceInterface extends BaseCrudServiceInterface {
     public function deleteDetailBank(
         Assignment $assignment,
         Sistem $sistem,
-        DetailBank $detailBank
+        DetailBank $detailBank,
+        Request $request
     ): bool;
 }

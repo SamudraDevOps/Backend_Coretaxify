@@ -168,7 +168,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     }
 
     public function getAllForSistem(Assignment $assignment, Sistem $sistem, Request $request,int $perPage = 5) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $intent = $request->query('intent');
 
@@ -211,14 +211,16 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return $this->getAllPaginated($filters, $perPage);
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
+
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? Auth::id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user
@@ -227,9 +229,10 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         ->firstOrFail();
     }
 
-    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem): void
+    public function authorizeFakturBelongsToSistem(Faktur $faktur, Sistem $sistem, Request $request): void
     {
-        if ($faktur->akun_pengirim_id !== $sistem->id) {
+        $user_id = $request->get('user_id');
+        if (($faktur->akun_pengirim_id !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this faktur');
         }
     }

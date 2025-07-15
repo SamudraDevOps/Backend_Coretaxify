@@ -73,12 +73,13 @@ class ApiDetailBankController extends ApiController
      * @param DetailBank $detailBank
      * @return DetailBankResource
      */
-    public function show(Assignment $assignment, Sistem $sistem, DetailBank $detailBank): DetailBankResource
+    public function show(Assignment $assignment, Sistem $sistem, DetailBank $detailBank, Request $request): DetailBankResource
     {
         $detailBank = $this->detailBankService->getDetailBankDetail(
             $assignment,
             $sistem,
-            $detailBank
+            $detailBank,
+            $request
         );
 
         return new DetailBankResource($detailBank);
@@ -97,13 +98,14 @@ class ApiDetailBankController extends ApiController
         Assignment $assignment,
         Sistem $sistem,
         UpdateDetailBankRequest $request,
-        DetailBank $detailBank
+        DetailBank $detailBank,
     ): DetailBankResource {
         $detailBank = $this->detailBankService->updateDetailBank(
             $assignment,
             $sistem,
             $detailBank,
-            $request->validated()
+            $request->validated(),
+            $request
         );
 
         return new DetailBankResource($detailBank);
@@ -120,12 +122,14 @@ class ApiDetailBankController extends ApiController
     public function destroy(
         Assignment $assignment,
         Sistem $sistem,
-        DetailBank $detailBank
+        DetailBank $detailBank,
+        Request $request
     ): JsonResponse {
         $result = $this->detailBankService->deleteDetailBank(
             $assignment,
             $sistem,
-            $detailBank
+            $detailBank,
+            $request
         );
 
         return response()->json([

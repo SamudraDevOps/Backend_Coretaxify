@@ -12,7 +12,7 @@ class SptPpnResource extends JsonResource {
         return [
             'id' => $this->id,
             'klasifikasi_lapangan_usaha' => $this->klasifikasi_lapangan_usaha,
-            'cl_1a1_dpp' => $this->cl_1a1_dpp,
+            'cl_1a1_dpp' => $this->cl_1a1_dpp ?? 0,
             'cl_1a2_dpp' => $this->cl_1a2_dpp,
             'cl_1a3_dpp' => $this->cl_1a3_dpp,
             'cl_1a4_dpp' => $this->cl_1a4_dpp,

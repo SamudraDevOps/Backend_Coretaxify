@@ -20,8 +20,8 @@ class ApiAuthUpdateRequest extends FormRequest {
     public function rules(): array {
         return [
             'name' => 'sometimes|string',
-            'email' => 'sometimes|string|email|min:8|unique:users',
-            'password' => 'sometimes|string|min:8|confirmed',
+            'email' => 'sometimes|string|email|min:4|unique:users',
+            'password' => 'sometimes|string|min:4|confirmed',
             'image' => 'sometimes|image|mimes:jpg,png,jpeg|max:2048',
         ];
     }

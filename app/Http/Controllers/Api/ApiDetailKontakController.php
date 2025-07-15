@@ -73,12 +73,13 @@ class ApiDetailKontakController extends ApiController
      * @param DetailKontak $detailKontak
      * @return DetailKontakResource
      */
-    public function show(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak): DetailKontakResource
+    public function show(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak, Request $request): DetailKontakResource
     {
         $detailKontak = $this->detailKontakService->getDetailKontakDetail(
             $assignment,
             $sistem,
-            $detailKontak
+            $detailKontak,
+            $request
         );
 
         return new DetailKontakResource($detailKontak);
@@ -103,7 +104,8 @@ class ApiDetailKontakController extends ApiController
             $assignment,
             $sistem,
             $detailKontak,
-            $request->validated()
+            $request->validated(),
+            $request
         );
 
         return new DetailKontakResource($detailKontak);
@@ -117,12 +119,13 @@ class ApiDetailKontakController extends ApiController
      * @param DetailKontak $detailKontak
      * @return JsonResponse
      */
-    public function destroy(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak): JsonResponse
+    public function destroy(Assignment $assignment, Sistem $sistem, DetailKontak $detailKontak, Request $request): JsonResponse
     {
         $result = $this->detailKontakService->deleteDetailKontak(
             $assignment,
             $sistem,
-            $detailKontak
+            $detailKontak,
+            $request
         );
 
         return response()->json([

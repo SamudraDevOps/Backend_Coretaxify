@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Faktur;
 use App\Models\Sistem;
 use App\Models\Assignment;
+use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\Auth;
@@ -17,14 +18,15 @@ class DetailTransaksiService extends BaseCrudService implements DetailTransaksiS
         return DetailTransaksiRepositoryInterface::class;
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Faktur $faktur): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Faktur $faktur, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user
@@ -37,9 +39,10 @@ class DetailTransaksiService extends BaseCrudService implements DetailTransaksiS
         }
     }
 
-    public function authorizeDetailTraBelongsToFaktur(Faktur $faktur, DetailTransaksi $detailTransaksi): void
+    public function authorizeDetailTraBelongsToFaktur(Faktur $faktur, DetailTransaksi $detailTransaksi, Request $request): void
     {
-        if ($faktur->id !== $detailTransaksi->faktur_id) {
+        $user_id = $request->get('user_id');
+        if (($faktur->id !== $detailTransaksi->faktur_id) && !$user_id) {
             abort(403, 'Unauthorized access to this faktur');
         }
     }

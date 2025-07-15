@@ -96,13 +96,14 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
     public function getSystemsByAssignment(Assignment $assignment, Request $request)
     {
         $intent = $request->get('intent');
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
         if ($intent === IntentEnum::API_GET_SISTEM_FIRST_ACCOUNT->value) {
-            return $this->getFirstSystemByAssignment($assignment);
+            return $this->getFirstSystemByAssignment($assignment, $request);
         }
 
         /** @var SistemRepositoryInterface $repository */
@@ -110,10 +111,11 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
         return $repository->getByAssignmentUser($assignmentUser->id);
     }
 
-    public function getFirstSystemByAssignment(Assignment $assignment)
+    public function getFirstSystemByAssignment(Assignment $assignment, Request $request)
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
@@ -125,12 +127,16 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
     public function getSystemDetail(Assignment $assignment, Model $sistem, Request $request, string $intent = null)
     {
         $intent = $intent ?? $request->get('intent');
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        $user = auth()->user();
+        $monitoringRole = $user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc');
+
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403);
         }
 

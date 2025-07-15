@@ -71,8 +71,9 @@ class ApiPicController extends ApiController
     /**
      * Get companies that the personal account can represent
      */
-    public function getRepresentedCompanies(Assignment $assignment, Sistem $sistem)
+    public function getRepresentedCompanies(Assignment $assignment, Sistem $sistem, Request $request)
     {
+        $user_id = $request->get('user_id');
         // Ensure this is a personal account
         if ($sistem->tipe_akun !== 'Orang Pribadi' && $sistem->tipe_akun !== 'Orang Pribadi Lawan Transaksi') {
             return response()->json(['message' => 'Akses ini hanya diperuntukkan untuk akun OP'], 400);
@@ -80,7 +81,7 @@ class ApiPicController extends ApiController
 
         // Get assignment user
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
@@ -97,8 +98,9 @@ class ApiPicController extends ApiController
     /**
      * Get representatives of a company account
      */
-    public function getCompanyRepresentatives(Assignment $assignment, Sistem $sistem)
+    public function getCompanyRepresentatives(Assignment $assignment, Sistem $sistem, Request $request)
     {
+        $user_id = $request->get('user_id');
         // Ensure this is a company account
         if ($sistem->tipe_akun !== 'Badan' && $sistem->tipe_akun !== 'Badan Lawan Transaksi') {
             return response()->json(['message' => 'Akses ini hanya diperuntukkan untuk akun badan'], 400);
@@ -106,7 +108,7 @@ class ApiPicController extends ApiController
 
         // Get assignment user
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 

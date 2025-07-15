@@ -90,7 +90,7 @@ class DataEkonomiService extends BaseCrudService implements DataEkonomiServiceIn
         Request $request
     ): ?Model
     {
-        $this->authorizeAccess($assignment, $sistem, $dataEkonomi);
+        $this->authorizeAccess($assignment, $sistem, $dataEkonomi, $request);
 
         return $dataEkonomi;
     }
@@ -128,14 +128,15 @@ class DataEkonomiService extends BaseCrudService implements DataEkonomiServiceIn
      * @param DataEkonomi $dataEkonomi
      * @return void
      */
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem, DataEkonomi $dataEkonomi): void
+    private function authorizeAccess(Assignment $assignment, Sistem $sistem, DataEkonomi $dataEkonomi, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
 

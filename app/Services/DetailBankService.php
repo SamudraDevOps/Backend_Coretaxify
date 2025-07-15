@@ -124,7 +124,7 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
         Request $request,
         int $perPage = 5
     ) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
 
@@ -150,9 +150,10 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
     public function getDetailBankDetail(
         Assignment $assignment,
         Sistem $sistem,
-        DetailBank $detailBank
+        DetailBank $detailBank,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToDetailBank($assignment, $sistem, $detailBank);
+        $this->authorizeAccessToDetailBank($assignment, $sistem, $detailBank, $request);
 
         return $detailBank;
     }
@@ -170,9 +171,10 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
         Assignment $assignment,
         Sistem $sistem,
         DetailBank $detailBank,
-        array $data
+        array $data,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToDetailBank($assignment, $sistem, $detailBank);
+        $this->authorizeAccessToDetailBank($assignment, $sistem, $detailBank, $request);
 
         return $this->update($detailBank, $data);
     }
@@ -188,9 +190,10 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
     public function deleteDetailBank(
         Assignment $assignment,
         Sistem $sistem,
-        DetailBank $detailBank
+        DetailBank $detailBank,
+        Request $request
     ): bool {
-        $this->authorizeAccessToDetailBank($assignment, $sistem, $detailBank);
+        $this->authorizeAccessToDetailBank($assignment, $sistem, $detailBank, $request);
 
         return $this->delete($detailBank);
     }
@@ -202,14 +205,15 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
      * @param Sistem $sistem
      * @return void
      */
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    private function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
 
@@ -230,12 +234,13 @@ class DetailBankService extends BaseCrudService implements DetailBankServiceInte
     private function authorizeAccessToDetailBank(
         Assignment $assignment,
         Sistem $sistem,
-        DetailBank $detailBank
+        DetailBank $detailBank,
+        Request $request
     ): void {
-        $this->authorizeAccess($assignment, $sistem);
-
+        $this->authorizeAccess($assignment, $sistem, $request);
+        $user_id = $request->get('user_id');
         // Ensure the detail bank belongs to the specified sistem
-        if ($detailBank->sistem_id !== $sistem->id) {
+        if (($detailBank->sistem_id !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this detail bank');
         }
     }

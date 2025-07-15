@@ -604,8 +604,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 ->get();
 
                 // $data['cl_1a2_dpp'] dokumen lain
-                $data_spt_ppn['cl_1a1_dpp'] = 0;
-
                 $fakturs1a2 = $fakturs->whereIn('kode_transaksi', [4, 5]);
                 $data_spt_ppn['cl_1a2_dpp']      = $fakturs1a2->sum('dpp');
                 $data_spt_ppn['cl_1a2_dpp_lain'] = $fakturs1a2->sum('dpp_lain');
@@ -931,14 +929,15 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return $spt;
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user
@@ -948,7 +947,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     }
 
     public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $picId = $request->query('pic_id');
         $bulan = $request->query('masa_bulan');

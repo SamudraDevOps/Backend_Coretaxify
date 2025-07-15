@@ -42,7 +42,8 @@ interface PihakTerkaitServiceInterface extends BaseCrudServiceInterface {
     public function getPihakTerkaitDetail(
         Assignment $assignment,
         Sistem $sistem,
-        PihakTerkait $pihakTerkait
+        PihakTerkait $pihakTerkait,
+        Request $request
     ): ?Model;
 
     /**
@@ -58,7 +59,8 @@ interface PihakTerkaitServiceInterface extends BaseCrudServiceInterface {
         Assignment $assignment,
         Sistem $sistem,
         PihakTerkait $pihakTerkait,
-        array $data
+        array $data,
+        Request $request
     ): ?Model;
 
     /**
@@ -72,6 +74,7 @@ interface PihakTerkaitServiceInterface extends BaseCrudServiceInterface {
     public function deletePihakTerkait(
         Assignment $assignment,
         Sistem $sistem,
-        PihakTerkait $pihakTerkait
+        PihakTerkait $pihakTerkait,
+        Request $request
     ): bool;
 }

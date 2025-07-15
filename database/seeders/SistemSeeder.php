@@ -20,7 +20,7 @@ class SistemSeeder extends Seeder
      */
     public function run(): void
     {
-        $assignmentUser = AssignmentUser::first();
+        $assignmentUser = AssignmentUser::where('user_id', 3)->first();
         $task_id = Assignment::where('id', $assignmentUser->assignment_id)->first()->task_id;
         $dataAccount = Account::where('task_id', $task_id)
             ->select('nama', 'npwp', 'account_type_id', 'alamat_utama', 'email')

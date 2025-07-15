@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assignment_users', function (Blueprint $table) {
+        Schema::create('self_assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assignment_id')->constrained()->onDelete('cascade');
-            $table->decimal('score', 5, 2)->nullable();
-            // $table->foreignId('lecture_task_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
+            $table->string('name');
+            $table->string('supporting_file')->nullable();
             $table->boolean('is_start')->default(false);
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assignment_users');
+        Schema::dropIfExists('self_assignments');
     }
 };

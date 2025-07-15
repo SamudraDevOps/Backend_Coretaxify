@@ -77,15 +77,12 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
             }
         } else {
             $data['assignment_code'] = Assignment::generateTaskCode();
-            $assignment = Assignment::create([
-                'user_id' => $data['user_id'],
-                'task_id' => $data['task_id'],
-                'name' => $data['name'],
-                'assignment_code' => $data['assignment_code'],
-                'start_period' => $data['start_period'],
-                'end_period' => $data['end_period'],
-                'supporting_file' => $filename,
-            ]);
+            $assignment = parent::create($data);
+        }
+
+        $user = auth()->user();
+        if ($user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc')) {
+            $assignment->users()->attach($user->id);
         }
 
         return $assignment;

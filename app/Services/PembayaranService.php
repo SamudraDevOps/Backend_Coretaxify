@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Sistem;
 use App\Models\Assignment;
 use App\Models\Pembayaran;
+use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Interfaces\Services\PembayaranServiceInterface;
@@ -16,14 +17,15 @@ class PembayaranService extends BaseCrudService implements PembayaranServiceInte
         return PembayaranRepositoryInterface::class;
     }
 
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
         // Verify the sistem exists for this assignment user

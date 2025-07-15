@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\ApiInformasiUmumController;
 use App\Http\Controllers\Api\ApiKodeTransaksiController;
 use App\Http\Controllers\Api\ApiAssignmentUserController;
 use App\Http\Controllers\Api\ApiManajemenKasusController;
+use App\Http\Controllers\Api\ApiSelfAssignmentController;
 use App\Http\Controllers\Api\ApiSistemTambahanController;
 use App\Http\Controllers\Api\ApiBupotObjekPajakController;
 use App\Http\Controllers\Api\ApiDetailTransaksiController;
@@ -118,16 +119,20 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::prefix('assignments')->group(function () {
                     Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
                 });
+                Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
                 Route::apiResource('groups', ApiGroupController::class);
                 Route::apiResource('roles', ApiRoleController::class);
                 Route::apiResource('tasks', ApiTaskController::class);
                 Route::apiResource('universities', ApiUniversityController::class);
                 Route::apiResource('contract', ApiContractController::class);
                 Route::apiResource('account-types', ApiAccountTypeController::class);
+                Route::apiResource('assignment-user', ApiAssignmentUserController::class);
             });
 
             Route::prefix('lecturer')->group(function () {
                 // Lecturer only routes
+                Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
+                Route::apiResource('assignment-user', ApiAssignmentUserController::class);
                 Route::apiResource('groups', ApiGroupController::class);
                 Route::prefix('groups')->group(function () {
                     Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
@@ -143,6 +148,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::get('{group}/assignments/{assignment}/members', [ApiGroupController::class, 'getAssignmentMembers']);
                     Route::delete('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'removeAssignmentMember']);
                     Route::get('{group}/assignments/{assignment}/members/{user}', [ApiGroupController::class, 'getAssignmentMemberDetail']);
+                    Route::put('{group}/assignments/{assignment}/members/{user}/score', [ApiGroupController::class, 'scoreAssignmentMember']);
                 });
                 Route::apiResource('assignments', ApiAssignmentController::class);
                 Route::prefix('assignments')->group(function () {
@@ -273,6 +279,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
             Route::prefix('psc')->group(function () {
                 // PSC only routes
+                Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
                 Route::apiResource('groups', ApiGroupController::class);
                 Route::prefix('groups')->group(function () {
                     Route::get('{group}/members', [ApiGroupController::class, 'getMembers']);
@@ -283,6 +290,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('assignments', ApiAssignmentController::class);
                 Route::prefix('assignments')->group(function () {
                     Route::get('{assignment}/members', [ApiAssignmentController::class, 'getMembers']);
+                    Route::put('{assignment}/members/{user}/score', [ApiAssignmentController::class, 'scoreMember']);
                     Route::delete('{assignment}/members/{user}', [ApiAssignmentController::class, 'removeMember']);
                     Route::get('{assignment}/members/{user}', [ApiAssignmentController::class, 'getMemberDetail']);
                 });

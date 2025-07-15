@@ -28,7 +28,7 @@ class ApiPembayaranController extends ApiController {
     public function index(Assignment $assignment, Sistem $sistem, Request $request) {
         $perPage = request()->get('perPage', 20);
 
-        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+        $this->pembayaranService->authorizeAccess($assignment, $sistem, $request);
 
         if($request['intent'] == IntentEnum::API_GET_SUDAH_PEMBAYARAN->value){
             $pembayarans = $this->pembayaranService->getAllForSudahPembayaran($sistem, $perPage);
@@ -53,7 +53,7 @@ class ApiPembayaranController extends ApiController {
      * Store a newly created resource in storage.
      */
     public function store(Assignment $assignment, Sistem $sistem, Request $request) {
-        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+        $this->pembayaranService->authorizeAccess($assignment, $sistem, $request);
 
         $randomNumber = mt_rand(100000000000000, 999999999999999);
         $ntpn = Str::random(16);
@@ -101,7 +101,7 @@ class ApiPembayaranController extends ApiController {
      * Display the specified resource.
      */
     public function show(Assignment $assignment, Sistem $sistem, Pembayaran $pembayaran, Request $request) {
-        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+        $this->pembayaranService->authorizeAccess($assignment, $sistem, $request);
 
         $additionalData = [];
 
@@ -116,7 +116,7 @@ class ApiPembayaranController extends ApiController {
      * Update the specified resource in storage.
      */
     public function update(Assignment $assignment, Sistem $sistem, Request $request, Pembayaran $pembayaran) {
-        $this->pembayaranService->authorizeAccess($assignment, $sistem);
+        $this->pembayaranService->authorizeAccess($assignment, $sistem, $request);
         $pembayaran->is_paid = true;
         $pembayaran->save();
 

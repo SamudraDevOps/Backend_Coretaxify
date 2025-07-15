@@ -114,7 +114,7 @@
         </div>
 
         <div style="text-align: center;">
-            <a href="{{ config('app.url') }}/login" class="button">Login to Your Account</a>
+            <a href="https://coretaxify.com/login" class="button">Login to Your Account</a>
         </div>
 
         <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>

@@ -17,21 +17,24 @@ use App\Http\Requests\Assignment\UpdateAssignmentRequest;
 use App\Support\Interfaces\Services\GroupServiceInterface;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
 
-class ApiGroupController extends ApiController {
+class ApiGroupController extends ApiController
+{
     public function __construct(
         protected GroupServiceInterface $groupService,
         protected AssignmentServiceInterface $assignmentService
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $perPage = request()->get('perPage', 20);
         $intent = request()->get('intent');
         $user = auth()->user();
 
-        switch($intent) {
+        switch ($intent) {
             case IntentEnum::API_GET_GROUP_BY_ROLES->value:
                 $groups = $this->groupService->getGroupsByUserRole($user);
                 return GroupResource::collection($groups);
@@ -60,7 +63,8 @@ class ApiGroupController extends ApiController {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreGroupRequest $request) {
+    public function store(StoreGroupRequest $request)
+    {
         $intent = $request->get('intent');
 
         $user = auth()->user();
@@ -88,12 +92,13 @@ class ApiGroupController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Group $group) {
+    public function show(Request $request, Group $group)
+    {
         $intent = $request->get('intent');
 
         $user = auth()->user();
 
-        switch($intent) {
+        switch ($intent) {
             // case IntentEnum::API_USER_DOWNLOAD_SOAL->value:
             //     return $this->groupService->downloadFile($group);
             case IntentEnum::API_GET_GROUP_WITH_ASSIGNMENTS->value:
@@ -121,32 +126,38 @@ class ApiGroupController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGroupRequest $request, Group $group) {
+    public function update(UpdateGroupRequest $request, Group $group)
+    {
         return $this->groupService->update($group, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Group $group) {
+    public function destroy(Request $request, Group $group)
+    {
         return $this->groupService->delete($group);
     }
 
-    public function getMembers(Request $request, Group $group) {
+    public function getMembers(Request $request, Group $group)
+    {
         $perPage = $request->get('perPage', 20);
         return UserResource::collection($group->users()->paginate($perPage));
     }
 
-    public function removeMember(Group $group, User $user) {
+    public function removeMember(Group $group, User $user)
+    {
         $group->users()->detach($user->id);
         return response()->json(['message' => 'Member removed successfully']);
     }
 
-    public function getMemberDetail(Group $group, User $user) {
+    public function getMemberDetail(Group $group, User $user)
+    {
         return $group->users()->findOrFail($user->id);
     }
 
-    public function getAssignments(Request $request, Group $group) {
+    public function getAssignments(Request $request, Group $group)
+    {
         $perPage = $request->get('perPage', 20);
         $user = auth()->user();
 
@@ -168,10 +179,11 @@ class ApiGroupController extends ApiController {
         return AssignmentResource::collection($group->assignments()->paginate($perPage));
     }
 
-    public function showAssignment(Request $request, Group $group, Assignment $assignment) {
+    public function showAssignment(Request $request, Group $group, Assignment $assignment)
+    {
         $intent = $request->get('intent');
 
-        switch($intent) {
+        switch ($intent) {
             case IntentEnum::API_USER_DOWNLOAD_FILE->value:
                 return $this->assignmentService->downloadFile($assignment);
         }
@@ -179,29 +191,68 @@ class ApiGroupController extends ApiController {
         return new AssignmentResource($assignment);
     }
 
-    public function storeAssignment(StoreAssignmentRequest $request, Group $group) {
+    public function storeAssignment(StoreAssignmentRequest $request, Group $group)
+    {
         return $this->assignmentService->create($request->validated(), $group);
     }
 
-    public function updateAssignment(UpdateAssignmentRequest $request, Group $group, Assignment $assignment) {
+    public function updateAssignment(UpdateAssignmentRequest $request, Group $group, Assignment $assignment)
+    {
         return $this->assignmentService->update($assignment, $request->validated());
     }
 
-    public function removeAssignment(Request $request, Group $group, Assignment $assignment) {
+    public function removeAssignment(Request $request, Group $group, Assignment $assignment)
+    {
         return $this->assignmentService->delete($assignment);
     }
 
-    public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment) {
+    public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment)
+    {
         $perPage = $request->get('perPage', 20);
-        return UserResource::collection($assignment->users()->paginate($perPage));
+
+        $users = $assignment->users()
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
+            })
+            ->withPivot('score') // Add this to include pivot data
+            ->paginate($perPage);
+
+        return UserResource::collection($users);
     }
 
-    public function removeAssignmentMember(Group $group, Assignment $assignment, User $user) {
+
+    public function removeAssignmentMember(Group $group, Assignment $assignment, User $user)
+    {
         $assignment->users()->detach($user->id);
         return response()->json(['message' => 'Member removed successfully']);
     }
 
-    public function getAssignmentMemberDetail(Group $group, Assignment $assignment, User $user) {
+    public function getAssignmentMemberDetail(Group $group, Assignment $assignment, User $user)
+    {
         return $assignment->users()->findOrFail($user->id);
     }
+
+    public function scoreAssignmentMember(Request $request, Group $group, Assignment $assignment, User $user)
+    {
+        $request->validate([
+            'score' => 'required|numeric|min:0|max:100'
+        ]);
+
+        $assignmentUser = $assignment->users()->wherePivot('user_id', $user->id)->first();
+
+        if (!$assignmentUser) {
+            return response()->json(['message' => 'User is not a member of this assignment'], 404);
+        }
+
+        // Update the score in the pivot table
+        $assignment->users()->updateExistingPivot($user->id, [
+            'score' => $request->score
+        ]);
+
+        return response()->json([
+            'message' => 'Score updated successfully',
+            'score' => $request->score
+        ]);
+    }
+
 }

@@ -49,12 +49,14 @@ class ApiPihakTerkaitController extends ApiController {
     public function destroy(
         Assignment $assignment,
         Sistem $sistem,
-        PihakTerkait $pihakTerkait
+        PihakTerkait $pihakTerkait,
+        Request $request
         ): JsonResponse {
             $result = $this->pihakTerkaitService->deletePihakTerkait(
                 $assignment,
                 $sistem,
-                $pihakTerkait
+                $pihakTerkait,
+                $request
             );
         return response()->json([
             'success' => $result,

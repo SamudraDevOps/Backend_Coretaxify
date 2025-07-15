@@ -197,7 +197,7 @@ class ApiFakturController extends ApiController
 
     public function deleteMultipleFakturs(Assignment $assignment, Sistem $sistem,Request $request)
     {
-        $this->fakturService->authorizeAccess($assignment, $sistem);
+        $this->fakturService->authorizeAccess($assignment, $sistem, $request);
 
         $fakturIds = $request->input('faktur_ids', []);
 
@@ -271,7 +271,7 @@ class ApiFakturController extends ApiController
 
     public function multipleDraftFakturToFix(Assignment $assignment, Sistem $sistem, Request $request)
     {
-        $this->fakturService->authorizeAccess($assignment, $sistem);
+        $this->fakturService->authorizeAccess($assignment, $sistem, $request);
 
         $fakturIds = $request->input('faktur_ids', []);
 
@@ -293,10 +293,11 @@ class ApiFakturController extends ApiController
         return response()->json(['message' => 'Fakturs berhasil dikirim ke SPT']);
     }
 
-    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem)
+    public function getCombinedAkunData(Assignment $assignment, Sistem $sistem, Request $request)
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => auth()->id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
             ])->firstOrFail();
 

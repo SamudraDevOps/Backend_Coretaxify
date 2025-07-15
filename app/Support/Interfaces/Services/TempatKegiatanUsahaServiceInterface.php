@@ -91,7 +91,8 @@ interface TempatKegiatanUsahaServiceInterface extends BaseCrudServiceInterface
     public function getTempatKegiatanUsahaDetail(
         Assignment $assignment,
         Sistem $sistem,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request
     ): ?Model;
 
     /**
@@ -107,7 +108,8 @@ interface TempatKegiatanUsahaServiceInterface extends BaseCrudServiceInterface
         Assignment $assignment,
         Sistem $sistem,
         TempatKegiatanUsaha $tempatKegiatanUsaha,
-        array $data
+        array $data,
+        Request $request
     ): ?Model;
 
     /**
@@ -121,6 +123,7 @@ interface TempatKegiatanUsahaServiceInterface extends BaseCrudServiceInterface
     public function deleteTempatKegiatanUsaha(
         Assignment $assignment,
         Sistem $sistem,
-        TempatKegiatanUsaha $tempatKegiatanUsaha
+        TempatKegiatanUsaha $tempatKegiatanUsaha,
+        Request $request
     ): bool;
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\Contracts\BaseCrudServiceInterface;
 
 interface SptServiceInterface extends BaseCrudServiceInterface {
-    public function authorizeAccess(Assignment $assignment, Sistem $sistem):void;
+    public function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request):void;
 
     public function checkPeriode(Assignment $assignment, Sistem $sistem, Request $request);
 

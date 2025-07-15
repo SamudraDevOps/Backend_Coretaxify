@@ -18,8 +18,8 @@ class StoreAssignmentRequest extends FormRequest {
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
                     // 'assignment_code' => 'required|string',
-                    'start_period' => 'required|date_format:Y-m-d H:i:s',
-                    'end_period' => 'required|date_format:Y-m-d H:i:s',
+                    'start_period' => 'sometimes|date_format:Y-m-d H:i:s',
+                    'end_period' => 'sometimes|date_format:Y-m-d H:i:s',
                     'supporting_file' => 'sometimes|file',
                 ];
             case IntentEnum::API_USER_JOIN_ASSIGNMENT->value:
@@ -32,8 +32,9 @@ class StoreAssignmentRequest extends FormRequest {
                     'task_id' => 'required|exists:tasks,id',
                     'name' => 'required|string',
                     // 'assignment_code' => 'required|string',
-                    'start_period' => 'required|date',
-                    'end_period' => 'required|date',
+                    'start_period' => 'sometimes|date',
+                    'end_period' => 'sometimes|date',
+                    'supporting_file' => 'sometimes|file',
                 ];
         }
 

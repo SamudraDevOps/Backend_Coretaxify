@@ -137,7 +137,7 @@ class DetailKontakService extends BaseCrudService implements DetailKontakService
         Request $request,
         int $perPage = 5
     ) {
-        $this->authorizeAccess($assignment, $sistem);
+        $this->authorizeAccess($assignment, $sistem, $request);
 
         $filters = array_merge($request->query(), ['sistem_id' => $sistem->id]);
 
@@ -155,9 +155,10 @@ class DetailKontakService extends BaseCrudService implements DetailKontakService
     public function getDetailKontakDetail(
         Assignment $assignment,
         Sistem $sistem,
-        DetailKontak $detailKontak
+        DetailKontak $detailKontak,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToDetailKontak($assignment, $sistem, $detailKontak);
+        $this->authorizeAccessToDetailKontak($assignment, $sistem, $detailKontak, $request);
 
         return $detailKontak;
     }
@@ -175,9 +176,10 @@ class DetailKontakService extends BaseCrudService implements DetailKontakService
         Assignment $assignment,
         Sistem $sistem,
         DetailKontak $detailKontak,
-        array $data
+        array $data,
+        Request $request
     ): ?Model {
-        $this->authorizeAccessToDetailKontak($assignment, $sistem, $detailKontak);
+        $this->authorizeAccessToDetailKontak($assignment, $sistem, $detailKontak, $request);
 
         return $this->update($detailKontak, $data);
     }
@@ -193,9 +195,10 @@ class DetailKontakService extends BaseCrudService implements DetailKontakService
     public function deleteDetailKontak(
         Assignment $assignment,
         Sistem $sistem,
-        DetailKontak $detailKontak
+        DetailKontak $detailKontak,
+        Request $request
     ): bool {
-        $this->authorizeAccessToDetailKontak($assignment, $sistem, $detailKontak);
+        $this->authorizeAccessToDetailKontak($assignment, $sistem, $detailKontak, $request);
 
         return $this->delete($detailKontak);
     }
@@ -207,14 +210,15 @@ class DetailKontakService extends BaseCrudService implements DetailKontakService
      * @param Sistem $sistem
      * @return void
      */
-    private function authorizeAccess(Assignment $assignment, Sistem $sistem): void
+    private function authorizeAccess(Assignment $assignment, Sistem $sistem, Request $request): void
     {
+        $user_id = $request->get('user_id');
         $assignmentUser = AssignmentUser::where([
-            'user_id' => Auth::id(),
+            'user_id' => $user_id ?? auth()->id(),
             'assignment_id' => $assignment->id
         ])->firstOrFail();
 
-        if ($sistem->assignment_user_id !== $assignmentUser->id) {
+        if (($sistem->assignment_user_id !== $assignmentUser->id) && !$user_id) {
             abort(403, 'Unauthorized access to this sistem');
         }
 
@@ -235,12 +239,13 @@ class DetailKontakService extends BaseCrudService implements DetailKontakService
     private function authorizeAccessToDetailKontak(
         Assignment $assignment,
         Sistem $sistem,
-        DetailKontak $detailKontak
+        DetailKontak $detailKontak,
+        Request $request
     ): void {
-        $this->authorizeAccess($assignment, $sistem);
-
+        $this->authorizeAccess($assignment, $sistem, $request);
+        $user_id = $request->get('user_id');
         // Ensure the detail kontak belongs to the specified sistem
-        if ($detailKontak->sistem_id !== $sistem->id) {
+        if (($detailKontak->sistem_id !== $sistem->id) && !$user_id) {
             abort(403, 'Unauthorized access to this detail kontak');
         }
     }

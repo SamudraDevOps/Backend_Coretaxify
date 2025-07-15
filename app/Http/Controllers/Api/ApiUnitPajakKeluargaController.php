@@ -49,11 +49,12 @@ class ApiUnitPajakKeluargaController extends ApiController {
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, Sistem $sistem, UnitPajakKeluarga $unitPajakKeluarga) {
+    public function show(Assignment $assignment, Sistem $sistem, UnitPajakKeluarga $unitPajakKeluarga, Request $request) {
         $unitPajakKeluarga = $this->unitPajakKeluargaService->getUnitPajakKeluargaDetail(
             $assignment,
             $sistem,
-            $unitPajakKeluarga
+            $unitPajakKeluarga,
+            $request
         );
 
         return new UnitPajakKeluargaResource($unitPajakKeluarga);
@@ -72,7 +73,8 @@ class ApiUnitPajakKeluargaController extends ApiController {
             $assignment,
             $sistem,
             $unitPajakKeluarga,
-            $request->validated()
+            $request->validated(),
+            $request
         );
 
         return new UnitPajakKeluargaResource($unitPajakKeluarga);
@@ -85,12 +87,14 @@ class ApiUnitPajakKeluargaController extends ApiController {
     public function destroy(
         Assignment $assignment,
         Sistem $sistem,
-        UnitPajakKeluarga $unitPajakKeluarga
+        UnitPajakKeluarga $unitPajakKeluarga,
+        Request $request
     ): JsonResponse {
         $result = $this->unitPajakKeluargaService->deleteUnitPajakKeluarga(
             $assignment,
             $sistem,
-            $unitPajakKeluarga
+            $unitPajakKeluarga,
+            $request
         );
 
         return response()->json([
