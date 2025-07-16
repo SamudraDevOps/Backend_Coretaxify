@@ -155,6 +155,11 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 }
 
                 $saldo = (int) $sistem->saldo;
+
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
