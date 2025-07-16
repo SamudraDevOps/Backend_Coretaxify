@@ -115,6 +115,11 @@ class FakturResource extends JsonResource
         $intent = $request->query('intent');
 
         switch($intent){
+            case IntentEnum::API_GET_FAKTUR_MASUKAN_BY_NOMOR_FAKTUR->value:
+                return [
+                    'id' => $this->id,
+                    'nomor_faktur_pajak' => $this->nomor_faktur_pajak . ' - ' . $this->akun_pengirim->nama_akun,
+                ];
             case IntentEnum::API_GET_FAKTUR_RETUR_KELUARAN->value:
                 return [
                     'id' => $this->id,
@@ -206,7 +211,17 @@ class FakturResource extends JsonResource
                                 'tipe' => $transaksi->tipe,
                                 'nama' => $transaksi->nama,
                                 'kode' => $transaksi->kode,
+                                'kuantitas_asli' => $transaksi->kuantitas ?? 0,
+                                'potongan_harga_asli' => $transaksi->pemotongan_harga ?? 0,
+                                'dpp_asli' => $transaksi->dpp ?? 0,
+                                'ppn_asli' => $transaksi->ppn ?? 0,
+                                'ppnbm_asli' => $transaksi->ppnbm ?? 0,
+                                'dpp_lain_asli' => $transaksi->dpp_lain ?? 0,
+                                'tarif_ppnbm_asli' => $transaksi->tarif_ppnbm ?? 0,
+                                'total_harga_asli' => $transaksi->total_harga ?? 0,
+                                
                                 'kuantitas' => $transaksi->jumlah_barang_diretur ?? 0,
+                                'jumlah_barang_diretur' => $transaksi->jumlah_barang_diretur ?? 0,
                                 'satuan' => $transaksi->satuan,
                                 'harga_satuan' => $transaksi->harga_satuan,
                                 'total_harga' => $transaksi->total_harga_diretur ?? 0,

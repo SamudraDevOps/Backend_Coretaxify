@@ -205,14 +205,64 @@ class ApiFakturController extends ApiController
             return response()->json(['message' => 'No faktur IDs provided'], 400);
         }
 
-        // $fakturs = Faktur::whereIn('id', $fakturIds)->get();
-        // foreach ($fakturs as $faktur) {
-        //     $this->fakturService->authorizeFakturBelongsToSistem($faktur, $sistem);
-        // }
+        // Check if any of the fakturs are not in draft status
+        $nonDraftFakturs = Faktur::whereIn('id', $fakturIds)
+        ->where('status', '!=', FakturStatusEnum::DRAFT->value)
+        ->pluck('id')
+        ->toArray();
 
-        Faktur::whereIn('id', $fakturIds)->delete();
+        // Get only draft fakturs for deletion
+        $draftFakturIds = Faktur::whereIn('id', $fakturIds)
+            ->where('status', FakturStatusEnum::DRAFT->value)
+            ->pluck('id')
+            ->toArray();
 
-        return response()->json(['message' => 'Fakturs deleted successfully']);
+        // Delete only draft fakturs
+        $deletedCount = 0;
+        if (!empty($draftFakturIds)) {
+            $deletedCount = Faktur::whereIn('id', $draftFakturIds)->delete();
+        }
+
+        $response = [
+            'message' => 'Process completed',
+            'deleted_count' => $deletedCount,
+            'deleted_ids' => $draftFakturIds
+        ];
+
+        // Add information about skipped fakturs if any
+        if (!empty($nonDraftFakturs)) {
+            $response['skipped_count'] = count($nonDraftFakturs);
+            $response['skipped_ids'] = $nonDraftFakturs;
+            $response['skipped_message'] = 'Some fakturs were skipped because they are not in draft status';
+        }
+
+        return response()->json($response);
+    }
+
+    public function multipleKreditkanFakturs(Assignment $assignment, Sistem $sistem,Request $request)
+    {
+        $fakturIds = $request->input('faktur_ids', []);
+
+        if (empty($fakturIds)) {
+            return response()->json(['message' => 'No faktur IDs provided'], 400);
+        }
+
+        Faktur::whereIn('id', $fakturIds)->update(['is_kredit' => true]);
+
+        return response()->json(['message' => 'Fakturs dikreditkan']);
+    }
+
+    public function multipleUnkreditkanFakturs(Assignment $assignment, Sistem $sistem,Request $request)
+    {
+        $fakturIds = $request->input('faktur_ids', []);
+
+        if (empty($fakturIds)) {
+            return response()->json(['message' => 'No faktur IDs provided'], 400);
+        }
+
+        Faktur::whereIn('id', $fakturIds)->update(['is_kredit' => false]);
+
+        return response()->json(['message' => 'Fakturs tidak dikreditkan']);
     }
 
     public function multipleDraftFakturToFix(Assignment $assignment, Sistem $sistem, Request $request)

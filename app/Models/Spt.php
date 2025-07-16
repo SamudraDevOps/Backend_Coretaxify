@@ -35,7 +35,7 @@ class Spt extends Model
         return $this->belongsTo(Sistem::class, 'badan_id');
     }
 
-    public function pembayaran(): BelongsTo
+    public function pembayaran()
     {
         return $this->hasOne(Pembayaran::class);
     }
