@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\AssignmentUser;
 use App\Models\SistemTambahan;
 use App\Models\DetailTransaksi;
+use App\Support\Enums\IntentEnum;
 use App\Http\Resources\FakturResource;
 use App\Support\Enums\FakturStatusEnum;
 use App\Http\Resources\CombinedAccountResource;
@@ -105,6 +106,8 @@ class ApiFakturController extends ApiController
      */
     public function show(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
     {
+        $intent = $request->input('intent', null);
+
         // For personal accounts, check if they're representing a company
         $representedCompanyId = $request->input('company_id');
         $representedCompany = null;
@@ -136,6 +139,12 @@ class ApiFakturController extends ApiController
             }]);
         }
         else {
+            $faktur->load(['detail_transaksis' => function ($query) {
+                $query->withoutTrashed();
+            }]);
+        }
+
+        if ($intent == IntentEnum::API_GET_FAKTUR_RETUR_KELUARAN->value || $intent == IntentEnum::API_GET_FAKTUR_RETUR_MASUKAN->value) {
             $faktur->load(['detail_transaksis' => function ($query) {
                 $query->withoutTrashed();
             }]);
