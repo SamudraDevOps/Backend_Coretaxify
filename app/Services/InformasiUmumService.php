@@ -92,7 +92,9 @@ class InformasiUmumService extends BaseCrudService implements InformasiUmumServi
     {
         $this->authorizeAccess($assignment, $sistem, $request);
 
-        return $informasiUmum;
+        $sistem = Sistem::with('profil_saya.informasi_umum')->findOrFail($sistem->id);
+
+        return $sistem->profil_saya->informasi_umum->first();
     }
 
     /**
