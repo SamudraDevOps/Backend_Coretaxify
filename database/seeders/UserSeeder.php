@@ -38,6 +38,7 @@ class UserSeeder extends Seeder
 
         $mhs1 = User::create([
             'name' => 'Mahasiswa 1 User',
+            'contract_id' => 1,
             'email' => 'mahasiswa1@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
@@ -47,6 +48,7 @@ class UserSeeder extends Seeder
 
         $mhs2 = User::create([
             'name' => 'Mahasiswa 2 User',
+            'contract_id' => 1,
             'email' => 'mahasiswa2@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password123'),
