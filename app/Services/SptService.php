@@ -130,6 +130,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     $bayar = $spt_ppn->cl_3e_ppn;
                 }
 
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
                 $dataPembayaran['nilai'] = $bayar;
                 $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
                 $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
@@ -155,6 +159,11 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 }
 
                 $saldo = (int) $sistem->saldo;
+
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
@@ -203,6 +212,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
 
                 $dataPembayaran = [
                     'nilai' => $bayar,
@@ -237,6 +249,11 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
                 $saldo = (int) $sistem->saldo;
+
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
@@ -272,6 +289,10 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
 
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
                 $randomNumber = mt_rand(100000000000000, 999999999999999);
 
                 $dataPembayaran = [
@@ -294,9 +315,15 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
 
-                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0;
 
-                $hasil = $sistem->saldo - $bayar;
+                $saldo = (int) $sistem->saldo;
+
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
+                $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
                     throw new \Exception('Saldo tidak mencukupi', 101);
