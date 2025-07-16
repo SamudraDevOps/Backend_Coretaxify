@@ -242,6 +242,11 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
                 $saldo = (int) $sistem->saldo;
+
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
@@ -299,9 +304,15 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
 
-                $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
+                $bayar = $sptunifikasi->cl_total_bayar ?? 0;
 
-                $hasil = $sistem->saldo - $bayar;
+                $saldo = (int) $sistem->saldo;
+
+                if ($bayar < 0){
+                    $bayar = 0;
+                }
+
+                $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
                     throw new \Exception('Saldo tidak mencukupi', 101);
