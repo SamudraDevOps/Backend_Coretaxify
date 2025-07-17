@@ -19,4 +19,8 @@ class Bupot extends Model
     public function penandatangan() {
         return $this->belongsTo(BupotTandaTangan::class);
     }
+
+    public function scores() {
+        return $this->hasMany(BupotScore::class);
+    }
 }

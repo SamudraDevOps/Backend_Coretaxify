@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\ApiWakilSayaController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
+use App\Http\Controllers\Api\ApiBupotScoreController;
 use App\Http\Controllers\Api\ApiDetailBankController;
 use App\Http\Controllers\Api\ApiJenisPajakController;
 use App\Http\Controllers\Api\ApiPembayaranController;
@@ -257,6 +258,9 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/bupot', ApiBupotController::class);
                     Route::post('{assignment}/sistem/{sistem}/bupot/approval', [ApiBupotController::class, 'penerbitan']);
                     Route::post('{assignment}/sistem/{sistem}/bupot/refusal', [ApiBupotController::class, 'penghapusan']);
+
+                    // Penilaian Sistem
+                    Route::apiResource('{assignment}/sistem/{sistem}/penilaian/bupot-scores', ApiBupotScoreController::class); //bupot
 
                     // Representation management
                     Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented
