@@ -45,6 +45,7 @@ class BupotResource extends JsonResource
                     'pajak_penghasilan' => $this->pajak_penghasilan,
                     'fasilitas_pajak' => $this->fasilitas_pajak,
                     'tarif_pajak' => $this->tarif_pajak,
+                    'nama_objek_pajak' => $this->nama_objek_pajak,
                 ];
             case IntentEnum::API_BUPOT_BPNR->value:
                 return [
@@ -67,6 +68,7 @@ class BupotResource extends JsonResource
                     'pajak_penghasilan' => $this->pajak_penghasilan,
                     'fasilitas_pajak' => $this->fasilitas_pajak,
                     'tarif_pajak' => $this->tarif_pajak,
+                    'nama_objek_pajak' => $this->nama_objek_pajak,
                 ];
             case IntentEnum::API_BUPOT_PS->value:
                 return [
@@ -86,6 +88,7 @@ class BupotResource extends JsonResource
                     'pajak_penghasilan' => $this->pajak_penghasilan,
                     'fasilitas_pajak' => $this->fasilitas_pajak,
                     'tarif_pajak' => $this->tarif_pajak,
+                    'nama_objek_pajak' => $this->nama_objek_pajak,
                 ];
             case IntentEnum::API_BUPOT_PSD->value:
                 return [
