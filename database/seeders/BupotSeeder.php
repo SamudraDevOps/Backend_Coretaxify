@@ -180,8 +180,8 @@ class BupotSeeder extends Seeder
     private function createBupotBP21(array $sistemIds): void
     {
         Bupot::create([
-            'pembuat_id' => $sistemIds[array_rand($sistemIds)],
-            'representatif_id' => $sistemIds[array_rand($sistemIds)],
+            'pembuat_id' => '2',
+            'representatif_id' => '5',
             'tipe_bupot' => BupotTypeEnum::toArray()[4],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
@@ -211,8 +211,8 @@ class BupotSeeder extends Seeder
     private function createBupotBP26(array $sistemIds): void
     {
         Bupot::create([
-            'pembuat_id' => $sistemIds[array_rand($sistemIds)],
-            'representatif_id' => $sistemIds[array_rand($sistemIds)],
+            'pembuat_id' => '2',
+            'representatif_id' => '5',
             'tipe_bupot' => BupotTypeEnum::toArray()[5],
             'masa_awal' => '2024-01-01',
             'status' => 'normal',
