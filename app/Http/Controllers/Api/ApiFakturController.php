@@ -358,6 +358,11 @@ class ApiFakturController extends ApiController
         ]);
     }
 
+    public function getDataDashboard(Assignment $assignment, Sistem $sistem) {
+        return $this->fakturService->getDashboardData($assignment,$sistem);
+
+    }
+
         // public function update(Request $request, Assignment $assignment, Sistem $sistem, Faktur $faktur)
     // {
     //     // For personal accounts, check if they're representing a company
