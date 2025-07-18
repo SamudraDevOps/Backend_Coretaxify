@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
 use App\Http\Controllers\Api\ApiDataEkonomiController;
+use App\Http\Controllers\Api\ApiFakturScoreController;
 use App\Http\Controllers\Api\ApiDetailKontakController;
 use App\Http\Controllers\Api\ApiPihakTerkaitController;
 use App\Http\Controllers\Api\ApiInformasiUmumController;
@@ -261,6 +262,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
 
                     // Penilaian Sistem
                     Route::apiResource('{assignment}/sistem/{sistem}/penilaian/bupot-scores', ApiBupotScoreController::class); //bupot
+                    Route::apiResource('{assignment}/sistem/{sistem}/penilaian/faktur-scores', ApiFakturScoreController::class); //faktur
 
                     // Representation management
                     Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented

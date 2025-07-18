@@ -8,7 +8,7 @@ class BupotScore extends Model
 {
     protected $guarded = ['id'];
 
-    public function bupot() {
-        return $this->belongsTo(Bupot::class);
+    public function sistem() {
+        return $this->belongsTo(Sistem::class);
     }
 }

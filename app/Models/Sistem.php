@@ -52,4 +52,12 @@ class Sistem extends Model
     public function sistem_tambahans() {
         return $this->hasMany(SistemTambahan::class, );
     }
+
+    public function bupot_scores() {
+        return $this->hasMany(BupotScore::class);
+    }
+
+    public function faktur_scores() {
+        return $this->hasMany(FakturScore::class);
+    }
 }
