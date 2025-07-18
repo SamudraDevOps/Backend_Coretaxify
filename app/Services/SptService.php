@@ -789,43 +789,43 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $bupot_lain = $bupots->whereIn('tipe_bupot', [BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value])
                     ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
 
-                $data_spt_uni['cl_a_1'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_a_1'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-100')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_b_1'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_b_1'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-100')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_c_1'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_c_1'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-100')
                                                             ->sum('pajak_penghasilan');
 
                 $data_spt_uni['cl_d_1'] = $data_spt_uni['cl_a_1'] + $data_spt_uni['cl_b_1'] + $data_spt_uni['cl_c_1'];
 
-                $data_spt_uni['cl_a_2'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_a_2'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-402')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_b_2'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_b_2'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-402')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_c_2'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_c_2'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-402')
                                                             ->sum('pajak_penghasilan');
 
                 $data_spt_uni['cl_d_2'] = $data_spt_uni['cl_a_2'] + $data_spt_uni['cl_b_2'] + $data_spt_uni['cl_c_2'];
 
-                $data_spt_uni['cl_a_3'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_a_3'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-403')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_b_3'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_b_3'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-403')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_c_3'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 ayat 2')
+                $data_spt_uni['cl_c_3'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-403')
                                                             ->sum('pajak_penghasilan');
 
