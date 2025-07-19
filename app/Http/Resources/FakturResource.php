@@ -222,6 +222,9 @@ class FakturResource extends JsonResource
                     'updated_at' => $this->updated_at,
                     'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                         return $this->detail_transaksis->map(function($transaksi) {
+                            if ($transaksi->dpp_lain = 0 || $transaksi->dpp_lain === null) {
+                                $dpp_lain = $transaksi->dpp;
+                            }
                             return [
                                 'id' => $transaksi->id,
                                 'tipe' => $transaksi->tipe,
@@ -232,7 +235,7 @@ class FakturResource extends JsonResource
                                 'dpp_asli' => $transaksi->dpp ?? 0,
                                 'ppn_asli' => $transaksi->ppn ?? 0,
                                 'ppnbm_asli' => $transaksi->ppnbm ?? 0,
-                                'dpp_lain_asli' => $transaksi->dpp_lain ?? 0,
+                                'dpp_lain_asli' => $dpp_lain,
                                 'tarif_ppnbm_asli' => $transaksi->tarif_ppnbm ?? 0,
                                 'total_harga_asli' => $transaksi->total_harga ?? 0,
                                 'kuantitas' => $transaksi->jumlah_barang_diretur ?? 0,
