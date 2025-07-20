@@ -222,8 +222,11 @@ class FakturResource extends JsonResource
                     'updated_at' => $this->updated_at,
                     'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                         return $this->detail_transaksis->map(function($transaksi) {
-                            if ($transaksi->dpp_lain = 0 || $transaksi->dpp_lain === null) {
+                            $dpp_lain = 0;
+                            if ($transaksi->dpp_lain == 0 || $transaksi->dpp_lain === null) {
                                 $dpp_lain = $transaksi->dpp;
+                            }else {
+                                $dpp_lain = $transaksi->dpp_lain;
                             }
                             return [
                                 'id' => $transaksi->id,
