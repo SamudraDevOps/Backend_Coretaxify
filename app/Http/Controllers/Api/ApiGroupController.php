@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\AssignmentResource;
 use App\Http\Requests\Group\StoreGroupRequest;
+use App\Http\Resources\AssignmentUserResource;
 use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Requests\Assignment\StoreAssignmentRequest;
 use App\Http\Requests\Assignment\UpdateAssignmentRequest;
@@ -206,20 +207,39 @@ class ApiGroupController extends ApiController
         return $this->assignmentService->delete($assignment);
     }
 
+    // public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment)
+    // {
+    //     $perPage = $request->get('perPage', 20);
+
+    //     $users = $assignment->users()
+    //         ->whereHas('roles', function ($query) {
+    //             $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
+    //         })
+    //         ->withPivot('score') // Add this to include pivot data
+    //         ->paginate($perPage);
+
+    //     return UserResource::collection($users);
+    // }
+
     public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment)
     {
         $perPage = $request->get('perPage', 20);
 
-        $users = $assignment->users()
-            ->whereHas('roles', function ($query) {
+        // Get AssignmentUser records with all necessary relationships
+        $assignmentUsers = $assignment->assignmentUsers()
+            ->whereHas('user.roles', function ($query) {
                 $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
             })
-            ->withPivot('score') // Add this to include pivot data
+            ->with([
+                'user',
+                'sistems.bupot_scores',
+                'sistems.faktur_scores',
+                'sistems.spt_scores'
+            ])
             ->paginate($perPage);
 
-        return UserResource::collection($users);
+        return AssignmentUserResource::collection($assignmentUsers);
     }
-
 
     public function removeAssignmentMember(Group $group, Assignment $assignment, User $user)
     {
