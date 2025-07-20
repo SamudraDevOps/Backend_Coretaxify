@@ -60,4 +60,8 @@ class Sistem extends Model
     public function faktur_scores() {
         return $this->hasMany(FakturScore::class);
     }
+
+    public function spt_scores() {
+        return $this->hasMany(SptScore::class);
+    }
 }
