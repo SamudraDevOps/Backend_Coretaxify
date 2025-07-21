@@ -65,7 +65,7 @@ class AssignmentUserResource extends JsonResource
                     'assignment' => new AssignmentResource($this->assignment),
                     'sistem_scores' => $sistemScores,
                     'summary' => [
-                        'total_sistems' => $this->sistems->length(),
+                        'total_sistems' => $this->sistems->count(),
                         'total_scores_across_all_sistems' => $totalScoresAcrossAllSistems
                     ]
                 ];
