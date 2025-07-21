@@ -20,10 +20,12 @@ use App\Http\Controllers\Api\ApiSptPpnController;
 use App\Http\Controllers\Api\ApiAccountController;
 use App\Http\Controllers\Api\ApiContractController;
 use App\Http\Controllers\Api\ApiRoleUserController;
+use App\Http\Controllers\Api\ApiSptScoreController;
 use App\Http\Controllers\Api\ApiGroupUserController;
 use App\Http\Controllers\Api\ApiWakilSayaController;
 use App\Http\Controllers\Api\Auth\ApiAuthController;
 use App\Http\Controllers\Api\ApiAssignmentController;
+use App\Http\Controllers\Api\ApiBupotScoreController;
 use App\Http\Controllers\Api\ApiDetailBankController;
 use App\Http\Controllers\Api\ApiJenisPajakController;
 use App\Http\Controllers\Api\ApiPembayaranController;
@@ -31,6 +33,7 @@ use App\Http\Controllers\Api\ApiProfilSayaController;
 use App\Http\Controllers\Api\ApiUniversityController;
 use App\Http\Controllers\Api\ApiAccountTypeController;
 use App\Http\Controllers\Api\ApiDataEkonomiController;
+use App\Http\Controllers\Api\ApiFakturScoreController;
 use App\Http\Controllers\Api\ApiDetailKontakController;
 use App\Http\Controllers\Api\ApiPihakTerkaitController;
 use App\Http\Controllers\Api\ApiInformasiUmumController;
@@ -258,6 +261,11 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::apiResource('{assignment}/sistem/{sistem}/bupot', ApiBupotController::class);
                     Route::post('{assignment}/sistem/{sistem}/bupot/approval', [ApiBupotController::class, 'penerbitan']);
                     Route::post('{assignment}/sistem/{sistem}/bupot/refusal', [ApiBupotController::class, 'penghapusan']);
+
+                    // Penilaian Sistem
+                    Route::apiResource('{assignment}/sistem/{sistem}/penilaian/bupot-scores', ApiBupotScoreController::class); //bupot
+                    Route::apiResource('{assignment}/sistem/{sistem}/penilaian/faktur-scores', ApiFakturScoreController::class); //faktur
+                    Route::apiResource('{assignment}/sistem/{sistem}/penilaian/spt-scores', ApiSptScoreController::class); //spt
 
                     // Representation management
                     Route::get('{assignment}/sistem/{sistem}/represented-companies', [ApiPicController::class, 'getRepresentedCompanies']); // get list of companies that can be represented

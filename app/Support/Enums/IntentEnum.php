@@ -172,4 +172,6 @@ enum IntentEnum: string {
     case API_GET_FAKTUR_RETUR_MASUKAN = 'api.get.faktur.retur.masukan';
 
     case API_GET_FAKTUR_MASUKAN_BY_NOMOR_FAKTUR = 'api.get.faktur.masukan.by.nomor.faktur';
+
+    case API_GET_ASSIGNMENT_MEMBERS_WITH_SISTEM_SCORES = 'api.get.assignment.members.with.sistem.scores';
 }
