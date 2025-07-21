@@ -1064,6 +1064,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 return FakturResource::collection($fakturKeluaran);
             case JenisSptPpnEnum::B1->value:
                 // return FakturResource::collection($fakturKeluaran);
+                break;
             case JenisSptPpnEnum::B2->value:
                 $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [1, 2, 3, 4, 5, 6, 9, 10])->where('is_kredit', true);
                 return (new FakturCollection($fakturMasukanB2))->additional([

@@ -284,7 +284,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     public function getDashboardData($assignment, $sistem)
     {
         $getFakturKeluaran = Faktur::where('akun_pengirim_id', $sistem->id)->count();
-        $getFakturMasukan = Faktur::where('akun_penerima_id', $sistem->id)->count();
+        $getFakturMasukan = Faktur::where('akun_penerima_id', $sistem->id)->where('status', FakturStatusEnum::APPROVED->value)->count();
 
         $getFakturKeluaranAmended = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::AMENDED->value)->count();
         $getFakturKeluaranDraft = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::DRAFT->value)->count();
