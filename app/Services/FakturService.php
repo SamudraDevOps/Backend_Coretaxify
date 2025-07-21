@@ -247,9 +247,6 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         }
     }
 
-    /**
- * Duplikat detail transaksi dari faktur lama ke faktur baru
- */
     private function duplicateDetailTransaksi(int $fakturLamaId, int $fakturBaruId): void
     {
         $detailTransaksiLama = DetailTransaksi::where('faktur_id', $fakturLamaId)->get();
@@ -282,6 +279,28 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         DetailTransaksi::where('faktur_id', $fakturLamaId)
                         ->where('is_tambahan', true)
                         ->forceDelete();
+    }
+
+    public function getDashboardData($assignment, $sistem)
+    {
+        $getFakturKeluaran = Faktur::where('akun_pengirim_id', $sistem->id)->count();
+        $getFakturMasukan = Faktur::where('akun_penerima_id', $sistem->id)->count();
+
+        $getFakturKeluaranAmended = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::AMENDED->value)->count();
+        $getFakturKeluaranDraft = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::DRAFT->value)->count();
+        $getFakturKeluaranCanceled = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::CANCELED->value)->count();
+        $getFakturKeluaranApproved = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::APPROVED->value)->count();
+
+        $allFaktur = $getFakturKeluaran + $getFakturMasukan;
+
+        return [
+            'faktur_keluaran_amended' => $getFakturKeluaranAmended,
+            'faktur_keluaran_draft' => $getFakturKeluaranDraft,
+            'faktur_keluaran_canceled' => $getFakturKeluaranCanceled,
+            'faktur_keluaran_approved' => $getFakturKeluaranApproved,
+            'faktur_masukan' => $getFakturMasukan,
+            'all_faktur' => $allFaktur
+        ];
     }
 
     private function recalculateFakturTotals($faktur): void

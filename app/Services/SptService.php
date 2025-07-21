@@ -729,6 +729,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $monthNumber = MonthHelper::getMonthNumber($month);
 
                 $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->where('status_penerbitan', 'published')
                 ->whereMonth('masa_awal', $monthNumber)
                 ->whereYear('masa_awal', $year)
                 ->get();
@@ -736,9 +737,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_pph = [];
 
                 $total_pemotongan_lain = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
-                    ->where('fasilitas_pajak', 'Pph Ditanggung Pemerintah (DTP)');
+                    ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
                 $total_pemotongan_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
-                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
+                    ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
                 $total_bp21 = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value);
                 $total_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value);
 
@@ -774,56 +775,57 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $monthNumber = MonthHelper::getMonthNumber($month);
 
                 $bupots = Bupot::where('pembuat_id', $data['badan_id'])
+                ->where('status_penerbitan', 'published')
                 ->whereMonth('masa_awal', $monthNumber)
                 ->whereYear('masa_awal', $year)
                 ->get();
 
                 $data_spt_uni = [];
 
-                $bupot_tanggung = $bupots->where('tipe_bupot',[BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value, BupotTypeEnum::PS->value])
-                    ->where('fasilitas_pajak', 'Pph Ditanggung Pemerintah (DTP)');
+                $bupot_tanggung = $bupots->whereIn('tipe_bupot',[BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value, BupotTypeEnum::PS->value])
+                    ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
                 $bupot_lain_sendiri = $bupots->where('tipe_bupot', BupotTypeEnum::PS->value)
-                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
+                    ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
                 $bupot_lain = $bupots->whereIn('tipe_bupot', [BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value])
-                    ->where('fasilitas_pajak', '!=', 'Pph Ditanggung Pemerintah (DTP)');
+                    ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
 
-                $data_spt_uni['cl_a_1'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_a_1'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-100')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_b_1'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_b_1'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-100')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_c_1'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_c_1'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-100')
                                                             ->sum('pajak_penghasilan');
 
                 $data_spt_uni['cl_d_1'] = $data_spt_uni['cl_a_1'] + $data_spt_uni['cl_b_1'] + $data_spt_uni['cl_c_1'];
 
-                $data_spt_uni['cl_a_2'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_a_2'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-402')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_b_2'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_b_2'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-402')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_c_2'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_c_2'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-402')
                                                             ->sum('pajak_penghasilan');
 
                 $data_spt_uni['cl_d_2'] = $data_spt_uni['cl_a_2'] + $data_spt_uni['cl_b_2'] + $data_spt_uni['cl_c_2'];
 
-                $data_spt_uni['cl_a_3'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_a_3'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-403')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_b_3'] = $bupot_lain->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_b_3'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-403')
                                                             ->sum('pajak_penghasilan');
 
-                $data_spt_uni['cl_c_3'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 4 Ayat 2')
+                $data_spt_uni['cl_c_3'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
                                                             ->where('kap', '411128-403')
                                                             ->sum('pajak_penghasilan');
 
@@ -1124,6 +1126,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $monthNumber = MonthHelper::getMonthNumber($month);
 
         $bupots = Bupot::where('pembuat_id', $spt->badan_id)
+                ->where('status_penerbitan', 'published')
                 ->whereMonth('masa_awal', $monthNumber)
                 ->whereYear('masa_awal', $spt->masa_tahun)
                 ->get();

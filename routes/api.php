@@ -231,6 +231,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     Route::put('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'update']);
                     Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}', [ApiFakturController::class, 'destroy']);
                     Route::get('{assignment}/sistem/{sistem}/getAkun', [ApiFakturController::class, 'getCombinedAkunData']);
+                    Route::get('{assignment}/sistem/{sistem}/faktur-data-dashboard', [ApiFakturController::class, 'getDataDashboard']);
 
                     Route::post('{assignment}/sistem/{sistem}/faktur/delete-multiple', [ApiFakturController::class, 'deleteMultipleFakturs']);
                     Route::post('{assignment}/sistem/{sistem}/faktur/approve-multiple', [ApiFakturController::class, 'multipleDraftFakturToFix']);

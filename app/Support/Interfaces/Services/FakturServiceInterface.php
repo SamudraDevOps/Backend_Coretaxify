@@ -25,14 +25,7 @@ interface FakturServiceInterface extends BaseCrudServiceInterface {
         Request $request,
         int $perPage = 5
     );
-    //  /**
-    //  * Add a detail transaksi to a faktur
-    //  */
-    // public function addDetailTransaksi(Faktur $faktur, array $data);
 
-    // /**
-    //  * Delete a detail transaksi from a faktur
-    //  */
-    // public function deleteDetailTransaksi(Faktur $faktur, $detailTransaksiId): bool;
+    public function getDashboardData(Assignment $assignment, Sistem $sistem);
 
 }
