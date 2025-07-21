@@ -70,8 +70,8 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
                 'tipe' => AssignmentTypeEnum::ASSIGNMENT->value,
                 'name' => $data['name'],
                 'assignment_code' => $data['assignment_code'],
-                'start_period' => $data['start_period'],
-                'end_period' => $data['end_period'],
+                'start_period' => $data['start_period'] ?? null,
+                'end_period' => $data['end_period'] ?? null,
                 'supporting_file' => $filename,
             ]);
         }
