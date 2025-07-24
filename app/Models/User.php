@@ -65,6 +65,10 @@ class User extends Authenticatable
         return $this->roles->contains('name', $roleName);
     }
 
+    public function hasAnyRole(array $roleNames) {
+        return $this->roles->pluck('name')->intersect($roleNames)->isNotEmpty();
+    }
+
     public function groups(): BelongsToMany {
         return $this->belongsToMany(Group::class, 'group_users');
     }

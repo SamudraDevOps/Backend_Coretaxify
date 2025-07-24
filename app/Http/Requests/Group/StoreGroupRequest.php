@@ -14,8 +14,6 @@ class StoreGroupRequest extends FormRequest {
             case IntentEnum::API_USER_CREATE_GROUP->value:
                 return [
                     'name' => 'required|string',
-                    'start_period' => 'required|date',
-                    'end_period' => 'required|date|after:start_time',
                     'class_code' => 'required|string|unique:groups,class_code',
                     'status' => 'required|in:' . implode(',', GroupStatusEnum::toArray()),
                     'import_file' => 'nullable|mimes:xlsx,xls',
@@ -28,9 +26,6 @@ class StoreGroupRequest extends FormRequest {
 
         return [
             'name' => 'required|string',
-            'qty_student' => 'required|integer',
-            'start_period' => 'required|date',
-            'end_period' => 'required|date|after:start_time',
             'status' => 'required|in:' . implode(',', GroupStatusEnum::toArray()),
         ];
     }

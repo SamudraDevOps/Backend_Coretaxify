@@ -14,8 +14,6 @@ class Group extends Model
     protected $fillable = [
         'name',
         'user_id',
-        'start_period',
-        'end_period',
         'class_code',
         'status',
     ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Support\Enums\ContractStatusEnum;
 use Illuminate\Support\Carbon;
 use App\Support\Enums\IntentEnum;
 use Illuminate\Support\Facades\URL;
@@ -42,7 +43,17 @@ class AssignmentResource extends JsonResource {
         if(!empty($this->duration)) {
             $data['duration'] = $this->duration;
         }
-        
+
+        $user = $this->user;
+
+        if ($user->hasAnyRole(['admin', 'psc', 'instruktur', 'mahasiswa-psc'])) {
+            $data['valid'] = true;
+        } else if (!empty($this->user->contract->end_period)) {
+            $user->contract->status == ContractStatusEnum::INACTIVE->value ? $data['valid'] = false : $data['valid'] = Carbon::parse($this->end_period)->greaterThan(now());
+        } else {
+            $data['valid'] = true;
+        }
+
         return $data;
     }
 

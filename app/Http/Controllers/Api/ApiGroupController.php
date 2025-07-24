@@ -76,7 +76,7 @@ class ApiGroupController extends ApiController
                     return $this->groupService->create($request->validated());
                 } else {
                     return response()->json([
-                        'message' => 'You are not authorized to create a group',
+                        'message' => 'Anda tidak memiliki izin untuk membuat kelas',
                     ], 403);
                 }
             case IntentEnum::API_USER_JOIN_GROUP->value:
@@ -84,7 +84,7 @@ class ApiGroupController extends ApiController
                     return $this->groupService->joinGroup($request->validated());
                 } else {
                     return response()->json([
-                        'message' => 'You are not authorized to join a group',
+                        'message' => 'Anda tidak memiliki izin untuk bergabung dengan kelas',
                     ], 403);
                 }
         }

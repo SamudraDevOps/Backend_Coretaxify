@@ -16,8 +16,6 @@ class GroupSeeder extends Seeder
         $groups = Group::create([
                 'name' => 'Kelas 1A',
                 'user_id' => 2,
-                'start_period' => now(),
-                'end_period' => now()->addYears(1),
                 'class_code' => 'ABCD',
                 'status' => 'ACTIVE',
             ]);
@@ -26,8 +24,6 @@ class GroupSeeder extends Seeder
         $groups2 = Group::create([
                 'name' => 'Kelas PSC',
                 'user_id' => 5,
-                'start_period' => now(),
-                'end_period' => now()->addYears(1),
                 'class_code' => 'DCBA',
                 'status' => 'ACTIVE',
             ]);

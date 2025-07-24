@@ -2,11 +2,14 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Carbon;
+use App\Support\Enums\ContractStatusEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 
 class ContractResource extends JsonResource {
     public function toArray($request): array {
-        return [
+        $data =  [
             'id' => $this->id,
             'university' => new UniversityResource($this->university),
             'tasks' => TaskResource::collection($this->tasks),
@@ -23,5 +26,9 @@ class ContractResource extends JsonResource {
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
+
+        $this->status == ContractStatusEnum::INACTIVE->value ? $data['valid'] = false : $data['valid'] = Carbon::parse($this->user->contract->end_period)->greaterThan(now());
+
+        return $data;
     }
 }
