@@ -25,8 +25,6 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         $group = Group::create([
             'name' => $data['name'],
             'user_id' => $data['user_id'],
-            'start_period' => $data['start_period'],
-            'end_period' => $data['end_period'],
             'class_code' => $data['class_code'],
             'status' => $data['status'],
         ]);
@@ -46,6 +44,17 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         if (!$group) {
             throw new \Exception('Kelas tidak ditemukan.');
         }
+
+        $user = auth()->user();
+
+        // Check if the user is in a contract
+        if ($user->hasAnyRole(['mahasiswa', 'dosen'])) {
+            // Check if user's contract and group->user contract is same
+            if ($user->contract->id != $group->user->contract->id) {
+                throw new \Exception('Anda hanya bisa bergabung dengan kelas yang berada pada institusi Anda. Apabila Anda merasa ini adalah sebuah kesalahan, hubungi Admin.');
+            }
+        }
+
         $groupId = $group->id;
 
         $groupUser = GroupUser::create([
