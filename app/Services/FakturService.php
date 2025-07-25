@@ -210,7 +210,8 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 $filters = array_merge($request->query(),
                 [
                     'akun_penerima_id' => $sistem->id,
-                    'is_retur' => true
+                    'is_retur' => true,
+                    'is_kredit' => true,
                 ]);
                 break;
             default:
