@@ -35,6 +35,7 @@ use App\Http\Controllers\Api\ApiAccountTypeController;
 use App\Http\Controllers\Api\ApiDataEkonomiController;
 use App\Http\Controllers\Api\ApiFakturScoreController;
 use App\Http\Controllers\Api\ApiDetailKontakController;
+use App\Http\Controllers\Api\ApiNotificationController;
 use App\Http\Controllers\Api\ApiPihakTerkaitController;
 use App\Http\Controllers\Api\ApiInformasiUmumController;
 use App\Http\Controllers\Api\ApiKodeTransaksiController;
@@ -242,6 +243,8 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                     // Route::delete('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi/{detailTransaksi}', [ApiFakturController::class, 'deleteDetailTransaksi']);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/sistem-tambahan', ApiSistemTambahanController::class);
+
+                    Route::apiResource('{assignment}/sistem/{sistem}/notification', ApiNotificationController::class);
 
                     Route::apiResource('{assignment}/sistem/{sistem}/faktur/{faktur}/detail-transaksi', ApiDetailTransaksiController::class);
 
