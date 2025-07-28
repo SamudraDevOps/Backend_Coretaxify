@@ -226,6 +226,10 @@ class ApiFakturController extends ApiController
             ->pluck('id')
             ->toArray();
 
+        if (empty($draftFakturIds)) {
+            return response()->json(['message' => 'Faktur Sudah Dilaporkan'], 500);
+        }
+
         // Delete only draft fakturs
         $deletedCount = 0;
         if (!empty($draftFakturIds)) {
