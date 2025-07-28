@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('sistem_id')->references('id')->on('sistems');
             $table->string('pengirim')->nullable();
             $table->string('subjek')->nullable();
-            $table->string('isi')->nullable();
+            $table->text('isi')->nullable();
             $table->timestamps();
         });
     }
