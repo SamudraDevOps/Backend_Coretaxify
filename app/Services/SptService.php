@@ -747,6 +747,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp1_1'] = $a + $b;
 
+                $data_spt_pph['cl_bp1_4'] = $data_spt_pph['cl_bp1_1'];
+
                 $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
                 $d = $total_bp21->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp1_7'] = $c + $d;
@@ -758,6 +760,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $a2 = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
                 $b2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp2_1'] = $a2 + $b2;
+
+                $data_spt_pph['cl_bp2_4'] = $data_spt_pph['cl_bp2_1'];
 
                 $c2 = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
                 $d2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
