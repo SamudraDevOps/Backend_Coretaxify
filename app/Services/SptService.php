@@ -752,7 +752,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_pph['cl_bp1_1'] = $a + $b;
 
                 $data_spt_pph['cl_bp1_4'] = $data_spt_pph['cl_bp1_1'];
-                $data_spt_pph['cl_bp1_6'] = $data_spt_pph['cl_bp1_4'];
+                $data_spt_pph['cl_bp1_6'] = $data_spt_pph['cl_bp1_4'] - ($data_spt_pph['cl_bp1_5'] ?? 0);
 
                 $e = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
                 $f = $total_bp21_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
@@ -771,7 +771,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $data_spt_pph['cl_bp2_1'] = $a2;
 
                 $data_spt_pph['cl_bp2_4'] = $data_spt_pph['cl_bp2_1'];
-                $data_spt_pph['cl_bp2_6'] = $data_spt_pph['cl_bp2_4'];
+                $data_spt_pph['cl_bp2_6'] = $data_spt_pph['cl_bp2_4']- ($data_spt_pph['cl_bp1_5'] ?? 0);
 
                 $c2 = $total_pemotongan_lain_bp26->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp2_7'] = $c2;

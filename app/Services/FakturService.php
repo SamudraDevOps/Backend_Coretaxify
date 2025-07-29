@@ -209,6 +209,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             case IntentEnum::API_GET_FAKTUR_RETUR_MASUKAN->value:
                 $filters = array_merge($request->query(),
                 [
+                    'status' => FakturStatusEnum::APPROVED->value,
                     'akun_penerima_id' => $sistem->id,
                     'is_retur' => true,
                     'is_kredit' => true,
