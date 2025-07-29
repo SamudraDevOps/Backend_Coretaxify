@@ -37,16 +37,16 @@ class PembayaranResource extends JsonResource {
         $showSpecialFormat = $this->additional['show'] ?? false;
 
         if ($showSpecialFormat && $this->spt->jenis_pajak == JenisPajakEnum::PPH->value){
-            if($this->spt->spt_pph->cl_bp1_5 !== null || $this->spt->spt_pph->cl_bp1_5 != 0){
+            if($this->spt->spt_pph->cl_bp1_5 !== null && $this->spt->spt_pph->cl_bp1_5 != 0){
                 $bayar21 = ($this->spt->spt_pph->cl_bp1_6 ?? 0) + ($this->spt->spt_pph->cl_bp1_7 ?? 0);
             } else {
-                $bayar21 = ($this->spt->spt_pph->cl_bp1_5 ?? 0) + ($this->spt->spt_pph->cl_bp1_7 ?? 0);
+                $bayar21 = ($this->spt->spt_pph->cl_bp1_4 ?? 0) + ($this->spt->spt_pph->cl_bp1_7 ?? 0);
             }
 
-            if($this->spt->spt_pph->cl_bp2_5 !== null || $this->spt->spt_pph->cl_bp2_5 != 0){
+            if($this->spt->spt_pph->cl_bp2_5 !== null && $this->spt->spt_pph->cl_bp2_5 != 0){
                 $bayar26 = ($this->spt->spt_pph->cl_bp2_6 ?? 0) + ($this->spt->spt_pph->cl_bp2_7 ?? 0);
             } else {
-                $bayar26= ($this->spt->spt_pph->cl_bp2_5 ?? 0) + ($this->spt->spt_pph->cl_bp2_7 ?? 0);
+                $bayar26= ($this->spt->spt_pph->cl_bp2_4 ?? 0) + ($this->spt->spt_pph->cl_bp2_7 ?? 0);
             }
 
             $data = [

@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             BupotSeeder::class,
             PicSeeder::class,
             FakturSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }

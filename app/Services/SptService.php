@@ -198,16 +198,18 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
-                if($spt_pph->cl_bp1_5 !== null || $spt_pph->cl_bp1_5 != 0){
+                $bayar21 = 0;
+                $bayar26 = 0;
+                if($spt_pph->cl_bp1_5 !== null && $spt_pph->cl_bp1_5 != 0){ // jika bp5 ada nilainya maka bp6
                     $bayar21 = $spt_pph->cl_bp1_6 ?? 0;
-                } else {
-                    $bayar21 = $spt_pph->cl_bp1_5 ?? 0;
+                } else {                                                    // jika bp5 tidak ada hasilnya maka bp4
+                    $bayar21 = $spt_pph->cl_bp1_4 ?? 0;
                 }
 
-                if($spt_pph->cl_bp2_5 !== null || $spt_pph->cl_bp2_5 != 0){
+                if($spt_pph->cl_bp2_5 !== null && $spt_pph->cl_bp2_5 != 0){
                     $bayar26 = $spt_pph->cl_bp2_6 ?? 0;
                 } else {
-                    $bayar26= $spt_pph->cl_bp2_5 ?? 0;
+                    $bayar26= $spt_pph->cl_bp2_4 ?? 0;
                 }
 
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
@@ -234,16 +236,16 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
 
-                if($spt_pph->cl_bp1_5 !== null || $spt_pph->cl_bp1_5 != 0){
+                if($spt_pph->cl_bp1_5 !== null && $spt_pph->cl_bp1_5 != 0){
                     $bayar21 = $spt_pph->cl_bp1_6 ?? 0;
                 } else {
-                    $bayar21 = $spt_pph->cl_bp1_5 ?? 0;
+                    $bayar21 = $spt_pph->cl_bp1_4 ?? 0;
                 }
 
-                if($spt_pph->cl_bp2_5 !== null || $spt_pph->cl_bp2_5 != 0){
+                if($spt_pph->cl_bp2_5 !== null && $spt_pph->cl_bp2_5 != 0){
                     $bayar26 = $spt_pph->cl_bp2_6 ?? 0;
                 } else {
-                    $bayar26= $spt_pph->cl_bp2_5 ?? 0;
+                    $bayar26= $spt_pph->cl_bp2_4 ?? 0;
                 }
 
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
@@ -537,7 +539,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
          $data['cl_3a_ppn'] = ($data['cl_1a2_ppn'] ?? 0) + ($data['cl_1a3_ppn'] ?? 0) + ($data['cl_1a4_ppn'] ?? 0) + ($data['cl_1a5_ppn'] ?? 0);
          $data['cl_3c_ppn'] = ($data['cl_2g_ppn'] ?? 0);
-         $data['cl_3e_ppn'] = ($data['cl_3a_ppn'] ?? 0) - ($data['cl_3b_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0);
+         $data['cl_3e_ppn'] = ($data['cl_3a_ppn'] ?? 0) - ($data['cl_3b_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0) - ($data['cl_3d_ppn'] ?? 0);
          $data['cl_3g_ppn'] = ($data['cl_3e_ppn'] ?? 0) - ($data['cl_3f_ppn'] ?? 0);
 
          if ($data['cl_3g_ppn'] < 0){
@@ -740,32 +742,42 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
                 $total_pemotongan_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
                     ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
-                $total_bp21 = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value);
-                $total_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value);
+                $total_bp21_lain = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value)
+                    ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
+                $total_bp21_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value)
+                    ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
 
                 $a = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
-                $b = $total_bp21->sum('pajak_penghasilan') ?? 0;
+                $b = $total_bp21_normal->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp1_1'] = $a + $b;
 
-                $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
-                $d = $total_bp21->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp1_7'] = $c + $d;
+                $data_spt_pph['cl_bp1_4'] = $data_spt_pph['cl_bp1_1'];
+                $data_spt_pph['cl_bp1_6'] = $data_spt_pph['cl_bp1_4'] - ($data_spt_pph['cl_bp1_5'] ?? 0);
 
                 $e = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
-                $f = $total_bp21->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $f = $total_bp21_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
                 $data_spt_pph['cl_bp1_5'] = $e + $f;
 
-                $a2 = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
-                $b2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp2_1'] = $a2 + $b2;
+                $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
+                $d = $total_bp21_lain->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp1_7'] = $c + $d;
 
-                $c2 = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
-                $d2 = $total_bp26->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp2_7'] = $c2 + $d2;
+                // BP26
+                $total_pemotongan_lain_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value)
+                    ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
+                $total_pemotongan_normal_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value)
+                    ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
+                $a2 = $total_pemotongan_normal_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_1'] = $a2;
 
-                $e2 = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
-                $f2 = $total_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
-                $data_spt_pph['cl_bp2_5'] = $e2 + $f2;
+                $data_spt_pph['cl_bp2_4'] = $data_spt_pph['cl_bp2_1'];
+                $data_spt_pph['cl_bp2_6'] = $data_spt_pph['cl_bp2_4']- ($data_spt_pph['cl_bp1_5'] ?? 0);
+
+                $c2 = $total_pemotongan_lain_bp26->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_7'] = $c2;
+
+                $e2 = $total_pemotongan_normal_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                $data_spt_pph['cl_bp2_5'] = $e2;
 
                 $data_spt_pph['spt_id'] = $spt->id;
 
@@ -1064,6 +1076,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 return FakturResource::collection($fakturKeluaran);
             case JenisSptPpnEnum::B1->value:
                 // return FakturResource::collection($fakturKeluaran);
+                break;
             case JenisSptPpnEnum::B2->value:
                 $fakturMasukanB2 = $fakturMasukan->whereIn('kode_transaksi', [1, 2, 3, 4, 5, 6, 9, 10])->where('is_kredit', true);
                 return (new FakturCollection($fakturMasukanB2))->additional([

@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Models\Bupot;
-use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
-use App\Support\Interfaces\Repositories\BupotRepositoryInterface;
-use App\Support\Interfaces\Services\BupotServiceInterface;
+use App\Models\Notification;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\Interfaces\Services\BupotServiceInterface;
+use App\Support\Interfaces\Repositories\BupotRepositoryInterface;
+use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
 
 class BupotService extends BaseCrudService implements BupotServiceInterface
 {
@@ -56,6 +57,14 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
                 if ($bupot->status_penerbitan == 'draft' && ($bupot->status == 'normal' || $bupot->status == 'pembetulan')) {
                     $bupot->status_penerbitan = 'published'; // Changed from == to =
                     $bupot->save();
+
+                    Notification::create([
+                        'sistem_id' => $bupot->pembuat_id,
+                        'pengirim' => $bupot->pembuat->nama_akun,
+                        'subjek' => 'Anda Menerima Bukti Pemotongan/Pemungutan baru. Silahkan cek detail',
+                        'isi' => 'Anda menerima Bukti Pemotongan/Pemungutan baru. Detil pemotongan/pemungutan sebagai berikut: Nomor Pemotongan/Pemungutan: ' . ($bupot->nomor_pemotongan ?? '-') . '. NPWP/NIK Pemotong/Pemungut: ' . ($bupot->npwp_akun ?? '-') . '. Nama Pemotong/Pemungut: ' . ($bupot->nama_akun ?? '-') . '. Dpp: ' . ($bupot->dasar_pengenaan_pajak ?? 0) . ' PPh yang Dipotong/Dipungut: ' . ($bupot->pajak_penghasilan ?? 0) . '. Regards, ' . ($bupot->pembuat->nama_akun ?? '-'),
+                    ]);
+
                     $successCount++;
                 } else if ($bupot->status_penerbitan == 'draft' && $bupot->status == 'invalid') {
                     $errors[] = "BUPOT dengan ID {$id} tidak dapat diterbitkan karena statusnya invalid";

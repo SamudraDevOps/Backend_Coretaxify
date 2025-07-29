@@ -38,7 +38,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
 
         $kodeTransaksi = KodeTransaksi::where('kode', $data['kode_transaksi'])->first();
 
-        $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
+        $randomNumber = '0'. $kodeTransaksi->kode .'0' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
         $data['badan_id'] = $sistem->id;
@@ -189,8 +189,8 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             case IntentEnum::API_GET_FAKTUR_PENERIMA->value:
                 $filters = array_merge($request->query(),
                 [
+                    'status' => FakturStatusEnum::APPROVED->value,
                     'akun_penerima_id' => $sistem->id,
-                    'is_draft' => false
                 ]);
                 break;
             case IntentEnum::API_GET_FAKTUR_MASUKAN_BY_NOMOR_FAKTUR->value:
@@ -210,7 +210,8 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 $filters = array_merge($request->query(),
                 [
                     'akun_penerima_id' => $sistem->id,
-                    'is_retur' => true
+                    'is_retur' => true,
+                    'is_kredit' => true,
                 ]);
                 break;
             default:
@@ -284,7 +285,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     public function getDashboardData($assignment, $sistem)
     {
         $getFakturKeluaran = Faktur::where('akun_pengirim_id', $sistem->id)->count();
-        $getFakturMasukan = Faktur::where('akun_penerima_id', $sistem->id)->count();
+        $getFakturMasukan = Faktur::where('akun_penerima_id', $sistem->id)->where('status', FakturStatusEnum::APPROVED->value)->count();
 
         $getFakturKeluaranAmended = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::AMENDED->value)->count();
         $getFakturKeluaranDraft = Faktur::where('akun_pengirim_id', $sistem->id)->where('status', FakturStatusEnum::DRAFT->value)->count();
