@@ -191,7 +191,6 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 [
                     'status' => FakturStatusEnum::APPROVED->value,
                     'akun_penerima_id' => $sistem->id,
-                    'is_draft' => false
                 ]);
                 break;
             case IntentEnum::API_GET_FAKTUR_MASUKAN_BY_NOMOR_FAKTUR->value:
