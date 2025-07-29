@@ -38,7 +38,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
 
         $kodeTransaksi = KodeTransaksi::where('kode', $data['kode_transaksi'])->first();
 
-        $randomNumber = '0'. $kodeTransaksi->kode .'-0-' . mt_rand(000000000000000, 999999999999999);
+        $randomNumber = '0'. $kodeTransaksi->kode .'0' . mt_rand(000000000000000, 999999999999999);
 
         $data['nomor_faktur_pajak'] = $randomNumber;
         $data['badan_id'] = $sistem->id;
