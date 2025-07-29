@@ -43,6 +43,10 @@ class FakturRepository extends BaseRepository implements FakturRepositoryInterfa
             $query->where('akun_penerima_id', $searchParams['akun_penerima_id']);
         }
 
+        if (isset($searchParams['status'])) {
+            $query->where('status', $searchParams['status']);
+        }
+
         if (isset($searchParams['is_draft'])) {
             $query->where('is_draft', $searchParams['is_draft']);
         }
