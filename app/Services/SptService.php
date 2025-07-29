@@ -539,7 +539,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
          $data['cl_3a_ppn'] = ($data['cl_1a2_ppn'] ?? 0) + ($data['cl_1a3_ppn'] ?? 0) + ($data['cl_1a4_ppn'] ?? 0) + ($data['cl_1a5_ppn'] ?? 0);
          $data['cl_3c_ppn'] = ($data['cl_2g_ppn'] ?? 0);
-         $data['cl_3e_ppn'] = ($data['cl_3a_ppn'] ?? 0) - ($data['cl_3b_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0);
+         $data['cl_3e_ppn'] = ($data['cl_3a_ppn'] ?? 0) - ($data['cl_3b_ppn'] ?? 0) - ($data['cl_3c_ppn'] ?? 0) - ($data['cl_3d_ppn'] ?? 0);
          $data['cl_3g_ppn'] = ($data['cl_3e_ppn'] ?? 0) - ($data['cl_3f_ppn'] ?? 0);
 
          if ($data['cl_3g_ppn'] < 0){
