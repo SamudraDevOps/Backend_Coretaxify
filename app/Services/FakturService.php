@@ -146,17 +146,22 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
                 $dataFakturOld = Faktur::where('id', $keyOrModel->id)->first();
 
                 $dataFakturOld->status = FakturStatusEnum::AMENDED->value;
+
+                $nomorLama = $dataFakturOld->nomor_faktur_pajak;
+                if (strlen($nomorLama) >= 3) {
+                    $nomorLama[2] = '0';
+                    $dataFakturOld->nomor_faktur_pajak = $nomorLama;
+                }
                 $dataFakturOld->save();
 
                 $dataFakturNew = $dataFakturOld->toArray();
                 unset($dataFakturNew['id'], $dataFakturNew['created_at'], $dataFakturNew['updated_at']);
 
-                $parts = explode('-', $dataFakturNew['nomor_faktur_pajak']);
-                if (isset($parts[1]) && $parts[1] === '0') {
-                    $parts[1] = '1';
+                $nomorBaru = $dataFakturNew['nomor_faktur_pajak'];
+                if (strlen($nomorBaru) >= 3) {
+                    $nomorBaru[2] = '1';
+                    $dataFakturNew['nomor_faktur_pajak'] = $nomorBaru;
                 }
-                $dataFakturNew['nomor_faktur_pajak'] = implode('-', $parts);
-
                 $dataFakturNew = array_merge($dataFakturNew, $data);
                 $dataFakturNew['status'] = FakturStatusEnum::APPROVED->value;
 
