@@ -24,8 +24,8 @@ class FakturResource extends JsonResource
         switch($intent_jenis_spt_ppn) {
             case JenisSptPpnEnum::A1->value:
                 return [
-                    'nama_pembeli' => $this->pic->nama_akun,
-                    'npwp' => $this->pic->npwp_akun,
+                    'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                    'npwp' => $this->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -35,8 +35,8 @@ class FakturResource extends JsonResource
                 ];
             case JenisSptPpnEnum::A2->value:
                 return [
-                    'nama_pembeli' => $this->pic->nama_akun,
-                    'npwp' => $this->pic->npwp_akun,
+                    'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                    'npwp' => $this->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -46,8 +46,8 @@ class FakturResource extends JsonResource
                     ];
             case JenisSptPpnEnum::B1->value:
                 return [
-                    'nama_pembeli' => $this->pic->nama_akun,
-                    'npwp' => $this->pic->npwp_akun,
+                    'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                    'npwp' => $this->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -63,8 +63,8 @@ class FakturResource extends JsonResource
                     return [
                         // Data original (sebelum retur)
                         [
-                            'nama_pembeli' => $this->pic->nama_akun,
-                            'npwp' => $this->pic->npwp_akun,
+                            'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                            'npwp' => $this->akun_pengirim->npwp_akun,
                             'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                             'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                             'dpp' => $this->dpp,
@@ -75,8 +75,8 @@ class FakturResource extends JsonResource
                         ],
                         // Data retur (nilai negatif)
                         [
-                            'nama_pembeli' => $this->pic->nama_akun,
-                            'npwp' => $this->pic->npwp_akun,
+                            'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                            'npwp' => $this->akun_pengirim->npwp_akun,
                             'faktur_pajak_nomor' => $this->nomor_retur ?? $this->nomor_faktur_pajak,
                             'faktur_pajak_tanggal' => $this->tanggal_retur ?? $this->tanggal_faktur_pajak,
                             'dpp' => 0, // atau bisa pakai dpp original jika diperlukan
@@ -89,8 +89,8 @@ class FakturResource extends JsonResource
                 } else {
                     // Data normal (tidak retur)
                     return [
-                        'nama_pembeli' => $this->pic->nama_akun,
-                        'npwp' => $this->pic->npwp_akun,
+                        'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                        'npwp' => $this->akun_pengirim->npwp_akun,
                         'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                         'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                         'dpp' => $this->dpp,
