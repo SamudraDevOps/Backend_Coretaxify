@@ -198,7 +198,7 @@ class ApiFakturController extends ApiController
 
         // Only draft fakturs can be deleted
         if ($faktur->status !== FakturStatusEnum::DRAFT->value) {
-            return response()->json(['message' => 'Only draft fakturs can be deleted'], 400);
+            return response()->json(['message' => 'Hanya Faktur Draft yang Bisa Dihapus'], 400);
         }
 
         $result = $this->fakturService->delete($faktur);
