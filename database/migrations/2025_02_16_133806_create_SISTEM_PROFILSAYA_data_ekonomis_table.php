@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('penghasilan_per_bulan')->nullable();
             $table->date('tanggal_mulai')->nullable();
             $table->string('jumlah_karyawan')->nullable();
-            $table->string('deskrisi_kegiatan')->nullable();
+            $table->string('deskripsi_kegiatan')->nullable();
             $table->string('periode_pembukuan')->nullable();
             $table->string('peredaran_bruto')->nullable();
             $table->string('metode_pembukuan')->nullable();

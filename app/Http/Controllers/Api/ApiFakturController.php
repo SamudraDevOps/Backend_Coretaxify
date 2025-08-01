@@ -197,6 +197,11 @@ class ApiFakturController extends ApiController
         }
 
         // Only draft fakturs can be deleted
+        if ($faktur->status == FakturStatusEnum::APPROVED->value){
+            Faktur::where('id', $faktur->id)->update(['status' => FakturStatusEnum::CANCELED->value]);
+            return response()->json(['message' => 'Faktur Dibatalkan'], 200);
+        }
+
         if ($faktur->status !== FakturStatusEnum::DRAFT->value) {
             return response()->json(['message' => 'Hanya Faktur Draft yang Bisa Dihapus'], 400);
         }
@@ -276,6 +281,19 @@ class ApiFakturController extends ApiController
         Faktur::whereIn('id', $fakturIds)->update(['is_kredit' => false]);
 
         return response()->json(['message' => 'Fakturs tidak dikreditkan']);
+    }
+
+    public function multipleDibatalkanFakturs(Assignment $assignment, Sistem $sistem,Request $request)
+    {
+        $fakturIds = $request->input('faktur_ids', []);
+
+        if (empty($fakturIds)) {
+            return response()->json(['message' => 'No faktur IDs provided'], 400);
+        }
+
+        Faktur::whereIn('id', $fakturIds)->update(['status' => FakturStatusEnum::CANCELED->value]);
+
+        return response()->json(['message' => 'Fakturs Dibatalkan']);
     }
 
     public function multipleDraftFakturToFix(Assignment $assignment, Sistem $sistem, Request $request)
