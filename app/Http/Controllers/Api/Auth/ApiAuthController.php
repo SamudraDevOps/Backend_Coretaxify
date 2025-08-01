@@ -86,7 +86,11 @@ class ApiAuthController extends ApiController {
 
         if (!$contract) {
             // if (str_starts_with($validated['contract_code'], 'PSC-')) {
-            $group = Group::where('class_code', $validated['contract_code'])->firstOrFail();
+            $group = Group::where('class_code', $validated['contract_code'])->first();
+
+            if (!$group) {
+                throw new \Exception('Kode Registrasi yang Anda masukkan tidak Valid. Mohon hubungi Admin apabila ada kendala.');
+            }
 
             $user = User::create([
                 'name' => $validated['name'],
