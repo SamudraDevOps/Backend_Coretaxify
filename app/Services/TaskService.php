@@ -275,7 +275,7 @@ class TaskService extends BaseCrudService implements TaskServiceInterface
         })->paginate();
     }
 
-    public function getTasksByUserRole($user, $perPage = 15)
+    public function getTasksByUserRole($user, $perPage = 20)
     {
         $repository = app($this->getRepositoryClass());
 
@@ -289,6 +289,10 @@ class TaskService extends BaseCrudService implements TaskServiceInterface
         return $repository->query()
             ->whereHas('user.roles', function ($query) use ($userRoleIds) {
                 $query->whereIn('roles.id', $userRoleIds);
+            })
+            ->where(function ($query) {
+                $query->where('status', 'active')
+                      ->orWhereNull('status');
             })
             ->paginate($perPage);
     }

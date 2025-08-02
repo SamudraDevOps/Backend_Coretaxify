@@ -22,7 +22,7 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface {
 
         $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
-        $query = $this->applyColumnFilters($query, $searchParams, ['id']);
+        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'status']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 

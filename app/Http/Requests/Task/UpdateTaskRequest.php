@@ -9,6 +9,7 @@ class UpdateTaskRequest extends FormRequest {
     public function rules(): array {
         return [
             'name' => 'sometimes|string',
+            'status' => 'sometimes|in:' . implode(',', ['active', 'inactive']),
             'import_file' => 'sometimes|mimes:xlsx,xls,csv',
         ];
     }
