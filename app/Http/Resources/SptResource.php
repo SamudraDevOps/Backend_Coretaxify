@@ -43,6 +43,7 @@ class SptResource extends JsonResource {
             'telepon_seluler' => $this->sistem->profil_saya->detail_kontak->nomor_handphone ?? null,
             'kota_badan' => $this->sistem->kota_badan,
             'nama_pic' => $this->pic->nama_akun,
+            'npwp_pic' => $this->pic->npwp_akun,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
