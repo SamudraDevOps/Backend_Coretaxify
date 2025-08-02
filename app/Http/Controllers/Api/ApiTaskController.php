@@ -69,7 +69,14 @@ class ApiTaskController extends ApiController {
         $perPage = request()->get('perPage', 20);
         $user = auth()->user();
 
-        return $user->contract->tasks;
+        // return $user->contract->tasks;
+        return $user->contract
+                ->tasks()
+                ->where(function ($query) {
+                    $query->where('status', 'active')
+                          ->orWhereNull('status');
+                })
+                ->paginate($perPage);
     }
 
     public function downloadPublic(Request $request, Task $task) {

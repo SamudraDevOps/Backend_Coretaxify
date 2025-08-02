@@ -13,6 +13,7 @@ class TaskResource extends JsonResource {
             'user' => new UserResource($this->whenLoaded('user')),
             'name' => $this->name,
             'file_path' => $this->file_path,
+            'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

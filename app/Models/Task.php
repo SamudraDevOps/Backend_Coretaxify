@@ -17,6 +17,7 @@ class Task extends Model
         'user_id',
         'name',
         'file_path',
+        'status',
     ];
     protected $guarded = ['id'];
 
