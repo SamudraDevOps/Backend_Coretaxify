@@ -74,15 +74,15 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
                                 'isi' => 'Anda menerima Bukti Pemotongan/Pemungutan baru. Detil pemotongan/pemungutan sebagai berikut: Nomor Pemotongan/Pemungutan: ' . ($bupot->nomor_pemotongan ?? '-') . '. NPWP/NIK Pemotong/Pemungut: ' . ($bupot->npwp_akun ?? '-') . '. Nama Pemotong/Pemungut: ' . ($bupot->nama_akun ?? '-') . '. Dpp: ' . ($bupot->dasar_pengenaan_pajak ?? 0) . ' PPh yang Dipotong/Dipungut: ' . ($bupot->pajak_penghasilan ?? 0) . '. Regards, ' . ($bupot->pembuat->nama_akun ?? '-'),
                             ]);
                         } catch (\Exception $e) {
-                            return response()->json([
-                                'message' => "Berhasil menerbitkan {$successCount} BUPOT (tanpa notifikasi)",
-                            ], 200);
+                            // return response()->json([
+                            //     'message' => "Berhasil menerbitkan {$successCount} BUPOT (tanpa notifikasi)",
+                            // ], 200);
                         }
                     } else {
                         // Jika idSistemPembuat null, tetap return 200
-                        return response()->json([
-                            'message' => "Berhasil menerbitkan {$successCount} BUPOT (tanpa notifikasi)",
-                        ], 200);
+                        // return response()->json([
+                        //     'message' => "Berhasil menerbitkan {$successCount} BUPOT (tanpa notifikasi)",
+                        // ], 200);
                     }
 
                     $successCount++;
