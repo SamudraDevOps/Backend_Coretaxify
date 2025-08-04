@@ -14,7 +14,7 @@ class UpdateDataEkonomiRequest extends FormRequest {
             'penghasilan_per_bulan' => 'nullable|string',
             'tanggal_mulai' => 'nullable|date',
             'jumlah_karyawan' => 'nullable|string',
-            'deskrisi_kegiatan' => 'nullable|string',
+            'deskripsi_kegiatan' => 'nullable|string',
             'periode_pembukuan' => 'nullable|string',
             'peredaran_bruto' => 'nullable|string',
             'metode_pembukuan' => 'nullable|string',
