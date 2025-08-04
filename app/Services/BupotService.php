@@ -59,16 +59,31 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
                     $bupot->status_penerbitan = 'published'; // Changed from == to =
                     $bupot->save();
 
-                    $idAssigment = Sistem::where('id',$bupot->pembuat_id)->first()->assignment_user_id;
-                    $idSistemPembuat = Sistem::where('assignment_user_id', $idAssigment)
-                                    ->where('npwp_akun', $bupot->npwp_akun)->first()->id;
+                    $idAssigmentObj = Sistem::where('id', $bupot->pembuat_id)->first();
+                    $idAssigment = $idAssigmentObj ? $idAssigmentObj->assignment_user_id : null;
+                    $idSistemPembuatObj = Sistem::where('assignment_user_id', $idAssigment)
+                        ->where('npwp_akun', $bupot->npwp_akun)->first();
+                    $idSistemPembuat = $idSistemPembuatObj ? $idSistemPembuatObj->id : null;
 
-                    Notification::create([
-                        'sistem_id' => $idSistemPembuat,
-                        'pengirim' => $bupot->pembuat->nama_akun,
-                        'subjek' => 'Anda Menerima Bukti Pemotongan/Pemungutan baru. Silahkan cek detail',
-                        'isi' => 'Anda menerima Bukti Pemotongan/Pemungutan baru. Detil pemotongan/pemungutan sebagai berikut: Nomor Pemotongan/Pemungutan: ' . ($bupot->nomor_pemotongan ?? '-') . '. NPWP/NIK Pemotong/Pemungut: ' . ($bupot->npwp_akun ?? '-') . '. Nama Pemotong/Pemungut: ' . ($bupot->nama_akun ?? '-') . '. Dpp: ' . ($bupot->dasar_pengenaan_pajak ?? 0) . ' PPh yang Dipotong/Dipungut: ' . ($bupot->pajak_penghasilan ?? 0) . '. Regards, ' . ($bupot->pembuat->nama_akun ?? '-'),
-                    ]);
+                    if ($idSistemPembuat) {
+                        try {
+                            Notification::create([
+                                'sistem_id' => $idSistemPembuat,
+                                'pengirim' => $bupot->pembuat->nama_akun,
+                                'subjek' => 'Anda Menerima Bukti Pemotongan/Pemungutan baru. Silahkan cek detail',
+                                'isi' => 'Anda menerima Bukti Pemotongan/Pemungutan baru. Detil pemotongan/pemungutan sebagai berikut: Nomor Pemotongan/Pemungutan: ' . ($bupot->nomor_pemotongan ?? '-') . '. NPWP/NIK Pemotong/Pemungut: ' . ($bupot->npwp_akun ?? '-') . '. Nama Pemotong/Pemungut: ' . ($bupot->nama_akun ?? '-') . '. Dpp: ' . ($bupot->dasar_pengenaan_pajak ?? 0) . ' PPh yang Dipotong/Dipungut: ' . ($bupot->pajak_penghasilan ?? 0) . '. Regards, ' . ($bupot->pembuat->nama_akun ?? '-'),
+                            ]);
+                        } catch (\Exception $e) {
+                            return response()->json([
+                                'message' => "Berhasil menerbitkan {$successCount} BUPOT (tanpa notifikasi)",
+                            ], 200);
+                        }
+                    } else {
+                        // Jika idSistemPembuat null, tetap return 200
+                        return response()->json([
+                            'message' => "Berhasil menerbitkan {$successCount} BUPOT (tanpa notifikasi)",
+                        ], 200);
+                    }
 
                     $successCount++;
                 } else if ($bupot->status_penerbitan == 'draft' && $bupot->status == 'invalid') {
