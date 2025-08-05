@@ -38,11 +38,30 @@ class SistemService extends BaseCrudService implements SistemServiceInterface
                 abort(Response::HTTP_FORBIDDEN, 'No assignment exists for the current user.');
             }
 
+            $user = auth()->user();
+            $dataAssign = $data['assignment'];
+
+            $assignmentUser = AssignmentUser::where('user_id', $user->id)
+                ->where('assignment_id', $dataAssign)
+                ->first();
+
+            $startedAt = now();
+
+            if ($assignmentUser->assignment->isExam()) {
+                $time = $assignmentUser->assignment->duration;
+                $assignmentUser->update([
+                    'is_start' => true,
+                    'started_at' => $startedAt,
+                    'submitted_at' => $startedAt->addMinutes($time),
+                ]);
+            } else {
+                $assignmentUser->update([
+                    'is_start' => true
+                ]);
+            }
+
             AssignmentUser::where('user_id', $userId)
                 ->update(['is_start' => true]);
-
-            $dataAssign = $data['assignment'];
-            $user = auth()->user();
 
             $assignUser_id = AssignmentUser::where('user_id', $user->id)
                 ->where('assignment_id', $dataAssign)
