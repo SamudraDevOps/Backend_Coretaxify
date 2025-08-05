@@ -30,11 +30,11 @@ class AssignmentUser extends Model
         }
 
         $endPeriod = $this->assignment->end_period;
-        $personalDeadline = $this->started_at->addMinutes($this->assignment->duration);
+        $personalDeadline = $this->submitted_at;
 
         $finalDeadline = $endPeriod->lt($personalDeadline) ? $endPeriod : $personalDeadline;
 
-        return now()->lt($finalDeadline) ? now()->diffInSeconds() : 0;
+        return now()->lt($finalDeadline) ? now()->diffInSeconds($finalDeadline) : 0;
     }
 
     public function sistems()
