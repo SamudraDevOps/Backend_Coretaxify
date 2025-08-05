@@ -29,6 +29,14 @@ class Assignment extends Model
         'supporting_file',
     ];
 
+    public function isValid() {
+        if ($this->group) {
+            return $this->group->isValid();
+        }
+
+        return $this->start_period >= now() && $this->end_period <= now();
+    }
+
     public function isExam()
     {
         return $this->tipe === self::TYPE_EXAM;

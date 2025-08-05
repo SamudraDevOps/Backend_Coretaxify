@@ -25,6 +25,7 @@ class AssignmentResource extends JsonResource {
             'end_period' => $this->end_period ? Carbon::parse($this->end_period)->format('d-m-Y H:i:s') : null,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
+            'is_valid' => $this->isValid(),
         ];
 
         // Add download URL for supporting file if it exists
@@ -42,7 +43,7 @@ class AssignmentResource extends JsonResource {
         if(!empty($this->duration)) {
             $data['duration'] = $this->duration;
         }
-        
+
         return $data;
     }
 
