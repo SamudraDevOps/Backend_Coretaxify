@@ -78,6 +78,8 @@ class AssignmentUserResource extends JsonResource
                     'assignment' => new AssignmentResource($this->assignment),
                     'is_start' => $this->is_start,
                     'score' => $this->score,
+                    'is_valid' => $this->isValid(),
+                    'remaining_time' => $this->remainingTime(),
                     // 'created_at' => $this->created_at->toDateTimeString(),
                     // 'updated_at' => $this->updated_at->toDateTimeString(),
                 ];
