@@ -41,7 +41,7 @@ class Contract extends Model
         }
 
         // If status is ACTIVE, then check if the end period is in the future or now
-        return $this->end_period <= now();
+        return $this->start_period >= now() && $this->end_period <= now();
     }
 
     public static function generateContractCode($type, $existingNumber = null) {
