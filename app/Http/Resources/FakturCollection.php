@@ -36,8 +36,8 @@ class FakturCollection extends ResourceCollection
         foreach ($this->collection as $faktur) {
             // Data normal selalu masuk ke array 'data'
             $normalData = [
-                'nama_pembeli' => $this->akun_pengirim->nama_akun,
-                'npwp' => $this->akun_pengirim->npwp_akun,
+                'nama_pembeli' => $faktur->akun_pengirim->nama_akun,
+                'npwp' => $faktur->akun_pengirim->npwp_akun,
                 'faktur_pajak_nomor' => $faktur->nomor_faktur_pajak,
                 'faktur_pajak_tanggal' => $faktur->tanggal_faktur_pajak,
                 'dpp' => $faktur->dpp,
