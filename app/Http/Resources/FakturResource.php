@@ -101,8 +101,8 @@ class FakturResource extends JsonResource
                 }
             case JenisSptPpnEnum::C->value:
                 return [
-                    'nama_pembeli' => $this->pic->nama_akun,
-                    'npwp' => $this->pic->npwp_akun,
+                    'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                    'npwp' => $this->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $this->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $this->tanggal_faktur_pajak,
                     'dpp' => $this->dpp,
@@ -305,8 +305,8 @@ class FakturResource extends JsonResource
         foreach ($this->collection as $faktur) {
             // Data normal selalu masuk ke array 'data'
             $normalData = [
-                'nama_pembeli' => $faktur->pic->nama_akun,
-                'npwp' => $faktur->pic->npwp_akun,
+                'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                'npwp' => $this->akun_pengirim->npwp_akun,
                 'faktur_pajak_nomor' => $faktur->nomor_faktur_pajak,
                 'faktur_pajak_tanggal' => $faktur->tanggal_faktur_pajak,
                 'dpp' => $faktur->dpp,
@@ -320,8 +320,8 @@ class FakturResource extends JsonResource
             // Kalau ada retur, tambahkan ke array 'data_retur'
             if ($faktur->is_retur) {
                 $returData = [
-                    'nama_pembeli' => $faktur->pic->nama_akun,
-                    'npwp' => $faktur->pic->npwp_akun,
+                    'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                    'npwp' => $this->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $faktur->nomor_retur ?? $faktur->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $faktur->tanggal_retur ?? $faktur->tanggal_faktur_pajak,
                     'dpp' => 0,
