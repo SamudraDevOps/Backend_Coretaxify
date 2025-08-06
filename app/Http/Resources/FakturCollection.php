@@ -36,8 +36,8 @@ class FakturCollection extends ResourceCollection
         foreach ($this->collection as $faktur) {
             // Data normal selalu masuk ke array 'data'
             $normalData = [
-                'nama_pembeli' => $faktur->pic->nama_akun,
-                'npwp' => $faktur->pic->npwp_akun,
+                'nama_pembeli' => $this->akun_pengirim->nama_akun,
+                'npwp' => $this->akun_pengirim->npwp_akun,
                 'faktur_pajak_nomor' => $faktur->nomor_faktur_pajak,
                 'faktur_pajak_tanggal' => $faktur->tanggal_faktur_pajak,
                 'dpp' => $faktur->dpp,
@@ -52,8 +52,8 @@ class FakturCollection extends ResourceCollection
         // Process semua faktur retur yang ada
         foreach ($fakturReturCollection as $fakturRetur) {
             $returData = [
-                'nama_pembeli' => $fakturRetur['pic']['nama_akun'] ?? $fakturRetur->pic->nama_akun,
-                'npwp' => $fakturRetur['pic']['npwp_akun'] ?? $fakturRetur->pic->npwp_akun,
+                'nama_pembeli' => $fakturRetur['akun_pengirim']['nama_akun'] ?? $fakturRetur->akun_pengirim->nama_akun,
+                'npwp' => $fakturRetur['akun_pengirim']['npwp_akun'] ?? $fakturRetur->akun_pengirim->npwp_akun,
                 'faktur_pajak_nomor' => $fakturRetur['nomor_retur'] ?? $fakturRetur->nomor_retur ?? ($fakturRetur['nomor_faktur_pajak'] ?? $fakturRetur->nomor_faktur_pajak),
                 'faktur_pajak_tanggal' => $fakturRetur['tanggal_retur'] ?? $fakturRetur->tanggal_retur ?? ($fakturRetur['tanggal_faktur_pajak'] ?? $fakturRetur->tanggal_faktur_pajak),
                 'dpp' => 0,
@@ -62,7 +62,7 @@ class FakturCollection extends ResourceCollection
                 'ppnbm' => $fakturRetur['ppnbm_retur'] ?? $fakturRetur->ppnbm_retur ?? 0,
             ];
 
-            $data[] = $returData; 
+            $data[] = $returData;
         }
 
         return ['data' => $data];
@@ -76,8 +76,8 @@ class FakturCollection extends ResourceCollection
         foreach ($this->collection as $faktur) {
             // Data normal selalu masuk ke array 'data'
             $normalData = [
-                'nama_pembeli' => $faktur->pic->nama_akun,
-                'npwp' => $faktur->pic->npwp_akun,
+                'nama_pembeli' => $faktur->akun_pengirim->nama_akun,
+                'npwp' => $faktur->akun_pengirim->npwp_akun,
                 'faktur_pajak_nomor' => $faktur->nomor_faktur_pajak,
                 'faktur_pajak_tanggal' => $faktur->tanggal_faktur_pajak,
                 'dpp' => $faktur->dpp,
@@ -91,8 +91,8 @@ class FakturCollection extends ResourceCollection
             // Kalau ada retur, tambahkan ke array 'data_retur'
             if ($faktur->is_retur) {
                 $returData = [
-                    'nama_pembeli' => $faktur->pic->nama_akun,
-                    'npwp' => $faktur->pic->npwp_akun,
+                    'nama_pembeli' => $faktur->akun_pengirim->nama_akun,
+                    'npwp' => $faktur->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $faktur->nomor_retur ?? $faktur->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $faktur->tanggal_retur ?? $faktur->tanggal_faktur_pajak,
                     'dpp' => 0,
@@ -122,8 +122,8 @@ class FakturCollection extends ResourceCollection
         foreach ($this->collection as $faktur) {
             // Data normal selalu masuk ke array 'data'
             $normalData = [
-                'nama_pembeli' => $faktur->pic->nama_akun,
-                'npwp' => $faktur->pic->npwp_akun,
+                'nama_pembeli' => $faktur->akun_pengirim->nama_akun,
+                'npwp' => $faktur->akun_pengirim->npwp_akun,
                 'faktur_pajak_nomor' => $faktur->nomor_faktur_pajak,
                 'faktur_pajak_tanggal' => $faktur->tanggal_faktur_pajak,
                 'dpp' => $faktur->dpp,
@@ -137,8 +137,8 @@ class FakturCollection extends ResourceCollection
             // Kalau ada retur, tambahkan ke array 'data_retur'
             if ($faktur->is_retur) {
                 $returData = [
-                    'nama_pembeli' => $faktur->pic->nama_akun,
-                    'npwp' => $faktur->pic->npwp_akun,
+                    'nama_pembeli' => $faktur->akun_pengirim->nama_akun,
+                    'npwp' => $faktur->akun_pengirim->npwp_akun,
                     'faktur_pajak_nomor' => $faktur->nomor_retur ?? $faktur->nomor_faktur_pajak,
                     'faktur_pajak_tanggal' => $faktur->tanggal_retur ?? $faktur->tanggal_faktur_pajak,
                     'dpp' => 0,
