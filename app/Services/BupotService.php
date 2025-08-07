@@ -22,7 +22,7 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
         $user = auth()->user();
 
         if ($user->hasRole('mahasiswa') || $user->hasRole('dosen')) {
-            $limitResponse = $this->checkLimit($user);
+            $limitResponse = $this->checkLimit($user, $data['pembuat_id']);
             if ($limitResponse) {
                 return $limitResponse;
             }
@@ -171,26 +171,32 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
         return $user->contract->bupot;
     }
 
-    private function getContractBupotCount($contract)
+    private function getAssignmentBupotCount($assignment)
     {
-        return Bupot::whereHas('pembuat', function ($query) use ($contract) {
-            $query->whereHas('assignment_user', function ($subQuery) use ($contract) {
-                $subQuery->whereHas('user', function ($userQuery) use ($contract) {
-                    $userQuery->where('contract_id', $contract->id);
-                });
+        return Bupot::whereHas('pembuat',function ($query) use ($assignment) {
+            $query->whereHas('assignment_user', function ($subQuery) use ($assignment) {
+                $subQuery->where('assignment_id', $assignment->id);
             });
         })->count();
     }
 
-    private function checkLimit($user)
+    private function checkLimit($user, $pembuat)
     {
         $limit = $this->getContractBupotLimit($user);
-        $contractBupotCount = $this->getContractBupotCount($user->contract);
+        $sistem = Sistem::where('id', $pembuat)->first();
+        $assignment = $sistem->assignment_user->assignment;
+
+        if (!$assignment) {
+            throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$pembuat}.");
+        }
+        
+        $contractBupotCount = $this->getAssignmentBupotCount($assignment);
 
         if ($contractBupotCount >= $limit) {
-            return response()->json([
-                'message' => "Batas pembuatan Bupot sebanyak {$limit} telah tercapai.",
-            ], 422);
+            // return response()->json([
+            //     'message' => "Batas pembuatan Bupot sebanyak {$limit} telah tercapai.",
+            // ], 422);
+            throw new \Exception("Batas Pembuatan Bupot sebanyak {$limit} telah tercapai.");
         }
 
         return null;
