@@ -25,8 +25,8 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         $group = Group::create([
             'name' => $data['name'],
             'user_id' => $data['user_id'],
-            'start_period' => $data['start_period'],
-            'end_period' => $data['end_period'],
+            'start_period' => $data['start_period'] ?? null,
+            'end_period' => $data['end_period'] ?? null,
             'class_code' => $data['class_code'],
             'status' => $data['status'],
         ]);

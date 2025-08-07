@@ -22,6 +22,7 @@ class ContractResource extends JsonResource {
             'is_buy_task' => $this->is_buy_task,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
+            'is_valid' => $this->isValid(),
         ];
     }
 }

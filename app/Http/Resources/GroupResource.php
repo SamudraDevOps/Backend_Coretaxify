@@ -17,13 +17,14 @@ class GroupResource extends JsonResource {
             'teacher' => $this->user->name,
             'users_count' => count($this->users),
             'assignments' => AssignmentResource::collection($this->whenLoaded('assignments')),
-            'start_period' => $this->start_period ? Carbon::parse($this->start_period)->format('d-m-Y') : null,
-            'end_period' => $this->end_period ? Carbon::parse($this->end_period)->format('d-m-Y') : null,
+            'start_period' => $this->user->contract ? Carbon::parse($this->user->contract->start_period)->format('d-m-Y') : ($this->start_period ? Carbon::parse($this->start_period)->format('d-m-Y') : null),
+            'end_period' => $this->user->contract ? Carbon::parse($this->user->contract->end_period)->format('d-m-Y') : ($this->end_period ? Carbon::parse($this->end_period)->format('d-m-Y') : null),
             'class_code' => $this->class_code,
             'status' => $this->status,
             // 'filename' => $this->filename,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
+            'is_valid' => $this->isValid(),
         ];
     }
 }

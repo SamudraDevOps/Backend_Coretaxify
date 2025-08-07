@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Enums\GroupStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,18 @@ class Group extends Model
         'class_code',
         'status',
     ];
+
+    public function isValid() {
+        if ($this->status !== GroupStatusEnum::ACTIVE->value) {
+            return false;
+        }
+
+        if ($this->user->contract) {
+            return $this->user->contract->isValid();
+        }
+
+        return true;
+    }
 
     public function users(): BelongsToMany {
         return $this->belongsToMany(User::class, 'group_users');

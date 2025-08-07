@@ -16,6 +16,27 @@ class AssignmentUser extends Model
 
     protected $guarded = ['id'];
 
+    public function isValid() {
+        if ($this->assignment->isExam()) {
+            return $this->remainingTime() > 0;
+        }
+
+        return $this->assignment->start_period <= now() && $this->assignment->end_period >= now();
+    }
+
+    public function remainingTime() {
+        if (!$this->assignment->isExam()) {
+            return null;
+        }
+
+        $endPeriod = $this->assignment->end_period;
+        $personalDeadline = $this->submitted_at;
+
+        $finalDeadline = $endPeriod->lt($personalDeadline) ? $endPeriod : $personalDeadline;
+
+        return now()->lt($finalDeadline) ? now()->diffInSeconds($finalDeadline) : 0;
+    }
+
     public function sistems()
     {
         return $this->hasMany(Sistem::class);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\Enums\ContractStatusEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,6 +33,16 @@ class Contract extends Model
     const TYPE_LICENSE = 'LICENSE';
     const TYPE_UNIT = 'UNIT';
     const TYPE_BNSP = 'BNSP';
+
+    public function isValid() {
+        // If status is not ACTIVE, return false immediately
+        if ($this->status !== ContractStatusEnum::ACTIVE->value) {
+            return false;
+        }
+
+        // If status is ACTIVE, then check if the end period is in the future or now
+        return $this->start_period >= now() && $this->end_period <= now();
+    }
 
     public static function generateContractCode($type, $existingNumber = null) {
         $prefix = match ($type) {
