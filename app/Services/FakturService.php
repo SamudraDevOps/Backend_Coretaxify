@@ -30,7 +30,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $user = auth()->user();
 
         if ($user->hasRole('mahasiswa') || $user->hasRole('dosen')) {
-            $limitResponse = $this->checkLimit($user);
+            $limitResponse = $this->checkLimit($user, $sistem);
             if ($limitResponse) {
                 return $limitResponse;
             }
@@ -342,26 +342,31 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return $user->contract->faktur;
     }
 
-    private function getContractFakturCount($contract)
+    private function getAssignmentFakturCount($assignment)
     {
-        return Faktur::whereHas('akun_pengirim', function ($query) use ($contract) {
-            $query->whereHas('assignment_user', function ($subQuery) use ($contract) {
-                $subQuery->whereHas('user', function ($userQuery) use ($contract) {
-                    $userQuery->where('contract_id', $contract->id);
-                });
+        return Faktur::whereHas('akun_pengirim', function ($query) use ($assignment) {
+            $query->whereHas('assignment_user', function ($subQuery) use ($assignment) {
+                $subQuery->where('assignment_id', $assignment->id);
             });
         })->count();
     }
 
-    private function checkLimit($user)
+    private function checkLimit($user, $sistem)
     {
         $limit = $this->getContractFakturLimit($user);
-        $contractFakturCount = $this->getContractFakturCount($user->contract);
+        $assignment = $sistem->assignment_user->assignment;
+
+        if (!$assignment) {
+            throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$sistem->id}.");
+        }
+
+        $contractFakturCount = $this->getAssignmentFakturCount($assignment);
 
         if ($contractFakturCount >= $limit) {
-            return response()->json([
-                'message' => "Batas pembuatan E-Faktur sebanyak {$limit} telah tercapai.",
-            ], 422);
+            // return response()->json([
+            //     'message' => "Batas pembuatan E-Faktur sebanyak {$limit} telah tercapai.",
+            // ], 422);
+            throw new \Exception("Batas Pembuatan E-Faktur sebanyak {$limit} telah tercapai.");
         }
 
         return null;
