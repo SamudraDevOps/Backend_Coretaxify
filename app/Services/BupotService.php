@@ -171,11 +171,12 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
         return $user->contract->bupot;
     }
 
-    private function getAssignmentBupotCount($assignment)
+    private function getAssignmentBupotCount($assignment, $user)
     {
-        return Bupot::whereHas('pembuat',function ($query) use ($assignment) {
-            $query->whereHas('assignment_user', function ($subQuery) use ($assignment) {
-                $subQuery->where('assignment_id', $assignment->id);
+        return Bupot::whereHas('pembuat',function ($query) use ($assignment, $user) {
+            $query->whereHas('assignment_user', function ($subQuery) use ($assignment, $user) {
+                $subQuery->where('assignment_id', $assignment->id)
+                         ->where('user_id', $user->id);
             });
         })->count();
     }
@@ -189,8 +190,8 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
         if (!$assignment) {
             throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$pembuat}.");
         }
-        
-        $contractBupotCount = $this->getAssignmentBupotCount($assignment);
+
+        $contractBupotCount = $this->getAssignmentBupotCount($assignment, $user);
 
         if ($contractBupotCount >= $limit) {
             // return response()->json([

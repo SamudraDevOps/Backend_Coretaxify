@@ -342,11 +342,12 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         return $user->contract->faktur;
     }
 
-    private function getAssignmentFakturCount($assignment)
+    private function getAssignmentFakturCount($assignment, $user)
     {
-        return Faktur::whereHas('akun_pengirim', function ($query) use ($assignment) {
-            $query->whereHas('assignment_user', function ($subQuery) use ($assignment) {
-                $subQuery->where('assignment_id', $assignment->id);
+        return Faktur::whereHas('akun_pengirim', function ($query) use ($assignment, $user) {
+            $query->whereHas('assignment_user', function ($subQuery) use ($assignment, $user) {
+                $subQuery->where('assignment_id', $assignment->id)
+                         ->where('user_id', $user->id);
             });
         })->count();
     }
@@ -360,7 +361,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$sistem->id}.");
         }
 
-        $contractFakturCount = $this->getAssignmentFakturCount($assignment);
+        $contractFakturCount = $this->getAssignmentFakturCount($assignment, $user);
 
         if ($contractFakturCount >= $limit) {
             // return response()->json([

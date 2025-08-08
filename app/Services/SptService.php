@@ -1168,12 +1168,13 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return $user->contract->spt;
     }
 
-    private function getAssignmentSPTCount($assignment)
+    private function getAssignmentSPTCount($assignment, $user)
     {
-        return Spt::where(function ($query) use ($assignment) {
-            $query->whereHas('sistem', function ($subQuery) use ($assignment) {
-                $subQuery->whereHas('assignment_user', function ($assignmentQuery) use ($assignment) {
-                    $assignmentQuery->where('assignment_id', $assignment->id);
+        return Spt::where(function ($query) use ($assignment, $user) {
+            $query->whereHas('sistem', function ($subQuery) use ($assignment, $user) {
+                $subQuery->whereHas('assignment_user', function ($assignmentQuery) use ($assignment, $user) {
+                    $assignmentQuery->where('assignment_id', $assignment->id)
+                                    ->where('user_id', $user->id);
                 });
             });
         })->count();
@@ -1189,7 +1190,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$badan}.");
         }
 
-        $contractSPTCount = $this->getAssignmentSPTCount($assignment);
+        $contractSPTCount = $this->getAssignmentSPTCount($assignment, $user);
 
         if ($contractSPTCount >= $limit) {
             // return response()->json([
