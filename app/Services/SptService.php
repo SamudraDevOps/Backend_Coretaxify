@@ -612,7 +612,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $user = auth()->user();
 
         if ($user->hasRole('mahasiswa') || $user->hasRole('dosen')) {
-            $limitResponse = $this->checkLimit($user);
+            $limitResponse = $this->checkLimit($user, $data['badan_id']);
             if ($limitResponse) {
                 return $limitResponse;
             }
@@ -1168,28 +1168,34 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return $user->contract->spt;
     }
 
-    private function getContractSPTCount($contract)
+    private function getAssignmentSPTCount($assignment)
     {
-        return Spt::where(function ($query) use ($contract) {
-            $query->whereHas('sistem', function ($subQuery) use ($contract) {
-                $subQuery->whereHas('assignment_user', function ($assignmentQuery) use ($contract) {
-                    $assignmentQuery->whereHas('user', function ($userQuery) use ($contract) {
-                        $userQuery->where('contract_id', $contract->id);
-                    });
+        return Spt::where(function ($query) use ($assignment) {
+            $query->whereHas('sistem', function ($subQuery) use ($assignment) {
+                $subQuery->whereHas('assignment_user', function ($assignmentQuery) use ($assignment) {
+                    $assignmentQuery->where('assignment_id', $assignment->id);
                 });
             });
         })->count();
     }
 
-    private function checkLimit($user)
+    private function checkLimit($user, $badan)
     {
         $limit = $this->getContractSPTLimit($user);
-        $contractSPTCount = $this->getContractSPTCount($user->contract);
+        $sistem = Sistem::where('id', $badan)->first();
+        $assignment = $sistem->assignment_user->assignment;
+
+        if (!$assignment) {
+            throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$badan}.");
+        }
+
+        $contractSPTCount = $this->getAssignmentSPTCount($assignment);
 
         if ($contractSPTCount >= $limit) {
-            return response()->json([
-                'message' => "Batas pembuatan SPT sebanyak {$limit} telah tercapai.",
-            ], 422);
+            // return response()->json([
+            //     'message' => "Batas pembuatan SPT sebanyak {$limit} telah tercapai.",
+            // ], 422);
+            throw new \Exception("Batas Pembuatan SPT sebanyak {$limit} telah tercapai.");
         }
 
         return null;
