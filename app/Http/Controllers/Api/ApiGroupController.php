@@ -224,6 +224,12 @@ class ApiGroupController extends ApiController
     public function getAssignmentMembers(Request $request, Group $group, Assignment $assignment)
     {
         $perPage = $request->get('perPage', 20);
+        $intent = $request->get('intent');
+
+        switch ($intent) {
+            case IntentEnum::API_USER_EXPORT_SCORE->value:
+                return $this->assignmentService->exportScore($assignment);
+        }
 
         // Get AssignmentUser records with all necessary relationships
         $assignmentUsers = $assignment->assignmentUsers()

@@ -30,6 +30,8 @@ enum IntentEnum: string {
 
     case API_USER_IMPORT_INSTRUKTUR = 'api.user.import.instruktur';
 
+    case API_USER_EXPORT_SCORE = 'api.user.export.score';
+
     case API_USER_CREATE_GROUP = 'api.user.create.group';
 
     case API_USER_JOIN_GROUP = 'api.user.join.group';

@@ -14,6 +14,9 @@ class AssignmentUserResource extends JsonResource
         switch ($intent) {
             case IntentEnum::API_GET_ASSIGNMENT_MEMBERS_WITH_SISTEM_SCORES->value:
                 $sistemScores = [];
+                $totalBupotScoresAcrossAllSistems = 0;
+                $totalFakturScoresAcrossAllSistems = 0;
+                $totalSptScoresAcrossAllSistems = 0;
                 $totalScoresAcrossAllSistems = 0;
 
                 foreach ($this->sistems as $sistem) {
@@ -31,6 +34,9 @@ class AssignmentUserResource extends JsonResource
                     $totalSptCount = $sptScores->count();
                     $totalAllCount = $totalBupotCount + $totalFakturCount + $totalSptCount;
 
+                    $totalBupotScoresAcrossAllSistems += $totalBupotScores;
+                    $totalFakturScoresAcrossAllSistems += $totalFakturScores;
+                    $totalSptScoresAcrossAllSistems += $totalSptScores;
                     $totalScoresAcrossAllSistems += $totalAllScores;
 
                     $sistemScores[] = [
@@ -66,6 +72,9 @@ class AssignmentUserResource extends JsonResource
                     'sistem_scores' => $sistemScores,
                     'summary' => [
                         'total_sistems' => $this->sistems->count(),
+                        'total_bupot_scores_across_all_sistems' => $totalBupotScoresAcrossAllSistems,
+                        'total_faktur_scores_across_all_sistems' => $totalFakturScoresAcrossAllSistems,
+                        'total_spt_scores_across_all_sistems' => $totalSptScoresAcrossAllSistems,
                         'total_scores_across_all_sistems' => $totalScoresAcrossAllSistems
                     ]
                 ];

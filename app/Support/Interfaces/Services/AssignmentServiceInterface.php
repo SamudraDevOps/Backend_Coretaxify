@@ -18,4 +18,6 @@ interface AssignmentServiceInterface extends BaseCrudServiceInterface {
     public function getAssignmentsByUserId($userId, $perPage);
 
     public function downloadFile(Assignment $assignment);
+
+    public function exportScore(Assignment $assignment);
 }

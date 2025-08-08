@@ -11,8 +11,14 @@ use App\Models\AssignmentUser;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use App\Support\Enums\AssignmentTypeEnum;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
 use App\Support\Interfaces\Repositories\AssignmentRepositoryInterface;
 use Adobrovolsky97\LaravelRepositoryServicePattern\Services\BaseCrudService;
@@ -84,9 +90,10 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         return $assignment;
     }
 
-    public function createExam(array $data): ?Model {
+    public function createExam(array $data): ?Model
+    {
         $filename = null;
-        if(isset($data['supporting_file'])) {
+        if (isset($data['supporting_file'])) {
             $filename = $this->importData($data['supporting_file']);
         }
 
@@ -241,4 +248,112 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         $path = storage_path('app/public/support-file/' . $filename);
         return response()->download($path);
     }
+
+    public function exportScore(Assignment $assignment)
+    {
+        $assignmentUsers = $assignment->assignmentUsers()
+            ->whereHas('user.roles', function ($query) {
+                $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
+            })
+            ->with([
+                'user',
+                'sistems.bupot_scores',
+                'sistems.faktur_scores',
+                'sistems.spt_scores'
+            ])
+            ->get();
+
+        // Prepare table rows
+        $rows = [];
+        foreach ($assignmentUsers as $index => $au) {
+            $bupotScore = $au->sistems->sum(fn($s) => $s->bupot_scores->sum('score'));
+            $fakturScore = $au->sistems->sum(fn($s) => $s->faktur_scores->sum('score'));
+            $sptScore = $au->sistems->sum(fn($s) => $s->spt_scores->sum('score'));
+
+            $total = $bupotScore + $fakturScore + $sptScore;
+            $avg = $total / 3;
+
+            $rows[] = [
+                $index + 1,
+                $au->user->name,
+                $au->user->email,
+                $bupotScore,
+                $fakturScore,
+                $sptScore,
+                $total,
+                round($avg, 2),
+            ];
+        }
+        \Log::info('Rows', $rows);
+
+        // Footer
+        $footer = [
+            'bupot_avg' => round(collect($rows)->avg(fn($r) => $r[3]), 2),
+            'faktur_avg' => round(collect($rows)->avg(fn($r) => $r[4]), 2),
+            'spt_avg' => round(collect($rows)->avg(fn($r) => $r[5]), 2),
+            'grand_total' => round(collect($rows)->sum(fn($r) => $r[6]), 2),
+            'avg_of_avg' => round(collect($rows)->avg(fn($r) => $r[7]), 2),
+        ];
+
+        // Create spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Title
+        $sheet->setCellValue('A1', $assignment->name . ' - Scores Report');
+        $sheet->mergeCells('A1:H1');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // Export date
+        $sheet->setCellValue('A2', 'Exported at: ' . now()->format('d M Y H:i'));
+        $sheet->mergeCells('A2:H2');
+
+        // Table headers
+        $headers = ['#', 'Name', 'Email', 'Bupot', 'Faktur', 'SPT', 'Total', 'Average'];
+        $sheet->fromArray($headers, null, 'A4');
+
+        // Table rows
+        $sheet->fromArray($rows, null, 'A5');
+
+        // Footer rows
+        $footerStartRow = count($rows) + 6;
+        $sheet->setCellValue('A' . $footerStartRow, 'Bupot Average');
+        $sheet->setCellValue('B' . $footerStartRow, $footer['bupot_avg']);
+
+        $sheet->setCellValue('A' . ($footerStartRow + 1), 'Faktur Average');
+        $sheet->setCellValue('B' . ($footerStartRow + 1), $footer['faktur_avg']);
+
+        $sheet->setCellValue('A' . ($footerStartRow + 2), 'SPT Average');
+        $sheet->setCellValue('B' . ($footerStartRow + 2), $footer['spt_avg']);
+
+        $sheet->setCellValue('A' . ($footerStartRow + 3), 'Grand Total');
+        $sheet->setCellValue('B' . ($footerStartRow + 3), $footer['grand_total']);
+
+        $sheet->setCellValue('A' . ($footerStartRow + 4), 'Average of Averages');
+        $sheet->setCellValue('B' . ($footerStartRow + 4), $footer['avg_of_avg']);
+
+        // Style
+        $sheet->getStyle('A4:H4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:H4')->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()->setARGB('FFD9D9D9');
+        $sheet->getStyle('A4:H' . ($footerStartRow - 2))
+            ->getBorders()->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        foreach (range('A', 'H') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Download
+        $writer = new Xlsx($spreadsheet);
+        return new StreamedResponse(function () use ($writer) {
+            $writer->save('php://output');
+        }, 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => 'attachment;filename="assignment-scores.xlsx"',
+        ]);
+    }
+
 }
