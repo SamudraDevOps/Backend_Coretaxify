@@ -175,8 +175,7 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
     {
         return Bupot::whereHas('pembuat',function ($query) use ($assignment, $user) {
             $query->whereHas('assignment_user', function ($subQuery) use ($assignment, $user) {
-                $subQuery->where('assignment_id', $assignment->id)
-                         ->where('user_id', $user->id);
+                $subQuery->where('user_id', $user->id);
             });
         })->count();
     }

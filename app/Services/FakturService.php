@@ -346,8 +346,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
     {
         return Faktur::whereHas('akun_pengirim', function ($query) use ($assignment, $user) {
             $query->whereHas('assignment_user', function ($subQuery) use ($assignment, $user) {
-                $subQuery->where('assignment_id', $assignment->id)
-                         ->where('user_id', $user->id);
+                $subQuery->where('user_id', $user->id);
             });
         })->count();
     }

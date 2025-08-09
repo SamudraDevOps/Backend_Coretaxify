@@ -1173,8 +1173,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         return Spt::where(function ($query) use ($assignment, $user) {
             $query->whereHas('sistem', function ($subQuery) use ($assignment, $user) {
                 $subQuery->whereHas('assignment_user', function ($assignmentQuery) use ($assignment, $user) {
-                    $assignmentQuery->where('assignment_id', $assignment->id)
-                                    ->where('user_id', $user->id);
+                    $assignmentQuery->where('user_id', $user->id);
                 });
             });
         })->count();
