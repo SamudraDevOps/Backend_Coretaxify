@@ -64,6 +64,10 @@ class UserResource extends JsonResource
                     ];
                 }
 
+                if ($intent === IntentEnum::API_USER_GET_DOSEN->value) {
+                    $baseData['default_password'] = $this->default_password;
+                }
+
                 return $baseData;
         }
     }
