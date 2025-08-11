@@ -1110,6 +1110,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $monthNumber = MonthHelper::getMonthNumber($month);
 
         $bupots = Bupot::where('pembuat_id', $spt->badan_id)
+                ->where('status_penerbitan', 'published')
                 ->whereMonth('masa_awal', $monthNumber)
                 ->whereYear('masa_awal', $spt->masa_tahun)
                 ->get();
