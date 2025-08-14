@@ -1092,9 +1092,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     'faktur_retur' => $fakturRetur
                 ]);
             case JenisSptPpnEnum::C->value:
-                $fakturMasukanC = $fakturMasukan->filter(function($item) {
-                    return $item->ppnbm !== null && $item->ppnbm > 0;
-                });
+                $fakturMasukanC = $fakturMasukan->whereNotNull('ppnbm')->where('ppnbm', '>', 0);
                 return (new FakturCollection($fakturMasukanC))->additional([
                     'masa_bulan_spt' => $masa_bulan_spt,
                     'tahun_spt' => $tahun_spt,
