@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Support\Enums\FakturStatusEnum;
 use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
 use App\Support\Enums\JenisSptPpnEnum;
@@ -298,10 +297,6 @@ class FakturResource extends JsonResource
             'updated_at' => $this->updated_at,
             'detail_transaksi' => $this->whenLoaded('detail_transaksis', function() {
                 return $this->detail_transaksis->map(function($transaksi) {
-                    if ($this->status == FakturStatusEnum::AMENDED->value){
-
-                        return $this->mapDetailTransaksiLamaWithFallback($transaksi);
-                    }
                     return $this->mapDetailTransaksiWithFallback($transaksi);
                 });
             }),
@@ -354,33 +349,6 @@ class FakturResource extends JsonResource
         return $result;
     }
     private function mapDetailTransaksiWithFallback($transaksi): array
-    {
-        return [
-            'id' => $transaksi->id,
-            'tipe' => $transaksi->tipe ?? $transaksi->tipe_lama,
-            'nama' => $transaksi->nama ?? $transaksi->nama_lama,
-            'kode' => $transaksi->kode ?? $transaksi->kode_lama,
-            'kuantitas' => $transaksi->kuantitas ?? $transaksi->kuantitas_lama,
-            'satuan' => $transaksi->satuan ?? $transaksi->satuan_lama,
-            'harga_satuan' => $transaksi->harga_satuan ?? $transaksi->harga_satuan_lama,
-            'total_harga' => $transaksi->total_harga ?? $transaksi->total_harga_lama,
-            'pemotongan_harga' => $transaksi->pemotongan_harga ?? $transaksi->pemotongan_harga_lama,
-            'dpp' => $transaksi->dpp ?? $transaksi->dpp_lama,
-            'ppn' => $transaksi->ppn ?? $transaksi->ppn_lama,
-            'dpp_lain' => $transaksi->dpp_lain ?? $transaksi->dpp_lain_lama,
-            'ppnbm' => $transaksi->ppnbm ?? $transaksi->ppnbm_lama,
-            'dpp_lain_retur' => $transaksi->dpp_lain_retur ?? $transaksi->dpp_lain_retur_lama,
-            'ppn_retur' => $transaksi->ppn_retur ?? $transaksi->ppn_retur_lama,
-            'ppnbm_retur' => $transaksi->ppnbm_retur ?? $transaksi->ppnbm_retur_lama,
-            'tarif_ppnbm' => $transaksi->tarif_ppnbm ?? $transaksi->tarif_ppnbm_lama,
-
-            // Tambahan info untuk tracking
-            'is_tambahan' => $transaksi->is_tambahan ?? false,
-            'is_lama' => $transaksi->is_lama ?? false,
-        ];
-    }
-
-    private function mapDetailTransaksiLamaWithFallback($transaksi): array
     {
         return [
             'id' => $transaksi->id,
