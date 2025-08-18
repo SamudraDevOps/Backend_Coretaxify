@@ -69,7 +69,18 @@ class ApiSptController extends ApiController {
         $request['badan_id'] = $sistem->id;
         $request['pic_id'] = $request->pic_id;
 
-        return $this->sptService->update($spt, $request);
+        try {
+            $result = $this->sptService->update($spt, $request);
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $e->getCode() ?: 400);
+        }
     }
 
     /**
