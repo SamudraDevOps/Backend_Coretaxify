@@ -167,7 +167,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
-                    throw new \Exception('Saldo tidak mencukupi', 101);
+                    throw new \Exception('Saldo tidak mencukupi', 422);
                 } else {
                     $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['ntpn'] = $ntpn;
@@ -259,7 +259,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
-                    throw new \Exception('Saldo tidak mencukupi', 101);
+                    throw new \Exception('Saldo tidak mencukupi', 422);
                 } else {
                     $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['ntpn'] = $ntpn;
@@ -328,7 +328,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $hasil = $saldo - $bayar;
 
                 if ($hasil < 0) {
-                    throw new \Exception('Saldo tidak mencukupi', 101);
+                    throw new \Exception('Saldo tidak mencukupi', 422);
                 } else {
                     $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['ntpn'] = $ntpn;
@@ -1030,7 +1030,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             if (!$check->is_can_pembetulan) {
                 return response()->json([
                     'message' => 'Spt Dalam Kondisi Konsep',
-                    'code' => 101,
+                    'code' => 422,
                 ]);
             }else {
                 //alur pembetulan
