@@ -1031,10 +1031,9 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             ];
         }else {
             if (!$check->is_can_pembetulan) {
-                return response()->json([
-                    'message' => 'Spt Dalam Kondisi Konsep',
-                    'code' => 422,
-                ]);
+                return [
+                    'code' => 101
+                ];
             }else {
                 //alur pembetulan
                 return [
