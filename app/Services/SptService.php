@@ -132,6 +132,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 if ($bayar < 0){
                     $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->save();
                 }else {
                     $dataPembayaran['nilai'] = $bayar;
                     $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
@@ -216,6 +217,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 if ($bayar < 0){
                     $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->save();
                 } else {
                     $dataPembayaran = [
                         'nilai' => $bayar,
@@ -294,6 +296,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
 
                 if ($bayar < 0){
                     $spt->status = SptStatusEnum::DILAPORKAN->value;
+                    $spt->save();
                 } else {
                     $dataPembayaran = [
                         'nilai' => $bayar,
