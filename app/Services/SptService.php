@@ -131,21 +131,21 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 }
 
                 if ($bayar < 0){
-                    $bayar = 0;
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                }else {
+                    $dataPembayaran['nilai'] = $bayar;
+                    $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
+                    $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
+                    $dataPembayaran['badan_id'] = $request['badan_id'];
+                    $dataPembayaran['pic_id'] = $request['pic_id'];
+                    $dataPembayaran['kode_billing'] = $randomNumber;
+                    $dataPembayaran['kap_kjs_id'] = 49;
+                    $dataPembayaran['ntpn'] = $ntpn;
+                    $dataPembayaran['masa_aktif'] = $masaAktif;
+                    $dataPembayaran['spt_id'] = $spt->id;
+
+                    Pembayaran::create($dataPembayaran);
                 }
-
-                $dataPembayaran['nilai'] = $bayar;
-                $dataPembayaran['masa_bulan'] = $spt->masa_bulan;
-                $dataPembayaran['masa_tahun'] = $spt->masa_tahun;
-                $dataPembayaran['badan_id'] = $request['badan_id'];
-                $dataPembayaran['pic_id'] = $request['pic_id'];
-                $dataPembayaran['kode_billing'] = $randomNumber;
-                $dataPembayaran['kap_kjs_id'] = 49;
-                $dataPembayaran['ntpn'] = $ntpn;
-                $dataPembayaran['masa_aktif'] = $masaAktif;
-                $dataPembayaran['spt_id'] = $spt->id;
-
-                Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPN_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
@@ -215,23 +215,22 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $bayar = ($bayar21 + ($spt_pph->cl_bp1_7 ?? 0)) + ($bayar26 + ($spt_pph->cl_bp2_7 ?? 0));
 
                 if ($bayar < 0){
-                    $bayar = 0;
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                } else {
+                    $dataPembayaran = [
+                        'nilai' => $bayar,
+                        'masa_bulan' => $spt->masa_bulan,
+                        'masa_tahun' => $spt->masa_tahun,
+                        'badan_id' => $request['badan_id'],
+                        'pic_id' => $request['pic_id'],
+                        'kode_billing' => $randomNumber,
+                        // 'kap_kjs_id' => $data['kap_kjs_id'],
+                        'ntpn' => $ntpn,
+                        'masa_aktif' => $masaAktif,
+                        'spt_id' => $spt->id,
+                    ];
+                    Pembayaran::create($dataPembayaran);
                 }
-
-                $dataPembayaran = [
-                    'nilai' => $bayar,
-                    'masa_bulan' => $spt->masa_bulan,
-                    'masa_tahun' => $spt->masa_tahun,
-                    'badan_id' => $request['badan_id'],
-                    'pic_id' => $request['pic_id'],
-                    'kode_billing' => $randomNumber,
-                    // 'kap_kjs_id' => $data['kap_kjs_id'],
-                    'ntpn' => $ntpn,
-                    'masa_aktif' => $masaAktif,
-                    'spt_id' => $spt->id,
-                ];
-
-                Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPH_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
@@ -283,6 +282,8 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     return $pembayaran;
                 }
             case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_KODE_BILLING->value:
+                $randomNumber = mt_rand(100000000000000, 999999999999999);
+
                 $sptunifikasi = SptUnifikasi::where('spt_id', $spt->id)->first();
 
                 $spt->status = SptStatusEnum::MENUNGGU_PEMBAYARAN->value;
@@ -292,23 +293,22 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 $bayar = $sptunifikasi->cl_total_bayar ?? 0 ;
 
                 if ($bayar < 0){
-                    $bayar = 0;
+                    $spt->status = SptStatusEnum::DILAPORKAN->value;
+                } else {
+                    $dataPembayaran = [
+                        'nilai' => $bayar,
+                        'masa_bulan' => $spt->masa_bulan,
+                        'masa_tahun' => $spt->masa_tahun,
+                        'badan_id' => $request['badan_id'],
+                        'pic_id' => $request['pic_id'],
+                        'kode_billing' => $randomNumber,
+                        // 'kap_kjs_id' => $data['kap_kjs_id'],
+                        'ntpn' => $ntpn,
+                        'masa_aktif' => $masaAktif,
+                        'spt_id' => $spt->id,
+                    ];
+                    Pembayaran::create($dataPembayaran);
                 }
-
-                $randomNumber = mt_rand(100000000000000, 999999999999999);
-
-                $dataPembayaran = [
-                    'nilai' => $bayar,
-                    'masa_bulan' => $spt->masa_bulan,
-                    'masa_tahun' => $spt->masa_tahun,
-                    'badan_id' => $request['badan_id'],
-                    'pic_id' => $request['pic_id'],
-                    'kode_billing' => $randomNumber,
-                    // 'kap_kjs_id' => $data['kap_kjs_id'],
-                    'ntpn' => $ntpn,
-                    'masa_aktif' => $masaAktif,
-                    'spt_id' => $spt->id,
-                ];
 
                 Pembayaran::create($dataPembayaran);
                 break;
