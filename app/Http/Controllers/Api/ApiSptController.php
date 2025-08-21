@@ -64,7 +64,7 @@ class ApiSptController extends ApiController {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Assignment $assignment, Sistem $sistem, Request $request, Spt $spt) {
+    public function update(Assignment $assignment, Sistem $sistem, Spt $spt, Request $request) {
         $this->sptService->authorizeAccess($assignment, $sistem, $request);
         $request['badan_id'] = $sistem->id;
         $request['pic_id'] = $request->pic_id;
@@ -79,7 +79,7 @@ class ApiSptController extends ApiController {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], $e->getCode() ?: 400);
+            ], (int) $e->getCode() ?: 400);
         }
     }
 

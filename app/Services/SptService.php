@@ -97,17 +97,15 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 throw new \Exception('SPT PPH tidak ditemukan untuk SPT ID: ' . $spt->id, 404);
             }
 
-            foreach ($fields_spt_pph as $field) {
-                if (array_key_exists($field, $requestData)) {
-                    // Handle null values - set to 0 if null
-                    $spt_pph->$field = $requestData[$field] ?? 0;
-                }
-            }
-
-            // Fill remaining data, ensuring null values become 0
             $filteredData = [];
             foreach ($requestData as $key => $value) {
-                $filteredData[$key] = $value ?? 0;
+                // Hanya proses jika value bertipe string
+                if (is_string($value)) {
+                    // Hilangkan semua koma
+                    $value = str_replace(',', '', $value);
+                }
+                // Set null jadi 0
+                $filteredData[$key] = $value === null ? 0 : $value;
             }
 
             $spt_pph->fill($filteredData);
