@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Pic;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AssignmentUser extends Model
 {
@@ -29,8 +30,8 @@ class AssignmentUser extends Model
             return null;
         }
 
-        $endPeriod = $this->assignment->end_period;
-        $personalDeadline = $this->submitted_at;
+        $endPeriod = Carbon::parse($this->assignment->end_period);
+        $personalDeadline = Carbon::parse($this->submitted_at);
 
         $finalDeadline = $endPeriod->lt($personalDeadline) ? $endPeriod : $personalDeadline;
 
