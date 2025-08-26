@@ -83,7 +83,7 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
         }
 
         $user = auth()->user();
-        if ($user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc')) {
+        if ($user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur')) {
             $assignment->users()->attach($user->id);
         }
 
