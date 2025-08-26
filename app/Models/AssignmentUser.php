@@ -19,7 +19,11 @@ class AssignmentUser extends Model
 
     public function isValid() {
         if ($this->assignment->isExam()) {
-            return $this->remainingTime() > 0;
+            if (!$this->is_start) {
+                return $this->assignment->start_period <= now() && $this->assignment->end_period >= now();
+            } else {
+                return $this->remainingTime() > 0;
+            }
         }
 
         return $this->assignment->start_period <= now() && $this->assignment->end_period >= now();
