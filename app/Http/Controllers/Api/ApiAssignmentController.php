@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Support\Enums\IntentEnum;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\AssignmentResource;
+use App\Http\Resources\AssignmentUserResource;
 use App\Http\Requests\Assignment\StoreAssignmentRequest;
 use App\Http\Requests\Assignment\UpdateAssignmentRequest;
 use App\Support\Interfaces\Services\AssignmentServiceInterface;
@@ -142,15 +143,26 @@ class ApiAssignmentController extends ApiController
     public function getMembers(Request $request, Assignment $assignment)
     {
         $perPage = $request->get('perPage', 20);
+        $intent = $request->get('intent');
 
-        $users = $assignment->users()
-            ->whereHas('roles', function ($query) {
+        switch ($intent) {
+            case IntentEnum::API_USER_EXPORT_SCORE->value:
+                return $this->assignmentService->exportScore($assignment);
+        }
+
+        $assignmentUsers = $assignment->assignmentUsers()
+            ->whereHas('user.roles', function ($query) {
                 $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
             })
-            ->withPivot('score') // Add this to include pivot data
+            ->with([
+                'user',
+                'sistems.bupot_scores',
+                'sistems.faktur_scores',
+                'sistems.spt_scores'
+            ])
             ->paginate($perPage);
 
-        return UserResource::collection($users);
+        return AssignmentUserResource::collection($assignmentUsers);
     }
 
     public function removeMember(Assignment $assignment, User $user)
