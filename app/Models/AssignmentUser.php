@@ -26,6 +26,14 @@ class AssignmentUser extends Model
             }
         }
 
+        if (!$this->assignment->start_period && !$this->assignment->end_period) {
+            if ($this->user->hasRole('dosen')) {
+                return $this->user->contract->isValid();
+            }
+
+            return true;
+        }
+
         return $this->assignment->start_period <= now() && $this->assignment->end_period >= now();
     }
 
