@@ -54,8 +54,13 @@ FROM build-php AS final-php
 # Set working directory
 WORKDIR /var/www/html
 
+# Set permissions for storage and bootstrap cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chmod -R ug+rwx /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Copy Nginx and Supervisor configurations
 COPY ./docker/staging/nginx.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 COPY ./docker/staging/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy the entrypoint script
