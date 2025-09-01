@@ -1,0 +1,74 @@
+# ----------- Build Stage: Install PHP extensions and application code ----------- #
+FROM php:8.2-fpm AS build-php
+
+# Set environment variables to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package lists and install required system packages and dependencies for PHP extensions
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    libzip-dev \
+    libmemcached-dev \
+    libssl-dev \
+    libsodium-dev \
+    zlib1g-dev \
+    pkg-config \
+    zip unzip \
+    git \
+    curl \
+    nano \
+    supervisor \
+    nginx \
+    gnupg \
+    wget
+
+RUN pecl install redis
+
+# Configure and install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) gd calendar \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install pdo_mysql exif \
+    && docker-php-ext-install sodium \
+    && docker-php-ext-install pcntl \
+    && docker-php-ext-enable exif redis
+
+# Copy Composer from an official Composer image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files
+COPY . .
+
+# Install Laravel dependencies
+RUN composer install --no-interaction --optimize-autoloader
+
+# -------------------------------- Final Stage ------------------------------- #
+FROM build-php AS final-php
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy Nginx and Supervisor configurations
+COPY ./docker/staging/nginx.conf /etc/nginx/sites-available/default
+COPY ./docker/staging/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy the entrypoint script
+COPY ./docker/staging/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+COPY ./docker/staging/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Set the entrypoint script to be executed when the container starts
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Start Supervisor to manage Nginx, PHP-FPM, and queue workers
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
