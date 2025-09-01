@@ -694,7 +694,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 break;
             case JenisPajakEnum::PPH->value:
                 if ($spt->status == SptStatusEnum::KONSEP->value) {
-                    $spt_pph = SptPpn::where('spt_id', $spt->id)->first();
+                    $spt_pph = SptPph::where('spt_id', $spt->id)->first();
 
                     $monthNumber = MonthHelper::getMonthNumber($month);
 
@@ -755,7 +755,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
                 if ($spt->status == SptStatusEnum::KONSEP->value) {
-                    $spt_uni = SptPpn::where('spt_id', $spt->id)->first();
+                    $spt_uni = SptUnifikasi::where('spt_id', $spt->id)->first();
                     $monthNumber = MonthHelper::getMonthNumber($month);
 
                     $bupots = Bupot::where('pembuat_id', $badan_id)
