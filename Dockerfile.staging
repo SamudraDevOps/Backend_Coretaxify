@@ -45,6 +45,8 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Install Laravel dependencies
 RUN composer install --no-interaction --optimize-autoloader
 
