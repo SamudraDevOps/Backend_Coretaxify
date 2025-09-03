@@ -46,8 +46,8 @@ WORKDIR /var/www/html
 COPY . .
 
 # Create the storage and bootstrap cache subdirectories Laravel needs
-RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs \
-    && mkdir -p bootstrap/cache
+RUN mkdir -p /var/www/html/storage/framework/{sessions,views,cache} /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/bootstrap/cache
 
 # Install Laravel dependencies
 RUN composer install --no-interaction --optimize-autoloader
