@@ -90,6 +90,8 @@ class ApiAuthController extends ApiController {
 
             if (!$group) {
                 throw new \Exception('Kode Registrasi yang Anda masukkan tidak Valid. Mohon hubungi Admin apabila ada kendala.');
+            } else if (!$group->user->hasRole('psc')) {
+                throw new \Exception('Kode Registrasi yang Anda masukkan tidak Valid. Mohon hubungi Admin apabila ada kendala.');
             }
 
             $user = User::create([
