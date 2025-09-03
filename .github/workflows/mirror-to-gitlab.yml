@@ -35,6 +35,10 @@ jobs:
           git remote add gitlab "https://oauth2:${GITLAB_TOKEN}@${CLEAN_REMOTE}"
           git remote -v
 
-      - name: Push all refs (mirror)
+      - name: Push branches (refspec)
         run: |
-          git push --prune --mirror gitlab
+          git push --prune --atomic gitlab +refs/heads/*:refs/heads/*
+
+      - name: Push tags
+        run: |
+          git push --prune gitlab --tags
