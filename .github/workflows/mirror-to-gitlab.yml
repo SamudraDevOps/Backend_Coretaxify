@@ -1,0 +1,44 @@
+name: Mirror to GitLab
+
+on:
+  push:
+    branches: ['**']
+    tags: ['**']
+  delete: {}
+  workflow_dispatch: {}
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      GITLAB_REMOTE: ${{ secrets.GITLAB_REMOTE }}
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Add GitLab remote
+        shell: bash
+        run: |
+          if [[ -z "$GITLAB_TOKEN" || -z "$GITLAB_REMOTE" ]]; then
+            echo "Secrets GITLAB_TOKEN / GITLAB_REMOTE belum diset"; exit 1
+          fi
+          # buang prefix https:// supaya bisa sisipkan oauth2:<token>@
+          CLEAN_REMOTE="${GITLAB_REMOTE#https://}"
+          git remote add gitlab "https://oauth2:${GITLAB_TOKEN}@${CLEAN_REMOTE}"
+          git remote -v
+
+      - name: Push branches (refspec)
+        run: |
+          git push --prune --atomic gitlab +refs/heads/*:refs/heads/*
+
+      - name: Push tags
+        run: |
+          git push --prune gitlab --tags
