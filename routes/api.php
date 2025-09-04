@@ -115,7 +115,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::apiResource('bupot-objek-pajaks', ApiBupotObjekPajakController::class);
 
         Route::middleware('verified')->group(function () {
-            Route::prefix('admin')->group(function () {
+            Route::prefix('admin')->name('admin.')->group(function () {
                 // Admin only routes
                 Route::apiResource('users', ApiUserController::class);
                 Route::apiResource('accounts', ApiAccountController::class);
@@ -133,7 +133,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
             });
 
-            Route::prefix('lecturer')->group(function () {
+            Route::prefix('lecturer')->name('lecturer.')->group(function () {
                 // Lecturer only routes
                 Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
                 Route::apiResource('assignment-user', ApiAssignmentUserController::class);
@@ -170,7 +170,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::get('contract-tasks', [ApiTaskController::class, 'getContractTasks']);
             });
 
-            Route::prefix('student')->group(function () {
+            Route::prefix('student')->name('student.')->group(function () {
                 // Student only routes;
                 Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
                 Route::apiResource('assignments', ApiAssignmentController::class, ['except' => ['update', 'destroy']]);
@@ -289,7 +289,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 // Route::apiResource('penunjukkan-wajib-pajak-saya', ApiPenunjukkanWajibPajakSayaController::class);
             });
 
-            Route::prefix('psc')->group(function () {
+            Route::prefix('psc')->name('psc.')->group(function () {
                 // PSC only routes
                 Route::apiResource('self-assignments', ApiSelfAssignmentController::class);
                 Route::apiResource('groups', ApiGroupController::class);
@@ -320,7 +320,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('tasks', ApiTaskController::class);
             });
 
-            Route::prefix('student-psc')->group(function () {
+            Route::prefix('student-psc')->name('student-psc.')->group(function () {
                 // Student-psc only routes
                 Route::apiResource('groups', ApiGroupController::class, ['except' => ['update', 'destroy']]);
                 Route::prefix('groups')->group(function () {
@@ -331,7 +331,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
                 Route::apiResource('sistems', ApiSistemController::class);
             });
 
-            Route::prefix('instructor')->group(function () {
+            Route::prefix('instructor')->name('instructor.')->group(function () {
                 // Instruktor only routes
                 Route::apiResource('tasks', ApiTaskController::class, ['only' => ['index', 'show']]);
                 Route::apiResource('assignments', ApiAssignmentController::class);
