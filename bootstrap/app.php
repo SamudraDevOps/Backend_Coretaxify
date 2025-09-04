@@ -30,5 +30,15 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 401);
             }
         });
+
+        // Handle domain/business logic errors
+        $exceptions->render(function (\DomainException $e, Request $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'status' => 422
+                ], 422);
+            }
+        });
         //
     })->create();

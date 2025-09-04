@@ -1187,7 +1187,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
         $assignment = $sistem->assignment_user->assignment;
 
         if (!$assignment) {
-            throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$badan}.");
+            throw new \DomainException("Data assignment tidak ditemukan untuk sistem ID {$badan}.");
         }
 
         $contractSPTCount = $this->getAssignmentSPTCount($assignment, $user);
@@ -1196,7 +1196,7 @@ class SptService extends BaseCrudService implements SptServiceInterface {
             // return response()->json([
             //     'message' => "Batas pembuatan SPT sebanyak {$limit} telah tercapai.",
             // ], 422);
-            throw new \Exception("Batas Pembuatan SPT sebanyak {$limit} telah tercapai.");
+            throw new \DomainException("Batas Pembuatan SPT sebanyak {$limit} telah tercapai.");
         }
 
         return null;

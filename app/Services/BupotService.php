@@ -187,7 +187,7 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
         $assignment = $sistem->assignment_user->assignment;
 
         if (!$assignment) {
-            throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$pembuat}.");
+            throw new \DomainException("Data assignment tidak ditemukan untuk sistem ID {$pembuat}.");
         }
 
         $contractBupotCount = $this->getAssignmentBupotCount($assignment, $user);
@@ -196,7 +196,7 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
             // return response()->json([
             //     'message' => "Batas pembuatan Bupot sebanyak {$limit} telah tercapai.",
             // ], 422);
-            throw new \Exception("Batas Pembuatan Bupot sebanyak {$limit} telah tercapai.");
+            throw new \DomainException("Batas Pembuatan Bupot sebanyak {$limit} telah tercapai.");
         }
 
         return null;
