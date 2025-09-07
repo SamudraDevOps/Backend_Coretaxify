@@ -8,7 +8,7 @@ cd /var/www/html
 echo "Running Laravel startup tasks..."
 
 php artisan optimize
-php artisan migrate --force
+# php artisan migrate --force
 
 echo "Startup complete. Handing over to main process..."
 
