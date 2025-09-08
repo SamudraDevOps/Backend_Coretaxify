@@ -97,6 +97,7 @@ class ApiAuthController extends ApiController {
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
+                'email_verified_at' => now(),
                 'password' => $validated['password'],
                 'default_password' => $validated['password'],
                 'status' => UserStatusEnum::ACTIVE->value,
@@ -135,6 +136,7 @@ class ApiAuthController extends ApiController {
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'email_verified_at' => now(),
             'password' => $validated['password'],
             'contract_id' => $contract->id,
             'status' => UserStatusEnum::ACTIVE->value,
