@@ -247,11 +247,11 @@ class ApiAuthController extends ApiController {
             ], 400);
         }
 
-        if ($user->email_otp_expires_at->isPast()) {
-            return response()->json([
-                'message' => 'OTP has expired. Please request a new one.',
-            ], 400);
-        }
+        // if ($user->email_otp_expires_at->isPast()) {
+        //     return response()->json([
+        //         'message' => 'OTP has expired. Please request a new one.',
+        //     ], 400);
+        // }
 
         // is verified
         $user->email_verified_at = now();

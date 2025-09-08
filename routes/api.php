@@ -110,7 +110,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
         Route::get('/profile', [ApiAuthController::class, 'me']);
         Route::post('/profile/update', [ApiAuthController::class, 'updateProfile']);
         Route::post('/verify-otp', [ApiAuthController::class, 'verifyOtp']);
-        Route::post('/resend-otp', [ApiAuthController::class, 'resendOtp']);
+        // Route::post('/resend-otp', [ApiAuthController::class, 'resendOtp']);
         Route::get('/verification-status', [ApiAuthController::class, 'verificationStatus']);
         Route::apiResource('bupot-objek-pajaks', ApiBupotObjekPajakController::class);
 
