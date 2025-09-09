@@ -102,7 +102,7 @@ Route::group(['middleware' => ['api'], 'as' => 'api.'], function () {
     Route::get('kap-kjs', [ApiKapKjsController::class, 'index']);
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
-    // Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
+    Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
 

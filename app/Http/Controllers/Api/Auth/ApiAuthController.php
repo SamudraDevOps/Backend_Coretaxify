@@ -174,7 +174,7 @@ class ApiAuthController extends ApiController {
 
         }
 
-        Mail::to($user->email)->send(new PasswordResetMail($user));
+        // Mail::to($user->email)->send(new PasswordResetMail($user));
 
         return response()->json([
             'message' => 'Password reset successfully. Check your email for your password.',
