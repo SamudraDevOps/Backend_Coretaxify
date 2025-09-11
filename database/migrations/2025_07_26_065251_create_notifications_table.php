@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('pengirim')->nullable();
             $table->string('subjek')->nullable();
             $table->text('isi')->nullable();
-            $table->text('bupot_resource')->nullable();
             $table->timestamps();
         });
     }

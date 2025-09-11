@@ -12,6 +12,7 @@ class NotificationResource extends JsonResource {
             'pengirim' => $this->pengirim,
             'subjek' => $this->subjek,
             'isi' => $this->isi,
+            'bupot_resource' => $this->bupot_resource,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
