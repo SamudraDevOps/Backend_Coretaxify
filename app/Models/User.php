@@ -30,6 +30,7 @@ class User extends Authenticatable
         'status',
         'contract_id',
         'email_otp',
+        'email_verified_at',
         'email_otp_expires_at',
     ];
 

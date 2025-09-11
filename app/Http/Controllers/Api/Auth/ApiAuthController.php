@@ -97,6 +97,7 @@ class ApiAuthController extends ApiController {
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
+                'email_verified_at' => now(),
                 'password' => $validated['password'],
                 'default_password' => $validated['password'],
                 'status' => UserStatusEnum::ACTIVE->value,
@@ -105,12 +106,9 @@ class ApiAuthController extends ApiController {
             $user->roles()->attach(Role::where('name', 'mahasiswa-psc')->first());
             $user->groups()->attach($group->id);
 
-            // TEMP FIXING
-            $user->email_verified_at = now();
-
             // generate and send otp
-            // $user->generateOtp();
-            // Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
+            $user->generateOtp();
+            Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
 
             // Create token for the newly registered user
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -138,6 +136,7 @@ class ApiAuthController extends ApiController {
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'email_verified_at' => now(),
             'password' => $validated['password'],
             'contract_id' => $contract->id,
             'status' => UserStatusEnum::ACTIVE->value,
@@ -145,11 +144,8 @@ class ApiAuthController extends ApiController {
 
         $user->roles()->attach(Role::where('name', 'mahasiswa')->first());
 
-        // TEMP FIXING
-        $user->email_verified_at = now();
-
-        // $user->generateOtp();
-        // Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
+        $user->generateOtp();
+        Mail::to($user->email)->send(new SendOtpMail($user->email_otp));
 
         // Create token for the newly registered user
         $token = $user->createToken('auth_token')->plainTextToken;
