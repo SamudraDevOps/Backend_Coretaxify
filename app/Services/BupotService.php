@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Bupot;
 use App\Models\Sistem;
 use App\Models\Notification;
+use App\Http\Resources\BupotResource;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Interfaces\Services\BupotServiceInterface;
 use App\Support\Interfaces\Repositories\BupotRepositoryInterface;
@@ -72,6 +73,7 @@ class BupotService extends BaseCrudService implements BupotServiceInterface
                                 'pengirim' => $bupot->pembuat->nama_akun,
                                 'subjek' => 'Anda Menerima Bukti Pemotongan/Pemungutan baru. Silahkan cek detail',
                                 'isi' => 'Anda menerima Bukti Pemotongan/Pemungutan baru. Detil pemotongan/pemungutan sebagai berikut: Nomor Pemotongan/Pemungutan: ' . ($bupot->nomor_pemotongan ?? '-') . '. NPWP/NIK Pemotong/Pemungut: ' . ($bupot->npwp_akun ?? '-') . '. Nama Pemotong/Pemungut: ' . ($bupot->nama_akun ?? '-') . '. Dpp: ' . ($bupot->dasar_pengenaan_pajak ?? 0) . ' PPh yang Dipotong/Dipungut: ' . ($bupot->pajak_penghasilan ?? 0) . '. Regards, ' . ($bupot->pembuat->nama_akun ?? '-'),
+                                'bupot_resource' => json_encode(new BupotResource($bupot)),
                             ]);
                         } catch (\Exception $e) {
                             // return response()->json([

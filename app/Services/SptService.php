@@ -310,8 +310,6 @@ class SptService extends BaseCrudService implements SptServiceInterface {
                     ];
                     Pembayaran::create($dataPembayaran);
                 }
-
-                Pembayaran::create($dataPembayaran);
                 break;
             case IntentEnum::API_UPDATE_SPT_PPH_UNIFIKASI_BAYAR_DEPOSIT->value:
                 $sistem = Sistem::find($sistem_id);
@@ -591,14 +589,364 @@ class SptService extends BaseCrudService implements SptServiceInterface {
     }
 
     public function showDetailSpt(Spt $spt) {
+        $year = $spt->masa_tahun;
+        $month = $spt->masa_bulan;
+        $badan_id = $spt->badan_id;
+
         switch ($spt->jenis_pajak) {
             case JenisPajakEnum::PPN->value:
+                $spt_ppn = SptPpn::where('spt_id', $spt->id)->first();
+
+                if ($spt->status == SptStatusEnum::KONSEP->value) {
+                    $fakturs = Faktur::where('badan_id', $badan_id)
+                    ->where('masa_pajak', $month)
+                    ->where('tahun', $year)
+                    ->where('status', FakturStatusEnum::APPROVED->value)
+                    ->get();
+
+                    // $data['cl_1a2_dpp'] dokumen lain
+                    $fakturs1a2 = $fakturs->whereIn('kode_transaksi', [4, 5]);
+                    $data_spt_ppn['cl_1a2_dpp']      = $fakturs1a2->sum('dpp');
+                    $data_spt_ppn['cl_1a2_dpp_lain'] = $fakturs1a2->sum('dpp_lain');
+                    $data_spt_ppn['cl_1a2_ppn']      = $fakturs1a2->sum('ppn');
+                    $data_spt_ppn['cl_1a2_ppnbm']    = $fakturs1a2->sum('ppnbm');
+
+                    $fakturs1a3 = $fakturs->where('kode_transaksi', 6);
+                    $data_spt_ppn['cl_1a3_dpp']      = $fakturs1a3->sum('dpp');
+                    $data_spt_ppn['cl_1a3_dpp_lain'] = $fakturs1a3->sum('dpp_lain');
+                    $data_spt_ppn['cl_1a3_ppn']      = $fakturs1a3->sum('ppn');
+                    $data_spt_ppn['cl_1a3_ppnbm']    = $fakturs1a3->sum('ppnbm');
+
+                    $fakturs1a4 = $fakturs->whereIn('kode_transaksi', [1, 9, 10]);
+                    $data_spt_ppn['cl_1a4_dpp']      = $fakturs1a4->sum('dpp');
+                    $data_spt_ppn['cl_1a4_ppn']      = $fakturs1a4->sum('ppn');
+                    $data_spt_ppn['cl_1a4_ppnbm']    = $fakturs1a4->sum('ppnbm');
+
+                    $fakturs1a6 = $fakturs->whereIn('kode_transaksi', [2, 3]);
+                    $data_spt_ppn['cl_1a6_dpp']      = $fakturs1a6->sum('dpp');
+                    $data_spt_ppn['cl_1a6_dpp_lain'] = $fakturs1a6->sum('dpp_lain');
+                    $data_spt_ppn['cl_1a6_ppn']      = $fakturs1a6->sum('ppn');
+                    $data_spt_ppn['cl_1a6_ppnbm']    = $fakturs1a6->sum('ppnbm');
+
+                    $fakturs1a7 = $fakturs->where('kode_transaksi', 7);
+                    $data_spt_ppn['cl_1a7_dpp']      = $fakturs1a7->sum('dpp');
+                    $data_spt_ppn['cl_1a7_dpp_lain'] = $fakturs1a7->sum('dpp_lain');
+                    $data_spt_ppn['cl_1a7_ppn']      = $fakturs1a7->sum('ppn');
+                    $data_spt_ppn['cl_1a7_ppnbm']    = $fakturs1a7->sum('ppnbm');
+
+                    $fakturs1a8 = $fakturs->where('kode_transaksi', 8);
+                    $data_spt_ppn['cl_1a8_dpp']      = $fakturs1a8->sum('dpp');
+                    $data_spt_ppn['cl_1a8_dpp_lain'] = $fakturs1a8->sum('dpp_lain');
+                    $data_spt_ppn['cl_1a8_ppn']      = $fakturs1a8->sum('ppn');
+                    $data_spt_ppn['cl_1a8_ppnbm']    = $fakturs1a8->sum('ppnbm');
+
+                    $faktursMasukan = Faktur::where('akun_penerima_id', $badan_id)
+                        ->where('masa_pajak', $month)
+                        ->where('tahun', $year)
+                        ->where('status', FakturStatusEnum::APPROVED->value)
+                        ->where('is_kredit', true)
+                        ->get();
+
+                    $fakturMasukanRetur = Faktur::where('akun_penerima_id', $badan_id)
+                        ->where('masa_pajak_retur', $month)
+                        ->where('tahun_retur', $year)
+                        ->where('status', FakturStatusEnum::APPROVED->value)
+                        ->where('is_kredit', true)
+                        ->get();
+
+                    $fakturs2b = $faktursMasukan->whereIn('kode_transaksi', [4, 5]);
+                    $fakturs2bRetur = $fakturMasukanRetur->whereIn('kode_transaksi', [4, 5]);
+                    $data_spt_ppn['cl_2b_dpp']      = $fakturs2b->sum('dpp');
+                    $data_spt_ppn['cl_2b_dpp_lain'] = $fakturs2b->sum('dpp_lain') + $fakturs2bRetur->sum('dpp_lain_retur');
+                    $data_spt_ppn['cl_2b_ppn']      = $fakturs2b->sum('ppn') + $fakturs2bRetur->sum('ppn_retur');
+                    $data_spt_ppn['cl_2b_ppnbm']    = $fakturs2b->sum('ppnbm') + $fakturs2bRetur->sum('ppnbm_retur');
+
+                    $fakturs2c = $faktursMasukan->whereIn('kode_transaksi', [1, 9, 10]);
+                    $fakturs2cRetur = $fakturMasukanRetur->whereIn('kode_transaksi', [1, 9, 10]);
+                    $data_spt_ppn['cl_2c_dpp']      = $fakturs2c->sum('dpp');
+                    $data_spt_ppn['cl_2c_ppn']      = $fakturs2c->sum('ppn') + $fakturs2cRetur->sum('ppn_retur');
+                    $data_spt_ppn['cl_2c_ppnbm']    = $fakturs2c->sum('ppnbm') + $fakturs2cRetur->sum('ppnbm_retur');
+
+                    $fakturs2d = $faktursMasukan->whereIn('kode_transaksi', [2, 3]);
+                    $fakturs2dRetur = $fakturMasukanRetur->whereIn('kode_transaksi', [2, 3]);
+                    $data_spt_ppn['cl_2d_dpp']      = $fakturs2d->sum('dpp');
+                    $data_spt_ppn['cl_2d_dpp_lain'] = $fakturs2d->sum('dpp_lain') + $fakturs2dRetur->sum('dpp_lain_retur');
+                    $data_spt_ppn['cl_2d_ppn']      = $fakturs2d->sum('ppn') + $fakturs2dRetur->sum('ppn_retur');
+                    $data_spt_ppn['cl_2d_ppnbm']    = $fakturs2d->sum('ppnbm') + $fakturs2dRetur->sum('ppnbm_retur');
+
+                    $fakturs2h = $faktursMasukan->whereIn('kode_transaksi', [7, 8])->where(function($faktur) {
+                        return $faktur->ppnbm !== null && $faktur->ppnbm > 0;
+                    });
+                    $fakturs2hRetur = $fakturMasukanRetur->whereIn('kode_transaksi', [7, 8])->where(function($faktur) {
+                        return $faktur->ppnbm !== null && $faktur->ppnbm > 0;
+                    });
+
+                    $data_spt_ppn['cl_2h_dpp']      = $fakturs2h->sum('dpp');
+                    $data_spt_ppn['cl_2h_dpp_lain'] = $fakturs2h->sum('dpp_lain') + $fakturs2hRetur->sum('dpp_lain_retur');
+                    $data_spt_ppn['cl_2h_ppn']      = $fakturs2h->sum('ppn') + $fakturs2hRetur->sum('ppn_retur');
+                    $data_spt_ppn['cl_2h_ppnbm']    = $fakturs2h->sum('ppnbm') + $fakturs2hRetur->sum('ppnbm_retur');
+
+                    $spt_ppn->fill($data_spt_ppn);
+                    $spt_ppn->save();
+                }
+
                 $spt->load('spt_ppn');
                 break;
             case JenisPajakEnum::PPH->value:
+                if ($spt->status == SptStatusEnum::KONSEP->value) {
+                    $spt_pph = SptPph::where('spt_id', $spt->id)->first();
+
+                    $monthNumber = MonthHelper::getMonthNumber($month);
+
+                    $bupots = Bupot::where('pembuat_id', $badan_id)
+                    ->where('status_penerbitan', 'published')
+                    ->whereMonth('masa_awal', $monthNumber)
+                    ->whereYear('masa_awal', $year)
+                    ->get();
+
+                    $data_spt_pph = [];
+
+                    $total_pemotongan_lain = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
+                        ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
+                    $total_pemotongan_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BPBPT->value)
+                        ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
+                    $total_bp21_lain = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value)
+                        ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
+                    $total_bp21_normal = $bupots->where('tipe_bupot', BupotTypeEnum::BP21->value)
+                        ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
+
+                    $a = $total_pemotongan_normal->sum('pajak_penghasilan') ?? 0;
+                    $b = $total_bp21_normal->sum('pajak_penghasilan') ?? 0;
+                    $data_spt_pph['cl_bp1_1'] = $a + $b;
+
+                    $data_spt_pph['cl_bp1_4'] = $data_spt_pph['cl_bp1_1'];
+                    $data_spt_pph['cl_bp1_6'] = $data_spt_pph['cl_bp1_4'] - ($data_spt_pph['cl_bp1_5'] ?? 0);
+
+                    $e = $total_pemotongan_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                    $f = $total_bp21_normal->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                    $data_spt_pph['cl_bp1_5'] = $e + $f;
+
+                    $c = $total_pemotongan_lain->sum('pajak_penghasilan') ?? 0;
+                    $d = $total_bp21_lain->sum('pajak_penghasilan') ?? 0;
+                    $data_spt_pph['cl_bp1_7'] = $c + $d;
+
+                    // BP26
+                    $total_pemotongan_lain_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value)
+                        ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
+                    $total_pemotongan_normal_bp26 = $bupots->where('tipe_bupot', BupotTypeEnum::BP26->value)
+                        ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
+                    $a2 = $total_pemotongan_normal_bp26->sum('pajak_penghasilan') ?? 0;
+                    $data_spt_pph['cl_bp2_1'] = $a2;
+
+                    $data_spt_pph['cl_bp2_4'] = $data_spt_pph['cl_bp2_1'];
+                    $data_spt_pph['cl_bp2_6'] = $data_spt_pph['cl_bp2_4']- ($data_spt_pph['cl_bp1_5'] ?? 0);
+
+                    $c2 = $total_pemotongan_lain_bp26->sum('pajak_penghasilan') ?? 0;
+                    $data_spt_pph['cl_bp2_7'] = $c2;
+
+                    $e2 = $total_pemotongan_normal_bp26->where('status', 'pembetulan')->sum('pajak_penghasilan') ?? 0;
+                    $data_spt_pph['cl_bp2_5'] = $e2;
+
+                    $spt_pph->fill($data_spt_pph);
+                    $spt_pph->save();
+                }
+
                 $spt->load('spt_pph');
                 break;
             case JenisPajakEnum::PPH_UNIFIKASI->value:
+                if ($spt->status == SptStatusEnum::KONSEP->value) {
+                    $spt_uni = SptUnifikasi::where('spt_id', $spt->id)->first();
+                    $monthNumber = MonthHelper::getMonthNumber($month);
+
+                    $bupots = Bupot::where('pembuat_id', $badan_id)
+                    ->where('status_penerbitan', 'published')
+                    ->whereMonth('masa_awal', $monthNumber)
+                    ->whereYear('masa_awal', $year)
+                    ->get();
+
+                    $data_spt_uni = [];
+
+                    $bupot_tanggung = $bupots->whereIn('tipe_bupot',[BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value, BupotTypeEnum::PS->value])
+                        ->where('fasilitas_pajak', 'pph_ditanggung_pemerintah');
+                    $bupot_lain_sendiri = $bupots->where('tipe_bupot', BupotTypeEnum::PS->value)
+                        ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
+                    $bupot_lain = $bupots->whereIn('tipe_bupot', [BupotTypeEnum::BPPU->value, BupotTypeEnum::BPNR->value])
+                        ->where('fasilitas_pajak', '!=', 'pph_ditanggung_pemerintah');
+
+                    $data_spt_uni['cl_a_1'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_1'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_1'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_1'] = $data_spt_uni['cl_a_1'] + $data_spt_uni['cl_b_1'] + $data_spt_uni['cl_c_1'];
+
+                    $data_spt_uni['cl_a_2'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-402')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_2'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-402')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_2'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-402')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_2'] = $data_spt_uni['cl_a_2'] + $data_spt_uni['cl_b_2'] + $data_spt_uni['cl_c_2'];
+
+                    $data_spt_uni['cl_a_3'] = $bupot_lain_sendiri->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-403')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_3'] = $bupot_lain->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-403')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_3'] = $bupot_tanggung->whereIn('jenis_pajak', ['Pasal 4 ayat 2', 'Pasal 4 Ayat 2'])
+                                                                ->where('kap', '411128-403')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_3'] = $data_spt_uni['cl_a_3'] + $data_spt_uni['cl_b_3'] + $data_spt_uni['cl_c_3'];
+
+                    $data_spt_uni['cl_a_pasal4'] = $data_spt_uni['cl_a_1'] + $data_spt_uni['cl_a_2'] + $data_spt_uni['cl_a_3'];
+                    $data_spt_uni['cl_b_pasal4'] = $data_spt_uni['cl_b_1'] + $data_spt_uni['cl_b_2'] + $data_spt_uni['cl_b_3'];
+                    $data_spt_uni['cl_c_pasal4'] = $data_spt_uni['cl_c_1'] + $data_spt_uni['cl_c_2'] + $data_spt_uni['cl_c_3'];
+                    $data_spt_uni['cl_d_pasal4'] = $data_spt_uni['cl_d_1'] + $data_spt_uni['cl_d_2'] + $data_spt_uni['cl_d_3'];
+
+                    $data_spt_uni['cl_a_4'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 15')
+                                                                ->where('kap', '411128-600')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_4'] = $bupot_lain->where('jenis_pajak', 'Pasal 15')
+                                                                ->where('kap', '411128-600')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_4'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 15')
+                                                                ->where('kap', '411128-600')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_4'] = $data_spt_uni['cl_a_4'] + $data_spt_uni['cl_b_4'] + $data_spt_uni['cl_c_4'];
+
+                    $data_spt_uni['cl_a_5'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 15')
+                                                                ->where('kap', '411129-600')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_5'] = $bupot_lain->where('jenis_pajak', 'Pasal 15')
+                                                                ->where('kap', '411129-600')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_5'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 15')
+                                                                ->where('kap', '411129-600')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_5'] = $data_spt_uni['cl_a_5'] + $data_spt_uni['cl_b_5'] + $data_spt_uni['cl_c_5'];
+
+                    $data_spt_uni['cl_a_pasal15'] = $data_spt_uni['cl_a_4'] + $data_spt_uni['cl_a_5'];
+                    $data_spt_uni['cl_b_pasal15'] = $data_spt_uni['cl_b_4'] + $data_spt_uni['cl_b_5'];
+                    $data_spt_uni['cl_c_pasal15'] = $data_spt_uni['cl_c_4'] + $data_spt_uni['cl_c_5'];
+                    $data_spt_uni['cl_d_pasal15'] = $data_spt_uni['cl_d_4'] + $data_spt_uni['cl_d_5'];
+
+                    $data_spt_uni['cl_a_6'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411122-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_6'] = $bupot_lain->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411122-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_6'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411122-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_6'] = $data_spt_uni['cl_a_6'] + $data_spt_uni['cl_b_6'] + $data_spt_uni['cl_c_6'];
+
+                    $data_spt_uni['cl_a_7'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411122-900')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_7'] = $bupot_lain->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411122-900')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_7'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411122-900')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_7'] = $data_spt_uni['cl_a_7'] + $data_spt_uni['cl_b_7'] + $data_spt_uni['cl_c_7'];
+
+                    $data_spt_uni['cl_a_8'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411128-403')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_8'] = $bupot_lain->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411128-403')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_8'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 22')
+                                                                ->where('kap', '411128-403')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_8'] = $data_spt_uni['cl_a_8'] + $data_spt_uni['cl_b_8'] + $data_spt_uni['cl_c_8'];
+
+                    $data_spt_uni['cl_a_pasal22'] = $data_spt_uni['cl_a_6'] + $data_spt_uni['cl_a_7'] + $data_spt_uni['cl_a_8'];
+                    $data_spt_uni['cl_b_pasal22'] = $data_spt_uni['cl_b_6'] + $data_spt_uni['cl_b_7'] + $data_spt_uni['cl_b_8'];
+                    $data_spt_uni['cl_c_pasal22'] = $data_spt_uni['cl_c_6'] + $data_spt_uni['cl_c_7'] + $data_spt_uni['cl_c_8'];
+                    $data_spt_uni['cl_d_pasal22'] = $data_spt_uni['cl_d_6'] + $data_spt_uni['cl_d_7'] + $data_spt_uni['cl_d_8'];
+
+                    $data_spt_uni['cl_a_9'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 23')
+                                                                ->where('kap', '411124-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_9'] = $bupot_lain->where('jenis_pajak', 'Pasal 23')
+                                                                ->where('kap', '411124-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_9'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 23')
+                                                                ->where('kap', '411124-100')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_9'] = $data_spt_uni['cl_a_9'] + $data_spt_uni['cl_b_9'] + $data_spt_uni['cl_c_9'];
+
+                    $data_spt_uni['cl_a_pasal23'] = $data_spt_uni['cl_a_9'];
+                    $data_spt_uni['cl_b_pasal23'] = $data_spt_uni['cl_b_9'];
+                    $data_spt_uni['cl_c_pasal23'] = $data_spt_uni['cl_c_9'];
+                    $data_spt_uni['cl_d_pasal23'] = $data_spt_uni['cl_d_9'];
+
+                    $data_spt_uni['cl_a_10'] = $bupot_lain_sendiri->where('jenis_pajak', 'Pasal 26')
+                                                                ->where('kap', '411127-110')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_b_10'] = $bupot_lain->where('jenis_pajak', 'Pasal 26')
+                                                                ->where('kap', '411127-110')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_c_10'] = $bupot_tanggung->where('jenis_pajak', 'Pasal 26')
+                                                                ->where('kap', '411127-110')
+                                                                ->sum('pajak_penghasilan');
+
+                    $data_spt_uni['cl_d_10'] = $data_spt_uni['cl_a_10'] + $data_spt_uni['cl_b_10'] + $data_spt_uni['cl_c_10'];
+
+                    $data_spt_uni['cl_a_pasal26'] = $data_spt_uni['cl_a_10'];
+                    $data_spt_uni['cl_b_pasal26'] = $data_spt_uni['cl_b_10'];
+                    $data_spt_uni['cl_c_pasal26'] = $data_spt_uni['cl_c_10'];
+                    $data_spt_uni['cl_d_pasal26'] = $data_spt_uni['cl_d_10'];
+
+                    $data_spt_uni['cl_total_setor'] = $data_spt_uni['cl_a_pasal4'] + $data_spt_uni['cl_a_pasal15'] + $data_spt_uni['cl_a_pasal22'] + $data_spt_uni['cl_a_pasal23'] + $data_spt_uni['cl_a_pasal26'];
+                    $data_spt_uni['cl_total_potong'] = $data_spt_uni['cl_b_pasal4'] + $data_spt_uni['cl_b_pasal15'] + $data_spt_uni['cl_b_pasal22'] + $data_spt_uni['cl_b_pasal23'] + $data_spt_uni['cl_b_pasal26'];
+                    $data_spt_uni['cl_total_tanggung'] = $data_spt_uni['cl_c_pasal4'] + $data_spt_uni['cl_c_pasal15'] + $data_spt_uni['cl_c_pasal22'] + $data_spt_uni['cl_c_pasal23'] + $data_spt_uni['cl_c_pasal26'];
+                    $data_spt_uni['cl_total_bayar'] = $data_spt_uni['cl_d_pasal4'] + $data_spt_uni['cl_d_pasal15'] + $data_spt_uni['cl_d_pasal22'] + $data_spt_uni['cl_d_pasal23'] + $data_spt_uni['cl_d_pasal26'];
+
+                    $spt_uni->fill($data_spt_uni);
+                    $spt_uni->save();
+                }
+
                 $spt->load('spt_unifikasi');
                 break;
             case JenisPajakEnum::PPH_BADAN->value:
