@@ -20,6 +20,12 @@ class ApiUserController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 20);
+        $intent = request()->get('intent');
+
+        switch ($intent) {
+            case IntentEnum::API_USER_EXPORT_MAHASISWA_PSC->value:
+                return $this->userService->exportUser($request);
+        }
 
         return UserResource::collection($this->userService->getAllPaginated($request->query(), $perPage));
     }

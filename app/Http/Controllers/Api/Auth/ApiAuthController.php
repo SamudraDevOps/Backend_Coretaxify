@@ -90,11 +90,14 @@ class ApiAuthController extends ApiController {
 
             if (!$group) {
                 throw new \Exception('Kode Registrasi yang Anda masukkan tidak Valid. Mohon hubungi Admin apabila ada kendala.');
+            } else if (!$group->user->hasRole('psc')) {
+                throw new \Exception('Kode Registrasi yang Anda masukkan tidak Valid. Mohon hubungi Admin apabila ada kendala.');
             }
 
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
+                'email_verified_at' => now(),
                 'password' => $validated['password'],
                 'default_password' => $validated['password'],
                 'status' => UserStatusEnum::ACTIVE->value,
@@ -133,6 +136,7 @@ class ApiAuthController extends ApiController {
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'email_verified_at' => now(),
             'password' => $validated['password'],
             'contract_id' => $contract->id,
             'status' => UserStatusEnum::ACTIVE->value,
@@ -170,7 +174,7 @@ class ApiAuthController extends ApiController {
 
         }
 
-        Mail::to($user->email)->send(new PasswordResetMail($user));
+        // Mail::to($user->email)->send(new PasswordResetMail($user));
 
         return response()->json([
             'message' => 'Password reset successfully. Check your email for your password.',
@@ -245,11 +249,11 @@ class ApiAuthController extends ApiController {
             ], 400);
         }
 
-        if ($user->email_otp_expires_at->isPast()) {
-            return response()->json([
-                'message' => 'OTP has expired. Please request a new one.',
-            ], 400);
-        }
+        // if ($user->email_otp_expires_at->isPast()) {
+        //     return response()->json([
+        //         'message' => 'OTP has expired. Please request a new one.',
+        //     ], 400);
+        // }
 
         // is verified
         $user->email_verified_at = now();

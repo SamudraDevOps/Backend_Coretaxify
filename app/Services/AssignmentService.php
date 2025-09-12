@@ -80,12 +80,12 @@ class AssignmentService extends BaseCrudService implements AssignmentServiceInte
                 'end_period' => $data['end_period'] ?? null,
                 'supporting_file' => $filename,
             ]);
+            $user = auth()->user();
+            if ($user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur')) {
+                $assignment->users()->attach($user->id);
+            }
         }
 
-        $user = auth()->user();
-        if ($user->hasRole('admin') || $user->hasRole('dosen') || $user->hasRole('psc') || $user->hasRole('instruktur')) {
-            $assignment->users()->attach($user->id);
-        }
 
         return $assignment;
     }

@@ -357,7 +357,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         $assignment = $sistem->assignment_user->assignment;
 
         if (!$assignment) {
-            throw new \Exception("Data assignment tidak ditemukan untuk sistem ID {$sistem->id}.");
+            throw new \DomainException("Data assignment tidak ditemukan untuk sistem ID {$sistem->id}.");
         }
 
         $contractFakturCount = $this->getAssignmentFakturCount($assignment, $user);
@@ -366,7 +366,7 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
             // return response()->json([
             //     'message' => "Batas pembuatan E-Faktur sebanyak {$limit} telah tercapai.",
             // ], 422);
-            throw new \Exception("Batas Pembuatan E-Faktur sebanyak {$limit} telah tercapai.");
+            throw new \DomainException("Batas Pembuatan E-Faktur sebanyak {$limit} telah tercapai.");
         }
 
         return null;
