@@ -275,7 +275,7 @@ class TaskService extends BaseCrudService implements TaskServiceInterface
         })->paginate();
     }
 
-    public function getTasksByUserRole($user, $perPage = 20)
+    public function getTasksByUserRole($user, $perPage = 20, $search)
     {
         $repository = app($this->getRepositoryClass());
 
@@ -294,6 +294,7 @@ class TaskService extends BaseCrudService implements TaskServiceInterface
                 $query->where('status', 'active')
                       ->orWhereNull('status');
             })
+            ->where('name', 'like', '%' . $search . '%')
             ->paginate($perPage);
     }
     public function downloadFile(Task $task)

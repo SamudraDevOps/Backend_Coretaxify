@@ -20,10 +20,11 @@ class ApiTaskController extends ApiController {
      */
     public function index(Request $request) {
         $perPage = request()->get('perPage', 20);
+        $search = request()->get('search', '');
         $user = auth()->user();
 
          // $tasks = $this->taskService->getTasksByUserId($user->id);
-        $tasks = $this->taskService->getTasksByUserRole($user, $perPage);
+        $tasks = $this->taskService->getTasksByUserRole($user, $perPage, $search);
 
         return TaskResource::collection($tasks);
 

@@ -20,6 +20,19 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface {
 
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
+        
+        // $query = $this->applySearchFilters($query, $searchParams, ['name', 'email']);
+        
+        // $query = $this->applyColumnFilters($query, $searchParams, ['id', 'contract_id']);
+
+        $query->where(function ($q) use ($searchParams) {
+            $this->applySearchFilters($q, $searchParams, ['name', 'email']);
+            $this->applyColumnFilters($q, $searchParams, ['id', 'contract_id']);
+        });
+        
+        $query = $this->applyResolvedRelations($query, $searchParams);
+        
+        $query = $this->applySorting($query, $searchParams);
 
         if (isset($searchParams['intent'])) {
             $roleName = match ($searchParams['intent']) {
@@ -37,15 +50,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface {
                 });
             }
         }
-
-        $query = $this->applySearchFilters($query, $searchParams, ['name', 'email']);
-
-        $query = $this->applyColumnFilters($query, $searchParams, ['id', 'contract_id']);
-
-        $query = $this->applyResolvedRelations($query, $searchParams);
-
-        $query = $this->applySorting($query, $searchParams);
-
+        
         return $query;
     }
 }

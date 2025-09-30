@@ -15,7 +15,7 @@ interface TaskServiceInterface extends BaseCrudServiceInterface {
 
     public function getTasksByUserId($userId);
 
-    public function getTasksByUserRole($user, $perPage);
+    public function getTasksByUserRole($user, $perPage, $search);
 
     public function downloadFile(Task $task);
 }
