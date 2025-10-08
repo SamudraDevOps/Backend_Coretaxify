@@ -31,10 +31,10 @@ class ApiAssignmentController extends ApiController
 
         switch ($intent) {
             case IntentEnum::API_GET_ASSIGNMENT_ALL->value:
-                return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
+                return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage));
         }
 
-        return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage)->load(['group']));
+        return AssignmentResource::collection($this->assignmentService->getAllPaginated($request->query(), $perPage));
 
         // $assignments = $this->assignmentService->getAssignmentsByUserId($user->id, $perPage);
 
