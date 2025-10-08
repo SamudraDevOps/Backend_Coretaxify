@@ -17,7 +17,12 @@ class AssignmentResource extends JsonResource {
             'instansi' => $this->user->contract ? $this->user->contract->university->name : null,
             'group' => new GroupResource($this->group),
             'users' => UserResource::collection($this->whenLoaded('users')),
-            'users_count' => count($this->users),
+            // 'users_count' => count($this->users),
+            'users_count' => $this->users()
+                ->whereHas('roles', function ($query) {
+                    $query->whereIn('name', ['mahasiswa', 'mahasiswa-psc']);
+                })
+                ->count(),
             'supporting_file' => $this->supporting_file,
             'task_id' => $this->task_id,
             'task' => new TaskResource($this->task),
