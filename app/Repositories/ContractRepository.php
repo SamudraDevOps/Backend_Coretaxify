@@ -20,13 +20,19 @@ class ContractRepository extends BaseRepository implements ContractRepositoryInt
     protected function applyFilters(array $searchParams = []): Builder {
         $query = $this->getQuery();
 
-        $query = $this->applySearchFilters($query, $searchParams, ['name']);
+        // $query = $this->applySearchFilters($query, $searchParams, ['name']);
 
         $query = $this->applyColumnFilters($query, $searchParams, ['id']);
 
         $query = $this->applyResolvedRelations($query, $searchParams);
 
         $query = $this->applySorting($query, $searchParams);
+
+        $relationSearchableColumns = [
+            'university' => ['name']
+        ];
+
+        $query = $this->applyRelationSearchFilters($query, $searchParams, $relationSearchableColumns);
 
         return $query;
     }
