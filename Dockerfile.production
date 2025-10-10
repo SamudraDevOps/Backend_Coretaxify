@@ -36,6 +36,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pcntl \
     && docker-php-ext-enable exif redis
 
+ENV TZ=Asia/Jakarta
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Copy Composer from an official Composer image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
