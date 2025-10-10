@@ -34,7 +34,7 @@ class Assignment extends Model
             return $this->group->isValid();
         }
 
-        return $this->start_period >= now() && $this->end_period <= now();
+        return $this->start_period <= now() && $this->end_period >= now();
     }
 
     public function isExam()
