@@ -60,6 +60,9 @@ use App\Http\Controllers\Api\ApiNomorIdentifikasiEksternalController;
 //     Route::post('login', [ApiAuthController::class, 'login']);
 //     Route::post('logout', [ApiAuthController::class, 'logout'])->middleware('auth:sanctum');
 // });
+Route::get('time', function() {
+    return Carbon\Carbon::now()->toDateTimeString();
+});
 
 Route::get('routes/download', function () {
     $routeCollection = Route::getRoutes();

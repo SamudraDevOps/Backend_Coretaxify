@@ -18,7 +18,6 @@ class AssignmentUser extends Model
     protected $guarded = ['id'];
 
     public function isValid() {
-        return Carbon::now()->toDateTimeString();
         if ($this->assignment->isExam()) {
             if (!$this->is_start) {
                 return $this->assignment->start_period <= now() && $this->assignment->end_period >= now();
