@@ -96,9 +96,13 @@ class ApiFakturController extends ApiController
 
         // $this->fakturService->getAllForSistem($assignment, $sistem, new Request(), 1);
 
-        $faktur = $this->fakturService->create($data, $sistem);
+        try {
+            $faktur = $this->fakturService->create($data, $sistem);
 
-        return new FakturResource($faktur);
+            return new FakturResource($faktur);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Failed to create faktur: ' . $e->getMessage()], 500);
+        }
     }
 
     /**

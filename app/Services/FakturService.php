@@ -69,20 +69,39 @@ class FakturService extends BaseCrudService implements FakturServiceInterface {
         unset($data['detail_transaksi']);
 
         // Use database transaction to ensure data integrity
-        return DB::transaction(function () use ($data, $detailTransaksiData) {
-            // Create the faktur
-            $faktur = parent::create($data);
-            // Create detail transaksi if provided
-            if ($detailTransaksiData && is_array($detailTransaksiData)) {
-                foreach ($detailTransaksiData as $transaksi) {
-                    $transaksi['faktur_id'] = $faktur->id;
-                    DetailTransaksi::create($transaksi);
-                }
-            }
+        // return DB::transaction(function () use ($data, $detailTransaksiData) {
+        //     // Create the faktur
+        //     $faktur = parent::create($data);
+        //     // Create detail transaksi if provided
+        //     if ($detailTransaksiData && is_array($detailTransaksiData)) {
+        //         foreach ($detailTransaksiData as $transaksi) {
+        //             $transaksi['faktur_id'] = $faktur->id;
+        //             DetailTransaksi::create($transaksi);
+        //         }
+        //     }
 
-            $this->recalculateFakturTotals($faktur);
-            return $faktur;
-        });
+        //     $this->recalculateFakturTotals($faktur);
+        //     return $faktur;
+        // });
+
+        try {
+            return DB::transaction(function () use ($data, $detailTransaksiData) {
+                // Create the faktur
+                $faktur = parent::create($data);
+                // Create detail transaksi if provided
+                if ($detailTransaksiData && is_array($detailTransaksiData)) {
+                    foreach ($detailTransaksiData as $transaksi) {
+                        $transaksi['faktur_id'] = $faktur->id;
+                        DetailTransaksi::create($transaksi);
+                    }
+                }
+
+                $this->recalculateFakturTotals($faktur);
+                return $faktur;
+            });
+        } catch (\Throwable $e) {
+            throw new \Exception($e->getMessage());
+        }
     }
 
     public function update($keyOrModel, array $data): ?Model
