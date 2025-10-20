@@ -81,11 +81,19 @@ class GroupService extends BaseCrudService implements GroupServiceInterface {
         // Get an array of role IDs for the currently logged-in user
         $userRoleIds = $user->roles->pluck('id')->toArray();
 
-        return $repository->query()
+        $query = $repository->query()
             ->whereHas('user.roles', function ($query) use ($userRoleIds) {
                 $query->whereIn('roles.id', $userRoleIds);
-            })
-            ->paginate();
+            });
+
+        $perPage = request('perPage', 15);
+
+        if ($perPage === 'all') {
+            return $query->get();
+        }
+
+        // Jika bukan 'all', tetap gunakan paginate
+        return $query->paginate((int) $perPage);
     }
 
     // private function importData(UploadedFile $file): void {
